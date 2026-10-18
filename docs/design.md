@@ -16,14 +16,18 @@ The benchmark asks whether that makes the agent better for that user, by how muc
 
 ## Conditions
 
-Every condition gets the same tasks, the same model (pinned and recorded) and the same tools, with web tools off.
+Every condition gets the same tasks, the same model (Sonnet 5.5, `claude-sonnet-5-5`, pinned and recorded) and the same tools, with web tools off.
 
 | | Condition | How it is set up |
 |---|---|---|
-| A | Fresh session | an empty folder, exposurie absent |
-| B | Whole history | the user's prior conversation (user and agent text, no tool output) placed before the task |
+| A | Fresh session | no instructions file, exposurie absent |
+| B | Whole history | the user's prior conversation (user and agent text, no tool output) in the instructions file |
 | C | exposurie | see below |
-| D | Perfect memory | only the facts the task needs, placed before the task |
+| D | Perfect memory | only the facts the task needs, in the instructions file |
+
+**The conditions differ by one file:** the sandbox's global instructions file, `~/.claude/CLAUDE.md`, which is also where exposurie puts its pointer. In C, the brain is on disk and the `exposurie` command is available as well. The pilot checks B's input tokens to confirm the whole history arrived. If the file were cut short, B and D would move to `--append-system-prompt-file`.
+
+For area 4, D gets the facts closest to the question, which is what perfect retrieval would return. The right answer is still "not recorded".
 
 Condition C is set up like this:
 
@@ -45,7 +49,14 @@ There are two made-up people:
 
 Neither is tied to a niche job or industry.
 
-They are synthetic for three reasons: every right answer is known, nothing private enters a public repository, and anyone can rerun the benchmark. Each history is written from a fact sheet as Claude Code transcripts, plus a claude.ai export for the second user.
+They are synthetic for three reasons: every right answer is known, nothing private enters a public repository, and anyone can rerun the benchmark.
+
+Their histories:
+
+- **The developer:** about 25 Claude Code sessions across about 4 repositories, over about 4 months.
+- **The second user:** about 15 short Claude Code sessions and about 10 claude.ai chats. Their prompts are short ("make it work", "ok, do that"), so the agent proposes most of their decisions and they accept them. exposurie keeps the agent's side of a transcript too, so a brain can still pick these decisions up.
+- **Size:** about 80K tokens of conversation per user, counted on the text exposurie reads. Real histories are larger than any context window, so this size is chosen to keep B runnable: the whole history fits, with room for the task.
+- **How they are made:** each session has a written plan, and Sonnet 5.5 writes the session from it. The text is then converted into Claude Code transcripts, plus a claude.ai export for the second user. See [build-plan.md](build-plan.md).
 
 How the planted facts work:
 
@@ -53,6 +64,7 @@ How the planted facts work:
 - Every fact is a non-default choice (a specific host, colour, supplier or library), so a fresh agent cannot score by guessing.
 - Every fact is checked to appear in the generated text.
 - Some facts are replaced later in the history, and some sessions are distractors.
+- There are 3–4 times more facts that no task asks about than facts a task does, so the brain has to sort what matters, not just store it.
 
 ## Areas
 
@@ -86,11 +98,14 @@ Two long tasks are each interrupted at half the context window. Then one of thre
 
 We measure whether the task gets finished, the tokens used, and how often the agent retries an approach that already failed. Retrying a failed approach is the clearest sign of lost context.
 
+This area needs sessions to be saved, so they can be resumed and synced. It is the one exception to the run hygiene below, and it is built last.
+
 ## Scoring
 
 - Each task lists **required facts**, which must appear, and **forbidden facts** (outdated or invented), which must not. A script checks these.
 - Work tasks are checked from the files the agent writes.
 - Some answers a string match can't judge: area 4, and prose in area 6. They get a fixed rubric, judged by a separate Claude run, and every one is also checked by hand.
+- An answer that contains both a required fact and a forbidden one, such as "you moved from Jest to Vitest", is not failed automatically. It goes to the judge and the hand check.
 - The scoring script never sees which condition produced an answer.
 
 ## Numbers
@@ -102,6 +117,8 @@ Each run uses `claude -p --output-format stream-json`, which reports:
 - every tool call
 
 `total_cost_usd` is recorded too, but it is a client-side estimate, so tokens are the primary number.
+
+**Tokens per run counts every input token, cached or not.** Whether a prompt hits the cache depends on what ran just before it, not on the condition. The cached/uncached split is kept as a second number.
 
 | Number | How it is computed |
 |---|---|
@@ -132,12 +149,17 @@ A pilot comes first: one task under all four conditions, to measure the real cos
 
 Every rule here exists because breaking it produces a wrong number.
 
-- **Isolated home and Claude Code config** (`CLAUDE_CONFIG_DIR`) for every run, logged in with a Claude plan, never an API key. Nothing from the machine owner's own setup (instructions, skills, plugins, memory) can load.
-- **A fresh empty folder per run, outside this repository.** The answer key lives in this repository.
+- **Isolated home and Claude Code config for every run**, logged in with a Claude plan, never an API key. `HOME`, `USERPROFILE`, `APPDATA`, `LOCALAPPDATA` and `CLAUDE_CONFIG_DIR` all point into the sandbox. Auto-memory and claude.ai connectors are off, and no MCP server loads. Nothing from the machine owner's own setup (instructions, skills, plugins, memory, connectors) can load.
+- **The sandbox's own pinned copies** of Claude Code and exposurie 1.2.0, with auto-update off. Claude Code went through 44 version numbers in the 46 days before this benchmark was designed, and the run takes several days.
+- **Transcript retention is set before any history is placed.** Claude Code deletes transcripts older than its `cleanupPeriodDays` (30 by default). exposurie orders history by file date, so the history's files carry dates months in the past.
+- **A fresh folder per run, outside this repository.** It is empty, except for the task's starter repository in areas 6 and 7. The answer key lives in this repository.
 - **stdin closed on every run.** An earlier exposurie pointer test overstated its result because each headless session read the remaining questions from stdin.
 - **No session persistence** (`--no-session-persistence`), so runs never become part of a user's history at the next sync.
-- **Web tools off in every condition.** This repository is public, so an agent allowed to search could find the answers.
-- **Brains built before any task runs**, with their build tokens recorded.
+- **The same tools in every condition:** read, write, edit, search, and a shell that may run only `exposurie`. No web tools: this repository is public, so an agent allowed to search could find the answers. The runner checks the tool list at the start of every run and throws out any run where it is wrong.
+- **Brains built before any task runs**, with their build tokens recorded. Then the raw history leaves the sandbox home, so C can only use the brain. The brain is hidden during A, B and D.
+- **C runs finish within 7 days of their brain build.** After 7 days exposurie's status line asks the agent to sync, and an agent that syncs mid-task changes both the brain and the token count.
+- **Conditions are mixed together in the run order.**
+- **A run stopped by a usage limit counts as "not run", never "wrong"**, and is run again later.
 - **Versions recorded per run:** Claude Code, model, exposurie.
 
 ## Where it runs
@@ -167,5 +189,6 @@ Results are reported whichever way they go. In [VibeMemBench](sources.md#vibemem
 - One agent (Claude Code) and one model.
 - One brain build per user, so variation between brain builds is not measured.
 - B is a simulation of a long session.
+- Histories are about 80K tokens per user, smaller than a real one. That also favours B, because a real history would not fit in one context at all.
 - Claude Code's own auto-memory and other memory systems are not compared in this version.
 - One run per cell, so per-area counts are only indicative; the pooled numbers are the result.
