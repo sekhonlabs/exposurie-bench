@@ -2,7 +2,7 @@
 
 Does an external brain make a coding agent better for the person using it? This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie). exposurie is a CLI that builds a curated Markdown wiki (the brain) from a person's own agent sessions and chat exports, and points every new session at it.
 
-**Status: designed, and the build follows [docs/build-plan.md](docs/build-plan.md). Nothing has run yet.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
+**Status: the run sandbox is built and checked (part 0 of [docs/build-plan.md](docs/build-plan.md)). No benchmark task has run yet.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
 
 ## The question
 
@@ -35,6 +35,7 @@ The questions are spread across nine areas, from recall to long sessions, with t
 | [docs/sources.md](docs/sources.md) | every paper and document cited, and what this benchmark takes from each |
 | [docs/decisions.md](docs/decisions.md) | dated decisions and why |
 | [CLAUDE.md](CLAUDE.md) | rules for any agent working in this repository, local or cloud |
+| [runner/](runner/) | the run sandbox: pinned versions, setup, the environment every run gets, and its check |
 
 ## License
 

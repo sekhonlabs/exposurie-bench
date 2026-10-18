@@ -24,18 +24,21 @@ The sandbox and the raw output (`sandbox/` and `runs/`) sit next to this reposit
 
 ### 0. Sandbox
 
-**Plan usage:** none, except one tiny run to confirm the login.
+**Done 2026-10-18.** Plan usage: one tiny run, to confirm the login.
 
-- Install a pinned Claude Code (the version current on setup day) and exposurie 1.2.0 inside the sandbox. Turn auto-update off (`DISABLE_AUTOUPDATER`).
-- Write the sandbox's settings:
-  - transcript retention long enough to keep the whole history (`cleanupPeriodDays`)
-  - auto-memory off
-- Write the environment script:
-  - `HOME`, `USERPROFILE`, `APPDATA`, `LOCALAPPDATA` and `CLAUDE_CONFIG_DIR` all point into the sandbox.
-  - claude.ai connectors are off (`ENABLE_CLAUDEAI_MCP_SERVERS=false`), and every run passes `--strict-mcp-config`.
-- The owner logs in once, inside the sandbox.
+Everything the sandbox runs is its own copy, pinned in [runner/pins.json](../runner/pins.json) and checked against its published hash: Node 24.22.0, Portable Git 2.56.0, Claude Code 2.1.302 and exposurie 1.2.0. Apart from Windows itself, it uses nothing of the machine owner's setup.
 
-**Done when** one run's start-up line shows the sandbox's own config, the pinned version, no MCP servers, and only the listed tools.
+- `runner/bootstrap.ps1` fetches the sandbox's Node with Windows' own `curl` and `tar`. It then hands over to `runner/sandbox.mjs setup`, which installs Git, then Claude Code and exposurie with the sandbox's own npm, prefix and cache. Setup also writes the sandbox's settings ([runner/sandbox-settings.json](../runner/sandbox-settings.json)):
+  - transcript retention of 3650 days (`cleanupPeriodDays`)
+  - auto-memory off, auto-update off, web tools denied, model Sonnet 5.5
+- `runner/sandbox.mjs` builds the environment every run gets. It is built, never inherited: Windows' own variables, plus
+  - `HOME`, `USERPROFILE`, `APPDATA`, `LOCALAPPDATA`, `TEMP` and `CLAUDE_CONFIG_DIR` pointing into the sandbox
+  - a `PATH` of the sandbox's folders and Windows
+  - claude.ai connectors off (`ENABLE_CLAUDEAI_MCP_SERVERS=false`), and every run passes `--strict-mcp-config`
+  - remote feature flags off (`DISABLE_GROWTHBOOK=1`), see [decisions.md](decisions.md)
+- The owner logs in once with `sandbox.mjs login`, by copying the sign-in URL into their own browser. A browser started from the sandbox makes a new profile inside it.
+
+**Done when** one run's start-up line shows the pinned version and model, a plan login with no API key, no MCP servers, only the listed tools, and no plugins, skills, agents or commands except the binary's built-in ones. `sandbox.mjs check` makes that one tiny run and checks it. It also fails if anything but `.claude` and the empty `AppData` folders appears in the sandbox home.
 
 ### 1. Fact sheets
 
@@ -106,6 +109,7 @@ Both are tested end to end against a fake `claude` that prints saved output, bef
 
 **Plan usage:** yes. **Needs the owner's go.**
 
+- Check that the sandbox's history folder holds only the generated history. Nothing else may be in it, including the owner's login session.
 - Build the first user's brain: exposurie syncs and Claude Code writes the pages, until nothing is left. Record the tokens.
 - Move the raw history out of the sandbox home.
 - Run the pilot: one task under all four conditions.

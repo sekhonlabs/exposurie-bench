@@ -33,3 +33,12 @@ Dated, newest last. Each entry says what was decided and why.
 - **Area 9 is built last**, once the pilot shows how much plan usage the run needs. It needs sessions to be saved, and that exception is decided when it is built.
 - **Charts and write-ups use exposurie's own look** (see CLAUDE.md).
 - **The build follows docs/build-plan.md, one part at a time:** each part is discussed, built and checked before the next one starts.
+- **Everything the benchmark installs, writes or runs stays in its own folder:** this repository, `../sandbox` and `../runs`. Nothing of the owner's own setup is read or written. So the sandbox carries its own Node and Git as well as Claude Code and exposurie, each pinned and checked against its published hash.
+- **The run environment is built, never inherited:** Windows' own variables plus the sandbox's paths. A run is often started from inside another agent session, and that session's variables (its effort setting, its session ID) would otherwise reach the run.
+- **Remote feature flags are off** (`DISABLE_GROWTHBOOK=1`). There are two reasons:
+  - On Windows, one flag (`tengu_windows_credman`) moves the login out of the sandbox's credentials file and into the Windows user's Credential Manager, which is outside the sandbox.
+  - Any flag can change behaviour partway through the run.
+
+  So every run gets the pinned binary's own defaults, the same on every day and for anyone who reruns the benchmark.
+- **The binary's built-in plugins and skills stay on.** Claude Code 2.1.302 ships three plugins (`cc-plugin-agents-md`, `cc-plugin-telemetry` and `cc-plugin-plugin-authoring`) and 17 skills of its own. They come with the pinned version and are the same in every condition.
+- **The login happens in the owner's own browser**, by copying the sign-in URL from the sandbox's Claude Code. A browser started from the sandbox creates a new profile inside it. On the first try, Edge signed that profile in with the owner's account and synced into it, and the profile was then deleted. `sandbox.mjs check` now fails if anything but `.claude` and the empty `AppData` folders appears in the sandbox home.

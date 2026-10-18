@@ -6,9 +6,11 @@ Build in the order of `docs/build-plan.md`, one part at a time: discuss the part
 
 ## Never
 
+- **Never touch anything outside the benchmark's own folder.** Everything stays in this repository, `../sandbox` and `../runs`. The owner's own agent setup, tools, notes and browser are off-limits, for reading as well as writing.
+- **Never open a browser from the sandbox.** It makes a new profile inside the sandbox home. To log in, copy the sign-in URL into the owner's own browser.
 - **Never run a benchmark task inside this repository.** The answer key lives here. Every run gets a fresh folder outside it.
 - **Never use an API key.** Runs use a Claude plan login inside the sandbox. Never print, copy or commit credentials. The sandbox lives beside this repository, never inside it.
-- **Never run with the owner's own Claude Code setup.** Every run, history generation included, uses the sandbox's environment and its pinned copies of Claude Code and exposurie.
+- **Never run with the owner's own Claude Code setup.** Every run, history generation included, goes through `runner/sandbox.mjs`: its environment, and its pinned copies of Node, Git, Claude Code and exposurie.
 - **Never place history in the sandbox before its transcript retention is set.** Claude Code deletes old transcripts when it starts.
 - **Never start live runs without the owner's go.** Every run spends plan usage. Build, test offline, then ask. The pilot comes first.
 - **Never commit personal data.** That means no real names, no machine paths and no private tool names. The users in this benchmark are synthetic.

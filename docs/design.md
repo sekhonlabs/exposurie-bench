@@ -149,8 +149,10 @@ A pilot comes first: one task under all four conditions, to measure the real cos
 
 Every rule here exists because breaking it produces a wrong number.
 
-- **Isolated home and Claude Code config for every run**, logged in with a Claude plan, never an API key. `HOME`, `USERPROFILE`, `APPDATA`, `LOCALAPPDATA` and `CLAUDE_CONFIG_DIR` all point into the sandbox. Auto-memory and claude.ai connectors are off, and no MCP server loads. Nothing from the machine owner's own setup (instructions, skills, plugins, memory, connectors) can load.
-- **The sandbox's own pinned copies** of Claude Code and exposurie 1.2.0, with auto-update off. Claude Code went through 44 version numbers in the 46 days before this benchmark was designed, and the run takes several days.
+- **Isolated home and Claude Code config for every run**, logged in with a Claude plan, never an API key. `HOME`, `USERPROFILE`, `APPDATA`, `LOCALAPPDATA`, `TEMP` and `CLAUDE_CONFIG_DIR` all point into the sandbox. Auto-memory and claude.ai connectors are off, and no MCP server loads. Nothing from the machine owner's own setup (instructions, skills, plugins, memory, connectors) can load.
+- **The environment is built, never inherited:** Windows' own variables plus the sandbox's paths, so nothing from the process that starts a run reaches it.
+- **The sandbox's own pinned copies** of Node, Git, Claude Code and exposurie 1.2.0, with auto-update off. Claude Code went through 44 version numbers in the 46 days before this benchmark was designed, and the run takes several days.
+- **No remote feature flags** (`DISABLE_GROWTHBOOK=1`). Every run gets the pinned binary's own defaults, the same on every day.
 - **Transcript retention is set before any history is placed.** Claude Code deletes transcripts older than its `cleanupPeriodDays` (30 by default). exposurie orders history by file date, so the history's files carry dates months in the past.
 - **A fresh folder per run, outside this repository.** It is empty, except for the task's starter repository in areas 6 and 7. The answer key lives in this repository.
 - **stdin closed on every run.** An earlier exposurie pointer test overstated its result because each headless session read the remaining questions from stdin.
@@ -191,4 +193,5 @@ Results are reported whichever way they go. In [VibeMemBench](sources.md#vibemem
 - B is a simulation of a long session.
 - Histories are about 80K tokens per user, smaller than a real one. That also favours B, because a real history would not fit in one context at all.
 - Claude Code's own auto-memory and other memory systems are not compared in this version.
+- Remote feature flags are off, so Claude Code runs on the pinned binary's defaults rather than on any account's flag settings.
 - One run per cell, so per-area counts are only indicative; the pooled numbers are the result.
