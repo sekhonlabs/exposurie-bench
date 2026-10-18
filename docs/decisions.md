@@ -11,4 +11,5 @@ Dated, newest last. Each entry says what was decided and why.
 - **One agent, Claude Code.** There is no second-agent arm.
 - **Broad, not deep.** The benchmark has nine areas, three tasks in each, and one run per cell, about 105 runs in total. An earlier draft had 2 users × 20 tasks × 4 conditions × 3 runs = 480.
 - **The half-context-window rule of thumb gets tested rather than asserted** (area 9).
+- **The two users are a great developer and someone who hands everything to agents** and just wants the work done. Neither is tied to a niche job or industry.
 - **Cloud sessions are an option, not yet the plan.** It is unverified whether nested `claude -p` runs work inside a cloud machine.

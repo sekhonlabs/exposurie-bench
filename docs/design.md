@@ -40,8 +40,10 @@ Condition C is set up like this:
 
 There are two made-up people:
 
-- **a developer**, with several repositories over some weeks
-- **a non-technical small-business owner**, building a site by prompting, who also plans in claude.ai chats
+- **a great developer**, who works across several repositories
+- **someone who hands everything to agents** and just wants the work done, who also plans in claude.ai chats
+
+Neither is tied to a niche job or industry.
 
 They are synthetic for three reasons: every right answer is known, nothing private enters a public repository, and anyone can rerun the benchmark. Each history is written from a fact sheet as Claude Code transcripts, plus a claude.ai export for the second user.
 
@@ -64,7 +66,7 @@ The benchmark goes broad rather than deep: nine areas, three tasks each, one run
 | 4 | Never discussed | it says "not recorded" instead of inventing | "What did I decide about Docker?" (never discussed) | A B C D |
 | 5 | Your way | the user's decision beats generic advice | "Should I add an ORM here?" (the user decided against ORMs) | A B C D |
 | 6 | Real work | the task is done the user's way, checked from the files it writes | "Set up this repo's deploy the way I always do" | A B C D |
-| 7 | Chat to agent | what was decided in a web chat reaches the coding agent | "Build the pricing section we planned" | A B C D |
+| 7 | Chat to agent | what was decided in a web chat reaches the coding agent | "Build the feature we planned in chat" | A B C D |
 | 8 | No past needed | the overhead on unrelated work | "Write a function that removes duplicates from a list" | A B C |
 | 9 | Long sessions | a fresh session after a sync, compared with carrying on | one long task, interrupted at half the context window | see below |
 
