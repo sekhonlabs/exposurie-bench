@@ -1,0 +1,5 @@
+# Committed line endings are LF, whoever commits.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.zip binary

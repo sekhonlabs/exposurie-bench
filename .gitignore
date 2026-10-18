@@ -1,0 +1,11 @@
+# The run sandbox (it holds a Claude login) and raw run output live beside
+# this repository, never inside it. These lines are a second guard.
+sandbox/
+runs/
+.credentials.json
+.env
+.env.*
+node_modules/
+*.log
+.DS_Store
+Thumbs.db
