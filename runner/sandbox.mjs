@@ -97,7 +97,7 @@ function fail(msg) {
 }
 
 /** Refuse any Node but the sandbox's own, and Node options set from outside. */
-function ownNodeOnly() {
+export function ownNodeOnly() {
   if (resolve(process.execPath).toLowerCase() !== join(NODE, 'node.exe').toLowerCase()) {
     fail(`run this with the sandbox's own Node: ${join(NODE, 'node.exe')}`);
   }

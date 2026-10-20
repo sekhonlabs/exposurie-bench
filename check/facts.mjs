@@ -1,7 +1,7 @@
 // The fact-sheet check: both users' facts, their session lists and the task
 // index, held against each other and against the method in docs/design.md,
 // before any history exists. Part 3's history checker runs over the generated
-// text with the same matching rule, `mentions`.
+// text with the same matching rule, `mentions`, from check/text.mjs.
 //
 //   node check/facts.mjs
 //
@@ -11,6 +11,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { mentions } from './text.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -31,20 +32,6 @@ const notes = [];
 const fail = (where, msg) => problems.push(`${where}: ${msg}`);
 
 const read = (...p) => JSON.parse(readFileSync(join(REPO, ...p), 'utf8'));
-
-/**
- * Does `text` mention `needle`, the way the scorer and the history checker read it?
- *
- * Case-insensitive unless the fact sets `exact_case`, and whole words only where
- * the needle starts or ends with a letter or digit, so `ams` is not found in
- * `teams` and `MIT` is not found in `submit`.
- */
-export function mentions(text, needle, exactCase = false) {
-  const esc = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pre = /^\w/.test(needle) ? '(?<!\\w)' : '';
-  const post = /\w$/.test(needle) ? '(?!\\w)' : '';
-  return new RegExp(pre + esc + post, exactCase ? 'u' : 'iu').test(text);
-}
 
 const tasks = read('tasks', 'index.json').tasks;
 const taskById = new Map();

@@ -201,3 +201,5 @@ Results are reported whichever way they go. In [VibeMemBench](sources.md#vibemem
 - Remote feature flags are off, so Claude Code runs on the pinned binary's defaults rather than on any account's flag settings.
 - One run per cell, so per-area counts are only indicative; the pooled numbers are the result.
 - Connectors are off in every run, so the benchmark measures whether work is done the team's way, not whether an agent can drive the team's tools.
+- Every planted fact is said in words. In a real history some decisions live only in code an agent wrote, where a brain built from conversation cannot see them.
+- The claude.ai export carries no claude.ai memory. A real one may, and exposurie would read it first.

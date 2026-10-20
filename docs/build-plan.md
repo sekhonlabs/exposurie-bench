@@ -67,26 +67,49 @@ There are 3–4 times more facts that no task asks about than facts that a task 
 
 ### 2. Histories
 
-**Plan usage:** yes. Sonnet 5.5 writes the sessions, inside the sandbox, with session persistence off.
+**Plan usage:** yes. Sonnet 5.5 writes the sessions, inside the sandbox, with session persistence off. **Built and tested offline 2026-10-20. The generation run needs the owner's go.**
 
-- Write a plan for every session: its date, repository, surface, and which facts come up and how. A fact can be stated by the user, proposed by the agent and accepted, or corrected later. Some sessions are distractors with no planted facts.
-- Sonnet writes each session from its plan, as Markdown.
-- The converter turns the sessions into:
-  - Claude Code transcripts (`.jsonl`), with file dates that follow the story
-  - the second user's claude.ai export (`data-*.zip`)
+- **Briefs.** Every session in `users/<user>/plan.json` has a `brief`:
+  - what happens (`story`)
+  - how each fact first said in it comes up (`facts`, one entry for each fact whose `first_session` it is). A fact can be stated by the user, proposed by the agent and accepted, or corrected later. Distractors plant nothing.
+  - the earlier facts that come up again (`again`)
+  - its planned size: `turns` from the user and `tokens` in all, about 80K per user
+  - for work sessions, the git branch
+
+  `plan.json`'s `machine` gives each project's made-up working folder. Each ends in the project's name, because exposurie names a project after its folder.
+- **The prompt** (`gen/prompt.mjs`) is built from the brief, the fact sheet and the checker's rules. It holds the facts that must come up, with their exact spellings and reasons, the earlier facts that come up again, the background the session must not contradict, and the words it must not use. The assistant in the history remembers nothing from earlier sessions, as Claude Code doesn't.
+- **The generator** (`gen/generate.mjs`) runs the sandbox's Claude Code once per session, with the pinned model and the prompt as its whole system prompt. The run has no tools, skills or MCP servers, stdin is closed and session persistence is off.
+  - What comes back is checked with `check/history.mjs` before it is kept. A session that fails goes back with the checker's findings, up to three attempts.
+  - Sessions already written are skipped, so a run stopped by a usage limit resumes when it is run again.
+  - `users/<user>/sessions/generation.json` keeps every attempt's usage and findings. Prompts and raw output go to `../runs`.
+- **The converter** (`gen/convert.mjs`) turns the sessions into a home folder:
+  - Claude Code transcripts under `.claude/projects/`, with the line fields Claude Code 2.1.302 writes and file dates that follow the story
+  - for the second user, a claude.ai export in `Downloads/`
+
+  It is deterministic. Its output is not committed, because git does not keep file dates and exposurie orders history by them; part 6 converts straight into the sandbox home. `--self-test` converts a small made-up history and reads it back with exposurie 1.2.0's own readers.
+
+```
+node gen/generate.mjs developer --dry-run       write every prompt to ../runs, run nothing
+node gen/generate.mjs developer                 generate the missing sessions (needs the owner's go)
+node gen/convert.mjs developer <home folder>    convert a finished history
+node gen/convert.mjs --self-test
+```
 
 **Done when** every session exists and passes part 3.
 
 ### 3. History checker
 
-**Plan usage:** none.
+**Plan usage:** none. **Built 2026-10-20, with part 2,** because the generator holds every session to it before keeping it. It is `check/history.mjs`, with the matching rule in `check/text.mjs` and the rival names in `check/rivals.json`.
 
-- Every fact appears in the session where it is planned, and in no earlier session.
-- A replaced value is never stated as current after it was replaced.
+- Every fact appears in the session where it is planned, and in no earlier session. A turned-down option is named in its session.
+- A replaced value is never stated as current after it was replaced. It may be named in the session that replaces it, and never after.
 - No task question appears in the history.
-- No other choice of the same kind (another database, host, library or colour) appears unless it is planned.
+- No other choice of the same kind (another database, host, library or colour) appears unless it is planned. A name from `check/rivals.json`, or a turned-down option, may appear only in a session where a fact or a turned-down option names it. A colour code may appear only once its fact has been said.
+- No `never_say` word appears anywhere in that user's history. Nothing first said in the claude.ai chats that area 7 asks about appears in a Claude Code session.
 - Each user's history is about 80K tokens of conversation.
-- exposurie's own readers parse every file. This is exposurie's staging step, which uses no model.
+- exposurie's own readers parse every file (`--readers`). This is exposurie's staging step, which uses no model.
+
+`node check/history.mjs --briefs` holds the briefs to the same rules before anything is generated.
 
 ### 4. Tasks
 

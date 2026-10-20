@@ -1,34 +1,338 @@
 {
   "user": "developer",
-  "note": "The developer's sessions, oldest first. Part 1 fixes each session's time, project and surface, which is what the fact sheet points at. Part 2 adds how each fact comes up. Times are local, in Lisbon (UTC+1 all summer).",
+  "note": "The developer's sessions, oldest first. Part 1 fixed each session's time, project and surface, which is what the fact sheet points at. Part 2 added each session's brief: what happens (story), how each fact first said in it comes up (facts, one entry per fact whose first_session is this one), the earlier facts that come up again (again), and its planned size (turns from the user, tokens in all). Times are local, in Lisbon (UTC+1 all summer). machine gives the made-up working folders the transcripts record: exposurie names a project after its folder.",
+  "machine": {
+    "os": "macOS",
+    "home": "/Users/dev",
+    "folders": {
+      "satchel": "/Users/dev/code/satchel",
+      "pagesift": "/Users/dev/code/pagesift",
+      "dotkit": "/Users/dev/code/dotkit",
+      "fieldnotes": "/Users/dev/code/fieldnotes",
+      "tidewell-api": "/Users/dev/work/tidewell-api",
+      "tidewell-infra": "/Users/dev/work/tidewell-infra"
+    }
+  },
   "sessions": [
-    { "id": "dev-01", "at": "2026-05-25T20:40:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Satchel starts: what it is, and the stack" },
-    { "id": "dev-02", "at": "2026-05-26T10:15:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "A Jira ticket, and how the team wants branches and pull requests" },
-    { "id": "dev-03", "at": "2026-05-27T21:10:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Tooling: formatter, tests, Node, package manager, commits" },
-    { "id": "dev-04", "at": "2026-05-30T11:00:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The first deploy, the domain, and backups" },
-    { "id": "dev-05", "at": "2026-06-02T14:30:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "A schema migration, and the team's database rules" },
-    { "id": "dev-06", "at": "2026-06-06T10:20:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The data layer, and how people sign in" },
-    { "id": "dev-07", "at": "2026-06-09T20:50:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Fetching saved pages in the background, and email" },
-    { "id": "dev-08", "at": "2026-06-11T11:40:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "A flaky test that fails on fake timers" },
-    { "id": "dev-09", "at": "2026-06-14T16:00:00+01:00", "project": "pagesift", "surface": "terminal", "kind": "build", "about": "Pulling the text extraction out of Satchel into its own library" },
-    { "id": "dev-10", "at": "2026-06-18T21:30:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Search, and the CSS" },
-    { "id": "dev-11", "at": "2026-06-23T20:15:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The paid plan" },
-    { "id": "dev-12", "at": "2026-06-30T15:00:00+01:00", "project": "tidewell-infra", "surface": "vscode", "kind": "build", "about": "How work deploys" },
-    { "id": "dev-13", "at": "2026-07-04T10:45:00+01:00", "project": "dotkit", "surface": "terminal", "kind": "build", "about": "dotkit starts" },
-    { "id": "dev-14", "at": "2026-07-08T21:00:00+01:00", "project": "dotkit", "surface": "terminal", "kind": "build", "about": "dotkit's first release, and its licence" },
-    { "id": "dev-15", "at": "2026-07-14T10:05:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "The move to Linear, and connecting the agent to work tools" },
-    { "id": "dev-16", "at": "2026-07-18T15:30:00+01:00", "project": "fieldnotes", "surface": "terminal", "kind": "build", "about": "The blog" },
-    { "id": "dev-17", "at": "2026-07-22T20:20:00+01:00", "project": "satchel", "surface": "terminal", "kind": "distractor", "about": "'database is locked' errors under load" },
-    { "id": "dev-18", "at": "2026-07-29T16:10:00+01:00", "project": "tidewell-infra", "surface": "vscode", "kind": "build", "about": "Friday deploys, on-call, and feature flags" },
-    { "id": "dev-19", "at": "2026-08-11T21:05:00+01:00", "project": "pagesift", "surface": "terminal", "kind": "build", "about": "Moving the tests off Vitest" },
-    { "id": "dev-20", "at": "2026-08-13T11:20:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "ENG-318, the export endpoint" },
-    { "id": "dev-21", "at": "2026-08-20T20:40:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Moving payments off Stripe" },
-    { "id": "dev-22", "at": "2026-08-24T21:15:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The weekly digest, and why there is no native app" },
-    { "id": "dev-23", "at": "2026-08-27T14:00:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "Reading a slow query's plan" },
-    { "id": "dev-24", "at": "2026-09-01T10:30:00+01:00", "project": "tidewell-infra", "surface": "vscode", "kind": "build", "about": "An on-call week: a rollback" },
-    { "id": "dev-25", "at": "2026-09-05T11:30:00+01:00", "project": "dotkit", "surface": "terminal", "kind": "build", "about": "dotkit on Windows" },
-    { "id": "dev-26", "at": "2026-09-10T15:20:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "A TypeScript type error" },
-    { "id": "dev-27", "at": "2026-09-17T11:00:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "ENG-402, behind a feature flag" },
-    { "id": "dev-28", "at": "2026-09-24T16:30:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "ENG-415, a small fix" }
+    { "id": "dev-01", "at": "2026-05-25T20:40:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Satchel starts: what it is, and the stack",
+      "brief": {
+        "story": "The first evening on Satchel, in an empty folder. They explain what Satchel is and lay out the stack they have already settled on, heading off the popular defaults by name and saying why each is wrong for this app. The agent asks two or three sharp questions, agrees, and scaffolds the project: a Hono server that renders HTML, a save form driven by htmx, the SQLite file, a Litestream config with the replica target left for later, and a starter fly.toml with no region or volume yet. It ends with the app running locally and a short list of next steps.",
+        "facts": {
+          "satchel.what": "They open by describing it: Satchel is a read-later web app. Save links, read them later, search them, and get a weekly digest. One person first: themself.",
+          "satchel.server": "The server is Hono, which they name themselves. They mention Express only to dismiss it as the default they don't want.",
+          "satchel.frontend": "No single-page app: server-rendered HTML with htmx for the interactive bits. They name React and Next.js as what everyone would expect, and say why not: a reading app doesn't need a client bundle to babysit.",
+          "satchel.database": "SQLite, and they give the whole reason: the database is one file next to the app on one machine, so there is no second machine to run or pay for, and Litestream covers backups. They name Postgres as the default they are deliberately not using.",
+          "satchel.replication": "Litestream replicates the SQLite file; they say it is what makes one machine safe.",
+          "satchel.host": "It will run on Fly.io. They name Vercel as the default host they're not using, since it doesn't suit a long-running server with a local database file.",
+          "me.experience": "When the agent starts explaining basics, they say they've been a developer for eight years and it can skip the tour."
+        },
+        "again": [],
+        "turns": 9, "tokens": 3600 } },
+
+    { "id": "dev-02", "at": "2026-05-26T10:15:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "A Jira ticket, and how the team wants branches and pull requests",
+      "brief": {
+        "branch": "TW-1182-rate-limit-header",
+        "story": "Their first work session with the agent, in VS Code. They pick up Jira ticket TW-1182: responses from the public API should carry headers saying how many requests are left in the client's rate-limit window. The limiter already exists and keeps its counters in a Postgres table; the ticket only exposes them. The agent reads the middleware, adds the headers and writes Jest tests. Then they explain how the team wants branches and pull requests, and the agent prepares the branch name, the title and the description for them to paste.",
+        "facts": {
+          "work.company": "Early on they say they're on the Core API team at Tidewell, so the agent knows whose conventions these are.",
+          "work.database": "The rate-limit counters live in a Postgres table; it comes up while the agent reads the middleware.",
+          "work.tests": "The repository's tests are Jest, and the agent writes the new tests with Jest.",
+          "work.tracker.1": "The ticket is in Jira, key TW-1182; they paste its description.",
+          "work.branch-format": "A branch is the ticket key plus a short slug: this one is TW-1182-rate-limit-header.",
+          "work.pr-title": "A pull request's title starts with the ticket key, like 'TW-1182: Add rate-limit headers to API responses'.",
+          "work.pr-sections": "The description has four sections, in this order: Why, What changed, How I tested, Rollback. The agent writes all four for this change.",
+          "work.handbook": "The template lives in the team handbook in Notion, not in the repository, which is why the agent couldn't find it."
+        },
+        "again": [],
+        "turns": 9, "tokens": 3200 } },
+
+    { "id": "dev-03", "at": "2026-05-27T21:10:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Tooling: formatter, tests, Node, package manager, commits",
+      "brief": {
+        "story": "An evening on Satchel's tooling before more code goes in. The agent proposes the usual linting and formatting pair, and they correct it. Then tests, the Node version, the package manager and how commits should read. The agent sets it all up and makes the first real commit in their style. When it offers to add editor settings to the repository, they decline.",
+        "facts": {
+          "me.lint": "The agent proposes ESLint plus Prettier with a shared config. They correct it: Biome, one tool for formatting and linting and one config file. The agent switches.",
+          "me.tests.1": "Tests use Vitest; they say so, and the agent adds it with a first test for the save handler.",
+          "me.node": "Node 24, pinned in the repository; they say it's what they run everywhere.",
+          "me.pm": "pnpm, said plainly when the agent asks how to install things.",
+          "me.editor": "When the agent offers editor settings, they say there's no need: they use Neovim, already set up for Biome.",
+          "me.commits": "They name Conventional Commits as what they don't want: no prefixes, an imperative subject under 60 characters, and a body that says why. The agent writes the first commit that way."
+        },
+        "again": ["satchel.server", "satchel.database"],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "dev-04", "at": "2026-05-30T11:00:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The first deploy, the domain, and backups",
+      "brief": {
+        "story": "Late morning: Satchel's first deploy. They walk the agent through how it should run on Fly.io: the region, a volume for the database file, Litestream replicating to object storage, where secrets come from, and the domain. The agent fills in fly.toml and the Litestream config, sets the database pragmas, deploys, and they check the site together. One hiccup: the first deploy can't find the database because the volume isn't mounted yet, and the agent fixes the mount.",
+        "facts": {
+          "me.fly-region": "The region is ams, Amsterdam, which they choose because it is next to the Backblaze B2 bucket in Amsterdam that Litestream replicates to.",
+          "me.fly-volume": "A Fly volume mounted at /data, where the SQLite file lives.",
+          "satchel.backup-bucket": "Litestream replicates to a Backblaze B2 bucket. The agent asks whether to use S3; they say B2: cheaper storage and free egress for restores.",
+          "me.secrets": "Secrets come from 1Password through its CLI and go into Fly's secrets: no .env files, ever. The agent had started a .env.example and deletes it.",
+          "satchel.wal": "They ask the agent to put SQLite in WAL mode, which Litestream needs.",
+          "satchel.registrar": "The domain is registered with Porkbun; the agent tells them which DNS records to add there."
+        },
+        "again": ["satchel.host", "satchel.replication", "satchel.database"],
+        "turns": 10, "tokens": 3600 } },
+
+    { "id": "dev-05", "at": "2026-06-02T14:30:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "A schema migration, and the team's database rules",
+      "brief": {
+        "branch": "TW-1207-billing-email",
+        "story": "A Jira ticket at work that needs a schema change: organisations get a billing contact email, filled in from the owner's account for existing rows. Before the agent writes anything, they state the team's database rule. The agent edits the Prisma schema, generates the migration and puts the backfill inside the migration itself. They explain who has to review it and what the pull request needs, and the agent writes the description.",
+        "facts": {
+          "work.orm": "Unprompted, at the start: Prisma for every query, raw SQL only inside migrations. They add that it isn't how they'd do it at home, but it's the team's codebase and they follow it.",
+          "work.migration-reviewer": "Ana, on the platform team, reviews every migration; they ask the agent to say in the pull request that it needs her review.",
+          "work.approvals": "Every pull request needs two approvals, so they want the description easy to review."
+        },
+        "again": ["work.tracker.1", "work.branch-format", "work.pr-sections", "work.database"],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "dev-06", "at": "2026-06-06T10:20:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The data layer, and how people sign in",
+      "brief": {
+        "story": "A morning on Satchel's data layer and sign-in. The agent proposes an ORM; they correct it and explain why. They describe how queries should be organised, and the agent writes the first queries that way. Then sign-in: a magic link, with an expiry, and a ULID for every record. Sending the email isn't wired up yet, so for now the link is printed to the console.",
+        "facts": {
+          "me.orm": "The agent proposes Drizzle, mentioning Prisma as the heavier alternative. They correct it: no ORM in their own code, raw SQL. The reason: an ORM hides the queries they need to tune, and they use Prisma all day at work and want none of it at home.",
+          "me.sql-files": "Queries live in .sql files next to the code that uses them, loaded by a small helper the agent writes, about twenty lines.",
+          "satchel.auth": "Sign-in is a magic link only, never a password: nothing to store, hash or reset. The agent had sketched a password column and drops it.",
+          "satchel.link-expiry": "A magic link expires after 15 minutes and works once.",
+          "satchel.ids": "Every primary key is a ULID, so ids sort by creation time."
+        },
+        "again": ["satchel.database"],
+        "turns": 9, "tokens": 3400 } },
+
+    { "id": "dev-07", "at": "2026-06-09T20:50:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Fetching saved pages in the background, and email",
+      "brief": {
+        "story": "An evening session. Saving a link should fetch the page and extract its text without blocking the request, and the magic links should finally go out by email. They describe the design for the background work; the agent builds the worker and the jobs table, then wires up email. Reviewing the worker, they object to its comments, and the agent cleans them up.",
+        "facts": {
+          "satchel.jobs": "Background work goes through a jobs table in SQLite, polled by a worker process every few seconds. They head off Redis and BullMQ by name: no second service to run for this.",
+          "satchel.email": "Email goes through Postmark, chosen for transactional mail; they name SendGrid as the one they don't want.",
+          "me.no-restating-comments": "The agent's worker is full of comments like '// increment the attempt count'. They correct it: no comments that restate the code; a comment says why. The agent removes them."
+        },
+        "again": ["satchel.auth", "satchel.ids"],
+        "turns": 9, "tokens": 3200 } },
+
+    { "id": "dev-08", "at": "2026-06-11T11:40:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "A flaky test that fails on fake timers",
+      "brief": {
+        "branch": "TW-1219-flaky-session-test",
+        "story": "A flaky test at work: the Jest test for session expiry fails about one run in ten. The agent finds that it mixes fake timers with real time, because the code reads the current time through a path the fake timers don't control. It sets the system time explicitly and makes the test deterministic; they run it a hundred times to confirm.",
+        "facts": {},
+        "again": ["work.tests"],
+        "turns": 6, "tokens": 2000 } },
+
+    { "id": "dev-09", "at": "2026-06-14T16:00:00+01:00", "project": "pagesift", "surface": "terminal", "kind": "build", "about": "Pulling the text extraction out of Satchel into its own library",
+      "brief": {
+        "story": "A Sunday afternoon: they pull Satchel's text-extraction code out into its own open-source library, pagesift. They explain where it came from, how it should be packaged and licensed, and where it's published; the agent sets up the repository, moves the code over with its tests and writes the README. When the agent reaches for an extra dependency, they set a rule.",
+        "facts": {
+          "pagesift.what": "pagesift turns a web page's HTML into readable text. It is the extraction code from Satchel's worker, now a library Satchel will depend on.",
+          "pagesift.licence": "MPL-2.0, not MIT. Their reason: file-level copyleft, so changes to pagesift's own files come back, while anyone can still use it inside a proprietary app.",
+          "pagesift.module": "ESM only, with no CommonJS build; they say it plainly when the agent asks about dual packages.",
+          "pagesift.dependency": "One runtime dependency, htmlparser2. The agent suggests jsdom for a more forgiving parser; they say no, it's far too heavy for this.",
+          "pagesift.registry": "It's published to npm and JSR.",
+          "pagesift.deno": "They mention it started as a Deno module one weekend, and moved to Node because the people who would use it are on npm.",
+          "me.ask-before-deps": "After the jsdom suggestion they set a rule for all their projects: ask before adding any dependency."
+        },
+        "again": [],
+        "turns": 10, "tokens": 3600 } },
+
+    { "id": "dev-10", "at": "2026-06-18T21:30:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Search, and the CSS",
+      "brief": {
+        "story": "An evening session: search across saved articles, and styling the reading view. They choose how search works; the agent builds the index, the search page and a ranked query. Then the reading view needs styling: the agent proposes a utility CSS framework, they correct it, and the agent writes the CSS their way.",
+        "facts": {
+          "satchel.search": "Search is SQLite FTS5 over the extracted text. They name Meilisearch as the separate service they won't run for this.",
+          "satchel.css": "The agent proposes Tailwind. They correct it: plain CSS with custom properties, no Tailwind; a reading app needs very little CSS. The agent writes it with custom properties for spacing and type sizes."
+        },
+        "again": ["pagesift.what", "satchel.frontend"],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "dev-11", "at": "2026-06-23T20:15:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The paid plan",
+      "brief": {
+        "story": "An evening session: Satchel gets a paid plan. They describe the price and the free plan's limit; the agent builds checkout, the webhook and the limit check. The agent asks whether Satchel will be open source like pagesift; they say no, and explain what Satchel is for. Near the end they mention when they get to work on their own projects.",
+        "facts": {
+          "satchel.payments.1": "Payments go through Stripe: they ask for Stripe Checkout and the customer portal, and the agent wires up the webhook.",
+          "satchel.price": "One paid plan at $4 a month.",
+          "satchel.free-limit": "The free plan keeps 100 links; saving the 101st asks them to upgrade.",
+          "satchel.source": "Satchel's code stays closed source, unlike pagesift.",
+          "satchel.goal": "They say why it matters, in their words: they want Satchel to cover my rent, and then to go part-time at Tidewell.",
+          "me.side-project-hours": "They mention they only get evenings and Saturday mornings for their own projects, so they want the agent to leave clear notes on anything half-done."
+        },
+        "again": ["pagesift.licence"],
+        "turns": 9, "tokens": 3200 } },
+
+    { "id": "dev-12", "at": "2026-06-30T15:00:00+01:00", "project": "tidewell-infra", "surface": "vscode", "kind": "build", "about": "How work deploys",
+      "brief": {
+        "branch": "TW-1240-notifications-service",
+        "story": "A work session in the infrastructure repository. A new notifications service needs to go out the way everything at Tidewell goes out, so they walk the agent through the deploy setup: where it runs, how it's defined, what merging does and how production is promoted. The agent adds the new service's definitions and a step that posts deploy notes to Slack.",
+        "facts": {
+          "work.host": "Everything runs on AWS, on ECS with Fargate; the new service gets its task definition and service.",
+          "work.iac": "The infrastructure is Terraform; the agent adds the new service as another instance of the team's service module.",
+          "work.deploy-flow": "Merging to main deploys to staging; production goes out through the promote workflow in GitHub Actions, run by hand.",
+          "work.deploy-channel": "Deploy notes go to #eng-deploys in Slack; the agent adds a step to the promote workflow that posts one."
+        },
+        "again": ["work.tracker.1"],
+        "turns": 9, "tokens": 3200 } },
+
+    { "id": "dev-13", "at": "2026-07-04T10:45:00+01:00", "project": "dotkit", "surface": "terminal", "kind": "build", "about": "dotkit starts",
+      "brief": {
+        "story": "A Saturday, mid-morning: they start dotkit, a small Go command-line tool. They explain what it's for and how it should be built; the agent scaffolds the module, the subcommands and config loading, and writes the first tests.",
+        "facts": {
+          "dotkit.what": "dotkit keeps dotfiles in sync across machines, linking files from one repository into place.",
+          "dotkit.cli": "Go's standard flag package, no Cobra; they name Cobra as the default they don't want for three subcommands.",
+          "dotkit.config": "Config is TOML at ~/.config/dotkit/config.toml; they say TOML, not YAML, before the agent asks.",
+          "me.running": "They open by saying they've just got back from a run along the river, which they do before working on weekends."
+        },
+        "again": ["me.ask-before-deps"],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "dev-14", "at": "2026-07-08T21:00:00+01:00", "project": "dotkit", "surface": "terminal", "kind": "build", "about": "dotkit's first release, and its licence",
+      "brief": {
+        "story": "An evening session: dotkit's first release. The agent sets up the release tooling and a Homebrew tap, and they settle the licence before tagging v0.1.0.",
+        "facts": {
+          "dotkit.release": "Releases are built with GoReleaser, which also updates a Homebrew tap.",
+          "dotkit.licence": "Apache-2.0, not MIT, which they'd normally pick for something this small. The reason: its explicit patent grant, because a company that wanted to use dotkit asked for it."
+        },
+        "again": ["dotkit.what", "dotkit.cli"],
+        "turns": 7, "tokens": 2800 } },
+
+    { "id": "dev-15", "at": "2026-07-14T10:05:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "The move to Linear, and connecting the agent to work tools",
+      "brief": {
+        "branch": "ENG-301-trim-org-names",
+        "story": "A work morning after two changes: the team has moved its tickets to a new tracker, and their manager asked everyone to connect their agent to the team's tools. They explain both, and the agent reads the first ticket through its new connection. The ticket is a small fix; the agent makes it and runs the team's lint before preparing the pull request, with the same branch and title conventions as before but the new ticket key.",
+        "facts": {
+          "work.tracker.2": "Tickets now live in Linear, team key ENG; the move from Jira happened this week. This ticket is ENG-301, so the branch is ENG-301-trim-org-names and the title starts 'ENG-301:'.",
+          "work.connectors": "They've connected their Claude Code to the GitHub, Linear and Slack MCP servers, so the agent reads the ticket itself instead of them pasting it.",
+          "work.manager": "Rui, their manager, asked the team to connect their agents.",
+          "work.lint": "The repository uses ESLint and Prettier with the team's shared config; the agent runs both before committing. Not their choice at home, but it's the team's repository."
+        },
+        "again": ["work.branch-format", "work.pr-title", "work.pr-sections"],
+        "turns": 10, "tokens": 3400 } },
+
+    { "id": "dev-16", "at": "2026-07-18T15:30:00+01:00", "project": "fieldnotes", "surface": "terminal", "kind": "build", "about": "The blog",
+      "brief": {
+        "story": "A Saturday afternoon: they set up fieldnotes, their blog. They explain how it should be built, hosted and measured; the agent scaffolds it, writes the base layout and a first post template, and deploys it.",
+        "facts": {
+          "fieldnotes.generator": "Eleventy. They name Hugo and Astro as the two the agent would suggest and say why not.",
+          "fieldnotes.host": "Fly.io, like everything else they run themselves: one bill, one dashboard. They name Netlify as the obvious free option they're skipping.",
+          "fieldnotes.server": "Caddy serves the static files inside the Fly app.",
+          "fieldnotes.analytics": "GoatCounter for analytics, not Google Analytics.",
+          "fieldnotes.comments": "There is no comment section; readers can email.",
+          "fieldnotes.accent": "The accent colour is #B4462F, a brick red; the agent uses it for links."
+        },
+        "again": ["satchel.host"],
+        "turns": 9, "tokens": 3200 } },
+
+    { "id": "dev-17", "at": "2026-07-22T20:20:00+01:00", "project": "satchel", "surface": "terminal", "kind": "distractor", "about": "'database is locked' errors under load",
+      "brief": {
+        "story": "An evening: Satchel's worker and web process hit 'database is locked' errors when an import saves many links at once. The agent finds long write transactions in the import path and no busy timeout; it sets a busy timeout, shortens the transactions and batches the inserts. They load-test locally and the errors are gone. Changing databases never comes up.",
+        "facts": {},
+        "again": ["satchel.database", "satchel.wal", "satchel.jobs"],
+        "turns": 6, "tokens": 2000 } },
+
+    { "id": "dev-18", "at": "2026-07-29T16:10:00+01:00", "project": "tidewell-infra", "surface": "vscode", "kind": "build", "about": "Friday deploys, on-call, and feature flags",
+      "brief": {
+        "branch": "ENG-342-friday-deploy-guard",
+        "story": "A work session in the infrastructure repository before their on-call week. They want a guard in the promote workflow for the team's Friday rule, and explain the on-call rota and how risky changes get switched on. The agent adds the guard with a clear failure message and an override for incident fixes.",
+        "facts": {
+          "work.freeze": "The rule: no production deploys after 14:00 on Fridays, in the office's local time.",
+          "work.oncall": "They're on call one week in six, starting Monday.",
+          "work.flags": "Risky changes ship behind feature flags in Unleash, which is why the guard's override is only for incident fixes."
+        },
+        "again": ["work.deploy-flow", "work.tracker.2"],
+        "turns": 8, "tokens": 3000 } },
+
+    { "id": "dev-19", "at": "2026-08-11T21:05:00+01:00", "project": "pagesift", "surface": "terminal", "kind": "build", "about": "Moving the tests off Vitest",
+      "brief": {
+        "story": "An evening: they move pagesift's tests off Vitest and onto Node's built-in test runner, and say this is now the plan for all their own projects. The agent ports the tests, removes the old config and dependency, and adjusts the build. It offers to add a hosted CI workflow; they explain how tests run instead.",
+        "facts": {
+          "me.tests.2": "From now on their own projects use node:test, Node's built-in test runner, run with node --test. The reason: Node 24's runner has watch mode, coverage and mocks, so it's one dependency and one config file fewer in every repository. pagesift goes first, Satchel next.",
+          "me.no-ci": "No CI on their own projects: a pre-push hook runs the tests. They turn down the agent's offer of a hosted workflow.",
+          "pagesift.build": "The build is plain tsc with no bundler; the agent had suggested tsup and they say no."
+        },
+        "again": ["me.node", "me.ask-before-deps"],
+        "turns": 9, "tokens": 3200 } },
+
+    { "id": "dev-20", "at": "2026-08-13T11:20:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "ENG-318, the export endpoint",
+      "brief": {
+        "branch": "ENG-318-org-export",
+        "story": "A work session on Linear ticket ENG-318: a new endpoint that exports an organisation's projects as CSV. The agent reads the ticket through the Linear connection, builds the endpoint with a Prisma query and streamed output, and adds Jest tests. They tell it where the route goes and how the branch will be merged, and the agent prepares the pull request.",
+        "facts": {
+          "work.merge": "Pull requests are squash-merged only, so they don't care about tidying the branch's commits; the title becomes the commit.",
+          "work.api-versioning": "Up front they say the public API is versioned in the path and new endpoints go under /v2, so the route is GET /v2/organizations/:id/export."
+        },
+        "again": ["work.tracker.2", "work.connectors", "work.pr-title", "work.pr-sections", "work.orm", "work.tests"],
+        "turns": 9, "tokens": 3200 } },
+
+    { "id": "dev-21", "at": "2026-08-20T20:40:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "Moving payments off Stripe",
+      "brief": {
+        "story": "An evening: they move Satchel's payments from Stripe to Paddle and explain why. The agent replaces checkout and the webhook handler, plans how existing subscribers move over, and removes the old provider's code once the new flow works in Paddle's sandbox.",
+        "facts": {
+          "satchel.payments.2": "Paddle replaces Stripe. The reason: Paddle is the merchant of record, so it handles VAT and sales tax for them, which Stripe left to them."
+        },
+        "again": ["satchel.price", "satchel.jobs"],
+        "turns": 8, "tokens": 3000 } },
+
+    { "id": "dev-22", "at": "2026-08-24T21:15:00+01:00", "project": "satchel", "surface": "terminal", "kind": "build", "about": "The weekly digest, and why there is no native app",
+      "brief": {
+        "story": "An evening: the weekly digest, plus a few loose ends. They say when the digest goes out; the agent schedules it through the jobs table and builds the email. The agent asks whether a native app is planned, and they say no and explain. They hand over the logo, and ask for structured logs shipped somewhere searchable.",
+        "facts": {
+          "satchel.digest": "The weekly digest goes out on Saturdays at 08:00, Lisbon time.",
+          "satchel.mobile": "No native app: Satchel is a PWA. They name React Native as the route they've ruled out, and the agent adds the web app manifest and icons.",
+          "satchel.logs": "JSON logs to stdout, shipped to Axiom.",
+          "satchel.logo": "Inês, a designer friend, drew the logo; the agent uses it for the PWA icons.",
+          "me.location": "They live in Lisbon, which is why the digest runs on Lisbon time."
+        },
+        "again": ["satchel.email", "satchel.jobs"],
+        "turns": 10, "tokens": 3400 } },
+
+    { "id": "dev-23", "at": "2026-08-27T14:00:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "Reading a slow query's plan",
+      "brief": {
+        "branch": "ENG-356-activity-feed-index",
+        "story": "A work session: the activity feed endpoint got slow. The agent runs EXPLAIN ANALYZE on the query Prisma generates, finds a sequential scan, and proposes a composite index. The index goes in as a migration, and they remind the agent who reviews migrations.",
+        "facts": {},
+        "again": ["work.orm", "work.migration-reviewer", "work.database"],
+        "turns": 6, "tokens": 2000 } },
+
+    { "id": "dev-24", "at": "2026-09-01T10:30:00+01:00", "project": "tidewell-infra", "surface": "vscode", "kind": "build", "about": "An on-call week: a rollback",
+      "brief": {
+        "branch": "main",
+        "story": "An on-call Tuesday morning: last night's production deploy raised the API's error rate. They ask the agent to help roll back and explain how a rollback works here. The agent finds the previous image's tag, they run the rollback, and the agent drafts the note for the deploys channel and a follow-up ticket.",
+        "facts": {
+          "work.rollback": "A rollback runs the promote workflow again with the previous image."
+        },
+        "again": ["work.oncall", "work.deploy-flow", "work.deploy-channel", "work.tracker.2"],
+        "turns": 8, "tokens": 3000 } },
+
+    { "id": "dev-25", "at": "2026-09-05T11:30:00+01:00", "project": "dotkit", "surface": "terminal", "kind": "build", "about": "dotkit on Windows",
+      "brief": {
+        "story": "A Saturday morning: a dotkit user reports that it fails on Windows. The agent finds that creating symlinks there needs special permissions, and they decide how dotkit should behave on Windows. The agent implements it, with a note in the README and a test.",
+        "facts": {
+          "dotkit.windows": "On Windows, dotkit copies files instead of symlinking them, and copies again on every sync."
+        },
+        "again": ["dotkit.config", "dotkit.release"],
+        "turns": 7, "tokens": 2800 } },
+
+    { "id": "dev-26", "at": "2026-09-10T15:20:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "A TypeScript type error",
+      "brief": {
+        "branch": "ENG-371-webhook-types",
+        "story": "A work session: a TypeScript error after a dependency bump. A handler's return type no longer narrows inside a switch on the event's type. The agent explains why the union stopped discriminating and fixes it with a type guard; the compiler is happy and the tests pass.",
+        "facts": {},
+        "again": [],
+        "turns": 5, "tokens": 1800 } },
+
+    { "id": "dev-27", "at": "2026-09-17T11:00:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "build", "about": "ENG-402, behind a feature flag",
+      "brief": {
+        "branch": "ENG-402-bulk-invite",
+        "story": "A work session on Linear ticket ENG-402: inviting many people to an organisation at once. It must ship dark, so the agent puts it behind a feature flag. They explain how flags are named; the agent builds the endpoint behind the flag, adds tests for both states of the flag, and prepares the pull request.",
+        "facts": {
+          "work.flag-naming": "A feature flag is named after its ticket: this one is eng-402-bulk-invite."
+        },
+        "again": ["work.flags", "work.api-versioning", "work.pr-sections", "work.tracker.2"],
+        "turns": 9, "tokens": 3000 } },
+
+    { "id": "dev-28", "at": "2026-09-24T16:30:00+01:00", "project": "tidewell-api", "surface": "vscode", "kind": "distractor", "about": "ENG-415, a small fix",
+      "brief": {
+        "branch": "ENG-415-page-size",
+        "story": "A work session on ENG-415, a small fix: one list endpoint returns one item too few when the page size equals the total. The agent finds the off-by-one in the pagination logic, fixes it with a test, and prepares the pull request.",
+        "facts": {},
+        "again": ["work.pr-title", "work.pr-sections"],
+        "turns": 5, "tokens": 1800 } }
   ]
 }

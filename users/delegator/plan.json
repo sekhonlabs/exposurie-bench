@@ -1,31 +1,279 @@
 {
   "user": "delegator",
-  "note": "The delegator's sessions and chats, oldest first. Part 1 fixes each one's time, project or chat title, and surface, which is what the fact sheet points at. Part 2 adds how each fact comes up. Times are local, in Manchester (UTC+1 all summer).",
+  "note": "The delegator's sessions and chats, oldest first. Part 1 fixed each one's time, project or chat title, and surface, which is what the fact sheet points at. Part 2 added each one's brief: what happens (story), how each fact first said in it comes up (facts, one entry per fact whose first_session is this one), the earlier facts that come up again (again), and its planned size (turns from the user, tokens in all). Times are local, in Manchester (UTC+1 all summer). machine gives the made-up working folders the transcripts record (exposurie names a project after its folder) and when the claude.ai export was downloaded.",
+  "machine": {
+    "os": "macOS",
+    "home": "/Users/user",
+    "folders": {
+      "small-hours": "/Users/user/Documents/small-hours",
+      "book-club": "/Users/user/Documents/book-club",
+      "spending-summary": "/Users/user/Documents/spending-summary",
+      "quiet-youtube": "/Users/user/Documents/quiet-youtube"
+    },
+    "export": { "at": "2026-10-05T09:20:00+01:00" }
+  },
   "sessions": [
-    { "id": "del-01", "at": "2026-07-06T22:40:00+01:00", "title": "Newsletter name ideas", "surface": "claude.ai", "kind": "planning", "about": "Naming the newsletter" },
-    { "id": "del-02", "at": "2026-07-07T21:15:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "A website for the newsletter" },
-    { "id": "del-03", "at": "2026-07-09T22:05:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "Make it green" },
-    { "id": "del-04", "at": "2026-07-12T20:30:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "The newsletter sign-up" },
-    { "id": "del-05", "at": "2026-07-15T21:50:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "The words on the site" },
-    { "id": "del-06", "at": "2026-07-18T11:20:00+01:00", "title": "Email to my landlord about the boiler", "surface": "claude.ai", "kind": "life", "about": "A broken boiler" },
-    { "id": "del-07", "at": "2026-07-20T21:00:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "A page for the book club" },
-    { "id": "del-08", "at": "2026-07-22T22:10:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "Do people need to log in?" },
-    { "id": "del-09", "at": "2026-07-25T10:40:00+01:00", "title": "Welcome email for Small Hours", "surface": "claude.ai", "kind": "planning", "about": "Planning the email new subscribers get" },
-    { "id": "del-10", "at": "2026-07-27T21:30:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "Where does my money go?" },
-    { "id": "del-11", "at": "2026-08-02T19:45:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "Put it somewhere I can see it" },
-    { "id": "del-12", "at": "2026-08-09T20:10:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "A way for people to write to me" },
-    { "id": "del-13", "at": "2026-08-12T22:30:00+01:00", "title": "Valencia trip in October", "surface": "claude.ai", "kind": "life", "about": "Planning a trip" },
-    { "id": "del-14", "at": "2026-08-15T14:20:00+01:00", "project": "quiet-youtube", "surface": "desktop", "kind": "build", "about": "Make YouTube stop sucking me in" },
-    { "id": "del-15", "at": "2026-08-19T21:40:00+01:00", "title": "Vegetarian meal prep", "surface": "claude.ai", "kind": "life", "about": "Cooking for the week" },
-    { "id": "del-16", "at": "2026-08-23T20:00:00+01:00", "project": "book-club", "surface": "desktop", "kind": "distractor", "about": "The page is broken" },
-    { "id": "del-17", "at": "2026-08-30T21:20:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "distractor", "about": "The sign-up button on my phone" },
-    { "id": "del-18", "at": "2026-09-02T22:00:00+01:00", "title": "My dog barks at the postman", "surface": "claude.ai", "kind": "life", "about": "A barking dog" },
-    { "id": "del-19", "at": "2026-09-06T19:30:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "Meeting details on the page" },
-    { "id": "del-20", "at": "2026-09-10T22:15:00+01:00", "title": "Sourdough starter help", "surface": "claude.ai", "kind": "life", "about": "A sourdough starter" },
-    { "id": "del-21", "at": "2026-09-14T21:05:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "September's numbers are wrong" },
-    { "id": "del-22", "at": "2026-09-20T20:45:00+01:00", "title": "Book club voting", "surface": "claude.ai", "kind": "planning", "about": "Planning how the club picks its next book" },
-    { "id": "del-23", "at": "2026-09-27T18:30:00+01:00", "project": "quiet-youtube", "surface": "desktop", "kind": "distractor", "about": "It stopped working" },
-    { "id": "del-24", "at": "2026-09-29T21:55:00+01:00", "title": "Monthly money summary", "surface": "claude.ai", "kind": "planning", "about": "Planning a monthly summary of their spending" },
-    { "id": "del-25", "at": "2026-10-04T17:10:00+01:00", "title": "Gift for my sister's 30th", "surface": "claude.ai", "kind": "life", "about": "A birthday present" }
+    { "id": "del-01", "at": "2026-07-06T22:40:00+01:00", "title": "Newsletter name ideas", "surface": "claude.ai", "kind": "planning", "about": "Naming the newsletter",
+      "brief": {
+        "story": "Late on a Monday night they think out loud about starting a newsletter of their own: what it would feel like to get it, when it would arrive, and that they want a name before anything else. Claude asks what the writing is like and when it happens, then suggests one name with its reason, and they take it at once. Which service would send it never comes up. They end saying they'll get a website made for it.",
+        "facts": {
+          "site.name": "Once they say when they write, Claude suggests 'Small Hours', because they write late at night. They love it.",
+          "me.night-owl": "They mention they do their writing late at night, after the day is done.",
+          "site.newsletter-day": "It would go out every Sunday."
+        },
+        "again": [],
+        "turns": 8, "tokens": 4400 } },
+
+    { "id": "del-02", "at": "2026-07-07T21:15:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "A website for the newsletter",
+      "brief": {
+        "story": "Their first Claude Code session, in an empty folder in the desktop app. They ask for a website for their newsletter, Small Hours. The agent asks a question about how it should look; they tell it to just pick. It builds a simple site with a home page and an About page, explains in plain words how to look at it, and proposes where to put it online, with a reason about them. They say ok, and the agent walks them through publishing it, one click at a time.",
+        "facts": {
+          "site.host.1": "The agent proposes GitHub Pages: free, and nothing new to sign up for, since they already have a GitHub account. They say ok do that.",
+          "me.pick-for-me": "When the agent asks about the look, they write 'idk just pick'. They want it to decide."
+        },
+        "again": ["site.name"],
+        "turns": 7, "tokens": 2600 } },
+
+    { "id": "del-03", "at": "2026-07-09T22:05:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "Make it green",
+      "brief": {
+        "story": "They ask the agent to make the site green, but not bright. The agent picks the colours with a reason, applies them and describes the result in words. They look and approve, asking only for the links to be the same green.",
+        "facts": {
+          "site.colour": "The agent picks #2F6B4F, a dark green, because they asked for green but not bright.",
+          "site.background": "The background becomes #FAF7F2, a warm off-white, so the green doesn't feel heavy."
+        },
+        "again": [],
+        "turns": 6, "tokens": 2200 } },
+
+    { "id": "del-04", "at": "2026-07-12T20:30:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "The newsletter sign-up",
+      "brief": {
+        "story": "They ask how people sign up for the newsletter. The agent picks a newsletter service with reasons about them and adds a sign-up form with a button. It also proposes a popup inviting visitors to subscribe; they refuse firmly, and the agent removes it. It walks them through creating the account and pasting one setting into the site.",
+        "facts": {
+          "site.newsletter": "The agent picks Buttondown: free to start, with no ads and no tracking, which suits someone who wants the newsletter to feel like a letter. It says Substack would wrap their writing in its own branding and recommendations, and Mailchimp is built for shops. They say ok.",
+          "site.signup-button": "The agent labels the button 'Get the Sunday email'; they like it.",
+          "site.popups": "The agent offers a popup that asks visitors to subscribe after a few seconds. They correct it: no popup, ever. The agent takes it out."
+        },
+        "again": ["site.newsletter-day"],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "del-05", "at": "2026-07-15T21:50:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "The words on the site",
+      "brief": {
+        "story": "They ask for better words on the site. The agent drafts new home page and About text, full of exclamation marks; they object, and it rewrites everything without one. They describe what each issue is, which the agent works into the home page, and they turn down analytics. The agent suggests a footer line, which they keep.",
+        "facts": {
+          "site.tone": "The draft opens 'Welcome to Small Hours!'. They correct it: not a single exclamation mark anywhere, because they make it sound like an ad. The agent rewrites without them and says it will keep it that way.",
+          "site.format": "They describe each issue: three links and one thought.",
+          "site.analytics": "The agent asks whether to add analytics to see visitors; they say no analytics at all.",
+          "site.footer": "The agent suggests the footer 'Written in the small hours'; they keep it."
+        },
+        "again": ["site.name", "site.newsletter-day"],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "del-06", "at": "2026-07-18T11:20:00+01:00", "title": "Email to my landlord about the boiler", "surface": "claude.ai", "kind": "life", "about": "A broken boiler",
+      "brief": {
+        "story": "A Saturday morning with no hot water for three days. They want help writing a firm but polite email to their landlord about the broken boiler, and ask what they can reasonably expect. Claude asks a couple of details, explains the landlord's duty to repair in plain terms, and drafts the email; they adjust the tone and Claude revises it.",
+        "facts": {
+          "me.city": "They mention they're in Manchester, where the nights are cold enough even in July to want hot water and heating.",
+          "me.renting": "They rent the flat, and the boiler broke on Wednesday."
+        },
+        "again": [],
+        "turns": 7, "tokens": 3400 } },
+
+    { "id": "del-07", "at": "2026-07-20T21:00:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "A page for the book club",
+      "brief": {
+        "story": "They ask for a page for their book club. The agent asks two questions and proposes how to build it, with reasons about them. They ask it not to explain the technical side, and it switches to plain click-by-click steps. The page shows the club's name and lists the members from the sheet they already keep. When and where the club meets doesn't come up, and no specific book or author is named.",
+        "facts": {
+          "bookclub.platform": "The agent proposes a Google Apps Script web app: free, with nothing to host.",
+          "bookclub.data": "The page reads from the Google Sheet where they already keep the club's member list, so there's nothing new to keep up to date.",
+          "bookclub.members": "They say the club has nine members.",
+          "bookclub.name": "The club is called Second Chapter.",
+          "me.no-jargon": "Halfway through they say: don't explain the tech, just tell me what to click. The agent switches to numbered steps."
+        },
+        "again": [],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "del-08", "at": "2026-07-22T22:10:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "Do people need to log in?",
+      "brief": {
+        "story": "They ask whether people need to log in to the club page. The agent recommends against accounts and proposes a lighter way in, with a reason about the members, plus a rule to keep it fresh. While it's there it adds RSVP buttons and an email reminder, and tells them what to click to switch the reminder on.",
+        "facts": {
+          "bookclub.auth": "No accounts: one shared link and a four-digit club code. The agent says sign in with Google is possible, but members won't make accounts for a book club, so a club code is better. They say ok do that.",
+          "bookclub.code-change": "The agent suggests changing the club code every three months, and adds a note to the sheet to remind them.",
+          "bookclub.reminder": "It adds a reminder the day before each meeting, emailed to everyone who said they're coming.",
+          "bookclub.rsvp": "The RSVP buttons say 'I'm in' and 'Not this time'."
+        },
+        "again": ["bookclub.name", "bookclub.data"],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "del-09", "at": "2026-07-25T10:40:00+01:00", "title": "Welcome email for Small Hours", "surface": "claude.ai", "kind": "planning", "about": "Planning the email new subscribers get",
+      "brief": {
+        "story": "A Saturday morning in claude.ai, thinking out loud about the email new subscribers get when they join Small Hours. They want it short and warm, and to set expectations. Claude asks what they want people to feel, proposes a subject line and drafts the email with them, line by line. They settle the subject, the promise and the sign-off, and say they'll set it up another day.",
+        "facts": {
+          "welcome.subject": "Claude proposes the subject 'You're on the list', and they take it.",
+          "welcome.signoff": "They want it to end 'Talk soon, from the small hours'.",
+          "welcome.promise": "The email thanks them for joining and promises nothing but the Sunday email: no ads, no other mail."
+        },
+        "again": ["site.name", "site.newsletter-day", "site.newsletter"],
+        "turns": 9, "tokens": 5000 } },
+
+    { "id": "del-10", "at": "2026-07-27T21:30:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "Where does my money go?",
+      "brief": {
+        "story": "They want to know where their money goes, using the CSV file their bank lets them download. The agent proposes a small script, with a reason about them, runs it on last month's file, and proposes spending categories. They add one for their dog. The agent shows the totals per category and tells them how to run it next month.",
+        "facts": {
+          "spending.language": "The agent writes it in Python using only the built-in csv module, so there's nothing to install; it mentions pandas would be heavier than this needs.",
+          "spending.categories": "The agent proposes Food, Home, Fun, Travel and Other; once they mention the dog, the list becomes Food, Home, Fun, Travel, Biscuit and Other.",
+          "me.dog": "They want a category for Biscuit, their dog, because he costs a fortune."
+        },
+        "again": [],
+        "turns": 8, "tokens": 2800 } },
+
+    { "id": "del-11", "at": "2026-08-02T19:45:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "Put it somewhere I can see it",
+      "brief": {
+        "story": "They want to see their spending totals on their phone. The agent proposes putting each month's totals into a Google Sheet, with a reason about them, sets it up, and gives click steps for the one-time permission.",
+        "facts": {
+          "spending.output": "Each month's summary goes into a Google Sheet called Money, because they already check Sheets on their phone.",
+          "me.phone": "They mention they have an iPhone."
+        },
+        "again": ["spending.categories"],
+        "turns": 6, "tokens": 2200 } },
+
+    { "id": "del-12", "at": "2026-08-09T20:10:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "A way for people to write to me",
+      "brief": {
+        "story": "They want readers to be able to write to them from the site. The agent explains in one line why the site has to move, proposes where, with a reason about them, and builds a contact page. They also want a photo of their dog on the About page. The agent walks them through the move with click steps.",
+        "facts": {
+          "site.host.2": "The agent proposes moving the site to Netlify: GitHub Pages can't receive a form, and Netlify Forms can, for free. They say ok.",
+          "site.contact": "The contact page's form goes through Netlify Forms, and messages land in their email.",
+          "site.about-photo": "They want a photo of Biscuit on the About page; the agent adds it with a short caption."
+        },
+        "again": ["me.dog", "site.colour"],
+        "turns": 8, "tokens": 3000 } },
+
+    { "id": "del-13", "at": "2026-08-12T22:30:00+01:00", "title": "Valencia trip in October", "surface": "claude.ai", "kind": "life", "about": "Planning a trip",
+      "brief": {
+        "story": "A late evening, planning a trip: they're going to Valencia in October and thinking out loud about where to stay and what to do. Claude asks what they like, suggests one neighbourhood that fits, and sketches a loose plan for the days, getting around by bike. They mention the Spanish they're learning.",
+        "facts": {
+          "me.trip": "They're going to Valencia from 23 to 27 October.",
+          "me.spanish": "They're learning Spanish for the trip, a few minutes a day.",
+          "me.trip-stay": "Claude suggests staying in Ruzafa: walkable, full of cafés, close to the centre. They like it.",
+          "me.cycling": "At home they cycle to work, so they want to get around Valencia by bike."
+        },
+        "again": [],
+        "turns": 8, "tokens": 4000 } },
+
+    { "id": "del-14", "at": "2026-08-15T14:20:00+01:00", "project": "quiet-youtube", "surface": "desktop", "kind": "build", "about": "Make YouTube stop sucking me in",
+      "brief": {
+        "story": "They ask the agent to make YouTube stop sucking them in. The agent asks which browser, and they answer. It builds a small add-on that hides the distracting parts, adds a way to switch it off for a while, names it, and explains how to install it so it stays installed. They try it and say it works.",
+        "facts": {
+          "quiet.browser": "It's a Firefox add-on: the agent asks whether they use Chrome, and they say Firefox.",
+          "quiet.hides": "It hides the homepage recommendations and Shorts, but not comments, because they like reading comments.",
+          "quiet.pause": "The agent adds a toolbar button that turns it off for 20 minutes; then it switches itself back on.",
+          "quiet.name": "The agent says it's called Quiet; they like the name.",
+          "quiet.unlisted": "To keep it installed after a restart, the agent signs it as an unlisted add-on, with click steps."
+        },
+        "again": ["me.no-jargon"],
+        "turns": 9, "tokens": 3000 } },
+
+    { "id": "del-15", "at": "2026-08-19T21:40:00+01:00", "title": "Vegetarian meal prep", "surface": "claude.ai", "kind": "life", "about": "Cooking for the week",
+      "brief": {
+        "story": "They want help planning a week of lunches and dinners they can cook ahead. Claude asks about tastes and time, and builds a plan with a shopping list; they swap a couple of dishes.",
+        "facts": {
+          "me.vegetarian": "They're vegetarian.",
+          "me.batch-cook": "They batch-cook on Sundays, so the plan is built around one cooking session."
+        },
+        "again": [],
+        "turns": 7, "tokens": 3600 } },
+
+    { "id": "del-16", "at": "2026-08-23T20:00:00+01:00", "project": "book-club", "surface": "desktop", "kind": "distractor", "about": "The page is broken",
+      "brief": {
+        "story": "The club page shows an error instead of the members. The agent finds that a column in the sheet was renamed, so the script can't find it; it makes the script find columns by their heading text and gives them the click steps to publish the fix. They check and it works.",
+        "facts": {},
+        "again": ["bookclub.data", "bookclub.platform"],
+        "turns": 6, "tokens": 1800 } },
+
+    { "id": "del-17", "at": "2026-08-30T21:20:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "distractor", "about": "The sign-up button on my phone",
+      "brief": {
+        "story": "On their phone, the sign-up button runs off the edge of the screen. The agent finds the form is laid out in one row that can't wrap on narrow screens, makes it stack on small screens, and tells them how to check it on their phone.",
+        "facts": {},
+        "again": ["site.signup-button"],
+        "turns": 5, "tokens": 1800 } },
+
+    { "id": "del-18", "at": "2026-09-02T22:00:00+01:00", "title": "My dog barks at the postman", "surface": "claude.ai", "kind": "life", "about": "A barking dog",
+      "brief": {
+        "story": "Their dog barks every time the postman comes. Claude asks a few questions and gives a plan: change what the dog can see, reward calm, practise with the doorbell. They report what they've already tried.",
+        "facts": {
+          "me.dog-breed": "Biscuit is a three-year-old beagle."
+        },
+        "again": ["me.dog"],
+        "turns": 7, "tokens": 3400 } },
+
+    { "id": "del-19", "at": "2026-09-06T19:30:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "Meeting details on the page",
+      "brief": {
+        "story": "They ask for the meeting details on the club page. The agent adds a box with when and where, and shows how many places are left once they mention the club's limit.",
+        "facts": {
+          "bookclub.meeting": "The club meets on the first Thursday of the month at 19:00.",
+          "bookclub.max": "No more than 12 members, so the page shows places left: 9 of 12 taken.",
+          "bookclub.venue": "They meet at Hartley's, a café."
+        },
+        "again": ["bookclub.members", "bookclub.name"],
+        "turns": 7, "tokens": 2400 } },
+
+    { "id": "del-20", "at": "2026-09-10T22:15:00+01:00", "title": "Sourdough starter help", "surface": "claude.ai", "kind": "life", "about": "A sourdough starter",
+      "brief": {
+        "story": "Their sourdough starter has stopped rising. Claude asks about feeding, flour and temperature, explains what's likely happening, and gives a schedule to revive it before their next bake.",
+        "facts": {
+          "me.sourdough": "The starter is called Gerald.",
+          "me.baking-day": "They say 'I bake on Saturdays', so the schedule aims for Gerald to peak on Saturday morning."
+        },
+        "again": [],
+        "turns": 7, "tokens": 3400 } },
+
+    { "id": "del-21", "at": "2026-09-14T21:05:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "September's numbers are wrong",
+      "brief": {
+        "story": "They say this month's numbers look wrong: far too much on Fun. The agent investigates with their bank's file, finds two problems, fixes both, runs it again, and explains the corrected totals in one line each.",
+        "facts": {
+          "spending.refunds": "A refund was being counted as spending; from now on the agent leaves every refund out of spending.",
+          "spending.date-format": "The bank's CSV writes dates as DD/MM/YYYY, and the script had read some days as months, so August purchases landed in this month; the agent fixes how dates are read."
+        },
+        "again": ["spending.categories", "spending.output"],
+        "turns": 7, "tokens": 2600 } },
+
+    { "id": "del-22", "at": "2026-09-20T20:45:00+01:00", "title": "Book club voting", "surface": "claude.ai", "kind": "planning", "about": "Planning how the club picks its next book",
+      "brief": {
+        "story": "A Sunday evening, thinking out loud about how their book club should pick its next book, because the current way (whoever talks loudest) isn't working. They and Claude work out a simple vote: how books get suggested, when voting closes, what happens in a tie, what members see, and what the button says. They plan to add it to the club's page later. No specific book or author is named.",
+        "facts": {
+          "vote.suggest": "Each member suggests one book by Friday.",
+          "vote.close": "Voting closes on Sunday at 20:00.",
+          "vote.tie": "Claude suggests that a tie goes to the book that was suggested first; they agree.",
+          "vote.button": "They want the button to say 'Cast my vote'.",
+          "vote.results": "Claude suggests results stay hidden until voting closes, so nobody just follows the leader; they like it."
+        },
+        "again": ["bookclub.name", "bookclub.members"],
+        "turns": 10, "tokens": 5200 } },
+
+    { "id": "del-23", "at": "2026-09-27T18:30:00+01:00", "project": "quiet-youtube", "surface": "desktop", "kind": "distractor", "about": "It stopped working",
+      "brief": {
+        "story": "Quiet stopped working: the homepage recommendations are back. The agent finds that YouTube changed how its page is built, so the add-on's rules no longer match; it updates them and gives click steps to install the new version.",
+        "facts": {},
+        "again": ["quiet.name", "quiet.hides"],
+        "turns": 5, "tokens": 1800 } },
+
+    { "id": "del-24", "at": "2026-09-29T21:55:00+01:00", "title": "Monthly money summary", "surface": "claude.ai", "kind": "planning", "about": "Planning a monthly summary of their spending",
+      "brief": {
+        "story": "An evening, thinking out loud about a monthly summary of their spending, on top of the totals they already get. They describe what they want to see; Claude asks questions and suggests when it should run and where it should go. They agree on the details and plan to add it to their script later.",
+        "facts": {
+          "summary.top": "It shows the top 3 categories.",
+          "summary.change": "Each category shows its change from last month as an up or down arrow.",
+          "summary.day": "Claude suggests running it on the 2nd of each month, because the bank's CSV arrives on the 1st.",
+          "summary.tab": "Claude suggests each summary goes into a new tab named 'Summary YYYY-MM' in their Money sheet."
+        },
+        "again": ["spending.output", "spending.categories"],
+        "turns": 9, "tokens": 5000 } },
+
+    { "id": "del-25", "at": "2026-10-04T17:10:00+01:00", "title": "Gift for my sister's 30th", "surface": "claude.ai", "kind": "life", "about": "A birthday present",
+      "brief": {
+        "story": "They want a present for their sister's 30th birthday. Claude asks what she's like and what she's into, then suggests one idea that fits; they talk it through and settle on it.",
+        "facts": {
+          "me.sister": "Their sister Niamh turns 30 later in October.",
+          "me.gift": "Claude suggests a pottery class, and they choose it."
+        },
+        "again": [],
+        "turns": 7, "tokens": 3400 } }
   ]
 }
