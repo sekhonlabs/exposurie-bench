@@ -397,7 +397,9 @@ export async function checkHistory(user, { briefsOnly = false, partial = false, 
   return { problems, notes, summary };
 }
 
-if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
+// Not a top-level await: --readers imports gen/convert.mjs, which imports this
+// file, and that import would wait for this file to finish loading forever.
+async function main() {
   const args = process.argv.slice(2);
   const users = args.filter((a) => USERS.includes(a));
   const opts = { briefsOnly: args.includes('--briefs'), partial: args.includes('--partial'), readers: args.includes('--readers') };
@@ -425,4 +427,11 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
     process.exit(1);
   }
   console.log(opts.briefsOnly ? '\nThe briefs hold.' : '\nThe histories hold.');
+}
+
+if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
 }

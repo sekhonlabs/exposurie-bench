@@ -59,7 +59,7 @@ mkdirSync(runDir, { recursive: true });
  * counts them, spread over the briefs not yet written. It stays inside SCALE,
  * well within the checker's band for a single session.
  */
-const SCALE = [0.7, 1.3];
+const SCALE = [0.7, 1.6];
 function lengthScale() {
   let written = 0;
   let left = 0;

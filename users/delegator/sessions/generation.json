@@ -33,6 +33,38 @@
           },
           "total_cost_usd_estimate": 0.06360199999999999,
           "duration_ms": 41851
+        },
+        {
+          "at": "2026-10-20T12:13:05.275Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.1,
+          "ok": false,
+          "problems": [
+            "site.popups is not said (one of \"popup\", \"pop-up\")"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4806,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5329
+          },
+          "total_cost_usd_estimate": 0.072518,
+          "duration_ms": 41444
+        },
+        {
+          "at": "2026-10-20T12:13:47.153Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.1,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4875,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5000
+          },
+          "total_cost_usd_estimate": 0.069504,
+          "duration_ms": 40905
         }
       ],
       "set_aside": [
@@ -114,6 +146,490 @@
           },
           "total_cost_usd_estimate": 0.06879199999999999,
           "duration_ms": 43311
+        },
+        {
+          "at": "2026-10-20T12:11:55.233Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.065,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4596,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4538
+          },
+          "total_cost_usd_estimate": 0.063768,
+          "duration_ms": 36397
+        }
+      ]
+    },
+    "del-03": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:12:22.972Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.083,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4509,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 3229
+          },
+          "total_cost_usd_estimate": 0.05033,
+          "duration_ms": 26885
+        }
+      ]
+    },
+    "del-05": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:14:24.218Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.118,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4779,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4185
+          },
+          "total_cost_usd_estimate": 0.06097,
+          "duration_ms": 36094
+        }
+      ]
+    },
+    "del-06": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:16:36.115Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.143,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 367,
+            "cache_read_input_tokens": 3819,
+            "output_tokens": 7903
+          },
+          "total_cost_usd_estimate": 0.08088390000000001,
+          "duration_ms": 71500
+        }
+      ]
+    },
+    "del-07": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:17:16.977Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.136,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4679,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5469
+          },
+          "total_cost_usd_estimate": 0.07341,
+          "duration_ms": 39858
+        }
+      ]
+    },
+    "del-08": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:17:58.415Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.157,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4757,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4958
+          },
+          "total_cost_usd_estimate": 0.06861199999999999,
+          "duration_ms": 40484
+        }
+      ]
+    },
+    "del-09": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:19:06.881Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.177,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4370,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 8092
+          },
+          "total_cost_usd_estimate": 0.098404,
+          "duration_ms": 67441
+        }
+      ]
+    },
+    "del-10": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:19:50.632Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.206,
+          "ok": false,
+          "problems": [
+            "1049 words, planned about 2100"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4541,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4875
+          },
+          "total_cost_usd_estimate": 0.066918,
+          "duration_ms": 42747
+        },
+        {
+          "at": "2026-10-20T12:20:23.856Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.206,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4602,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4036
+          },
+          "total_cost_usd_estimate": 0.05877199999999999,
+          "duration_ms": 32218
+        }
+      ]
+    },
+    "del-11": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:21:06.731Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.244,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4435,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5006
+          },
+          "total_cost_usd_estimate": 0.067804,
+          "duration_ms": 41870
+        }
+      ]
+    },
+    "del-12": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:21:50.153Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.273,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4695,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5179
+          },
+          "total_cost_usd_estimate": 0.070574,
+          "duration_ms": 42409
+        }
+      ]
+    },
+    "del-13": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:23:13.767Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.321,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4225,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9466
+          },
+          "total_cost_usd_estimate": 0.11156400000000001,
+          "duration_ms": 82602
+        }
+      ]
+    },
+    "del-14": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:24:00.589Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.332,
+          "ok": false,
+          "problems": [
+            "\"back up\" must not appear (never discussed: backing up the book club's data): …small green button. Click it, and the homepage should fill back up with videos. This way of loading is only for trying…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4700,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5609
+          },
+          "total_cost_usd_estimate": 0.074894,
+          "duration_ms": 45821
+        },
+        {
+          "at": "2026-10-20T12:24:47.107Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.332,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4806,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5482
+          },
+          "total_cost_usd_estimate": 0.074048,
+          "duration_ms": 45506
+        }
+      ]
+    },
+    "del-15": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:25:59.602Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.395,
+          "ok": false,
+          "problems": [
+            "a heading inside a turn: \"## The week\"",
+            "a heading inside a turn: \"## Sunday order (about 2 hours 40 minutes)\"",
+            "a heading inside a turn: \"## Shopping list\""
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4028,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9512
+          },
+          "total_cost_usd_estimate": 0.111236,
+          "duration_ms": 71499
+        },
+        {
+          "at": "2026-10-20T12:27:18.651Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.395,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4143,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9565
+          },
+          "total_cost_usd_estimate": 0.11222600000000002,
+          "duration_ms": 78038
+        }
+      ]
+    },
+    "del-16": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:27:56.049Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.412,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4213,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4312
+          },
+          "total_cost_usd_estimate": 0.059975999999999995,
+          "duration_ms": 36401
+        }
+      ]
+    },
+    "del-17": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:28:27.761Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.463,
+          "ok": false,
+          "problems": [
+            "\"back up\" must not appear (never discussed: backing up the book club's data): …Scroll to the sign-up form. 4. Turn the phone sideways and back upright once, to see both layouts. If the old, cut-off…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4280,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 3888
+          },
+          "total_cost_usd_estimate": 0.056004,
+          "duration_ms": 30691
+        },
+        {
+          "at": "2026-10-20T12:28:51.059Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.463,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4399,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 2637
+          },
+          "total_cost_usd_estimate": 0.04397,
+          "duration_ms": 22327
+        }
+      ]
+    },
+    "del-18": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:30:14.121Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.533,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4029,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9196
+          },
+          "total_cost_usd_estimate": 0.10807999999999998,
+          "duration_ms": 82116
+        }
+      ]
+    },
+    "del-19": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:30:51.583Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.511,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4534,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4823
+          },
+          "total_cost_usd_estimate": 0.06637,
+          "duration_ms": 36442
+        }
+      ]
+    },
+    "del-20": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:32:16.734Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.6,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4028,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9892
+          },
+          "total_cost_usd_estimate": 0.115036,
+          "duration_ms": 84244
+        }
+      ]
+    },
+    "del-21": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:33:02.354Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.6,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4464,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5064
+          },
+          "total_cost_usd_estimate": 0.06849999999999999,
+          "duration_ms": 44701
+        }
+      ]
+    },
+    "del-23": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:33:39.854Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.6,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4159,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 3617
+          },
+          "total_cost_usd_estimate": 0.052809999999999996,
+          "duration_ms": 36516
+        }
+      ]
+    },
+    "del-24": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:35:18.868Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.6,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4310,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 11269
+          },
+          "total_cost_usd_estimate": 0.129934,
+          "duration_ms": 97976
+        }
+      ]
+    },
+    "del-25": {
+      "attempts": [
+        {
+          "at": "2026-10-20T12:36:47.176Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.6,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 3935,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9672
+          },
+          "total_cost_usd_estimate": 0.11246400000000001,
+          "duration_ms": 87271
         }
       ]
     }

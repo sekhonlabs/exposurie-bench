@@ -90,7 +90,7 @@ Seven kept sessions are written again: del-04, where the assistant knew somethin
 - **The prompt** (`gen/prompt.mjs`) is built from the brief, the fact sheet and the checker's rules. It holds the facts that must come up, with their exact spellings and reasons, the earlier facts that come up again, the background the session must not contradict, and the words it must not use. The assistant in the history remembers nothing from earlier sessions, as Claude Code doesn't.
 - **The generator** (`gen/generate.mjs`) runs the sandbox's Claude Code once per session, with the pinned model and the prompt as its whole system prompt. The run has no tools, skills or MCP servers, stdin is closed and session persistence is off.
   - What comes back is checked with `check/history.mjs` before it is kept. A session that fails goes back with the checker's findings, up to three attempts.
-  - Each history is about 80K tokens, and sessions come in longer or shorter than their briefs. So each new session is asked for its share of what is left: the tokens the written sessions have not used, spread over the briefs still to write, between 0.7 and 1.3 of its own brief.
+  - Each history is about 80K tokens, and sessions come in longer or shorter than their briefs. So each new session is asked for its share of what is left: the tokens the written sessions have not used, spread over the briefs still to write, between 0.7 and 1.6 of its own brief.
   - Sessions already written are skipped, so a run stopped by a usage limit resumes when it is run again.
   - `users/<user>/sessions/generation.json` keeps every attempt's usage and findings. Prompts and raw output go to `../runs`.
 - **The converter** (`gen/convert.mjs`) turns the sessions into a home folder:
@@ -106,11 +106,11 @@ node gen/convert.mjs developer <home folder>    convert a finished history
 node gen/convert.mjs --self-test
 ```
 
-**Done when** every session exists and passes part 3.
+**Done when** every session exists and passes part 3. **Done 2026-10-20:** 28 developer sessions (about 83K tokens) and 25 delegator sessions (about 74K), each kept only after the checker and a reading pass.
 
 ### 3. History checker
 
-**Plan usage:** none. **Built 2026-10-20, with part 2,** because the generator holds every session to it before keeping it. It is `check/history.mjs`, with the matching rule in `check/text.mjs` and the rival names in `check/rivals.json`.
+**Plan usage:** none. **Built 2026-10-20, with part 2,** because the generator holds every session to it before keeping it. **Done 2026-10-20:** `--readers` passes for both users. Its first full run had found a deadlock: the check's top-level await waited on `gen/convert.mjs`, which imports the check back. It is `check/history.mjs`, with the matching rule in `check/text.mjs` and the rival names in `check/rivals.json`.
 
 - Every fact appears in the session where it is planned, and in no earlier session. A turned-down option is named in its session.
 - A replaced value is never stated as current after it was replaced. It may be named in the session that replaces it, and never after.
