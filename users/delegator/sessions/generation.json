@@ -1,0 +1,58 @@
+{
+  "note": "One entry per session: every attempt, with the API usage Claude Code reported and the checker's findings. Prompts and raw output are in ../runs.",
+  "model": "claude-sonnet-5-5",
+  "sessions": {
+    "del-04": {
+      "attempts": [
+        {
+          "at": "2026-10-20T10:44:59.817Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "983 words, planned about 2100"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4487,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4268
+          },
+          "total_cost_usd_estimate": 0.060632,
+          "duration_ms": 35232
+        },
+        {
+          "at": "2026-10-20T10:45:42.577Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4547,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4541
+          },
+          "total_cost_usd_estimate": 0.06360199999999999,
+          "duration_ms": 41851
+        }
+      ]
+    },
+    "del-22": {
+      "attempts": [
+        {
+          "at": "2026-10-20T10:46:33.835Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4100,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5509
+          },
+          "total_cost_usd_estimate": 0.071494,
+          "duration_ms": 50226
+        }
+      ]
+    }
+  }
+}

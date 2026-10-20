@@ -163,6 +163,10 @@ export function forbiddenIn(text, rules) {
   for (const c of colourCodes(text)) {
     if (!rules.colours.has(c)) out.push(`colour ${c} is not planned here${rules.colours.size ? ` (only ${[...rules.colours].join(', ')})` : ''}`);
   }
+  // Both users work on a Mac (plan.json's machine). A drive letter is the
+  // generating machine showing through, as in dev-01's first draft.
+  const drive = /(?<![A-Za-z])[A-Za-z]:\\/.exec(text);
+  if (drive) out.push(`a Windows path does not fit the user's machine: ${around(text, drive.index)}`);
   return out;
 }
 

@@ -67,7 +67,7 @@ There are 3–4 times more facts that no task asks about than facts that a task 
 
 ### 2. Histories
 
-**Plan usage:** yes. Sonnet 5.5 writes the sessions, inside the sandbox, with session persistence off. **Built and tested offline 2026-10-20. The generation run needs the owner's go.**
+**Plan usage:** yes. Sonnet 5.5 writes the sessions, inside the sandbox, with session persistence off. **Built and tested offline 2026-10-20, then piloted on three sessions with the owner's go.** del-04 and del-22 are kept. dev-01 passed but was set aside on reading, because it printed a Windows drive path that does not fit the user's Mac. Since the pilot, the prompt names each project's folder, asks for at least the planned length, and leaves the language name off code blocks, and the checker refuses drive paths. Each kept session took about 4.5–9.4K output tokens, roughly twice its visible text, because the model thinks before writing.
 
 - **Briefs.** Every session in `users/<user>/plan.json` has a `brief`:
   - what happens (`story`)

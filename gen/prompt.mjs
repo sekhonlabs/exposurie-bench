@@ -2,7 +2,6 @@
 // brief. Everything in it comes from users/<user>/facts.json and plan.json and
 // the rules in check/history.mjs, so the prompt and the checker cannot disagree.
 
-import { basename } from 'node:path';
 import { rulesFor, sourceOf } from '../check/history.mjs';
 
 const WORDS_PER_TOKEN = 0.75;
@@ -25,10 +24,11 @@ const HOW = {
 const quote = (list) => list.map((m) => `"${m}"`).join(', ');
 
 function surface(u, s) {
-  const folder = s.project ? basename(u.plan.machine.folders[s.project]) : null;
+  const folder = s.project ? u.plan.machine.folders[s.project] : null;
   const agent =
-    'The assistant is Claude Code, a coding agent working in the project folder' +
-    ` \`${folder}\`. It reads files, runs commands and edits code, but this history keeps only what was said,` +
+    `The person works on a ${u.plan.machine.os === 'macOS' ? 'Mac' : u.plan.machine.os}, and the assistant is Claude Code,` +
+    ` a coding agent working in the project folder \`${folder}\`; any path it mentions is on that machine.` +
+    ' It reads files, runs commands and edits code, but this history keeps only what was said,' +
     ' so its work shows only in what it says: it may say in one line what it is about to check, and after' +
     ' working it reports what it did and found, naming files and the decisions that matter, the way Claude' +
     ' Code does. It never narrates tool calls and never pastes whole files.';
@@ -90,7 +90,8 @@ export function promptFor(u, id, feedback = []) {
       ' no closing remarks, no code fence around the whole thing.',
     '',
     'Inside a turn, write the way that side would: plain text, lists, inline code, short code blocks,' +
-      ' `###` headings or bold. Never start a line with `# ` or `## ` inside a turn.',
+      ' `###` headings or bold. Never start a line with `# ` or `## ` inside a turn. A code block opens' +
+      ' with three backticks and nothing after them: no language name.',
     '',
     '## Where this happens',
     '',
@@ -161,8 +162,10 @@ export function promptFor(u, id, feedback = []) {
     say(
       '## Background',
       '',
-      'Also true of the person, though the assistant does not know it unless it comes up. Use these only' +
-        ' where the conversation needs them, and never contradict them:',
+      'Also true, and never to be contradicted. Use these only where the conversation needs them. In' +
+        ' Claude Code the assistant can see what the project\'s files show (its tools, config and code), but' +
+        ' nothing about the person beyond the files unless they say it in this session; in claude.ai, Claude' +
+        ' knows none of it unless the person says it:',
       '',
       ...bg.map((v) => `- ${v}`),
       '',
@@ -188,7 +191,7 @@ export function promptFor(u, id, feedback = []) {
       ' plans come up only where a brief plans them.',
     "- Don't re-decide anything already decided, and don't plan anything the brief doesn't.",
     '- Code: short snippets only, under 15 lines, and only where they make a point.',
-    `- Length: about ${Math.round(b.tokens * WORDS_PER_TOKEN)} words in all, across about ${b.turns} exchanges (an exchange is one message from the person and one reply).`,
+    `- Length: at least ${Math.round(b.tokens * WORDS_PER_TOKEN)} words in all, across about ${b.turns} exchanges (an exchange is one message from the person and one reply). A shorter session is sent back.`,
   );
 
   if (feedback.length) {

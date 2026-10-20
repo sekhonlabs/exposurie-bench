@@ -1,0 +1,46 @@
+{
+  "note": "One entry per session: every attempt, with the API usage Claude Code reported and the checker's findings. Prompts and raw output are in ../runs.",
+  "model": "claude-sonnet-5-5",
+  "sessions": {
+    "dev-01": {
+      "attempts": [
+        {
+          "at": "2026-10-20T10:43:07.190Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "\"YAML\" must not appear (not planned in this session): …litestream.yml` in the project root. The relevant part: ```yaml dbs: - path: ./satchel.db replica: # target…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4986,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 6279
+          },
+          "total_cost_usd_estimate": 0.082738,
+          "duration_ms": 52796
+        },
+        {
+          "at": "2026-10-20T10:44:23.478Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 5096,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9393
+          },
+          "total_cost_usd_estimate": 0.114318,
+          "duration_ms": 75260
+        }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T10:49:19.257Z",
+          "why": "Kept on attempt 2, then set aside on reading: it printed a Windows drive path (E:\\\\...) that does not fit the user's Mac. The checker now refuses drive paths, and the prompt names each project folder. The draft is in ../runs."
+        }
+      ]
+    }
+  }
+}
