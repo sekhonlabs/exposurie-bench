@@ -14,7 +14,7 @@
 
 import { spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from 'node:fs';
 import { dirname, join, parse, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -25,7 +25,7 @@ export const SANDBOX = join(BENCH, 'sandbox');
 export const RUNS = join(BENCH, 'runs');
 export const PINS = JSON.parse(readFileSync(join(REPO, 'runner', 'pins.json'), 'utf8'));
 
-const HOME = join(SANDBOX, 'home');
+export const HOME = join(SANDBOX, 'home');
 const CONFIG = join(HOME, '.claude');
 const NODE = join(SANDBOX, 'node');
 const GIT = join(SANDBOX, 'git');
@@ -53,26 +53,39 @@ const FROM_WINDOWS = [
   'CommonProgramFiles', 'CommonProgramFiles(x86)', 'CommonProgramW6432', 'ALLUSERSPROFILE',
 ];
 
-export function sandboxEnv() {
+/**
+ * The environment of every sandbox process. `home` is the sandbox's home folder
+ * unless a test gives it its own. With `exposurie: false` the PATH leaves out
+ * the sandbox's npm folder, which holds the `exposurie` command: conditions A,
+ * B and D run without it, since it is part of what exposurie installs.
+ */
+export function sandboxEnv({ home = HOME, exposurie = true } = {}) {
   const env = {};
   for (const k of FROM_WINDOWS) if (process.env[k] !== undefined) env[k] = process.env[k];
   const win = env.SystemRoot ?? 'C:\\Windows';
-  const drive = parse(HOME).root.replace(/\\$/, '');
+  const drive = parse(home).root.replace(/\\$/, '');
   return {
     ...env,
-    HOME,
-    USERPROFILE: HOME,
+    HOME: home,
+    USERPROFILE: home,
     HOMEDRIVE: drive,
-    HOMEPATH: HOME.slice(drive.length),
-    APPDATA: join(HOME, 'AppData', 'Roaming'),
-    LOCALAPPDATA: join(HOME, 'AppData', 'Local'),
+    HOMEPATH: home.slice(drive.length),
+    APPDATA: join(home, 'AppData', 'Roaming'),
+    LOCALAPPDATA: join(home, 'AppData', 'Local'),
     TEMP: TMP,
     TMP,
     PATH: [
-      PREFIX, NODE, join(GIT, 'cmd'),
+      ...(exposurie ? [PREFIX] : []), NODE, join(GIT, 'cmd'),
       join(win, 'System32'), win, join(win, 'System32', 'Wbem'), join(win, 'System32', 'WindowsPowerShell', 'v1.0'),
     ].join(';'),
-    CLAUDE_CONFIG_DIR: CONFIG,
+    // Windows hands a child process its parent's USERNAME, USERDOMAIN and
+    // LOGONSERVER whenever its environment leaves them out (Node's libuv counts
+    // them as required), which carried the machine owner's account name into
+    // every sandbox process. So the sandbox sets them itself.
+    USERNAME: 'sandbox',
+    USERDOMAIN: 'SANDBOX',
+    LOGONSERVER: '\\\\SANDBOX',
+    CLAUDE_CONFIG_DIR: join(home, '.claude'),
     CLAUDE_CODE_GIT_BASH_PATH: join(GIT, 'bin', 'bash.exe'),
     DISABLE_AUTOUPDATER: '1',
     // No remote feature flags. On Windows one of them (tengu_windows_credman)
@@ -83,7 +96,7 @@ export function sandboxEnv() {
     ENABLE_CLAUDEAI_MCP_SERVERS: 'false',
     npm_config_prefix: PREFIX,
     npm_config_cache: join(SANDBOX, 'npm-cache'),
-    npm_config_userconfig: join(HOME, '.npmrc'),
+    npm_config_userconfig: join(home, '.npmrc'),
     npm_config_globalconfig: join(PREFIX, 'etc', 'npmrc'),
     npm_config_update_notifier: 'false',
     npm_config_fund: 'false',
@@ -198,7 +211,9 @@ async function setup() {
 
 function claude(args) {
   ownNodeOnly();
+  const release = lockSandbox();
   const r = spawnSync(CLAUDE, args, { env: sandboxEnv(), cwd: HOME, stdio: 'inherit' });
+  release();
   process.exit(r.status ?? 1);
 }
 
@@ -217,24 +232,64 @@ function login() {
 /** What the sandbox home may hold. Anything else came from a program that should not run here. */
 const HOME_ALLOWED = new Set(['.claude', 'AppData', join('AppData', 'Local'), join('AppData', 'Roaming')]);
 
-function strays() {
+export function strays(home = HOME) {
   const found = [];
-  for (const top of readdirSync(HOME)) {
+  for (const top of readdirSync(home)) {
     if (top !== 'AppData') {
       if (!HOME_ALLOWED.has(top)) found.push(top);
       continue;
     }
-    for (const sub of readdirSync(join(HOME, 'AppData'))) {
+    for (const sub of readdirSync(join(home, 'AppData'))) {
       const rel = join('AppData', sub);
       if (!HOME_ALLOWED.has(rel)) found.push(rel);
-      else for (const leaf of readdirSync(join(HOME, rel))) found.push(join(rel, leaf));
+      else for (const leaf of readdirSync(join(home, rel))) found.push(join(rel, leaf));
     }
   }
   return found;
 }
 
+const alive = (pid) => {
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (e) {
+    return e.code === 'EPERM';
+  }
+};
+
+/**
+ * One sandbox Claude Code process at a time: they share one login, and two
+ * token refreshes at once could break it. The lock is a file holding its
+ * owner's process ID, and one left by a process that has gone is taken over.
+ * Returns the function that releases it.
+ */
+export function lockSandbox(file = join(SANDBOX, 'run.lock')) {
+  for (let tries = 0; tries < 2; tries += 1) {
+    try {
+      writeFileSync(file, String(process.pid), { flag: 'wx' });
+      const release = () => {
+        process.off('exit', release);
+        try {
+          if (readFileSync(file, 'utf8') === String(process.pid)) unlinkSync(file);
+        } catch {
+          // Already gone.
+        }
+      };
+      process.on('exit', release);
+      return release;
+    } catch (e) {
+      if (e.code !== 'EEXIST') throw e;
+      const pid = Number(readFileSync(file, 'utf8'));
+      if (alive(pid)) fail(`another sandbox process (${pid}) holds ${file}. Run one at a time: they share one login`);
+      unlinkSync(file);
+    }
+  }
+  return fail(`could not take ${file}`);
+}
+
 function check() {
   ownNodeOnly();
+  lockSandbox();
   const dir = join(RUNS, `part0-check-${new Date().toISOString().replace(/[:.]/g, '-')}`);
   const work = join(dir, 'work');
   mkdirSync(work, { recursive: true });

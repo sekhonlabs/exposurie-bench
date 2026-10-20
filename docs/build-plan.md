@@ -12,9 +12,9 @@ Claude Code builds and runs all of it.
 | `users/<user>/plan.json` | the session plan: each session's time, project or chat, and surface (part 1), and which facts come up in it and how (part 2) |
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
-| `check/` | the fact-sheet check (part 1), the history checker (part 3) and the task check (part 4) |
+| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4) and the runner and scorer check (part 5) |
 | `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6 and 7 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`) and example answers (`tasks/examples.json`) |
-| `runner/` | sandbox setup and the runner |
+| `runner/` | sandbox setup, the runner, and the fake `claude` the runner and scorer are tested against |
 | `score/` | how a task's checks read a run (part 4), and the scorer and the judge (part 5) |
 | `results/` | summaries and charts. Raw run output stays outside the repository |
 
@@ -167,29 +167,55 @@ node check/tasks.mjs          check the tasks
 
 ### 5. Runner and scorer
 
-**Plan usage:** none.
+**Plan usage:** none. **Done 2026-10-21:** `check/runner.mjs` passes. A fault test then broke the code fourteen ways, one at a time, and the check failed on every one (`../runs/part5-fault-test`). The fake found one thing a real run would not have shown: Windows gives a child process its parent's `USERNAME`, `USERDOMAIN` and `LOGONSERVER` whenever its environment leaves them out, so every sandbox process had carried the owner's account name. The sandbox now sets all three itself (see [decisions.md](decisions.md)).
 
-The runner:
+The runner, `runner/run.mjs`:
 
-- makes a fresh folder for each run, named as the task says and holding a copy of its starter, writes the condition's file and sets the environment
-- runs Claude Code headless and saves the output stream and the versions
-- saves the files the run created or changed, compared with the starter
-- refuses a run whose start-up line shows a tool or MCP server that should not be there
-- mixes conditions together in the run order, and can resume after a stop
+- **`plan <batch>`** fixes a batch: each task asked for, under each condition asked for (area 8 has no D). The order comes from sorting on a hash of the seed, so conditions are mixed and the same seed always gives the same order. Each run gets an ID, `r001` onwards, that names neither its task nor its condition, because the agent sees its folder's path.
+- **`go <batch>`** runs whatever has not run, in order. For each run it:
+  - makes a fresh folder, `../runs/<batch>/<run>/<folder>`, holding a copy of the starter or nothing
+  - puts the condition into the sandbox home. A gets nothing. B and D get the condition file as `~/.claude/CLAUDE.md`. C gets a copy of everything exposurie installed, and of the brain, from `../sandbox/brains/<user>/`, and the `exposurie` command on the PATH, which A, B and D do not have.
+  - runs Claude Code headless with stdin closed: `-p`, the pinned model, `stream-json`, `--strict-mcp-config`, the six tools, `Bash(exposurie:*)` allowed, edits accepted inside its folder (`acceptEdits`), and no session persistence
+  - checks the start-up line the moment it arrives: the version, the model, a plan login, no MCP server, the tool list, built-in plugins only, its own folder, the permission mode, and nothing of exposurie outside C. A wrong one stops the run before it spends anything.
+  - puts the home back as runs leave it, then checks the run. Every tool call must stay inside its folder (C may also reach its brain), the shell may have run only `exposurie`, its condition must be unchanged, and it must have written no transcript and left nothing in the home. A call that was denied reached nothing, so it is only noted.
+  - saves what the scorer reads in the run's folder: `run.json` (the task, the versions, tokens per model, turns, plan usage, and whether it ran `exposurie read`), `answer.md` (the final reply), and the files it created or changed (`files/`, `files.json`). The condition is only in `batch.json`.
+- Each run ends up **done**, **not run** (a usage limit, an API error, no result within 30 minutes, or a crash) or **thrown out** (it broke a check). The batch stops at a usage limit, at three API errors in a row, or when a run leaves anything in the home. Running `go` again carries on and reruns whatever did not run. `--again` reruns named runs, and keeps each earlier attempt beside the new one.
+- C runs only on a brain synced in the last 7 days with nothing left unfiled. Past that, exposurie's own status line asks the agent to sync.
+- **`keep-brain <user>`**, for part 6, moves what exposurie wrote into the sandbox home out to `../sandbox/brains/<user>/home/`, and the raw history to `../sandbox/brains/<user>/history/`.
+- Only one sandbox process runs at a time. A lock file, `../sandbox/run.lock`, enforces it, and `sandbox.mjs check` and `login` take it too.
+- Nothing runs while a `CLAUDE.md`, `AGENTS.md` or `.claude` sits in a folder above the runs, since Claude Code would load it into every one of them.
 
-The scorer never sees the condition. It reads each run through `score/checks.mjs` (part 4). Answers that contain both a required and a forbidden fact go to the judge and the hand check, and so does every answer in areas 4 and 5. Anything the runner or the scorer saves into the repository goes through the history checker's login check first, because every run's context carries the sandbox login's email address.
+The scorer, `score/score.mjs`, reads only each run's folder, never `batch.json`. A run's verdict comes from its checks (`score/checks.mjs`). The judge, `score/judge.mjs`, decides areas 4 and 5, and any answer where every required check holds while a forbidden one does too. It is a separate run, with the pinned model and no tools, given the question, the rubric, the final reply and the files, and it answers `VERDICT:` and `REASON:`. `hand-check.md` lists every judged run for the hand check, and a verdict written into `hand.json` is final. `--save` writes the scores into `results/<batch>/`, and refuses any text holding the sandbox login's address or names, or a machine path.
 
-Both are tested end to end against a fake `claude` that prints saved output, before any real run. `tasks/examples.json` is where the fake answers start.
+`check/runner.mjs` runs all of it against `runner/fake-claude.mjs`, in a sandbox home of its own under `../runs`:
+
+- both users' brains, made by exposurie 1.2.0's own `scaffold` and kept with `keep-brain`
+- all 93 runs of areas 1–8. Fifteen of them get trouble on purpose: a usage limit, a crash, a hang, an API error, a wrong tool list, an MCP server, a read outside the folder (once allowed and once denied), a shell command, a transcript written, an edited condition, something left in the home, the login's address in an answer, and two answers that must go to the judge.
+- the fake checks each run's arguments, environment, folder and condition, and looks for `exposurie` through Git Bash, as an agent's shell would
+- C on a brain synced 8 days ago, and on one with conversations unfiled, and a batch with an `AGENTS.md` above it
+- scoring with `batch.json` moved out of reach, a usage limit in the judge, a hand verdict, the repository save's refusals, and the real sandbox home unchanged
+
+```
+node runner/run.mjs plan <batch> [--users u,u] [--tasks id,id] [--conditions A,B,C,D] [--seed text]
+node runner/run.mjs go <batch> [--again r001,r002]     every run spends plan usage: needs the owner's go
+node runner/run.mjs status <batch>
+node runner/run.mjs keep-brain <user>
+node score/score.mjs <batch> [--no-judge] [--save]     the judge spends plan usage too
+node check/runner.mjs
+```
+
+**Done when** `check/runner.mjs` passes.
 
 ### 6. Brain build and pilot
 
 **Plan usage:** yes. **Needs the owner's go.**
 
 - Check that the sandbox's history folder holds only the generated history. Nothing else may be in it, including the owner's login session.
-- Build the first user's brain: exposurie syncs and Claude Code writes the pages, until nothing is left. Record the tokens.
-- Move the raw history out of the sandbox home.
-- Run the pilot: one task under all four conditions.
+- Build the first user's brain: exposurie syncs and Claude Code writes the pages, until nothing is left. Record the tokens. exposurie's `scaffold` leaves three asks for the person (transcript retention, the claude.ai export, Obsidian), and the build settles them so C's reads stay clean.
+- Move the brain and the raw history out of the sandbox home: `node runner/run.mjs keep-brain <user>`.
+- Run the pilot, one task under all four conditions: `plan pilot --tasks <id>`, then `go pilot`.
 - Check that B's input tokens show the whole history arrived, and that C saw the pointer.
+- Check what the fake could not show. Were reads outside the run's folder denied, as headless runs should be? Do exposurie's skill and command appear in C's start-up line? Was any run thrown out for a harmless shell command, such as one Claude Code allows by itself?
 - Use the pilot's numbers to estimate the plan usage of the full run.
 
 ### 7. Full run

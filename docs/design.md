@@ -113,6 +113,7 @@ This area needs sessions to be saved, so they can be resumed and synced. It is t
 ## Scoring
 
 - Each task lists **required facts**, which must appear, and **forbidden facts** (outdated or invented), which must not. A script checks these.
+- An answer is the agent's final reply, not the text it wrote before its tool calls.
 - Work tasks are checked from the files the agent creates or changes. Area 7 also reads the agent's reply, because it measures whether a plan made in a web chat reached the agent, and a reply that names the plan shows it did.
 - Some answers a string match can't judge. They get a fixed rubric, judged by a separate Claude run, and every one is also checked by hand:
   - area 4, where the right answer is "not recorded"
@@ -166,7 +167,8 @@ Every rule here exists because breaking it produces a wrong number.
 - **The sandbox's own pinned copies** of Node, Git, Claude Code and exposurie 1.2.0, with auto-update off. Claude Code went through 44 version numbers in the 46 days before this benchmark was designed, and the run takes several days.
 - **No remote feature flags** (`DISABLE_GROWTHBOOK=1`). Every run gets the pinned binary's own defaults, the same on every day.
 - **Transcript retention is set before any history is placed.** Claude Code deletes transcripts older than its `cleanupPeriodDays` (30 by default). exposurie orders history by file date, so the history's files carry dates months in the past.
-- **A fresh folder per run, outside this repository.** It is empty, except for the task's starter repository in areas 6 and 7. The answer key lives in this repository.
+- **A fresh folder per run, outside this repository.** It is empty, except for the task's starter repository in areas 6 and 7. The answer key lives in this repository. The folder's path names neither the task nor the condition, since the agent sees it, and no instructions file (`CLAUDE.md`, `AGENTS.md`) sits in any folder above it.
+- **Every tool call stays in the run's folder.** The runner reads every tool call afterwards, and throws out a run that reached a file outside its folder or ran a shell command other than `exposurie`. C may also reach its brain. Edits are accepted inside the folder, and anything else that would ask for permission is denied.
 - **stdin closed on every run.** An earlier exposurie pointer test overstated its result because each headless session read the remaining questions from stdin.
 - **No session persistence** (`--no-session-persistence`), so runs never become part of a user's history at the next sync.
 - **The same tools in every condition:** read, write, edit, search, and a shell that may run only `exposurie`. No web tools: this repository is public, so an agent allowed to search could find the answers. The runner checks the tool list at the start of every run and throws out any run where it is wrong.
