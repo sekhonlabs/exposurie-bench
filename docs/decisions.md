@@ -55,3 +55,4 @@ Dated, newest last. Each entry says what was decided and why.
 - **"Non-default" applies to the facts a task asks about.** The other facts also include people, places and habits, as a real history does. A replaced value may be a popular default, since it is never the right answer.
 - **26 tasks, not 27:** three in each of areas 1–8, and two in area 9.
 - **`check/facts.mjs` holds both fact sheets to the method** before any history exists. Part 3's history checker reads text the same way, with its `mentions` rule.
+- **The owner approved both users' fact sheets**, which ends part 1.

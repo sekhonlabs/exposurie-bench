@@ -42,7 +42,7 @@ Everything the sandbox runs is its own copy, pinned in [runner/pins.json](../run
 
 ### 1. Fact sheets
 
-**Plan usage:** none. **Written 2026-10-20, waiting for the owner's approval.**
+**Plan usage:** none. **Done 2026-10-20:** `check/facts.mjs` passes, and the owner approved both users.
 
 Each planted fact in `users/<user>/facts.json` has:
 
