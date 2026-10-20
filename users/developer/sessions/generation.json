@@ -33,12 +33,816 @@
           },
           "total_cost_usd_estimate": 0.114318,
           "duration_ms": 75260
+        },
+        {
+          "at": "2026-10-20T10:56:37.380Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 5049,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 8272
+          },
+          "total_cost_usd_estimate": 0.10292000000000001,
+          "duration_ms": 72412
         }
       ],
       "set_aside": [
         {
           "at": "2026-10-20T10:49:19.257Z",
           "why": "Kept on attempt 2, then set aside on reading: it printed a Windows drive path (E:\\\\...) that does not fit the user's Mac. The checker now refuses drive paths, and the prompt names each project folder. The draft is in ../runs."
+        }
+      ]
+    },
+    "dev-02": {
+      "attempts": [
+        {
+          "at": "2026-10-20T10:57:37.585Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4828,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 8153
+          },
+          "total_cost_usd_estimate": 0.100846,
+          "duration_ms": 59175
+        }
+      ]
+    },
+    "dev-03": {
+      "attempts": [
+        {
+          "at": "2026-10-20T10:58:59.776Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4811,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 10935
+          },
+          "total_cost_usd_estimate": 0.12859800000000002,
+          "duration_ms": 81310
+        }
+      ]
+    },
+    "dev-04": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:00:46.101Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4939,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 14169
+          },
+          "total_cost_usd_estimate": 0.16144999999999998,
+          "duration_ms": 105260
+        }
+      ]
+    },
+    "dev-05": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:01:46.753Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "a heading inside a turn: \"## Why\"",
+            "a heading inside a turn: \"## What changed\"",
+            "a heading inside a turn: \"## How I tested\"",
+            "a heading inside a turn: \"## Rollback\"",
+            "a heading inside a turn: \"## Rollback\""
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4595,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 7728
+          },
+          "total_cost_usd_estimate": 0.095664,
+          "duration_ms": 59481
+        },
+        {
+          "at": "2026-10-20T11:02:47.067Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4729,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 6985
+          },
+          "total_cost_usd_estimate": 0.08877,
+          "duration_ms": 59139
+        }
+      ]
+    },
+    "dev-06": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:04:05.805Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "a heading inside a turn: \"## Database\""
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4955,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9960
+          },
+          "total_cost_usd_estimate": 0.119424,
+          "duration_ms": 77531
+        },
+        {
+          "at": "2026-10-20T11:05:07.439Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "me.sql-files is not said (one of \".sql files\")"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 5018,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 7465
+          },
+          "total_cost_usd_estimate": 0.094726,
+          "duration_ms": 60401
+        },
+        {
+          "at": "2026-10-20T11:06:19.671Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 5022,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 8706
+          },
+          "total_cost_usd_estimate": 0.107152,
+          "duration_ms": 70948
+        }
+      ]
+    },
+    "dev-07": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:07:42.359Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4723,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 11025
+          },
+          "total_cost_usd_estimate": 0.129146,
+          "duration_ms": 81440
+        }
+      ]
+    },
+    "dev-08": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:08:28.677Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4127,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5600
+          },
+          "total_cost_usd_estimate": 0.072512,
+          "duration_ms": 45101
+        }
+      ]
+    },
+    "dev-09": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:09:41.803Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "a heading inside a turn: \"# pagesift\"",
+            "a heading inside a turn: \"## Install\"",
+            "a heading inside a turn: \"## Usage\"",
+            "a heading inside a turn: \"## Malformed markup\"",
+            "a heading inside a turn: \"## Dependencies\"",
+            "a heading inside a turn: \"## License\"",
+            "a heading inside a turn: \"## History\""
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4870,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 9527
+          },
+          "total_cost_usd_estimate": 0.11475400000000001,
+          "duration_ms": 71933
+        },
+        {
+          "at": "2026-10-20T11:11:07.517Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "\"CJS\" must not appear (not planned in this session): …re are no CommonJS fields at all: no `main` pointing at a `.cjs` file and no `require` condition. - `jsr.json`: name, ve…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 5037,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 10795
+          },
+          "total_cost_usd_estimate": 0.128102,
+          "duration_ms": 84486
+        },
+        {
+          "at": "2026-10-20T11:13:01.143Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": false,
+          "problems": [
+            "\"YAML\" must not appear (not planned in this session): …, `coverage`, and `*.tgz` for packed tarballs. - `pnpm-lock.yaml`: generated by the install. **Dependencies installed**…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4988,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 14934
+          },
+          "total_cost_usd_estimate": 0.169296,
+          "duration_ms": 112426
+        },
+        {
+          "at": "2026-10-20T11:38:11.993Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": false,
+          "problems": [
+            "\"closed-source\" must not appear (first said in dev-11): …shared under the same license, but you can use it inside a closed-source application.\" Wait, that last phrase needs to…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4973,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5776
+          },
+          "total_cost_usd_estimate": 0.077656,
+          "duration_ms": 47150
+        },
+        {
+          "at": "2026-10-20T11:39:00.487Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 5076,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5879
+          },
+          "total_cost_usd_estimate": 0.07909799999999999,
+          "duration_ms": 47306
+        }
+      ]
+    },
+    "dev-10": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:14:02.145Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4608,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 7465
+          },
+          "total_cost_usd_estimate": 0.09308600000000002,
+          "duration_ms": 59764
+        }
+      ]
+    },
+    "dev-11": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:15:31.409Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4831,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 10826
+          },
+          "total_cost_usd_estimate": 0.127588,
+          "duration_ms": 88043
+        },
+        {
+          "at": "2026-10-20T11:58:23.111Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4996,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5924
+          },
+          "total_cost_usd_estimate": 0.07922799999999999,
+          "duration_ms": 45606
+        }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T11:57:18.385Z",
+          "why": "Kept, then set aside on reading: the assistant says \"You said to ask before adding any dependency\", which the person said only in dev-09. The assistant remembers nothing between sessions, and the prompt now says a team's conventions are known only once said. The kept file is in ../runs."
+        }
+      ]
+    },
+    "dev-12": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:17:05.531Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4405,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 12111
+          },
+          "total_cost_usd_estimate": 0.138734,
+          "duration_ms": 92849
+        }
+      ]
+    },
+    "dev-13": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:39:41.583Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4535,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4664
+          },
+          "total_cost_usd_estimate": 0.064784,
+          "duration_ms": 39870
+        }
+      ]
+    },
+    "dev-14": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:40:23.699Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4435,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4982
+          },
+          "total_cost_usd_estimate": 0.067564,
+          "duration_ms": 40843
+        }
+      ]
+    },
+    "dev-15": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:41:01.962Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4587,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4904
+          },
+          "total_cost_usd_estimate": 0.067392,
+          "duration_ms": 36961
+        },
+        {
+          "at": "2026-10-20T11:58:57.174Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4649,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4049
+          },
+          "total_cost_usd_estimate": 0.05909,
+          "duration_ms": 33093
+        }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T11:57:18.388Z",
+          "why": "Kept, then set aside on reading: the assistant says the team handbook is in Notion, which the person said only in dev-02. The assistant remembers nothing between sessions, and the prompt now says a team's conventions are known only once said. The kept file is in ../runs."
+        }
+      ]
+    },
+    "dev-16": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:42:28.438Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": false,
+          "problems": [
+            "colour #1C1B1A is not planned here (only #B4462F)",
+            "colour #FAF6EF is not planned here (only #B4462F)"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4639,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 10364
+          },
+          "total_cost_usd_estimate": 0.1222,
+          "duration_ms": 85184
+        },
+        {
+          "at": "2026-10-20T11:43:20.458Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": false,
+          "problems": [
+            "\"YAML\" must not appear (not planned in this session): …ode 24 pinned under `engines`, a `biome.json`, a `pnpm-lock.yaml`, and a `fly.toml`. There's no source yet and no `.giti…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4734,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 6394
+          },
+          "total_cost_usd_estimate": 0.08288000000000001,
+          "duration_ms": 50803
+        },
+        {
+          "at": "2026-10-20T11:44:13.313Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4766,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 6131
+          },
+          "total_cost_usd_estimate": 0.080378,
+          "duration_ms": 51587
+        }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T12:05:06.410Z",
+          "why": "Kept on attempt 3, then set aside before it was committed: it used the sandbox login's own email address as the blog's contact address. Claude Code adds the account's email to every run's context, even with a system prompt of its own. The checker now refuses the login's address and names, and the prompt says every address is made up. The kept file is in ../runs."
+        }
+      ]
+    },
+    "dev-17": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:44:44.443Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4277,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 3497
+          },
+          "total_cost_usd_estimate": 0.052082,
+          "duration_ms": 29853
+        }
+      ]
+    },
+    "dev-18": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:45:27.014Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4328,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5167
+          },
+          "total_cost_usd_estimate": 0.06898599999999999,
+          "duration_ms": 41347
+        },
+        {
+          "at": "2026-10-20T11:59:35.934Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4390,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4550
+          },
+          "total_cost_usd_estimate": 0.063064,
+          "duration_ms": 37740
+        }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T11:57:18.388Z",
+          "why": "Kept, then set aside on reading: the assistant writes the team's four-section pull request description and says it needs two approvals, though neither was said in this session. The assistant remembers nothing between sessions, and the prompt now says a team's conventions are known only once said. The kept file is in ../runs."
+        }
+      ]
+    },
+    "dev-19": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:46:33.951Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 4,
+            "cache_creation_input_tokens": 5173,
+            "cache_read_input_tokens": 4002,
+            "output_tokens": 4673
+          },
+          "total_cost_usd_estimate": 0.0678302,
+          "duration_ms": 65652
+        }
+      ]
+    },
+    "dev-20": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:47:20.347Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4345,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5719
+          },
+          "total_cost_usd_estimate": 0.074574,
+          "duration_ms": 45118
+        }
+      ]
+    },
+    "dev-21": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:48:04.983Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4529,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5826
+          },
+          "total_cost_usd_estimate": 0.07637999999999999,
+          "duration_ms": 43399
+        }
+      ]
+    },
+    "dev-22": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:48:54.657Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4810,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5962
+          },
+          "total_cost_usd_estimate": 0.078864,
+          "duration_ms": 48390
+        }
+      ]
+    },
+    "dev-23": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:49:28.948Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4006,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4101
+          },
+          "total_cost_usd_estimate": 0.05703799999999999,
+          "duration_ms": 33052
+        },
+        {
+          "at": "2026-10-20T12:00:20.999Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4068,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4220
+          },
+          "total_cost_usd_estimate": 0.058476,
+          "duration_ms": 44113
+        }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T11:57:18.389Z",
+          "why": "Kept, then set aside on reading: the assistant writes the team's four-section pull request description, though nobody gave it the sections in this session. The assistant remembers nothing between sessions, and the prompt now says a team's conventions are known only once said. The kept file is in ../runs."
+        }
+      ]
+    },
+    "dev-24": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:50:11.975Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4150,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4945
+          },
+          "total_cost_usd_estimate": 0.06605399999999999,
+          "duration_ms": 41821
+        }
+      ]
+    },
+    "dev-25": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:50:49.871Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": false,
+          "problems": [
+            "\"YAML\" must not appear (not planned in this session): …held\" error in the issue. Other findings: - `.goreleaser.yaml` already builds `windows/amd64` and `windows/arm64` arc…",
+            "a Windows path does not fit the user's machine: …Windows. They ran `dotkit sync` and got this: ``` symlink C:\\Users\\mara\\dotfiles\\gitconfig C:\\Users\\mara\\.gitconfig: A…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4230,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4225
+          },
+          "total_cost_usd_estimate": 0.05917399999999999,
+          "duration_ms": 36597
+        },
+        {
+          "at": "2026-10-20T11:51:33.299Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4427,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4959
+          },
+          "total_cost_usd_estimate": 0.067302,
+          "duration_ms": 42143
+        }
+      ]
+    },
+    "dev-26": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:52:00.594Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 3927,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 3059
+          },
+          "total_cost_usd_estimate": 0.046301999999999996,
+          "duration_ms": 26081
+        }
+      ]
+    },
+    "dev-27": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:52:41.252Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4213,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5222
+          },
+          "total_cost_usd_estimate": 0.069076,
+          "duration_ms": 39407
+        },
+        {
+          "at": "2026-10-20T12:01:06.750Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4275,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4922
+          },
+          "total_cost_usd_estimate": 0.066324,
+          "duration_ms": 44792
+        }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T11:57:18.389Z",
+          "why": "Kept, then set aside on reading: the assistant says the pull request needs two approvals before it can be squash-merged, though neither was said in this session. The assistant remembers nothing between sessions, and the prompt now says a team's conventions are known only once said. The kept file is in ../runs."
+        }
+      ]
+    },
+    "dev-28": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:53:06.590Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 0.7,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 3985,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 3073
+          },
+          "total_cost_usd_estimate": 0.046674,
+          "duration_ms": 24034
         }
       ]
     }

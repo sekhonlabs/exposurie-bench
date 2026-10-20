@@ -67,7 +67,17 @@ There are 3–4 times more facts that no task asks about than facts that a task 
 
 ### 2. Histories
 
-**Plan usage:** yes. Sonnet 5.5 writes the sessions, inside the sandbox, with session persistence off. **Built and tested offline 2026-10-20, then piloted on three sessions with the owner's go.** del-04 and del-22 are kept. dev-01 passed but was set aside on reading, because it printed a Windows drive path that does not fit the user's Mac. Since the pilot, the prompt names each project's folder, asks for at least the planned length, and leaves the language name off code blocks, and the checker refuses drive paths. Each kept session took about 4.5–9.4K output tokens, roughly twice its visible text, because the model thinks before writing.
+**Plan usage:** yes. Sonnet 5.5 writes the sessions, inside the sandbox, with session persistence off. **Built and tested offline 2026-10-20, then piloted on three sessions with the owner's go.** del-04 and del-22 were kept. dev-01 passed but was set aside on reading, because it printed a Windows drive path that does not fit the user's Mac. Since the pilot, the prompt names each project's folder and leaves the language name off code blocks, and the checker refuses drive paths. Each kept session took about 4.5–9.4K output tokens, roughly twice its visible text, because the model thinks before writing.
+
+The first full run, 2026-10-20, changed four things (see [decisions.md](decisions.md)):
+
+- Sessions asked for at least their planned length came in at 1.39 times it, which would have put the developer's history near 114K tokens. Each session's length now follows the history's budget.
+- Every heading the checker refused was inside a code block, in a README or a pull request description. Headings are now refused only outside code blocks.
+- Two attempts named a forbidden word inside a file name (`.cjs`, and pnpm's lockfile), and one split a spelling with backticks. The prompt now covers both.
+- Reading found five developer sessions where the assistant knew a team convention said only in an earlier session. The prompt now says the assistant knows the person's rules and the team's conventions only once they are said.
+- Claude Code adds the sandbox login's own email address to every run's context. One session used it, and was set aside before it was committed. The checker now refuses the login's address and names, read from the sandbox when it runs, so they never enter the repository.
+
+Seven kept sessions are written again: del-04, where the assistant knew something only a claude.ai chat had said; dev-11, dev-15, dev-18, dev-23 and dev-27, where it knew a team convention said only earlier; and dev-16, which used the login's address.
 
 - **Briefs.** Every session in `users/<user>/plan.json` has a `brief`:
   - what happens (`story`)
@@ -80,6 +90,7 @@ There are 3–4 times more facts that no task asks about than facts that a task 
 - **The prompt** (`gen/prompt.mjs`) is built from the brief, the fact sheet and the checker's rules. It holds the facts that must come up, with their exact spellings and reasons, the earlier facts that come up again, the background the session must not contradict, and the words it must not use. The assistant in the history remembers nothing from earlier sessions, as Claude Code doesn't.
 - **The generator** (`gen/generate.mjs`) runs the sandbox's Claude Code once per session, with the pinned model and the prompt as its whole system prompt. The run has no tools, skills or MCP servers, stdin is closed and session persistence is off.
   - What comes back is checked with `check/history.mjs` before it is kept. A session that fails goes back with the checker's findings, up to three attempts.
+  - Each history is about 80K tokens, and sessions come in longer or shorter than their briefs. So each new session is asked for its share of what is left: the tokens the written sessions have not used, spread over the briefs still to write, between 0.7 and 1.3 of its own brief.
   - Sessions already written are skipped, so a run stopped by a usage limit resumes when it is run again.
   - `users/<user>/sessions/generation.json` keeps every attempt's usage and findings. Prompts and raw output go to `../runs`.
 - **The converter** (`gen/convert.mjs`) turns the sessions into a home folder:

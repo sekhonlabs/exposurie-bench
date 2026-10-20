@@ -9,6 +9,10 @@
 // history. What comes back is held to check/history.mjs before it is kept; a
 // session that fails goes back with the checker's findings, up to N attempts.
 //
+// Each history is about TARGET_TOKENS long, and sessions come in longer or
+// shorter than their briefs, so each new session is asked for its share of the
+// budget still left (lengthScale below).
+//
 // Sessions already in users/<user>/sessions/ are skipped, so a run stopped by
 // a usage limit resumes by running the same command again. Every attempt's
 // prompt, output and usage are saved under ../runs; users/<user>/sessions/
@@ -21,7 +25,9 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { CLAUDE, PINS, RUNS, SANDBOX, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
-import { USERS, checkSession, headerFor, loadUser, parseTurns, sessionFile } from '../check/history.mjs';
+import {
+  CHARS_PER_TOKEN, TARGET_TOKENS, USERS, checkSession, headerFor, loadUser, parseSession, parseTurns, sessionFile, textOf,
+} from '../check/history.mjs';
 import { promptFor } from './prompt.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -47,9 +53,28 @@ const todo = [...u.sessions.values()].filter((s) => (named.length ? named.includ
 const runDir = join(RUNS, `gen-${user}-${dryRun ? 'dry-run-' : ''}${stamp()}`);
 mkdirSync(runDir, { recursive: true });
 
+/**
+ * The share of its brief's length the next session is asked for: the tokens
+ * the written sessions have left of TARGET_TOKENS, counted as check/history.mjs
+ * counts them, spread over the briefs not yet written. It stays inside SCALE,
+ * well within the checker's band for a single session.
+ */
+const SCALE = [0.7, 1.3];
+function lengthScale() {
+  let written = 0;
+  let left = 0;
+  for (const s of u.sessions.values()) {
+    const f = sessionFile(user, s.id);
+    if (existsSync(f)) written += textOf(parseSession(readFileSync(f, 'utf8')).turns).length / CHARS_PER_TOKEN;
+    else left += s.brief.tokens;
+  }
+  return left ? Math.min(SCALE[1], Math.max(SCALE[0], (TARGET_TOKENS - written) / left)) : 1;
+}
+
 if (dryRun) {
-  for (const s of todo) writeFileSync(join(runDir, `${s.id}.md`), promptFor(u, s.id));
-  console.log(`${todo.length} prompts written to ${runDir}`);
+  const scale = lengthScale();
+  for (const s of todo) writeFileSync(join(runDir, `${s.id}.md`), promptFor(u, s.id, [], scale));
+  console.log(`${todo.length} prompts written to ${runDir}, at ${scale.toFixed(2)} of their briefs' length`);
   process.exit(0);
 }
 
@@ -104,11 +129,12 @@ let used = { input: 0, cacheWrite: 0, cacheRead: 0, output: 0 };
 for (const s of todo) {
   if (existsSync(sessionFile(user, s.id))) continue;
   const entry = (log.sessions[s.id] ??= { attempts: [] });
+  const scale = lengthScale();
   let feedback = [];
   let kept = false;
   for (let n = 1; n <= attempts && !kept; n += 1) {
-    const prompt = promptFor(u, s.id, feedback);
-    process.stdout.write(`${s.id} attempt ${n}: `);
+    const prompt = promptFor(u, s.id, feedback, scale);
+    process.stdout.write(`${s.id} attempt ${n} (length ${scale.toFixed(2)}): `);
     const res = write(s, n, prompt);
     const header = ['---', ...headerFor(user, s).map(([k, v]) => `${k}: ${v}`), '---', ''].join('\n');
     const md = `${header}\n${res.text}\n`;
@@ -122,7 +148,7 @@ for (const s of todo) {
       output: used.output + (usage.output_tokens || 0),
     };
     entry.attempts.push({
-      at: new Date().toISOString(), claude_code: version, ok: problems.length === 0, problems,
+      at: new Date().toISOString(), claude_code: version, length_scale: Number(scale.toFixed(3)), ok: problems.length === 0, problems,
       usage: { input_tokens: usage.input_tokens, cache_creation_input_tokens: usage.cache_creation_input_tokens, cache_read_input_tokens: usage.cache_read_input_tokens, output_tokens: usage.output_tokens },
       total_cost_usd_estimate: res.cost, duration_ms: res.ms,
     });

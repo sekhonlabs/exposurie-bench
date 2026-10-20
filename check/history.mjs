@@ -15,8 +15,11 @@ import { existsSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { around, colourCodes, find, mentions } from './text.mjs';
+import { loginIdentity } from '../runner/sandbox.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+/** Never the person's, and never public, so a problem names what it is, never the value. */
+const LOGIN = loginIdentity();
 export const USERS = ['developer', 'delegator'];
 const readJson = (...p) => JSON.parse(readFileSync(join(REPO, ...p), 'utf8'));
 
@@ -167,6 +170,10 @@ export function forbiddenIn(text, rules) {
   // generating machine showing through, as in dev-01's first draft.
   const drive = /(?<![A-Za-z])[A-Za-z]:\\/.exec(text);
   if (drive) out.push(`a Windows path does not fit the user's machine: ${around(text, drive.index)}`);
+  // The sandbox login's own details reach the generating model with every run.
+  for (const id of LOGIN) {
+    if (find(text, id) >= 0) out.push(`the sandbox login's own ${id.includes('@') ? 'email address' : 'name'} appears; every address and name in the history is made up`);
+  }
   return out;
 }
 
@@ -177,19 +184,25 @@ export function parseTurns(body) {
   const problems = [];
   const turns = [];
   let cur = null;
+  let fenced = false;
   const before = [];
   for (const line of body.replace(/\r\n/g, '\n').split('\n')) {
     const m = DELIM.exec(line);
     if (m) {
       if (cur) turns.push(cur);
       cur = { role: m[1] === 'User' ? 'user' : 'assistant', lines: [] };
+      fenced = false;
       continue;
     }
     if (!cur) {
       if (line.trim()) before.push(line);
       continue;
     }
-    if (/^##? /.test(line)) problems.push(`a heading inside a turn: "${line.slice(0, 60)}"`);
+    // Inside a code block a heading belongs to the document being shown (a
+    // README, a pull request description). Outside one it looks like the
+    // file's own turn headings.
+    if (/^\s*```/.test(line)) fenced = !fenced;
+    else if (!fenced && /^##? /.test(line)) problems.push(`a heading inside a turn: "${line.slice(0, 60)}"`);
     cur.lines.push(line);
   }
   if (cur) turns.push(cur);

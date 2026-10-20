@@ -48,7 +48,8 @@ const MEMORY = {
   'claude-code':
     'The assistant remembers nothing from earlier sessions. It knows only what is said in this one and what it' +
     ' finds in the project\'s files. So an earlier decision that matters here is either said again by the' +
-    ' person or found by the assistant in the code, and the assistant never claims to remember the person.',
+    ' person or found by the assistant in the code, and the assistant never claims to remember the person.' +
+    ' It never tells them "you said" about anything they have not said in this session.',
   'claude.ai':
     'Claude remembers nothing from their other chats or their coding sessions. It knows only what the person' +
     ' says in this chat, so anything earlier that matters here, the person says again.',
@@ -64,7 +65,11 @@ function background(u, s, skip) {
     .map((f) => f.value);
 }
 
-export function promptFor(u, id, feedback = []) {
+/**
+ * `scale` sets the session's length as a share of its brief's: the generator
+ * aims each new session at the history's remaining budget (see gen/generate.mjs).
+ */
+export function promptFor(u, id, feedback = [], scale = 1) {
   const s = u.sessions.get(id);
   const b = s.brief;
   const rules = rulesFor(u, id);
@@ -90,7 +95,8 @@ export function promptFor(u, id, feedback = []) {
       ' no closing remarks, no code fence around the whole thing.',
     '',
     'Inside a turn, write the way that side would: plain text, lists, inline code, short code blocks,' +
-      ' `###` headings or bold. Never start a line with `# ` or `## ` inside a turn. A code block opens' +
+      ' `###` headings or bold. Outside code blocks, never start a line with `# ` or `## `. Inside a code' +
+      ' block, such as a README or a pull request description, any heading is fine. A code block opens' +
       ' with three backticks and nothing after them: no language name.',
     '',
     '## Where this happens',
@@ -122,7 +128,9 @@ export function promptFor(u, id, feedback = []) {
       '',
       'Each item appears in this session. Write each quoted spelling exactly as given, as whole words: a' +
         ' plural or any other ending does not count ("exclamation marks" is not "exclamation mark"), and' +
-        ' where it says the case must match, it must. Where a reason is given, it is said in the conversation.',
+        ' where it says the case must match, it must. Backticks may go around a whole spelling but never' +
+        ' inside one ("`save` button" is not "save button"). Where a reason is given, it is said in the' +
+        ' conversation.',
       '',
     );
     rules.required.forEach((r, i) => {
@@ -162,10 +170,11 @@ export function promptFor(u, id, feedback = []) {
     say(
       '## Background',
       '',
-      'Also true, and never to be contradicted. Use these only where the conversation needs them. In' +
-        ' Claude Code the assistant can see what the project\'s files show (its tools, config and code), but' +
-        ' nothing about the person beyond the files unless they say it in this session; in claude.ai, Claude' +
-        ' knows none of it unless the person says it:',
+      'Also true, and never to be contradicted. Use these only where the conversation needs them, and only' +
+        ' as the assistant could know them. In Claude Code it can see what the project\'s files show (its' +
+        ' tools, config and code). Everything else, such as the person\'s habits and rules or their team\'s' +
+        ' conventions and templates, it knows only once the person says it in this session, and until then it' +
+        ' asks rather than assumes. In claude.ai, Claude knows none of it unless the person says it:',
       '',
       ...bg.map((v) => `- ${v}`),
       '',
@@ -174,12 +183,14 @@ export function promptFor(u, id, feedback = []) {
 
   const words = rules.forbidden.filter((f) => f.mode === 'word');
   const parts = rules.forbidden.filter((f) => f.mode === 'substring');
+  const target = b.tokens * WORDS_PER_TOKEN * scale;
   say(
     '## Rules',
     '',
     '- Never write any of these words or names, in any case, anywhere in the session, not even in code,' +
       ` file names, examples or asides. They belong to other sessions or are not this person's choices: ${words.map((f) => f.term).join(', ')}.`,
   );
+  say('- That includes file names and extensions. Where a file\'s name holds one of those words, call the file something else, such as "the lockfile".');
   if (parts.length) say(`- Never write these letters in a row, even inside a longer word: ${quote(parts.map((f) => f.term))}.`);
   say(
     rules.colours.size
@@ -189,9 +200,11 @@ export function promptFor(u, id, feedback = []) {
       ' something has to be referred to, use a plain description ("a hosted CI service", "a teammate").',
     "- Don't add facts about the person beyond this brief: where they live, their job, family, habits and" +
       ' plans come up only where a brief plans them.',
+    '- Any email address in the session is made up, at example.com. Never use an address or a name from' +
+      ' anywhere outside this brief.',
     "- Don't re-decide anything already decided, and don't plan anything the brief doesn't.",
     '- Code: short snippets only, under 15 lines, and only where they make a point.',
-    `- Length: at least ${Math.round(b.tokens * WORDS_PER_TOKEN)} words in all, across about ${b.turns} exchanges (an exchange is one message from the person and one reply). A shorter session is sent back.`,
+    `- Length: at least ${Math.round(target * 0.9)} and at most ${Math.round(target * 1.15)} words in all, across about ${b.turns} exchanges (an exchange is one message from the person and one reply). A session far outside that is sent back.`,
   );
 
   if (feedback.length) {

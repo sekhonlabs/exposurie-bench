@@ -34,6 +34,12 @@
           "total_cost_usd_estimate": 0.06360199999999999,
           "duration_ms": 41851
         }
+      ],
+      "set_aside": [
+        {
+          "at": "2026-10-20T11:38:31.381Z",
+          "why": "Kept on attempt 2 in the pilot, then set aside on reading: the assistant says the user writes late at night, which only the claude.ai chat del-01 had said. The prompt was fixed after the pilot, but this draft was kept. The kept file is in ../runs."
+        }
       ]
     },
     "del-22": {
@@ -51,6 +57,63 @@
           },
           "total_cost_usd_estimate": 0.071494,
           "duration_ms": 50226
+        }
+      ]
+    },
+    "del-01": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:54:44.610Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.057,
+          "ok": true,
+          "problems": [],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4134,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 6334
+          },
+          "total_cost_usd_estimate": 0.07988,
+          "duration_ms": 60203
+        }
+      ]
+    },
+    "del-02": {
+      "attempts": [
+        {
+          "at": "2026-10-20T11:55:31.142Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.065,
+          "ok": false,
+          "problems": [
+            "969 words, planned about 1950"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4497,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 4956
+          },
+          "total_cost_usd_estimate": 0.067552,
+          "duration_ms": 45410
+        },
+        {
+          "at": "2026-10-20T11:56:15.643Z",
+          "claude_code": "2.1.302 (Claude Code)",
+          "length_scale": 1.065,
+          "ok": false,
+          "problems": [
+            "\"what to click\" must not appear (first said in del-07): …he site on. We'll do the first stage now, and I'll tell you what to click one step at a time. **Stage 1: make the place…"
+          ],
+          "usage": {
+            "input_tokens": 2,
+            "cache_creation_input_tokens": 4557,
+            "cache_read_input_tokens": 0,
+            "output_tokens": 5056
+          },
+          "total_cost_usd_estimate": 0.06879199999999999,
+          "duration_ms": 43311
         }
       ]
     }

@@ -134,6 +134,23 @@ async function waitFor(done, ms, what) {
   }
 }
 
+/**
+ * The plan login's own email address and names, read from the sandbox when a
+ * check runs, so they never enter the repository. Claude Code 2.1.302 adds the
+ * account's email address to every run's context (its user context
+ * `userEmail`), even when the run brings its own system prompt, so a generated
+ * session can repeat it. Empty when there is no sandbox login.
+ */
+export function loginIdentity() {
+  try {
+    const a = JSON.parse(readFileSync(join(CONFIG, '.claude.json'), 'utf8')).oauthAccount ?? {};
+    const email = typeof a.emailAddress === 'string' ? a.emailAddress : '';
+    return [email, email.split('@')[0], a.displayName, a.fullName].filter((v) => typeof v === 'string' && v.length >= 3);
+  } catch {
+    return [];
+  }
+}
+
 export function versions() {
   const out = (r) => (r.stdout || r.stderr).trim();
   return {
