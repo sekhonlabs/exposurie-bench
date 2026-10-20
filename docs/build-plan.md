@@ -12,10 +12,10 @@ Claude Code builds and runs all of it.
 | `users/<user>/plan.json` | the session plan: each session's time, project or chat, and surface (part 1), and which facts come up in it and how (part 2) |
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
-| `check/` | the fact-sheet check (part 1) and the history checker (part 3) |
-| `tasks/` | the tasks, their required and forbidden facts, and the starter repositories for areas 6 and 7. `tasks/index.json` lists every task |
+| `check/` | the fact-sheet check (part 1), the history checker (part 3) and the task check (part 4) |
+| `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6 and 7 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`) and example answers (`tasks/examples.json`) |
 | `runner/` | sandbox setup and the runner |
-| `score/` | the scorer and the judge rubric |
+| `score/` | how a task's checks read a run (part 4), and the scorer and the judge (part 5) |
 | `results/` | summaries and charts. Raw run output stays outside the repository |
 
 The sandbox and the raw output (`sandbox/` and `runs/`) sit next to this repository's folder, never inside it.
@@ -124,12 +124,46 @@ node gen/convert.mjs --self-test
 
 ### 4. Tasks
 
-**Plan usage:** none.
+**Plan usage:** none. **Done 2026-10-20:** `check/tasks.mjs` passes. The 24 tasks of areas 1–8 are complete. Area 9's two are built in part 8.
 
-- 26 tasks across the nine areas, three in each and two in area 9, each tied to one user. Their list, `tasks/index.json`, starts in part 1.
-- For every task, the required and forbidden facts, with the spellings that count.
-- Starter repositories for areas 6 and 7, and the file checks for each.
-- The condition files: B's history file for each user, and D's facts file for each task.
+Each task in `tasks/index.json` has:
+
+- its question (`ask`), in the user's own voice
+- the folder it runs in (`folder`): an empty folder named `scratch` for areas 1–5 and 8, so the name points at no project, and the project's own folder name for areas 6 and 7, holding a copy of its starter (`starter`) or nothing
+- how it is scored (`score`): by its checks, or by the judge for areas 4 and 5
+- its required checks (`required`), which must all hold, and its forbidden checks (`forbidden`), which must not. Each check names the fact it tests (`fact`), or none when it only confirms the work was done.
+- the judge's rubric (`judge`): what a right answer does and what makes it wrong. The judge uses it for areas 4 and 5, and for any answer where every required check holds and a forbidden one does too.
+
+A check reads the answer, the files the run created or changed, or both (`in`). It can narrow to some files (`file`, a glob) or to an HTML page's visible text (`text`). It passes when any, all or none of its spellings appear (`any`, `all`, `none`), or when a pattern matches (`patterns`). Spellings match as whole words, case-insensitively unless `exact`, in text read with backticks removed and curly quotes straightened. `score/checks.mjs` holds these rules, for the task check now and the scorer in part 5.
+
+- **Facts.** A task's required checks cover every fact whose `tasks` list it, and its forbidden checks cover every fact whose `traps` list it.
+- **Starters** in `tasks/starters/<task>/`. Each one is a project as the history leaves it:
+  - real-work-1: a new Hono and SQLite app of the developer's own, written their way, with no deploy files
+  - real-work-2: a cut-down `tidewell-api`, whose export endpoint fails for an organisation with no projects
+  - chat-1 to chat-3: the delegator's book-club, small-hours and spending-summary
+  - real-work-3 starts empty.
+
+  Where sessions disagree about a file, the latest session wins.
+- **The condition files**, written by `tasks/conditions.mjs` into `tasks/conditions/` and committed:
+  - B, `history-<user>.md`: every session and chat, oldest first, as exposurie reads them. Each one is headed by its start, its surface, and the folder it ran in or the chat's title.
+  - D, `facts-<task>.md`: only the facts the task needs, one line each. For area 4 these are the facts closest to what was never discussed. Area 8 has no D.
+- **Examples.** `tasks/examples.json` holds a right and a wrong answer for every task scored by its checks, and some answers that must go to the judge.
+
+`check/tasks.mjs` holds all of it:
+
+- each task against the fact sheets
+- no fact check passing on the question itself, or on a fresh agent's guess
+- no starter file passing a check on its own, or holding a plan made only in claude.ai
+- the condition files against a fresh build
+- every example's verdict
+- no question in the history, and no Windows path or login detail in any task file
+
+```
+node tasks/conditions.mjs     write the condition files
+node check/tasks.mjs          check the tasks
+```
+
+**Done when** `check/tasks.mjs` passes.
 
 ### 5. Runner and scorer
 
@@ -137,14 +171,15 @@ node gen/convert.mjs --self-test
 
 The runner:
 
-- makes a fresh folder for each run, writes the condition's file and sets the environment
+- makes a fresh folder for each run, named as the task says and holding a copy of its starter, writes the condition's file and sets the environment
 - runs Claude Code headless and saves the output stream and the versions
+- saves the files the run created or changed, compared with the starter
 - refuses a run whose start-up line shows a tool or MCP server that should not be there
 - mixes conditions together in the run order, and can resume after a stop
 
-The scorer never sees the condition. Answers that contain both a required and a forbidden fact go to the judge and the hand check.
+The scorer never sees the condition. It reads each run through `score/checks.mjs` (part 4). Answers that contain both a required and a forbidden fact go to the judge and the hand check, and so does every answer in areas 4 and 5. Anything the runner or the scorer saves into the repository goes through the history checker's login check first, because every run's context carries the sandbox login's email address.
 
-Both are tested end to end against a fake `claude` that prints saved output, before any real run.
+Both are tested end to end against a fake `claude` that prints saved output, before any real run. `tasks/examples.json` is where the fake answers start.
 
 ### 6. Brain build and pilot
 

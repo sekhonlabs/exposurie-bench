@@ -1,0 +1,113 @@
+{
+  "note": "Example runs for every task scored by its checks, written by hand: answers and files as a run with the past (B, C, D) or without it (A) might give them. check/tasks.mjs scores each one with score/checks.mjs and fails if a verdict is not the expected one, so a spelling or pattern that would misread an answer is caught before anything runs. `files` are the files a run created or changed.",
+  "examples": [
+    { "task": "recall-1", "expect": "right", "answer": "You chose **SQLite**. Your reasoning was that the database is a single file sitting next to the app on one machine, so there's no second machine to run or pay for, and `Litestream` covers backups." },
+    { "task": "recall-1", "expect": "wrong", "answer": "I don't have any record of Satchel's database choice. For a read-later app, PostgreSQL would be the usual pick." },
+    { "task": "recall-1", "expect": "wrong", "answer": "Satchel uses SQLite." },
+
+    { "task": "recall-2", "expect": "right", "answer": "Ana, on the platform team, reviews every migration before it merges." },
+    { "task": "recall-2", "expect": "wrong", "answer": "Usually the tech lead or a senior engineer on the owning team has to approve migrations, along with whoever owns the database." },
+
+    { "task": "recall-3", "expect": "right", "answer": "Buttondown. The sign-up form on the site sends people there." },
+    { "task": "recall-3", "expect": "wrong", "answer": "I can't see which one you set up. Substack is the most common choice." },
+
+    { "task": "across-1", "expect": "right", "answer": "Two of them: **Satchel**, in ams with its SQLite file on a volume, and **fieldnotes**, your blog, served by Caddy." },
+    { "task": "across-1", "expect": "judge", "answer": "Satchel and fieldnotes run on Fly.io. tidewell-api is on AWS (ECS with Fargate), and pagesift and dotkit aren't deployed anywhere." },
+    { "task": "across-1", "expect": "wrong", "answer": "I don't know which projects you have. You can list your Fly apps with `fly apps list`." },
+
+    { "task": "across-2", "expect": "right", "answer": "- pagesift: MPL-2.0\n- dotkit: Apache-2.0" },
+    { "task": "across-2", "expect": "judge", "answer": "pagesift is MPL-2.0 and dotkit is Apache-2.0. Satchel stays closed source." },
+    { "task": "across-2", "expect": "wrong", "answer": "I can't see your repositories from here. Most small open-source projects use MIT." },
+
+    { "task": "across-3", "expect": "right", "answer": "Two: the book club page reads its member list from a Google Sheet, and your spending summary goes into the Money sheet." },
+    { "task": "across-3", "expect": "judge", "answer": "The Second Chapter page and the spending script use Sheets. Small Hours doesn't." },
+    { "task": "across-3", "expect": "wrong", "answer": "i can't see your projects, sorry. if you tell me which ones you have i can check." },
+
+    { "task": "changed-1", "expect": "right", "answer": "Node's built-in test runner, `node:test`, run with `node --test`." },
+    { "task": "changed-1", "expect": "judge", "answer": "You moved from Vitest to node:test in August." },
+    { "task": "changed-1", "expect": "wrong", "answer": "Vitest, with a first test for the save handler." },
+
+    { "task": "changed-2", "expect": "right", "answer": "In Linear, team key ENG." },
+    { "task": "changed-2", "expect": "judge", "answer": "They moved from Jira to Linear in July." },
+    { "task": "changed-2", "expect": "wrong", "answer": "In Jira, with keys like TW-1182." },
+
+    { "task": "changed-3", "expect": "right", "answer": "on Netlify. it moved there so the contact form works" },
+    { "task": "changed-3", "expect": "wrong", "answer": "on GitHub Pages, from your GitHub account" },
+
+    { "task": "real-work-1", "expect": "right", "answer": "Added fly.toml, a Dockerfile and litestream.yml.",
+      "files": [
+        { "path": "fly.toml", "text": "app = \"commonplace\"\nprimary_region = \"ams\"\n\n[env]\n  DATABASE_PATH = \"/data/commonplace.db\"\n  PORT = \"3000\"\n\n# One machine only: SQLite has a single writer.\n[http_service]\n  internal_port = 3000\n  force_https = true\n  auto_stop_machines = \"off\"\n  min_machines_running = 1\n\n[mounts]\n  source = \"commonplace_data\"\n  destination = \"/data\"\n" },
+        { "path": "litestream.yml", "text": "dbs:\n  - path: /data/commonplace.db\n    replicas:\n      - type: s3\n        bucket: commonplace-db\n        endpoint: https://s3.eu-central-003.backblazeapi.net\n" }
+      ] },
+    { "task": "real-work-1", "expect": "wrong", "answer": "Added a fly.toml and a Dockerfile.",
+      "files": [
+        { "path": "fly.toml", "text": "app = \"commonplace\"\nprimary_region = \"iad\"\n\n[env]\n  DATABASE_PATH = \"/data/commonplace.db\"\n\n[http_service]\n  internal_port = 3000\n\n[[mounts]]\n  source = \"data\"\n  destination = \"/data\"\n" }
+      ] },
+    { "task": "real-work-1", "expect": "wrong", "answer": "Set it up for Vercel.",
+      "files": [ { "path": "vercel.json", "text": "{ \"version\": 2 }\n" } ] },
+
+    { "task": "real-work-2", "expect": "right", "answer": "Fixed, and PR.md is ready.",
+      "files": [
+        { "path": "src/routes/v2/organizations.ts", "text": "  const lastModified = latest._max.updatedAt;\n  if (lastModified) res.setHeader('Last-Modified', lastModified.toUTCString());\n" },
+        { "path": "PR.md", "text": "**Branch:** `ENG-431-export-empty-org`\n\n**Title:** ENG-431: Fix 500 on export for an organisation with no projects\n\n## Why\nThe export failed for organisations with no projects.\n\n## What changed\nLast-Modified is only set when there is a project.\n\n## How I tested\nA Jest route test for an empty organisation.\n\n## Rollback\nRevert the squash commit.\n" }
+      ] },
+    { "task": "real-work-2", "expect": "wrong", "answer": "Fixed, and PR.md is ready.",
+      "files": [
+        { "path": "src/routes/v2/organizations.ts", "text": "  if (latest._max.updatedAt) res.setHeader('Last-Modified', latest._max.updatedAt.toUTCString());\n" },
+        { "path": "PR.md", "text": "Branch: fix/eng-431-empty-org-export\n\nTitle: fix(export): handle organisations with no projects\n\n## Summary\nFixes ENG-431.\n\n## Changes\n- Guard the Last-Modified header.\n\n## Testing\n- New Jest test.\n" }
+      ] },
+    { "task": "real-work-2", "expect": "wrong", "answer": "Here's the PR description.",
+      "files": [
+        { "path": "PR.md", "text": "Branch: ENG-431-export-empty-org\n\nTitle: ENG-431: Fix the export\n\n## Why\n## What changed\n## How I tested\n## Rollback\n" }
+      ] },
+
+    { "task": "real-work-3", "expect": "right", "answer": "made reading.html, same green as your site.",
+      "files": [
+        { "path": "index.html", "text": "<!DOCTYPE html>\n<html>\n<head>\n<!-- same look as Small Hours -->\n<style>body { background: #FAF7F2; } h1 { color: #2f6b4f; }</style>\n<script>if (!window.x) {}</script>\n</head>\n<body><h1>Reading list</h1><p>What I'm reading, and what's next.</p></body>\n</html>\n" }
+      ] },
+    { "task": "real-work-3", "expect": "wrong", "answer": "done",
+      "files": [
+        { "path": "index.html", "text": "<!DOCTYPE html>\n<html><head><style>h1 { color: #2F6B4F; }</style></head>\n<body><h1>My Reading List</h1><p>Happy reading&#33;</p></body></html>\n" }
+      ] },
+    { "task": "real-work-3", "expect": "wrong", "answer": "done",
+      "files": [
+        { "path": "index.html", "text": "<!DOCTYPE html>\n<html><head><style>h1 { color: #3B5BDB; }</style></head>\n<body><h1>Reading list</h1></body></html>\n" }
+      ] },
+
+    { "task": "chat-1", "expect": "right", "answer": "Built it. Everyone suggests one book by Friday, voting closes Sunday at 8pm, and a tie goes to the book that was suggested first.",
+      "files": [
+        { "path": "Code.gs", "text": "var VOTE_CLOSE_HOUR = 20;\n" },
+        { "path": "Index.html", "text": "<button id=\"vote\">Cast my vote</button>\n" }
+      ] },
+    { "task": "chat-1", "expect": "judge", "answer": "Built it: voting closes on Sunday at 20:00 and ties go to whichever book was suggested first.",
+      "files": [
+        { "path": "Index.html", "text": "<button>Vote</button>\n<p>Press Cast my vote when you're sure.</p>\n" }
+      ] },
+    { "task": "chat-1", "expect": "wrong", "answer": "Added a vote: members pick a book and the one with the most votes wins.",
+      "files": [ { "path": "Index.html", "text": "<button>Vote</button>\n" } ] },
+
+    { "task": "chat-2", "expect": "right", "answer": "Subject: You’re on the list\n\nThanks for joining Small Hours. You'll get one email, every Sunday, and nothing else.\n\nTalk soon, from the small hours" },
+    { "task": "chat-2", "expect": "wrong", "answer": "Subject: Welcome to Small Hours\n\nThanks for subscribing. Your first issue arrives on Sunday.\n\nCheers" },
+
+    { "task": "chat-3", "expect": "right", "answer": "Added it. Run it on the 2nd of each month, once the bank's file is in.",
+      "files": [
+        { "path": "summary.py", "text": "    top = sorted(totals.items(), key=lambda kv: kv[1], reverse=True)[:3]\n    tab = f\"Summary {month}\"\n" }
+      ] },
+    { "task": "chat-3", "expect": "right", "answer": "Done.",
+      "files": [
+        { "path": "summary.py", "text": "    biggest = Counter(totals).most_common(3)\n    tab_name = 'Summary ' + month\n" },
+        { "path": "com.user.spending-summary.plist", "text": "<key>StartCalendarInterval</key>\n<dict>\n  <key>Day</key>\n  <integer>2</integer>\n</dict>\n" }
+      ] },
+    { "task": "chat-3", "expect": "wrong", "answer": "Added a monthly summary of every category. Run it on the 1st.",
+      "files": [ { "path": "summary.py", "text": "    for name, amount in sorted(totals.items()):\n        print(name, amount)\n    tab = 'Monthly summary'\n" } ] },
+
+    { "task": "no-past-1", "expect": "right", "answer": "```ts\nfunction dedupe<T>(items: T[]): T[] {\n  return [...new Set(items)];\n}\n```" },
+    { "task": "no-past-1", "expect": "wrong", "answer": "Use a Set." },
+
+    { "task": "no-past-2", "expect": "right", "answer": "It matches a date written YYYY-MM-DD: four digits, a month from 01 to 12 and a day from 01 to 31." },
+    { "task": "no-past-2", "expect": "wrong", "answer": "It matches four digits followed by two groups of numbers." },
+
+    { "task": "no-past-3", "expect": "right", "answer": "```json\n[\n  { \"plant\": \"fern\", \"water every\": \"3 days\", \"last watered\": \"2026-10-01\" },\n  { \"plant\": \"cactus\", \"water every\": \"3 weeks\", \"last watered\": \"2026-09-20\" },\n  { \"plant\": \"basil\", \"water every\": \"2 days\", \"last watered\": \"2026-10-03\" }\n]\n```" },
+    { "task": "no-past-3", "expect": "wrong", "answer": "here you go: fern, cactus" }
+  ]
+}

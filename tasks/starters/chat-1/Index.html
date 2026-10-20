@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      :root { --green: #2F6B4F; --paper: #FAF7F2; --ink: #22302A; }
+      body { margin: 0; background: var(--paper); color: var(--ink); font-family: Georgia, serif; line-height: 1.5; }
+      main { max-width: 34rem; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+      h1 { color: var(--green); font-size: 2.2rem; margin: 0; }
+      .count { margin: 0 0 1.5rem; color: #5b6660; }
+      .box { border-left: 4px solid var(--green); background: var(--paper); padding: 1rem 1.25rem; margin: 1.5rem 0; }
+      .box h2 { color: var(--green); font-size: 1rem; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em; }
+      .when { font-size: 1.3rem; font-weight: bold; margin: 0; }
+      .where, .places { margin: 0.25rem 0 0; font-size: 0.95rem; }
+      ul { list-style: none; padding: 0; }
+      li { padding: 0.5rem 0; border-bottom: 1px solid rgba(47, 107, 79, 0.25); }
+      select, input { font: inherit; padding: 0.5rem; }
+      .answer { display: flex; gap: 0.75rem; margin-top: 0.75rem; }
+      .answer button { font: inherit; padding: 0.75rem 1.25rem; border-radius: 0.4rem; border: 2px solid var(--green); cursor: pointer; }
+      .answer button.picked { background: var(--green); color: var(--paper); }
+      .answer button:not(.picked) { background: var(--paper); color: var(--green); }
+      #code-box[hidden], #page[hidden] { display: none; }
+      .error { color: #8a2c1d; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section id="code-box">
+        <h1>Second Chapter</h1>
+        <p>Enter the club code</p>
+        <form id="code-form">
+          <input id="code" inputmode="numeric" maxlength="4" autocomplete="off">
+          <button type="submit">Open</button>
+        </form>
+        <p class="error" id="code-error"></p>
+      </section>
+
+      <section id="page" hidden>
+        <h1 id="club"></h1>
+        <p class="count" id="count"></p>
+
+        <div class="box">
+          <h2>Next meeting</h2>
+          <p class="when" id="when"></p>
+          <p class="where" id="where"></p>
+          <p class="places" id="places"></p>
+          <label for="member">I am</label>
+          <select id="member"></select>
+          <div class="answer">
+            <button type="button" data-answer="I'm in">I'm in</button>
+            <button type="button" data-answer="Not this time">Not this time</button>
+          </div>
+        </div>
+
+        <h2>Members</h2>
+        <ul id="members"></ul>
+      </section>
+    </main>
+
+    <script>
+      var KEY = 'second-chapter-code';
+      var state = null;
+
+      function show(page) {
+        state = page;
+        document.getElementById('code-box').hidden = true;
+        document.getElementById('page').hidden = false;
+        document.getElementById('club').textContent = page.club;
+        document.getElementById('count').textContent = page.taken + ' members';
+        document.getElementById('when').textContent = page.meeting.when;
+        document.getElementById('where').textContent = page.meeting.where;
+        var left = page.max - page.taken;
+        document.getElementById('places').textContent =
+          page.taken + ' of ' + page.max + ' taken · ' + (left > 0 ? left + ' places left' : 'Full');
+        var select = document.getElementById('member');
+        var list = document.getElementById('members');
+        select.innerHTML = '';
+        list.innerHTML = '';
+        page.members.forEach(function (name) {
+          select.add(new Option(name, name));
+          var li = document.createElement('li');
+          li.textContent = name;
+          list.appendChild(li);
+        });
+        var saved = localStorage.getItem(KEY + '-member');
+        if (saved) select.value = saved;
+        markAnswer();
+      }
+
+      function markAnswer() {
+        var member = document.getElementById('member').value;
+        var answer = state.rsvps[member];
+        document.querySelectorAll('.answer button').forEach(function (b) {
+          b.classList.toggle('picked', b.dataset.answer === answer);
+        });
+      }
+
+      function load(code) {
+        google.script.run
+          .withSuccessHandler(function (page) {
+            localStorage.setItem(KEY, code);
+            show(page);
+          })
+          .withFailureHandler(function () {
+            localStorage.removeItem(KEY);
+            document.getElementById('code-error').textContent = 'That code is not right.';
+          })
+          .getPage(code);
+      }
+
+      document.getElementById('code-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        load(document.getElementById('code').value);
+      });
+
+      document.getElementById('member').addEventListener('change', function () {
+        localStorage.setItem(KEY + '-member', this.value);
+        markAnswer();
+      });
+
+      document.querySelectorAll('.answer button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var member = document.getElementById('member').value;
+          google.script.run
+            .withSuccessHandler(function (rsvps) {
+              state.rsvps = rsvps;
+              markAnswer();
+            })
+            .setRsvp(localStorage.getItem(KEY), state.meeting.id, member, b.dataset.answer);
+        });
+      });
+
+      if (localStorage.getItem(KEY)) load(localStorage.getItem(KEY));
+    </script>
+  </body>
+</html>

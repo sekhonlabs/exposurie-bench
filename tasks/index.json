@@ -1,37 +1,291 @@
 {
-  "note": "Every task, by area. Part 1 starts this list so the fact sheets can point at tasks. Each `ask` is a draft of the question. Part 4 fixes the wording and adds the required and forbidden facts, the starter repositories and the file checks.",
+  "note": "Every task, by area. The fields are explained in docs/build-plan.md, part 4. Each task runs in a fresh folder named `folder`: empty, or a copy of its starter under tasks/. `required` and `forbidden` are checks, and `judge` is the rubric for answers the checks cannot settle. Area 9 is built in part 8.",
   "tasks": [
-    { "id": "recall-1", "area": 1, "user": "developer", "context": "personal", "ask": "Which database did I pick for Satchel, and why?" },
-    { "id": "recall-2", "area": 1, "user": "developer", "context": "work", "ask": "At work, who has to review a database migration before it merges?" },
-    { "id": "recall-3", "area": 1, "user": "delegator", "context": "personal", "ask": "Which newsletter service did we set up for my site?" },
+    {
+      "id": "recall-1", "area": 1, "user": "developer", "context": "personal",
+      "ask": "Which database did I pick for Satchel, and why?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "satchel.database", "in": "answer", "any": ["SQLite"] },
+        { "fact": "satchel.database", "in": "answer", "what": "the reason",
+          "any": ["one machine", "single machine", "same machine", "one file", "single file", "second machine", "no database server", "no separate database", "Litestream"] }
+      ],
+      "forbidden": [],
+      "judge": "Right if it says Satchel uses SQLite and gives the reason: the database is one file next to the app on one machine, so there is no second machine or database server to run or pay for, and Litestream covers backups. Wrong if it names another database as the pick, or gives no reason."
+    },
+    {
+      "id": "recall-2", "area": 1, "user": "developer", "context": "work",
+      "ask": "At work, who has to review a database migration before it merges?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "work.migration-reviewer", "in": "answer", "any": ["Ana"], "exact": true }
+      ],
+      "forbidden": [],
+      "judge": "Right if it names Ana, on the platform team. Wrong if it names anyone else or only a role (a senior engineer, the tech lead, a database administrator), or says it does not know."
+    },
+    {
+      "id": "recall-3", "area": 1, "user": "delegator", "context": "personal",
+      "ask": "which newsletter service did we set up for my site?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "site.newsletter", "in": "answer", "any": ["Buttondown"] }
+      ],
+      "forbidden": [],
+      "judge": "Right if it names Buttondown. Wrong if it names another service as the one set up, or says it does not know."
+    },
 
-    { "id": "across-1", "area": 2, "user": "developer", "context": "both", "ask": "Which of my projects run on Fly.io?" },
-    { "id": "across-2", "area": 2, "user": "developer", "context": "both", "ask": "Which of my repositories are open source, and under which licence?" },
-    { "id": "across-3", "area": 2, "user": "delegator", "context": "personal", "ask": "Which of my projects use Google Sheets?" },
+    {
+      "id": "across-1", "area": 2, "user": "developer", "context": "both",
+      "ask": "Which of my projects run on Fly.io?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "satchel.host", "in": "answer", "any": ["Satchel"] },
+        { "fact": "fieldnotes.host", "in": "answer", "any": ["fieldnotes", "field notes", "blog"] }
+      ],
+      "forbidden": [
+        { "fact": "work.host", "in": "answer", "any": ["tidewell-api", "tidewell-infra", "Tidewell"], "what": "the work repositories, which run on AWS" },
+        { "fact": null, "in": "answer", "any": ["pagesift", "dotkit"], "what": "a library and a CLI, which are not deployed" }
+      ],
+      "judge": "Right if it names Satchel and fieldnotes (the blog) as the projects on Fly.io, and no others. Wrong if it leaves either out, or includes a project that is not on Fly.io: tidewell-api and tidewell-infra run on AWS, on ECS with Fargate, and pagesift and dotkit are a library and a command-line tool that are not deployed."
+    },
+    {
+      "id": "across-2", "area": 2, "user": "developer", "context": "both",
+      "ask": "Which of my repositories are open source, and under which licence?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "pagesift.licence", "in": "answer", "any": ["pagesift"] },
+        { "fact": "pagesift.licence", "in": "answer", "any": ["MPL-2.0", "MPL 2.0", "MPL", "Mozilla Public License"], "what": "pagesift's licence" },
+        { "fact": "dotkit.licence", "in": "answer", "any": ["dotkit"] },
+        { "fact": "dotkit.licence", "in": "answer", "any": ["Apache-2.0", "Apache 2.0", "Apache License", "Apache"], "what": "dotkit's licence" }
+      ],
+      "forbidden": [
+        { "fact": "satchel.source", "in": "answer", "any": ["Satchel"], "what": "Satchel, which stays closed source" },
+        { "fact": "pagesift.licence", "in": "answer", "any": ["MIT"], "exact": true, "what": "the licence both projects turned down" },
+        { "fact": null, "in": "answer", "any": ["fieldnotes", "tidewell-api", "tidewell-infra"], "what": "repositories that are not open source" }
+      ],
+      "judge": "Right if it says pagesift is under MPL-2.0 and dotkit under Apache-2.0, and calls no other repository open source. Satchel stays closed source, and fieldnotes and the two work repositories are not open source either. Wrong if a licence is missing or swapped, or another repository is called open source."
+    },
+    {
+      "id": "across-3", "area": 2, "user": "delegator", "context": "personal",
+      "ask": "which of my projects use google sheets?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "bookclub.data", "in": "answer", "any": ["book club", "book-club", "Second Chapter", "club page"] },
+        { "fact": "spending.output", "in": "answer", "any": ["spending", "Money"] }
+      ],
+      "forbidden": [
+        { "fact": null, "in": "answer", "any": ["Small Hours", "small-hours", "quiet-youtube"], "what": "projects that do not use Sheets" },
+        { "fact": null, "in": "answer", "any": ["Quiet"], "exact": true, "what": "the add-on, which does not use Sheets" }
+      ],
+      "judge": "Right if it names the book club page (Second Chapter) and the spending summary (the Money sheet), and no other project. Wrong if it leaves either out, or adds the Small Hours site or the Quiet add-on."
+    },
 
-    { "id": "changed-1", "area": 3, "user": "developer", "context": "personal", "ask": "Which test runner do I use in my own projects now?" },
-    { "id": "changed-2", "area": 3, "user": "developer", "context": "work", "ask": "Where do our tickets live at work now?" },
-    { "id": "changed-3", "area": 3, "user": "delegator", "context": "personal", "ask": "Where is my site hosted now?" },
+    {
+      "id": "changed-1", "area": 3, "user": "developer", "context": "personal",
+      "ask": "Which test runner do I use in my own projects now?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "me.tests.2", "in": "answer",
+          "any": ["node:test", "node --test", "built-in test runner", "built-in runner", "Node's test runner", "Node test runner", "Node's own test runner", "Node's built-in test runner", "test runner built into Node"] }
+      ],
+      "forbidden": [
+        { "fact": "me.tests.1", "in": "answer", "any": ["Vitest"], "what": "the runner it replaced" },
+        { "fact": "work.tests", "in": "answer", "any": ["Jest"], "exact": true, "what": "the runner at work" }
+      ],
+      "judge": "Right if it says their own projects now use node:test, Node's built-in test runner. Wrong if it gives Vitest, which node:test replaced in August, or Jest, the work repository's runner, as the current one."
+    },
+    {
+      "id": "changed-2", "area": 3, "user": "developer", "context": "work",
+      "ask": "Where do our tickets live at work now?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "work.tracker.2", "in": "answer", "any": ["Linear"], "exact": true }
+      ],
+      "forbidden": [
+        { "fact": "work.tracker.1", "in": "answer", "any": ["Jira"], "what": "the tracker the team left in July" }
+      ],
+      "judge": "Right if it says the tickets live in Linear. Wrong if it gives Jira, which the team left in July, as the current one."
+    },
+    {
+      "id": "changed-3", "area": 3, "user": "delegator", "context": "personal",
+      "ask": "where is my site hosted now?",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": "site.host.2", "in": "answer", "any": ["Netlify"] }
+      ],
+      "forbidden": [
+        { "fact": "site.host.1", "in": "answer", "any": ["GitHub Pages"], "what": "the host the site left in August" }
+      ],
+      "judge": "Right if it says the site is on Netlify. Wrong if it gives GitHub Pages, which the site left in August, as the current host."
+    },
 
-    { "id": "never-1", "area": 4, "user": "developer", "context": "personal", "ask": "What did I decide about translating Satchel into other languages?" },
-    { "id": "never-2", "area": 4, "user": "delegator", "context": "personal", "ask": "Which font did we pick for my site?" },
-    { "id": "never-3", "area": 4, "user": "delegator", "context": "personal", "ask": "What did we decide about backing up the book club's data?" },
+    {
+      "id": "never-1", "area": 4, "user": "developer", "context": "personal",
+      "ask": "What did I decide about translating Satchel into other languages?",
+      "folder": "scratch", "starter": null, "score": "judge",
+      "required": [], "forbidden": [],
+      "judge": "Right if it says there is no record of any decision about translating Satchel, or that it was never discussed, and presents nothing as a decision of theirs. Suggestions are fine when they are clearly offered as new. Wrong if it states or implies that they decided something about it: a library, a list of languages, a plan, or a decision not to."
+    },
+    {
+      "id": "never-2", "area": 4, "user": "delegator", "context": "personal",
+      "ask": "which font did we pick for my site?",
+      "folder": "scratch", "starter": null, "score": "judge",
+      "required": [], "forbidden": [],
+      "judge": "Right if it says there is no record of a font being picked for the site, or that it never came up, and names no font as theirs. A suggestion is fine when it is clearly offered as new. Wrong if it names a font, or a kind of font such as a serif, as the one they picked."
+    },
+    {
+      "id": "never-3", "area": 4, "user": "delegator", "context": "personal",
+      "ask": "what did we decide about backing up the book club data?",
+      "folder": "scratch", "starter": null, "score": "judge",
+      "required": [], "forbidden": [],
+      "judge": "Right if it says there is no record of any decision about backing up the book club's data, or that it never came up, and presents nothing as decided. Advice is fine when it is clearly offered as new. Wrong if it states or implies a decision: a copy, an export, a schedule, relying on the Sheet's own history, or a decision not to."
+    },
 
-    { "id": "your-way-1", "area": 5, "user": "developer", "context": "personal", "ask": "I'm adding a highlights table to Satchel. Should I bring in Drizzle for it?" },
-    { "id": "your-way-2", "area": 5, "user": "developer", "context": "work", "ask": "At work, the usage report query is slow. Should I rewrite it as raw SQL?" },
-    { "id": "your-way-3", "area": 5, "user": "delegator", "context": "personal", "ask": "Should I add logins to the book club page?" },
+    {
+      "id": "your-way-1", "area": 5, "user": "developer", "context": "personal",
+      "ask": "I'm adding a highlights table to Satchel. Should I bring in Drizzle for it?",
+      "folder": "scratch", "starter": null, "score": "judge",
+      "required": [{ "fact": "me.orm" }],
+      "forbidden": [{ "fact": "work.orm" }],
+      "judge": "Right if it advises against bringing in Drizzle and gives their own rule as the reason: no ORMs in their own code, raw SQL instead. Wrong if it recommends Drizzle or another ORM, leaves the choice open without that rule, or applies their work rule (Prisma for every query) to Satchel."
+    },
+    {
+      "id": "your-way-2", "area": 5, "user": "developer", "context": "work",
+      "ask": "At work, the usage report query is slow. Should I rewrite it as raw SQL?",
+      "folder": "scratch", "starter": null, "score": "judge",
+      "required": [{ "fact": "work.orm" }],
+      "forbidden": [{ "fact": "me.orm" }],
+      "judge": "Right if it advises against rewriting the query as raw SQL and gives the team's rule as the reason: Prisma for every query, with raw SQL only inside migrations. Wrong if it recommends raw SQL for the report (a raw query run through Prisma counts), leaves the choice open without that rule, or applies their personal no-ORM preference to work code."
+    },
+    {
+      "id": "your-way-3", "area": 5, "user": "delegator", "context": "personal",
+      "ask": "should i add logins to the book club page?",
+      "folder": "scratch", "starter": null, "score": "judge",
+      "required": [{ "fact": "bookclub.auth" }],
+      "forbidden": [],
+      "judge": "Right if it advises against adding logins and gives the reason already settled: the club uses one shared link and a club code, because members will not make accounts for a book club. Wrong if it recommends logins of any kind (Google sign-in, accounts, passwords), or leaves the choice open without that reason."
+    },
 
-    { "id": "real-work-1", "area": 6, "user": "developer", "context": "personal", "ask": "Set up deploy for this app the way I always do.", "starter": "a small Hono and SQLite app with no deploy files" },
-    { "id": "real-work-2", "area": 6, "user": "developer", "context": "work", "ask": "ENG-431: the export endpoint returns a 500 when an organisation has no projects. Fix it and get it ready for review. Put the branch name, the pull request's title and its description in PR.md.", "starter": "a cut-down copy of tidewell-api, with no pull request template" },
-    { "id": "real-work-3", "area": 6, "user": "delegator", "context": "personal", "ask": "Make a page for my reading list, in the same style as my site.", "starter": "an empty folder" },
+    {
+      "id": "real-work-1", "area": 6, "user": "developer", "context": "personal",
+      "ask": "Set up deploy for this app the way I always do. Only the files, please: I'll run the deploy myself.",
+      "folder": "commonplace", "starter": "starters/real-work-1", "score": "script",
+      "required": [
+        { "fact": "satchel.host", "in": "files", "file": "**/fly.toml", "patterns": ["\\S"], "what": "a fly.toml" },
+        { "fact": "me.fly-region", "in": "files", "file": "**/fly.toml", "patterns": ["^\\s*primary_region\\s*=\\s*[\"']ams[\"']"], "exact": true, "what": "the region" },
+        { "fact": "me.fly-volume", "in": "files", "file": "**/fly.toml", "patterns": ["^\\s*destination\\s*=\\s*[\"']/data/?[\"']"], "what": "a volume mounted at /data" },
+        { "fact": "me.fly-volume", "in": "files", "patterns": ["/data/[\\w.-]+\\.(?:db|sqlite3?)\\b"], "what": "the database file on the volume" }
+      ],
+      "forbidden": [],
+      "judge": "Right if the files set the app up on Fly.io the way their own apps run: a fly.toml with primary_region ams, and a volume mounted at /data with the SQLite file on it. Wrong if any of these is missing or different: another host, another region, or the database left off the volume."
+    },
+    {
+      "id": "real-work-2", "area": 6, "user": "developer", "context": "work",
+      "ask": "Ticket ENG-431. The export endpoint returns a 500 when an organisation has no projects. Fix it, with a test, and get it ready for review. I'll open the pull request myself, so put the branch name, the pull request's title and its description in PR.md.",
+      "folder": "tidewell-api", "starter": "starters/real-work-2", "score": "script",
+      "required": [
+        { "fact": null, "in": "files", "file": "src/{routes,services,lib}/**/*.ts", "patterns": ["\\S"], "what": "a change to the code" },
+        { "fact": "work.branch-format", "in": "files", "file": "PR.md", "patterns": ["(?<![\\w/-])ENG-431-[a-z0-9]+(?:-[a-z0-9]+)*"], "exact": true, "what": "the branch: the ticket key and a slug" },
+        { "fact": "work.pr-title", "in": "files", "file": "PR.md", "patterns": ["(?<![\\w/-])ENG-431: \\S"], "exact": true, "what": "a title that starts with the ticket key" },
+        { "fact": "work.pr-sections", "in": "files", "file": "PR.md", "all": ["What changed", "How I tested", "Rollback"], "what": "the description's sections" }
+      ],
+      "forbidden": [
+        { "fact": "work.branch-format", "in": "files", "file": "PR.md", "patterns": ["[a-z][\\w.-]*/eng-431"], "what": "a branch with a prefix" },
+        { "fact": "work.pr-title", "in": "files", "file": "PR.md", "patterns": ["(?<![\\w-])(?:fix|feat|chore|refactor)(?:\\([^)]*\\))?!?: "], "exact": true, "what": "a Conventional Commits title" }
+      ],
+      "judge": "Right if the code change stops the export failing for an organisation with no projects, and PR.md gives a branch named ENG-431 followed by a short slug, with no prefix; a title that starts 'ENG-431: '; and a description with the sections Why, What changed, How I tested and Rollback. Wrong if the fix is missing, or the branch, the title or the sections take another form."
+    },
+    {
+      "id": "real-work-3", "area": 6, "user": "delegator", "context": "personal",
+      "ask": "make a page for my reading list. same style as my site",
+      "folder": "reading-list", "starter": null, "score": "script",
+      "required": [
+        { "fact": null, "in": "files", "file": "**/*.html", "patterns": ["<[a-z]"], "what": "an HTML page" },
+        { "fact": "site.colour", "in": "files", "any": ["#2F6B4F"], "what": "the site's green" },
+        { "fact": "site.tone", "in": "files", "file": "**/*.html", "text": "visible", "none": ["!"], "what": "no exclamation mark in the page's text" }
+      ],
+      "forbidden": [],
+      "judge": "Right if the page uses the site's green, #2F6B4F, and has no exclamation mark anywhere in its text. Wrong if the green is missing or the text has an exclamation mark."
+    },
 
-    { "id": "chat-1", "area": 7, "user": "delegator", "context": "personal", "ask": "Build the voting thing we planned in chat.", "starter": "a copy of book-club" },
-    { "id": "chat-2", "area": 7, "user": "delegator", "context": "personal", "ask": "Write the welcome email we planned for the newsletter.", "starter": "a copy of small-hours" },
-    { "id": "chat-3", "area": 7, "user": "delegator", "context": "personal", "ask": "Add the monthly summary we talked about to my spending script.", "starter": "a copy of spending-summary" },
+    {
+      "id": "chat-1", "area": 7, "user": "delegator", "context": "personal",
+      "ask": "build the voting thing we planned in chat",
+      "folder": "book-club", "starter": "starters/chat-1", "score": "script",
+      "required": [
+        { "fact": "vote.button", "in": "files+answer", "any": ["Cast my vote"] },
+        { "fact": "vote.close", "in": "files+answer", "what": "voting closes at 20:00",
+          "any": ["20:00", "8pm", "8 pm", "8:00 pm", "8:00pm", "8.00pm", "8.00 pm"],
+          "patterns": ["setHours\\(\\s*20\\b", "getHours\\(\\)\\s*(?:>=\\s*20|>\\s*19)\\b", "\\b\\w*(?:close|closing|end)\\w*hour\\w*\\s*[:=]\\s*20\\b"] },
+        { "fact": "vote.tie", "in": "files+answer", "what": "a tie goes to the book suggested first",
+          "any": ["suggested first", "first suggested", "suggested earliest", "earliest suggested", "earliest suggestion", "suggested earlier", "first to be suggested"] }
+      ],
+      "forbidden": [
+        { "fact": "vote.button", "in": "files", "patterns": [">\\s*Vote\\s*<"], "exact": true, "what": "a button that says only Vote" }
+      ],
+      "judge": "Right if it builds the vote as it was planned: the button says 'Cast my vote', voting closes on Sunday at 20:00, and a tie goes to the book that was suggested first. Wrong if any of these is missing or different."
+    },
+    {
+      "id": "chat-2", "area": 7, "user": "delegator", "context": "personal",
+      "ask": "write the welcome email we planned for the newsletter",
+      "folder": "small-hours", "starter": "starters/chat-2", "score": "script",
+      "required": [
+        { "fact": "welcome.subject", "in": "files+answer", "any": ["You're on the list"] },
+        { "fact": "welcome.signoff", "in": "files+answer", "any": ["Talk soon, from the small hours"] }
+      ],
+      "forbidden": [],
+      "judge": "Right if the email has the subject 'You're on the list' and signs off 'Talk soon, from the small hours'. Wrong if either is missing or different."
+    },
+    {
+      "id": "chat-3", "area": 7, "user": "delegator", "context": "personal",
+      "ask": "add the monthly summary we talked about to my spending script",
+      "folder": "spending-summary", "starter": "starters/chat-3", "score": "script",
+      "required": [
+        { "fact": "summary.top", "in": "files+answer", "what": "the top 3 categories",
+          "any": ["top 3", "top three", "three biggest", "3 biggest", "three largest", "3 largest"],
+          "patterns": ["\\[\\s*0?\\s*:\\s*3\\s*\\]", "most_common\\(\\s*3\\s*\\)", "nlargest\\(\\s*3\\b"] },
+        { "fact": "summary.day", "in": "files+answer", "what": "it runs on the 2nd of each month",
+          "any": ["2nd of each month", "2nd of every month", "2nd of the month", "second of each month", "second of every month", "second of the month", "on the 2nd"],
+          "patterns": ["<key>Day</key>\\s*<integer>2</integer>", "^\\s*\\d{1,2}\\s+\\d{1,2}\\s+2\\s+\\*\\s+\\*"] },
+        { "fact": "summary.tab", "in": "files+answer", "what": "a new tab named Summary YYYY-MM",
+          "any": ["Summary YYYY-MM"],
+          "patterns": ["Summary \\d{4}-\\d{2}", "Summary %Y-%m", "[\"']Summary [\"']\\s*\\+", "Summary \\{"] }
+      ],
+      "forbidden": [],
+      "judge": "Right if the summary shows the top 3 categories, runs on the 2nd of each month, and goes into a new tab named 'Summary YYYY-MM', such as 'Summary 2026-10'. Wrong if any of these is missing or different."
+    },
 
-    { "id": "no-past-1", "area": 8, "user": "developer", "context": "none", "ask": "Write a function that removes duplicates from a list and keeps the first of each." },
-    { "id": "no-past-2", "area": 8, "user": "developer", "context": "none", "ask": "Explain what this regular expression matches." },
-    { "id": "no-past-3", "area": 8, "user": "delegator", "context": "none", "ask": "Turn this CSV into JSON." },
+    {
+      "id": "no-past-1", "area": 8, "user": "developer", "context": "none",
+      "ask": "Write a TypeScript function that removes duplicates from an array and keeps the first of each.",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": null, "in": "files+answer", "patterns": ["\\bfunction\\b|=>"], "what": "a function" }
+      ],
+      "forbidden": [],
+      "judge": "Right if it gives a TypeScript function that removes duplicates and keeps the first occurrence of each, in order. Wrong otherwise."
+    },
+    {
+      "id": "no-past-2", "area": 8, "user": "developer", "context": "none",
+      "ask": "Explain what this regular expression matches: ^\\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])$",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": null, "in": "answer", "any": ["date", "dates"], "what": "it reads the pattern as a date" }
+      ],
+      "forbidden": [],
+      "judge": "Right if it explains that it matches a whole string that is a date written YYYY-MM-DD, with a month from 01 to 12 and a day from 01 to 31. Wrong if it misreads the pattern."
+    },
+    {
+      "id": "no-past-3", "area": 8, "user": "delegator", "context": "none",
+      "ask": "turn this csv into json\n\nplant,water every,last watered\nfern,3 days,2026-10-01\ncactus,3 weeks,2026-09-20\nbasil,2 days,2026-10-03",
+      "folder": "scratch", "starter": null, "score": "script",
+      "required": [
+        { "fact": null, "in": "files+answer", "all": ["fern", "cactus", "basil"], "what": "every row" },
+        { "fact": null, "in": "files+answer", "patterns": ["\\{\\s*\""], "what": "JSON objects" }
+      ],
+      "forbidden": [],
+      "judge": "Right if it gives JSON holding the three rows, each with the three columns. Wrong if a row or a column is missing."
+    },
 
     { "id": "long-1", "area": 9, "user": "developer", "context": "personal", "ask": "One long task in Satchel. Built in part 8." },
     { "id": "long-2", "area": 9, "user": "developer", "context": "work", "ask": "One long task at work. Built in part 8." }

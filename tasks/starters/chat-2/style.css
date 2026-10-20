@@ -1,0 +1,77 @@
+:root {
+  --green: #2F6B4F;
+  --green-dark: #24553F;
+  --paper: #FAF7F2;
+  --ink: #1F2622;
+  --soft: #66706A;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+nav, main, footer {
+  max-width: 36rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+}
+
+nav { display: flex; gap: 1.25rem; padding-top: 1.5rem; }
+nav a:first-child { margin-right: auto; font-weight: bold; }
+
+a { color: var(--green); }
+
+h1 { font-size: 2.25rem; line-height: 1.2; margin: 2.5rem 0 0.5rem; }
+.lede { font-size: 1.3rem; color: var(--soft); margin-top: 0; }
+
+.signup { margin: 2rem 0; }
+.signup label, .contact label { display: block; margin: 1rem 0 0.35rem; }
+.signup-row { display: flex; gap: 0.5rem; }
+.signup-row input { flex: 1; min-width: 0; }
+
+input, textarea {
+  font: inherit;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid #C9CEC9;
+  border-radius: 0.35rem;
+  background: #fff;
+}
+.contact input, .contact textarea { width: 100%; }
+
+button {
+  font: inherit;
+  padding: 0.6rem 1.1rem;
+  border: 0;
+  border-radius: 0.35rem;
+  background: var(--green);
+  color: var(--paper);
+  cursor: pointer;
+}
+button:hover { background: var(--green-dark); }
+.contact button { margin-top: 1rem; }
+
+figure { margin: 2rem 0; }
+figure img { width: 100%; height: auto; border-radius: 0.5rem; }
+figcaption { font-size: 0.9rem; color: var(--soft); margin-top: 0.4rem; }
+
+.hidden { display: none; }
+
+footer {
+  margin-top: 4rem;
+  padding-bottom: 2rem;
+  font-size: 0.9rem;
+  color: var(--green);
+  opacity: 0.75;
+}
+
+@media (max-width: 30rem) {
+  .signup-row { flex-direction: column; }
+  .signup-row button { width: 100%; }
+}

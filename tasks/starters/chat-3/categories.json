@@ -1,0 +1,7 @@
+{
+  "Food": ["GROCERS", "SUPERMARKET", "BAKERY", "MARKET", "CAFE", "TAKEAWAY"],
+  "Home": ["RENT", "ENERGY", "WATER", "COUNCIL TAX", "BROADBAND", "HARDWARE"],
+  "Fun": ["CINEMA", "CONCERT", "GAMES", "KIOSK", "BOOKSHOP", "STREAMING"],
+  "Travel": ["RAIL", "TRAIN", "BUS", "BIKE", "COACH"],
+  "Biscuit": ["VET", "PET", "GROOM", "KENNEL", "PAWS"]
+}

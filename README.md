@@ -2,7 +2,7 @@
 
 Does an external brain make a coding agent better for the person using it? This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie). exposurie is a CLI that builds a curated Markdown wiki (the brain) from a person's own agent sessions and chat exports, and points every new session at it.
 
-**Status: the run sandbox is built and checked (part 0 of [docs/build-plan.md](docs/build-plan.md)), and the two users' fact sheets are written and approved (part 1). Both users' histories are generated and checked (parts 2 and 3): 53 sessions, about 83K tokens for the developer and 74K for the delegator, read back by exposurie 1.2.0's own readers. No benchmark task has run yet.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
+**Status: the run sandbox is built and checked (part 0 of [docs/build-plan.md](docs/build-plan.md)), and the two users' fact sheets are written and approved (part 1). Both users' histories are generated and checked (parts 2 and 3): 53 sessions, about 83K tokens for the developer and 74K for the delegator, read back by exposurie 1.2.0's own readers. The tasks are complete for areas 1 to 8 (part 4): 24 questions and work tasks, their checks and rubrics, five starter repositories, and the files conditions B and D give the agent. No benchmark task has run yet.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
 
 ## The question
 
@@ -36,9 +36,12 @@ The questions are spread across nine areas, from recall to long sessions, with t
 | [docs/decisions.md](docs/decisions.md) | dated decisions and why |
 | [CLAUDE.md](CLAUDE.md) | rules for any agent working in this repository, local or cloud |
 | [users/](users/) | the two made-up users: who they are, every planted fact, and each session's brief |
-| [tasks/index.json](tasks/index.json) | every task, by area |
+| [tasks/index.json](tasks/index.json) | every task, by area, with its checks and the judge's rubric |
+| [tasks/starters/](tasks/starters/) | the projects the work tasks start from |
+| [tasks/conditions/](tasks/conditions/) | what conditions B and D put in the agent's instructions file: each user's whole history, and the facts each task needs |
 | [gen/](gen/) | the generator that writes each session from its brief, and the converter that turns the sessions into Claude Code transcripts and a claude.ai export |
-| [check/](check/) | the checks that hold the fact sheets and the histories to the method |
+| [check/](check/) | the checks that hold the fact sheets, the histories and the tasks to the method |
+| [score/](score/) | how a task's checks read a run |
 | [runner/](runner/) | the run sandbox: pinned versions, setup, the environment every run gets, and its check |
 
 ## License

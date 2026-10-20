@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Small Hours</title>
+  <meta name="description" content="A quiet email, every Sunday.">
+  <link rel="stylesheet" href="style.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <nav>
+    <a href="index.html">Small Hours</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Write to me</a>
+  </nav>
+
+  <main>
+    <h1>Small Hours</h1>
+    <p class="lede">A quiet email, every Sunday.</p>
+    <p>Three links and one thought, written late, sent once a week, and then nothing until the next Sunday.</p>
+
+    <form id="signup" class="signup" method="post" target="_blank">
+      <label for="email">Your email address</label>
+      <div class="signup-row">
+        <input id="email" type="email" name="email" placeholder="you@example.com" required>
+        <button type="submit">Get the Sunday email</button>
+      </div>
+    </form>
+  </main>
+
+  <footer>Written in the small hours</footer>
+
+  <script>
+    document.getElementById("signup").action =
+      "https://buttondown.com/api/emails/embed-subscribe/" + window.SMALL_HOURS.buttondownUsername;
+  </script>
+</body>
+</html>

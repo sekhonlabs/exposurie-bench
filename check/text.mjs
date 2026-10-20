@@ -34,6 +34,32 @@ export function colourCodes(text) {
   return out;
 }
 
+/**
+ * An agent's answer or file, read the way the scorer reads it. Backticks go,
+ * because agents put code in them and `` `.sql` files `` would otherwise not be
+ * ".sql files". Curly quotes become straight ones, so "You’re" is "You're".
+ */
+export function answerText(text) {
+  return text.replace(/`/g, '').replace(/[‘’]/g, "'").replace(/[“”]/g, '"');
+}
+
+const ENTITIES = { amp: '&', lt: '<', gt: '>', quot: '"', apos: "'", nbsp: ' ', excl: '!' };
+
+/**
+ * The text a reader of an HTML page sees: no tags, comments, doctype, scripts
+ * or styles, and character references decoded, so `&#33;` is still "!".
+ */
+export function visibleText(html) {
+  return html
+    .replace(/<!--[\s\S]*?-->/g, ' ')
+    .replace(/<!doctype[^>]*>/gi, ' ')
+    .replace(/<(script|style)\b[\s\S]*?<\/\1\s*>/gi, ' ')
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&([a-z]+);/gi, (m, n) => ENTITIES[n.toLowerCase()] ?? m);
+}
+
 /** A short excerpt around position `at`, on one line, for a problem report. */
 export function around(text, at, width = 60) {
   const from = Math.max(0, at - width);

@@ -25,7 +25,12 @@ Every condition gets the same tasks, the same model (Sonnet 5.5, `claude-sonnet-
 | C | exposurie | see below |
 | D | Perfect memory | only the facts the task needs, in the instructions file |
 
-**The conditions differ by one file:** the sandbox's global instructions file, `~/.claude/CLAUDE.md`, which is also where exposurie puts its pointer. In C, the brain is on disk and the `exposurie` command is available as well. The pilot checks B's input tokens to confirm the whole history arrived. If the file were cut short, B and D would move to `--append-system-prompt-file`.
+**A, B and D differ by one file:** the sandbox's global instructions file, `~/.claude/CLAUDE.md`, which is also where exposurie puts its pointer. C has that file with the pointer in it, plus everything else exposurie installs: its skill (`~/.claude/skills/exposurie/SKILL.md`), its `/exposurie-sync` command, the brain on disk, and the `exposurie` command. The pilot checks B's input tokens to confirm the whole history arrived. If the file were cut short, B and D would move to `--append-system-prompt-file`.
+
+The files B and D get are in `tasks/conditions/`:
+
+- **B** holds every session and chat, oldest first, as exposurie reads them: only what was said. Each one is headed by what exposurie also knows about it: when it started, the surface, and the folder it ran in or the chat's title.
+- **D** holds only the facts the task needs, one line each: where the fact applies, what kind it is, its value and its reason. Nothing marks a fact as replaced, since perfect retrieval returns only the current one.
 
 For area 4, D gets the facts closest to the question, which is what perfect retrieval would return. The right answer is still "not recorded".
 
@@ -108,8 +113,10 @@ This area needs sessions to be saved, so they can be resumed and synced. It is t
 ## Scoring
 
 - Each task lists **required facts**, which must appear, and **forbidden facts** (outdated or invented), which must not. A script checks these.
-- Work tasks are checked from the files the agent writes.
-- Some answers a string match can't judge: area 4, and prose in area 6. They get a fixed rubric, judged by a separate Claude run, and every one is also checked by hand.
+- Work tasks are checked from the files the agent creates or changes. Area 7 also reads the agent's reply, because it measures whether a plan made in a web chat reached the agent, and a reply that names the plan shows it did.
+- Some answers a string match can't judge. They get a fixed rubric, judged by a separate Claude run, and every one is also checked by hand:
+  - area 4, where the right answer is "not recorded"
+  - area 5, whose answers are advice. Advice is right only when it follows the user's decision for the user's reason, and that reason can be put in many words, while a fresh agent can give the same verdict for a generic one.
 - An answer that contains both a required fact and a forbidden one, such as "you moved from Jest to Vitest", is not failed automatically. It goes to the judge and the hand check.
 - The scoring script never sees which condition produced an answer.
 
