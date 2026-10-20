@@ -44,27 +44,32 @@ Condition C is set up like this:
 
 There are two made-up people:
 
-- **a great developer**, who works across several repositories
+- **a great developer**, who works across several repositories: two at the software company they work for, and four of their own
 - **someone who hands everything to agents** and just wants the work done, who also plans in claude.ai chats
 
-Neither is tied to a niche job or industry.
+Neither is tied to a niche job or industry: the developer's company is never said to make anything in particular, and the second user's job is never named. Neither has a name either, since real users rarely tell Claude Code theirs.
 
 They are synthetic for three reasons: every right answer is known, nothing private enters a public repository, and anyone can rerun the benchmark.
 
 Their histories:
 
-- **The developer:** about 25 Claude Code sessions across about 4 repositories, over about 4 months.
-- **The second user:** about 15 short Claude Code sessions and about 10 claude.ai chats. Their prompts are short ("make it work", "ok, do that"), so the agent proposes most of their decisions and they accept them. exposurie keeps the agent's side of a transcript too, so a brain can still pick these decisions up.
+- **The developer:** 28 Claude Code sessions across 6 repositories, over 4 months. 12 are at work, in VS Code, where their Claude Code has GitHub, Linear and Slack connected. 16 are on their own projects, in the terminal.
+- **The second user:** 15 short Claude Code sessions in the desktop app and 10 claude.ai chats, over 3 months. Their prompts are short ("make it work", "ok, do that"), so the agent proposes most of their decisions and they accept them. exposurie keeps the agent's side of a transcript too, so a brain can still pick these decisions up.
 - **Size:** about 80K tokens of conversation per user, counted on the text exposurie reads. Real histories are larger than any context window, so this size is chosen to keep B runnable: the whole history fits, with room for the task.
-- **How they are made:** each session has a written plan, and Sonnet 5.5 writes the session from it. The text is then converted into Claude Code transcripts, plus a claude.ai export for the second user. See [build-plan.md](build-plan.md).
+- **How they are made:** each session has a written plan, and Sonnet 5.5 writes the session from it. The text is then converted into Claude Code transcripts, plus a claude.ai export for the second user. See [build-plan.md](build-plan.md). Each user's facts are in `users/<user>/facts.json`, and the sessions they are first said in are in `users/<user>/plan.json`.
 
 How the planted facts work:
 
 - Every planted fact has an ID.
-- Every fact is a non-default choice (a specific host, colour, supplier or library), so a fresh agent cannot score by guessing.
+- Every fact a task asks about is a non-default choice (a specific host, colour, supplier or library), so a fresh agent cannot score by guessing. The other facts also include people, places and habits, because a real history has them and exposurie is built to keep them.
+- A replaced value may be the popular default, as it often is in life. It is never the right answer, so guessing it still cannot score.
 - Every fact is checked to appear in the generated text.
 - Some facts are replaced later in the history, and some sessions are distractors.
 - There are 3–4 times more facts that no task asks about than facts a task does, so the brain has to sort what matters, not just store it.
+
+**Work and personal.** The developer follows their team's rules at work and their own at home, and the two disagree. The team uses Prisma for every query, for example, while they keep ORMs out of their own code. Some tasks check that one context's rules do not leak into the other.
+
+Connectors and MCP servers stay off in every run, and exposurie drops what a connector returns, so only what was *said* about a connector can reach a brain. Where a connector would act, such as opening a pull request, a task writes a file instead, and the file is checked.
 
 ## Areas
 
@@ -195,3 +200,4 @@ Results are reported whichever way they go. In [VibeMemBench](sources.md#vibemem
 - Claude Code's own auto-memory and other memory systems are not compared in this version.
 - Remote feature flags are off, so Claude Code runs on the pinned binary's defaults rather than on any account's flag settings.
 - One run per cell, so per-area counts are only indicative; the pooled numbers are the result.
+- Connectors are off in every run, so the benchmark measures whether work is done the team's way, not whether an agent can drive the team's tools.

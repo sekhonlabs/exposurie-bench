@@ -1,0 +1,39 @@
+{
+  "note": "Every task, by area. Part 1 starts this list so the fact sheets can point at tasks. Each `ask` is a draft of the question. Part 4 fixes the wording and adds the required and forbidden facts, the starter repositories and the file checks.",
+  "tasks": [
+    { "id": "recall-1", "area": 1, "user": "developer", "context": "personal", "ask": "Which database did I pick for Satchel, and why?" },
+    { "id": "recall-2", "area": 1, "user": "developer", "context": "work", "ask": "At work, who has to review a database migration before it merges?" },
+    { "id": "recall-3", "area": 1, "user": "delegator", "context": "personal", "ask": "Which newsletter service did we set up for my site?" },
+
+    { "id": "across-1", "area": 2, "user": "developer", "context": "both", "ask": "Which of my projects run on Fly.io?" },
+    { "id": "across-2", "area": 2, "user": "developer", "context": "both", "ask": "Which of my repositories are open source, and under which licence?" },
+    { "id": "across-3", "area": 2, "user": "delegator", "context": "personal", "ask": "Which of my projects use Google Sheets?" },
+
+    { "id": "changed-1", "area": 3, "user": "developer", "context": "personal", "ask": "Which test runner do I use in my own projects now?" },
+    { "id": "changed-2", "area": 3, "user": "developer", "context": "work", "ask": "Where do our tickets live at work now?" },
+    { "id": "changed-3", "area": 3, "user": "delegator", "context": "personal", "ask": "Where is my site hosted now?" },
+
+    { "id": "never-1", "area": 4, "user": "developer", "context": "personal", "ask": "What did I decide about translating Satchel into other languages?" },
+    { "id": "never-2", "area": 4, "user": "delegator", "context": "personal", "ask": "Which font did we pick for my site?" },
+    { "id": "never-3", "area": 4, "user": "delegator", "context": "personal", "ask": "What did we decide about backing up the book club's data?" },
+
+    { "id": "your-way-1", "area": 5, "user": "developer", "context": "personal", "ask": "I'm adding a highlights table to Satchel. Should I bring in Drizzle for it?" },
+    { "id": "your-way-2", "area": 5, "user": "developer", "context": "work", "ask": "At work, the usage report query is slow. Should I rewrite it as raw SQL?" },
+    { "id": "your-way-3", "area": 5, "user": "delegator", "context": "personal", "ask": "Should I add logins to the book club page?" },
+
+    { "id": "real-work-1", "area": 6, "user": "developer", "context": "personal", "ask": "Set up deploy for this app the way I always do.", "starter": "a small Hono and SQLite app with no deploy files" },
+    { "id": "real-work-2", "area": 6, "user": "developer", "context": "work", "ask": "ENG-431: the export endpoint returns a 500 when an organisation has no projects. Fix it and get it ready for review. Put the branch name, the pull request's title and its description in PR.md.", "starter": "a cut-down copy of tidewell-api, with no pull request template" },
+    { "id": "real-work-3", "area": 6, "user": "delegator", "context": "personal", "ask": "Make a page for my reading list, in the same style as my site.", "starter": "an empty folder" },
+
+    { "id": "chat-1", "area": 7, "user": "delegator", "context": "personal", "ask": "Build the voting thing we planned in chat.", "starter": "a copy of book-club" },
+    { "id": "chat-2", "area": 7, "user": "delegator", "context": "personal", "ask": "Write the welcome email we planned for the newsletter.", "starter": "a copy of small-hours" },
+    { "id": "chat-3", "area": 7, "user": "delegator", "context": "personal", "ask": "Add the monthly summary we talked about to my spending script.", "starter": "a copy of spending-summary" },
+
+    { "id": "no-past-1", "area": 8, "user": "developer", "context": "none", "ask": "Write a function that removes duplicates from a list and keeps the first of each." },
+    { "id": "no-past-2", "area": 8, "user": "developer", "context": "none", "ask": "Explain what this regular expression matches." },
+    { "id": "no-past-3", "area": 8, "user": "delegator", "context": "none", "ask": "Turn this CSV into JSON." },
+
+    { "id": "long-1", "area": 9, "user": "developer", "context": "personal", "ask": "One long task in Satchel. Built in part 8." },
+    { "id": "long-2", "area": 9, "user": "developer", "context": "work", "ask": "One long task at work. Built in part 8." }
+  ]
+}

@@ -2,7 +2,7 @@
 
 Does an external brain make a coding agent better for the person using it? This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie). exposurie is a CLI that builds a curated Markdown wiki (the brain) from a person's own agent sessions and chat exports, and points every new session at it.
 
-**Status: the run sandbox is built and checked (part 0 of [docs/build-plan.md](docs/build-plan.md)). No benchmark task has run yet.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
+**Status: the run sandbox is built and checked (part 0 of [docs/build-plan.md](docs/build-plan.md)), and the two users' fact sheets are written and waiting for approval (part 1). No benchmark task has run yet.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
 
 ## The question
 
@@ -24,7 +24,7 @@ Same tasks, same model, same tools. Does a fresh session with an exposurie brain
 
 **Potential reached = (C − A) ÷ (D − A).** This is the share of the gap between a forgetful agent and a perfect-memory one that exposurie closes.
 
-The questions are spread across nine areas, from recall to long sessions, with three tasks in each. That comes to about 105 runs. See [docs/design.md](docs/design.md).
+The questions are spread across nine areas, from recall to long sessions, with three tasks in each of the first eight and two in the last. That comes to about 105 runs. See [docs/design.md](docs/design.md).
 
 ## What is here
 
@@ -35,6 +35,9 @@ The questions are spread across nine areas, from recall to long sessions, with t
 | [docs/sources.md](docs/sources.md) | every paper and document cited, and what this benchmark takes from each |
 | [docs/decisions.md](docs/decisions.md) | dated decisions and why |
 | [CLAUDE.md](CLAUDE.md) | rules for any agent working in this repository, local or cloud |
+| [users/](users/) | the two made-up users: who they are, every planted fact, and the sessions each fact is first said in |
+| [tasks/index.json](tasks/index.json) | every task, by area |
+| [check/](check/) | the check that holds the fact sheets to the method |
 | [runner/](runner/) | the run sandbox: pinned versions, setup, the environment every run gets, and its check |
 
 ## License

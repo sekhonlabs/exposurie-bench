@@ -9,11 +9,11 @@ Claude Code builds and runs all of it.
 | Path | What it holds |
 |---|---|
 | `users/<user>/facts.json` | the user's planted facts |
-| `users/<user>/plan.json` | the session plan: which facts come up in which session, and how |
+| `users/<user>/plan.json` | the session plan: each session's time, project or chat, and surface (part 1), and which facts come up in it and how (part 2) |
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
-| `check/` | the history checker |
-| `tasks/` | the tasks, their required and forbidden facts, and the starter repositories for areas 6 and 7 |
+| `check/` | the fact-sheet check (part 1) and the history checker (part 3) |
+| `tasks/` | the tasks, their required and forbidden facts, and the starter repositories for areas 6 and 7. `tasks/index.json` lists every task |
 | `runner/` | sandbox setup and the runner |
 | `score/` | the scorer and the judge rubric |
 | `results/` | summaries and charts. Raw run output stays outside the repository |
@@ -42,21 +42,28 @@ Everything the sandbox runs is its own copy, pinned in [runner/pins.json](../run
 
 ### 1. Fact sheets
 
-**Plan usage:** none.
+**Plan usage:** none. **Written 2026-10-20, waiting for the owner's approval.**
 
-Each planted fact has:
+Each planted fact in `users/<user>/facts.json` has:
 
-- an ID
-- its value, with the spellings that count as a match
-- what a fresh agent would guess instead
-- the session where it is first said
-- what replaces it later, if anything
-- where it comes from (Claude Code or claude.ai)
-- the tasks that ask about it
+- an ID (`id`), its context (`context`: work or personal), its project (`project`, or null when it is about the person) and its kind (`kind`, such as host, licence or colour)
+- its value (`value`), with the spellings that count as a match (`match`). `match_all` means every spelling must appear, and `exact_case` means case matters.
+- why it was chosen (`why`), and the spellings that count for the reason where a task asks why (`why_match`)
+- what a fresh agent would guess instead (`guess`)
+- how it first comes up (`how`): said by the user (`user`), proposed by the agent and accepted (`agent`), or the user correcting the agent (`correction`)
+- the session where it is first said (`first_session`)
+- what replaces it later, or what it replaces (`replaced_by`, `replaces`)
+- the options turned down, and the session that names them (`rejected`). A rival choice may be named only where a fact or a turned-down option plans it.
+- where it comes from (`source`: `claude-code` or `claude.ai`)
+- the tasks that ask about it (`tasks`), and the tasks where giving it as the answer is wrong (`traps`)
+
+Each sheet also lists what is never discussed (`never_discussed`), for area 4: the topic, the words that must never appear in the history, and the facts closest to it, which D gets.
+
+The sessions the facts point at are fixed here too, in `users/<user>/plan.json` (time, project or chat, surface), and so is the task list, `tasks/index.json`.
 
 There are 3–4 times more facts that no task asks about than facts that a task asks about.
 
-**Done when** the owner approves both users.
+**Done when** `check/facts.mjs` passes and the owner approves both users.
 
 ### 2. Histories
 
@@ -85,7 +92,7 @@ There are 3–4 times more facts that no task asks about than facts that a task 
 
 **Plan usage:** none.
 
-- 27 tasks across the nine areas, each tied to one user.
+- 26 tasks across the nine areas, three in each and two in area 9, each tied to one user. Their list, `tasks/index.json`, starts in part 1.
 - For every task, the required and forbidden facts, with the spellings that count.
 - Starter repositories for areas 6 and 7, and the file checks for each.
 - The condition files: B's history file for each user, and D's facts file for each task.

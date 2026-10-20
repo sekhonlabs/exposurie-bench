@@ -42,3 +42,16 @@ Dated, newest last. Each entry says what was decided and why.
   So every run gets the pinned binary's own defaults, the same on every day and for anyone who reruns the benchmark.
 - **The binary's built-in plugins and skills stay on.** Claude Code 2.1.302 ships three plugins (`cc-plugin-agents-md`, `cc-plugin-telemetry` and `cc-plugin-plugin-authoring`) and 17 skills of its own. They come with the pinned version and are the same in every condition.
 - **The login happens in the owner's own browser**, by copying the sign-in URL from the sandbox's Claude Code. A browser started from the sandbox creates a new profile inside it. On the first try, Edge signed that profile in with the owner's account and synced into it, and the profile was then deleted. `sandbox.mjs check` now fails if anything but `.claude` and the empty `AppData` folders appears in the sandbox home.
+- **The developer also has a job**, at the owner's suggestion: a developer at a company works across its repositories, with connectors and memories of their own, and a brain can carry that working life too. So the developer works at a made-up company, Tidewell, as well as on four projects of their own: 28 sessions across 6 repositories, instead of about 25 across about 4.
+  - Connectors stay off in every run, and exposurie drops what a connector returns. So where a connector would act, a task writes a file instead.
+  - The team's rules and the developer's own disagree in places, and some tasks check that neither leaks into the other.
+- **The users have no names.** Real users rarely tell Claude Code their name. Their folders are `users/developer` and `users/delegator`.
+
+## 2026-10-20
+
+- **The fact sheets carry more than the build plan first listed.** For each fact they also give its kind, its context (work or personal), how it first comes up (said by the user, proposed by the agent and accepted, or a correction), the options turned down and the session that names them, and the tasks where stating it would be wrong. A rival choice may be named only where a fact or a turned-down option plans it. Each user also lists what is never discussed, with the words that must never appear. See build-plan.md, part 1.
+- **The sessions are fixed in part 1**, in `users/<user>/plan.json`: each one's time, project or chat, and surface. A fact's first session means nothing without them. Part 2 adds how each fact comes up.
+- **The task list starts in part 1**, in `tasks/index.json`, so the fact sheets can point at tasks. Part 4 completes each task.
+- **"Non-default" applies to the facts a task asks about.** The other facts also include people, places and habits, as a real history does. A replaced value may be a popular default, since it is never the right answer.
+- **26 tasks, not 27:** three in each of areas 1–8, and two in area 9.
+- **`check/facts.mjs` holds both fact sheets to the method** before any history exists. Part 3's history checker reads text the same way, with its `mentions` rule.

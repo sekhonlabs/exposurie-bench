@@ -1,0 +1,31 @@
+{
+  "user": "delegator",
+  "note": "The delegator's sessions and chats, oldest first. Part 1 fixes each one's time, project or chat title, and surface, which is what the fact sheet points at. Part 2 adds how each fact comes up. Times are local, in Manchester (UTC+1 all summer).",
+  "sessions": [
+    { "id": "del-01", "at": "2026-07-06T22:40:00+01:00", "title": "Newsletter name ideas", "surface": "claude.ai", "kind": "planning", "about": "Naming the newsletter" },
+    { "id": "del-02", "at": "2026-07-07T21:15:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "A website for the newsletter" },
+    { "id": "del-03", "at": "2026-07-09T22:05:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "Make it green" },
+    { "id": "del-04", "at": "2026-07-12T20:30:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "The newsletter sign-up" },
+    { "id": "del-05", "at": "2026-07-15T21:50:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "The words on the site" },
+    { "id": "del-06", "at": "2026-07-18T11:20:00+01:00", "title": "Email to my landlord about the boiler", "surface": "claude.ai", "kind": "life", "about": "A broken boiler" },
+    { "id": "del-07", "at": "2026-07-20T21:00:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "A page for the book club" },
+    { "id": "del-08", "at": "2026-07-22T22:10:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "Do people need to log in?" },
+    { "id": "del-09", "at": "2026-07-25T10:40:00+01:00", "title": "Welcome email for Small Hours", "surface": "claude.ai", "kind": "planning", "about": "Planning the email new subscribers get" },
+    { "id": "del-10", "at": "2026-07-27T21:30:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "Where does my money go?" },
+    { "id": "del-11", "at": "2026-08-02T19:45:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "Put it somewhere I can see it" },
+    { "id": "del-12", "at": "2026-08-09T20:10:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "build", "about": "A way for people to write to me" },
+    { "id": "del-13", "at": "2026-08-12T22:30:00+01:00", "title": "Valencia trip in October", "surface": "claude.ai", "kind": "life", "about": "Planning a trip" },
+    { "id": "del-14", "at": "2026-08-15T14:20:00+01:00", "project": "quiet-youtube", "surface": "desktop", "kind": "build", "about": "Make YouTube stop sucking me in" },
+    { "id": "del-15", "at": "2026-08-19T21:40:00+01:00", "title": "Vegetarian meal prep", "surface": "claude.ai", "kind": "life", "about": "Cooking for the week" },
+    { "id": "del-16", "at": "2026-08-23T20:00:00+01:00", "project": "book-club", "surface": "desktop", "kind": "distractor", "about": "The page is broken" },
+    { "id": "del-17", "at": "2026-08-30T21:20:00+01:00", "project": "small-hours", "surface": "desktop", "kind": "distractor", "about": "The sign-up button on my phone" },
+    { "id": "del-18", "at": "2026-09-02T22:00:00+01:00", "title": "My dog barks at the postman", "surface": "claude.ai", "kind": "life", "about": "A barking dog" },
+    { "id": "del-19", "at": "2026-09-06T19:30:00+01:00", "project": "book-club", "surface": "desktop", "kind": "build", "about": "Meeting details on the page" },
+    { "id": "del-20", "at": "2026-09-10T22:15:00+01:00", "title": "Sourdough starter help", "surface": "claude.ai", "kind": "life", "about": "A sourdough starter" },
+    { "id": "del-21", "at": "2026-09-14T21:05:00+01:00", "project": "spending-summary", "surface": "desktop", "kind": "build", "about": "September's numbers are wrong" },
+    { "id": "del-22", "at": "2026-09-20T20:45:00+01:00", "title": "Book club voting", "surface": "claude.ai", "kind": "planning", "about": "Planning how the club picks its next book" },
+    { "id": "del-23", "at": "2026-09-27T18:30:00+01:00", "project": "quiet-youtube", "surface": "desktop", "kind": "distractor", "about": "It stopped working" },
+    { "id": "del-24", "at": "2026-09-29T21:55:00+01:00", "title": "Monthly money summary", "surface": "claude.ai", "kind": "planning", "about": "Planning a monthly summary of their spending" },
+    { "id": "del-25", "at": "2026-10-04T17:10:00+01:00", "title": "Gift for my sister's 30th", "surface": "claude.ai", "kind": "life", "about": "A birthday present" }
+  ]
+}
