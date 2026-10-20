@@ -167,7 +167,7 @@ node check/tasks.mjs          check the tasks
 
 ### 5. Runner and scorer
 
-**Plan usage:** none. **Done 2026-10-21:** `check/runner.mjs` passes. A fault test then broke the code fourteen ways, one at a time, and the check failed on every one (`../runs/part5-fault-test`). The fake found one thing a real run would not have shown: Windows gives a child process its parent's `USERNAME`, `USERDOMAIN` and `LOGONSERVER` whenever its environment leaves them out, so every sandbox process had carried the owner's account name. The sandbox now sets all three itself (see [decisions.md](decisions.md)).
+**Plan usage:** none. **Done 2026-10-21:** `check/runner.mjs` passes. A fault test then broke the code fifteen ways, one at a time, and the check failed on every one (`../runs/part5-fault-test`). The fake found one thing a real run would not have shown: Windows gives a child process its parent's `USERNAME`, `USERDOMAIN` and `LOGONSERVER` whenever its environment leaves them out, so every sandbox process had carried the owner's account name. The sandbox now sets all three itself (see [decisions.md](decisions.md)).
 
 The runner, `runner/run.mjs`:
 
