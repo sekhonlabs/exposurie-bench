@@ -546,18 +546,22 @@ function commands(cmd) {
 const EXPOSURIE_CMD = /^exposurie(?:\s|$)/;
 const EXPOSURIE_READ = /^exposurie\s+read\b/;
 
+/** What a redirect names that is no place on disk: Git Bash's null device and standard streams. */
+const DEVICE = /^\/dev\/(?:null|stdin|stdout|stderr|fd\/\d+)$/;
+
 /**
  * The places a shell command names: `.` and `..`, anything with a slash, the
  * home, a drive. A variable or a command substitution can't be resolved here,
  * so it counts as the drive's root, which is outside every folder a run may
- * reach. This is a backstop: Claude Code itself denies the commands it allows
- * on its own once they name a place outside the run's folder.
+ * reach. The null device is not a place: an agent hides an error with
+ * `2>/dev/null`. This is a backstop: Claude Code itself denies the commands it
+ * allows on its own once they name a place outside the run's folder.
  */
 function shellPaths(cmd, work, home) {
   const out = [];
   for (const raw of cmd.match(/"[^"]*"|'[^']*'|\S+/g) ?? []) {
-    const w = raw.replace(/^["']|["']$/g, '').replace(/^\d*[<>]+&?/, '').replace(/^-[^=]*=/, '');
-    if (!w || w.startsWith('-')) continue;
+    const w = raw.replace(/^["']|["']$/g, '').replace(/^\d*&?[<>]+&?/, '').replace(/^-[^=]*=/, '');
+    if (!w || w.startsWith('-') || DEVICE.test(w)) continue;
     if (/^\$|\$[({]|`/.test(w)) out.push(parse(work).root);
     else if (w === '.' || w === '..' || /[\\/]/.test(w) || w.startsWith('~') || /^[A-Za-z]:/.test(w)) out.push(toPath(w, work, home));
   }

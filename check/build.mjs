@@ -15,7 +15,8 @@
 //   trouble          a session that reads the answer key (accepted by hand),
 //                    one that writes a transcript, one that never syncs, no
 //                    retention set, a history folder already holding a session
-//   the shell        the audit reads here-documents as text, not commands
+//   the shell        the audit reads here-documents as text, not commands, and
+//                    the null device as no place
 //
 // Run it with the sandbox's own Node. Exit 0 when everything holds; exit 1
 // lists every problem.
@@ -235,6 +236,12 @@ function kept(ctx, user, b) {
   expect(!a.problems.length && a.notes.length === 3, `read-only commands inside the folder: ${JSON.stringify(a)}`);
   a = shell('cat ~/.claude/.credentials.json');
   expect(a.problems.length === 1, 'a shell read of the home went unflagged');
+  // A full run's agent hid an error with 2>/dev/null, and the audit read the
+  // null device as a place outside the folder.
+  a = shell('cat README.md 2>/dev/null; ls -la src &>/dev/null');
+  expect(!a.problems.length && a.notes.length === 2, `the null device read as a place: ${JSON.stringify(a)}`);
+  a = shell('cat ../outside.txt 2>/dev/null; echo hi &>../x.txt');
+  expect(a.problems.length === 2, `a place outside the folder went unflagged beside a redirect: ${JSON.stringify(a.problems)}`);
 }
 
 // ---------------------------------------------------------------- the real home
