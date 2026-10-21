@@ -305,7 +305,8 @@ if (kind === 'outside' || kind === 'outside-denied') {
   const file = join(REPO, 'tasks', 'index.json');
   tool('Read', { file_path: file }, kind === 'outside' ? readFileSync(file, 'utf8').slice(0, 200) : '', { denied: kind === 'outside-denied' });
 }
-if (kind === 'shell') tool('Bash', { command: 'ls -la' }, 'total 0');
+if (kind === 'shell') tool('Bash', { command: 'cat ../../batch.json' }, '{"cells": []}');
+if (kind === 'shell-inside') tool('Bash', { command: 'ls -la' }, 'total 0');
 if (kind === 'persist') {
   mkdirSync(join(CONFIG, 'projects', 'fake'), { recursive: true });
   writeFileSync(join(CONFIG, 'projects', 'fake', `${session}.jsonl`), '{}\n');

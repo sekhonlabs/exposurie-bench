@@ -11,10 +11,11 @@
 //
 //   a usage limit, a crash, a hang, an API error       not run, then run again
 //   a wrong tool list, an MCP server                   stopped at the start-up line
-//   a read outside its folder, a shell command, a      thrown out
+//   a read outside its folder, one with the shell, a   thrown out
 //   transcript written, its condition edited,
 //   something left in the home
-//   a read outside its folder that was denied          kept, with a note
+//   a read outside its folder that was denied, and     kept, with a note
+//   a shell command Claude Code allows by itself
 //
 // The scorer then scores every run with the run order moved out of its reach,
 // the judge decides what the checks cannot (meeting one usage limit on the
@@ -107,6 +108,7 @@ const trouble = {
   'changed-1/C': 'outside',
   'changed-2/B': 'outside-denied',
   'changed-3/A': 'shell',
+  'across-1/A': 'shell-inside',
   'never-1/B': 'persist',
   'never-2/D': 'edit-condition',
   'your-way-3/C': 'stray',
@@ -227,7 +229,7 @@ for (const cell of b.cells) {
   expect(existsSync(join(dir, tasks.get(cell.task).folder)), `${cell.run} ${key}: no ${tasks.get(cell.task).folder} folder`);
   const reasons = {
     'wrong-tools': /^start-up line: only the listed tools/, mcp: /^start-up line: no MCP servers/, outside: /reach outside its folder: Read/,
-    shell: /shell command other than exposurie: ls/, persist: /wrote a transcript/, 'edit-condition': /changed \.claude\/CLAUDE\.md/,
+    shell: /reach outside its folder with the shell: cat/, persist: /wrote a transcript/, 'edit-condition': /changed \.claude\/CLAUDE\.md/,
     stray: /left AppData\/Local\/Stray/,
   };
   if (reasons[name]) expect(reasons[name].test(r.reason), `${cell.run} ${key}: thrown out for "${r.reason}"`);
@@ -236,6 +238,7 @@ for (const cell of b.cells) {
   }
   if (name === 'persist') expect(existsSync(join(dir, 'leaked', 'projects')), `${cell.run} ${key}: the transcript it wrote was not kept`);
   if (name === 'outside-denied') expect(r.notes.some((n) => /tried to reach outside its folder/.test(n)), `${cell.run} ${key}: no note of the denied read`);
+  if (name === 'shell-inside') expect(r.notes.some((n) => /ran ls -la, which Claude Code allows by itself/.test(n)), `${cell.run} ${key}: no note of the shell command`);
   if (PASSING.includes(name)) {
     const first = readRun(`${dir}-try1`);
     const was = { limit: /^usage limit/, crash: /^no result line \(exit 3\)/, hang: /^no result within/, 'api-error': /overloaded_error \(529\)/ }[name];
