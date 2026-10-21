@@ -60,7 +60,7 @@ Their histories:
 
 - **The developer:** 28 Claude Code sessions across 6 repositories, over 4 months. 12 are at work, in VS Code, where their Claude Code has GitHub, Linear and Slack connected. 16 are on their own projects, in the terminal.
 - **The second user:** 15 short Claude Code sessions in the desktop app and 10 claude.ai chats, over 3 months. Their prompts are short ("make it work", "ok, do that"), so the agent proposes most of their decisions and they accept them. exposurie keeps the agent's side of a transcript too, so a brain can still pick these decisions up.
-- **Size:** about 80K tokens of conversation per user, counted on the text exposurie reads. Real histories are larger than any context window, so this size is chosen to keep B runnable: the whole history fits, with room for the task.
+- **Size:** about 80K tokens of conversation per user, counted on the text exposurie reads at 4 characters per token. Sonnet 5.5's own count is higher: the pilot measured about 119K tokens for the developer's B file. Real histories are larger than any context window, so this size is chosen to keep B runnable: the whole history fits, with room for the task.
 - **How they are made:** each session has a written plan, and Sonnet 5.5 writes the session from it. The text is then converted into Claude Code transcripts, plus a claude.ai export for the second user. See [build-plan.md](build-plan.md). Each user's facts are in `users/<user>/facts.json`, and the sessions they are first said in are in `users/<user>/plan.json`.
 
 How the planted facts work:

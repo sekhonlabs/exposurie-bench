@@ -208,7 +208,7 @@ node check/runner.mjs
 
 ### 6. Brain build and pilot
 
-**Plan usage:** yes. **Needs the owner's go.** **Built and tested offline 2026-10-21:** `check/build.mjs` passes, and so does `check/runner.mjs` again.
+**Plan usage:** yes. **Done 2026-10-21,** with the owner's go. Built and tested offline first: `check/build.mjs` passes, and so does `check/runner.mjs` again.
 
 The brain build, `node runner/run.mjs build <user>`:
 
@@ -230,13 +230,23 @@ The brain build, `node runner/run.mjs build <user>`:
 - the delegator, through a session that stops after one batch, so the build starts another
 - a session that reads the answer key (stopped, then accepted by hand), one that writes a transcript, one that never syncs, a home with no retention set, and a history folder already holding a session
 
-What part 6 does live, with the owner's go:
+What part 6 did live, in order: `probe`, `build developer`, `keep-brain developer`, then the pilot, `plan pilot --tasks recall-1` and `go pilot`. Costs are Claude Code's own estimates at list prices.
 
-- `probe`, then the first user's brain: `build developer`, then `keep-brain developer`.
-- Run the pilot, one task under all four conditions: `plan pilot --tasks recall-1`, then `go pilot`.
-- Check that B's input tokens show the whole history arrived, and that C saw the pointer.
-- Check what the fake could not show. Were reads outside the run's folder denied, as headless runs should be? Do exposurie's skill and command appear in C's start-up line? Was any run thrown out for a harmless shell command, such as one Claude Code allows by itself?
-- Use the build's and the pilot's numbers to estimate the plan usage of the full run.
+- **The probe** (twice, about $0.04 in all): a headless run is denied every read outside its folder, with the Read tool and with the shell, and Claude Code lets `ls` and `git status` run inside it without asking. So the audit notes such commands rather than throwing the run out (see [decisions.md](decisions.md)).
+- **The developer's brain:** one session of 9 minutes and 113 turns filed all 28 sessions in three batches (13, 9 and 6) into 39 pages: 12 entities, 27 concepts, and 19 working rules in `how-they-work.md`. It took 4,008,581 input tokens (3,781,295 of them cache reads) and 64,842 output tokens, about $1.94. Its start-up line listed exposurie's skill and `/exposurie-sync`.
+  - The audit stopped it on a false flag: a here-document's text read as commands. Fixed, re-audited clean (all 101 file tool calls in the brain), and accepted. No page holds the sandbox login's address or names.
+- **The pilot, recall-1:** A wrong, and B, C and D right, all scored by the checks.
+
+  | | input tokens, all | output | turns | about |
+  |---|---|---|---|---|
+  | A | 13,050 | 350 | 3 | $0.009 |
+  | B | 125,498 | 354 | 1 | $0.484 |
+  | C | 73,998 | 1,200 | 7 | $0.056 |
+  | D | 6,594 | 67 | 1 | $0.005 |
+
+- **B's history arrived whole.** B's input less D's is about 119K tokens for a 338,692-character file. Sonnet 5.5's window in Claude Code 2.1.302 is 1,000,000 tokens, so B has room even on long work tasks.
+- **C saw the pointer.** Its first command was `exposurie read --search "Satchel database"`, and it read four pages after two searches. Its start-up line listed the `exposurie` skill and `/exposurie-sync`.
+- **The estimate for part 7.** B dominates: each B run puts about 120K tokens of history in the cache, about $0.48 when the cache is cold, and a turn on a warm cache costs about $0.04. Work tasks take many turns, so B's six work tasks cost the most. The remaining 89 runs of areas 1–8, the second brain, the stability check and the judge come to roughly $20–25 at list prices. The build and the pilot (about $2.50) moved the plan's five-hour meter from 19% to 43%, and that meter also counts the session that ran them. So part 7 needs roughly one and a half to two five-hour windows.
 
 ### 7. Full run
 
@@ -251,6 +261,8 @@ What part 6 does live, with the owner's go:
 **Plan usage:** yes. Built last, and only as far as the estimated usage allows.
 
 This area needs sessions to be saved, so they can be resumed and synced. Every other area turns saving off, so the exception gets its own entry in [decisions.md](decisions.md) when this part is built. It also needs a check that `/compact` works in a headless run.
+
+Sonnet 5.5's window in Claude Code 2.1.302 is 1,000,000 tokens (seen in the pilot), so "half the context window" is 500K tokens a session, and every turn past that point re-reads it. Where to interrupt is decided in this part, with the owner, before anything runs.
 
 ### 9. Results
 

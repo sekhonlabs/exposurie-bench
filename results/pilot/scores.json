@@ -1,0 +1,125 @@
+{
+  "batch": "pilot",
+  "runs": [
+    {
+      "run": "r001",
+      "task": "recall-1",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "wrong",
+      "by": "checks",
+      "checks": {
+        "required": [
+          false,
+          false
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 13050,
+        "input": 4,
+        "cache_write": 1097,
+        "cache_read": 11949,
+        "output": 350
+      },
+      "turns": 3,
+      "duration_ms": 5787,
+      "tool_calls": 2,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r002",
+      "task": "recall-1",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 125498,
+        "input": 2,
+        "cache_write": 119932,
+        "cache_read": 5564,
+        "output": 354
+      },
+      "turns": 1,
+      "duration_ms": 11760,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r003",
+      "task": "recall-1",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 73998,
+        "input": 14,
+        "cache_write": 9457,
+        "cache_read": 64527,
+        "output": 1200
+      },
+      "turns": 7,
+      "duration_ms": 17502,
+      "tool_calls": 6,
+      "looked": true,
+      "reads": 6
+    },
+    {
+      "run": "r004",
+      "task": "recall-1",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 6594,
+        "input": 2,
+        "cache_write": 1028,
+        "cache_read": 5564,
+        "output": 67
+      },
+      "turns": 1,
+      "duration_ms": 2336,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    }
+  ]
+}

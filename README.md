@@ -2,7 +2,7 @@
 
 Does an external brain make a coding agent better for the person using it? This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie). exposurie is a CLI that builds a curated Markdown wiki (the brain) from a person's own agent sessions and chat exports, and points every new session at it.
 
-**Status: the run sandbox is built and checked (part 0 of [docs/build-plan.md](docs/build-plan.md)), and the two users' fact sheets are written and approved (part 1). Both users' histories are generated and checked (parts 2 and 3): 53 sessions, about 83K tokens for the developer and 74K for the delegator, read back by exposurie 1.2.0's own readers. The tasks are complete for areas 1 to 8 (part 4): 24 questions and work tasks, their checks and rubrics, five starter repositories, and the files conditions B and D give the agent. The runner and the scorer are built (part 5) and tested end to end against a fake `claude`: every task under every condition, with usage limits, crashes and broken runs planted on purpose. No benchmark task has run yet.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
+**Status: the run sandbox is built and checked (part 0 of [docs/build-plan.md](docs/build-plan.md)), and the two users' fact sheets are written and approved (part 1). Both users' histories are generated and checked (parts 2 and 3): 53 sessions, about 83K tokens for the developer and 74K for the delegator at 4 characters a token (Sonnet 5.5 itself counts about 119K for the developer's), read back by exposurie 1.2.0's own readers. The tasks are complete for areas 1 to 8 (part 4): 24 questions and work tasks, their checks and rubrics, five starter repositories, and the files conditions B and D give the agent. The runner and the scorer are built (part 5) and tested end to end against a fake `claude`: every task under every condition, with usage limits, crashes and broken runs planted on purpose. The developer's brain is built, and the pilot ran one task under all four conditions (part 6): the fresh session got it wrong, and the other three right. Its scores are in [results/pilot/](results/pilot/). The full run has not started.** It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code on Sonnet 5.5.
 
 ## The question
 
@@ -40,9 +40,10 @@ The questions are spread across nine areas, from recall to long sessions, with t
 | [tasks/starters/](tasks/starters/) | the projects the work tasks start from |
 | [tasks/conditions/](tasks/conditions/) | what conditions B and D put in the agent's instructions file: each user's whole history, and the facts each task needs |
 | [gen/](gen/) | the generator that writes each session from its brief, and the converter that turns the sessions into Claude Code transcripts and a claude.ai export |
-| [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, and the runner and scorer to the method |
+| [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, the runner and scorer, and the brain build to the method |
 | [score/](score/) | how a task's checks read a run, the scorer, and the judge for what the checks cannot settle |
-| [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner, and the fake `claude` it is tested against |
+| [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, and the fake `claude` they are tested against |
+| [results/](results/) | scores saved from real runs, so far the pilot's |
 
 ## License
 
