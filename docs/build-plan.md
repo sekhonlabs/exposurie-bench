@@ -250,11 +250,20 @@ What part 6 did live, in order: `probe`, `build developer`, `keep-brain develope
 
 ### 7. Full run
 
-**Plan usage:** yes.
+**Plan usage:** yes. **Run 2026-10-21,** with the owner's go. Next comes the hand check of every judged answer, done blind by a session that has not seen which run had which condition.
 
 - Build the second user's brain.
 - Run every cell, with conditions mixed together. Resume after usage-limit stops.
 - Each user's C runs finish within 7 days of that user's brain build.
+
+What part 7 did, in order: `build delegator`, `keep-brain delegator`, `plan full` and `go full`, then the stability check, then `score/score.mjs` on all three batches. Costs are Claude Code's own estimates at list prices.
+
+- **The delegator's brain:** one session of 7 minutes and 70 turns filed all 25 conversations, 15 Claude Code sessions and 10 claude.ai chats, into 20 pages. It took 2,996,876 input tokens and 53,890 output tokens, about $1.58. No page holds the sandbox login's address or names.
+- **The full run, `full`:** all 24 tasks of areas 1–8, the pilot's included, under every condition. That is 93 runs in one mixed order, and all are done. The plan's five-hour limit stopped it once, after 30 runs, and `go` carried on after the reset.
+- **The audit's second false flag.** One run ran `cat README.md 2>/dev/null` inside its folder, and the audit read the null device as a place outside it. The audit was fixed and tested, the runs before it re-audited unchanged, and that run ran again by name (see [decisions.md](decisions.md)).
+- **The stability check, `stability-1` and `stability-2`:** area 3's three tasks, twice more under C, all done.
+- **Scored:** in `full`, 56 answers were settled by their checks and 37 by the judge: the 24 of areas 4 and 5, and 13 that named both an old and a new choice. All 6 stability answers named both, so the judge decided them. With two earlier attempts, the runs cost about $14.22, and part 7 about $16 in all.
+- **The work tasks can't run their tests, in any condition.** The shell may run only `exposurie`, so `npx jest` is denied, and an agent writes its test without running it.
 
 ### 8. Area 9
 
