@@ -16,6 +16,8 @@
 //   trouble           a compaction nobody asked for, a step whose session was
 //                     not saved, a session that runs out of steps short of the
 //                     mark, and a session a stopped runner left in the home
+//   writes            a shell command that writes into a file counts as a
+//                     write, as Write and Edit do; one that reads does not
 //
 // Run it with the sandbox's own Node. Exit 0 when everything holds; exit 1
 // lists every problem.
@@ -26,7 +28,7 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { EXPOSURIE, HOME, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
 import { DECLINED, Stop, keepBrain, neutralProblems } from '../runner/run.mjs';
-import { STRATEGIES, long, stepsFor } from '../runner/long.mjs';
+import { STRATEGIES, long, stepsFor, writesIn } from '../runner/long.mjs';
 
 ownNodeOnly();
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -222,6 +224,26 @@ const noLeftovers = (ctx, where) => {
   expect(!L.fill.forked && L.fill.steps.length === stepsFor(TASK, 'fill').length, `the short session: ${L.fill.steps.length} steps, forked ${JSON.stringify(L.fill.forked)}`);
   expect(readdirSync(run).some((n) => n.startsWith('recovered-')), 'the session left in the home was not kept in its run');
   noLeftovers(ctx, 'after the short session');
+}
+
+// ---------------------------------------------------------------- what counts as a write
+
+{
+  // The probe saw Claude Code let `printf ... >> notes.txt` run by itself
+  // inside the folder, so a shell command that writes counts as a write.
+  const work = join(root, 'writes', 'satchel');
+  const call = (id, name, input) => ({ type: 'assistant', message: { content: [{ type: 'tool_use', id, name, input }] } });
+  const w = writesIn([
+    call('t1', 'Bash', { command: "printf 'INSERT OR REPLACE INTO links' >> src/queries/x.sql" }),
+    call('t2', 'Bash', { command: 'cat src/app.js 2>/dev/null; ls &>/dev/null' }),
+    call('t3', 'Bash', { command: 'exposurie read --search "INSERT OR REPLACE"' }),
+    call('t4', 'Bash', { command: "sed -i 's/a/b/' src/app.js" }),
+    call('t5', 'Edit', { file_path: join(work, 'src', 'app.js'), old_string: 'a', new_string: 'line.split(",")' }),
+    call('t6', 'Write', { file_path: join(work, 'notes.md'), content: 'hi' }),
+    { type: 'result', permission_denials: [{ tool_use_id: 't5' }] },
+  ], work);
+  expect(JSON.stringify(w.map((x) => [x.tool, x.path, x.denied])) === JSON.stringify([['Bash', null, false], ['Bash', null, false], ['Edit', 'src/app.js', true], ['Write', 'notes.md', false]]),
+    `what counts as a write: ${JSON.stringify(w)}`);
 }
 
 // ---------------------------------------------------------------- the real home

@@ -147,15 +147,33 @@ export function compactionsIn(msgs) {
   return out;
 }
 
-/** What the agent wrote with Write and Edit, as `{ step, tool, path, text }`, paths relative to its folder. */
+/** A shell command that writes into a file: a redirect, `tee`, or `sed -i`. */
+const SHELL_WRITE = /(?:^|[^0-9&<>-])>>?(?![&>])|\btee\b|\bsed\s+(?:-\w*\s+)*-i/;
+
+/**
+ * What the agent wrote, as `{ tool, path, text, denied }`, paths relative to
+ * its folder: the text of every Write and Edit, and every shell command that
+ * writes into a file. Claude Code lets those run by themselves inside the
+ * folder when edits are accepted (seen in the probe), so `printf ... >> x`
+ * writes as surely as Edit does. A denied call counts too: it is still an
+ * attempt.
+ */
 export function writesIn(msgs, work) {
+  const result = msgs.findLast((m) => m.type === 'result');
+  const denied = new Set((result?.permission_denials ?? []).map((d) => d.tool_use_id));
   const out = [];
   for (const m of msgs) {
     if (m.type !== 'assistant') continue;
     for (const b of m.message?.content ?? []) {
-      if (b.type !== 'tool_use' || !['Write', 'Edit'].includes(b.name)) continue;
+      if (b.type !== 'tool_use') continue;
+      if (b.name === 'Bash') {
+        const command = String(b.input?.command ?? '');
+        if (SHELL_WRITE.test(command)) out.push({ tool: 'Bash', path: null, text: command, denied: denied.has(b.id) });
+        continue;
+      }
+      if (!['Write', 'Edit'].includes(b.name)) continue;
       const path = relative(work, resolve(work, String(b.input?.file_path ?? ''))).split(sep).join('/');
-      out.push({ tool: b.name, path, text: String((b.name === 'Write' ? b.input?.content : b.input?.new_string) ?? '') });
+      out.push({ tool: b.name, path, text: String((b.name === 'Write' ? b.input?.content : b.input?.new_string) ?? ''), denied: denied.has(b.id) });
     }
   }
   return out;
@@ -327,8 +345,7 @@ async function longStep(ctx, { dir, task, L, phase, n, step, kit, versions }) {
   writeFileSync(join(sdir, 'stderr.txt'), l.stderr);
   const msgs = l.lines.map(parseLine).filter(Boolean);
   const result = msgs.findLast((m) => m.type === 'result');
-  // A slash command may answer without the start-up line a model call brings.
-  const o = step.kind === 'compact' && !l.init && !l.refused && result && !result.is_error ? { status: 'done' } : outcome(l, result, ctx.timeoutMs);
+  const o = outcome(l, result, ctx.timeoutMs);
   const a = audit(msgs, { work, home: ctx.home, condition: 'C' });
   const compactions = compactionsIn(msgs);
   const problems = [...a.problems, ...home];
@@ -695,7 +712,7 @@ export const PROBE_TASK = {
     'Add a second line to notes.txt: two. Then tell me in one sentence which word I asked for first.',
   ],
   more: [],
-  after: ['Add a third line to notes.txt: three. Then say which line I asked for first, from what you remember of this work, without reading the file.'],
+  after: ['Add a third line to notes.txt: three. Then remind me, in one sentence, what my very first message in this work asked for.'],
   material: null,
 };
 

@@ -242,6 +242,14 @@ function kept(ctx, user, b) {
   expect(!a.problems.length && a.notes.length === 2, `the null device read as a place: ${JSON.stringify(a)}`);
   a = shell('cat ../outside.txt 2>/dev/null; echo hi &>../x.txt');
   expect(a.problems.length === 2, `a place outside the folder went unflagged beside a redirect: ${JSON.stringify(a.problems)}`);
+  // area 9's probe: a sync appended to its log with printf, and the audit read
+  // the quoted text, which opens on \n and holds a backtick, as a place.
+  a = shell("printf '\\n## [2026-10-21] sync | Fourth batch: 1 scratch session\\n- Nothing folded in: a `notes.txt` test\\n' >> log.md");
+  expect(!a.problems.length && a.notes.length === 1, `quoted text read as a place: ${JSON.stringify(a)}`);
+  a = shell("printf 'imports go to /data/imports/ and ~ nowhere else\\n' >> notes.txt; printf 'three\\n' >> notes.txt");
+  expect(!a.problems.length && a.notes.length === 2, `a path inside quoted text read as a place: ${JSON.stringify(a)}`);
+  a = shell("cat '../outside.txt'; cat \"E:/somewhere else/x.txt\"; echo \"$HOME\" > x");
+  expect(a.problems.length === 3, `a quoted place outside the folder went unflagged: ${JSON.stringify(a.problems)}`);
 }
 
 // ---------------------------------------------------------------- the real home

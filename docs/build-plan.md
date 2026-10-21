@@ -300,12 +300,21 @@ node check/long.mjs
 - **A step that ends without a result** puts the repository and the session back as they were, and runs again next time. After three such ends, it waits for a person. A step that breaks a check stops the run until `--accept "<why>"`.
 - **`check/long.mjs` passes:** a made-up task through the fill, the fork and all three strategies, with exposurie's real sync, a usage limit, a read outside the folder accepted by hand, a compaction nobody asked for, an unsaved session, a session that runs out of steps, and one a stopped runner left in the home. `check/runner.mjs` and `check/build.mjs` still pass.
 
+**The probe ran on 2026-10-21, with the owner's go,** for about $0.32 (`../runs/probe-long-*`). Every phase ran, and the file came out as asked under all three strategies.
+- A saved session resumes, and a fork stands on its own.
+- `/compact` leaves one boundary, with the tokens before and after.
+- The sync filed the session.
+- Where it differed from the fake, the fake now matches: what `/compact` prints. It also turned up two things the runner needed:
+  - A shell command that writes inside the folder goes through by itself, so it now counts as a write.
+  - The audit read quoted text as a place, which it no longer does.
+
+  See [decisions.md](decisions.md).
+
 **Next, in order:**
 
-1. **The probe, with the owner's go.** It shows what the fake can't: that a headless step saves a session that resumes and forks, what `/compact` prints, what else Claude Code writes into its config folder with a session saved, and that exposurie files a real 2.1.302 transcript. Whatever it shows that the fake does not do, the fake is changed to match before anything else runs.
-2. **long-1's content**, then `check/tasks.mjs` extended to hold area 9's steps files to the method, and their examples to their checks.
-3. **long-1's live runs**, with the owner's go, after the seven-day reset. Their cost decides long-2.
-4. **long-2's content and runs**, if the cost allows.
+1. **long-1's content**, then `check/tasks.mjs` extended to hold area 9's steps files to the method, and their examples to their checks.
+2. **long-1's live runs**, with the owner's go, after the seven-day reset. Their cost decides long-2.
+3. **long-2's content and runs**, if the cost allows.
 
 **long-1, Satchel (personal): import from other read-later services.**
 

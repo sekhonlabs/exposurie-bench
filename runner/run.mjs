@@ -558,19 +558,29 @@ const DEVICE = /^\/dev\/(?:null|stdin|stdout|stderr|fd\/\d+)$/;
  * The places a shell command names: `.` and `..`, anything with a slash, the
  * home, a drive. A variable or a command substitution can't be resolved here,
  * so it counts as the drive's root, which is outside every folder a run may
- * reach. The null device is not a place: an agent hides an error with
- * `2>/dev/null`. This is a backstop: Claude Code itself denies the commands it
- * allows on its own once they name a place outside the run's folder.
+ * reach, except in single quotes, where the shell expands nothing. The null
+ * device is not a place: an agent hides an error with `2>/dev/null`. Nor is
+ * text in quotes: an agent appends a line with `printf '\n## A heading\n' >>
+ * log.md`, and that string holds spaces and opens on an escape. This is a
+ * backstop: Claude Code itself denies the commands it allows on its own once
+ * they name a place outside the run's folder.
  */
 function shellPaths(cmd, work, home) {
   const out = [];
   for (const raw of cmd.match(/"[^"]*"|'[^']*'|\S+/g) ?? []) {
     const w = raw.replace(/^["']|["']$/g, '').replace(/^\d*&?[<>]+&?/, '').replace(/^-[^=]*=/, '');
     if (!w || w.startsWith('-') || DEVICE.test(w)) continue;
-    if (/^\$|\$[({]|`/.test(w)) out.push(parse(work).root);
-    else if (w === '.' || w === '..' || /[\\/]/.test(w) || w.startsWith('~') || /^[A-Za-z]:/.test(w)) out.push(toPath(w, work, home));
+    if (!raw.startsWith("'") && /^\$|\$[({]|`/.test(w)) out.push(parse(work).root);
+    else if (isPlace(w)) out.push(toPath(w, work, home));
   }
   return out;
+}
+
+/** A word that names a place. A drive path may hold spaces; any other word with a space, or one opening on an escape like `\n`, is text. */
+function isPlace(w) {
+  if (/^[A-Za-z]:/.test(w)) return true;
+  if (/\s/.test(w) || /^\\[A-Za-z0-9]/.test(w)) return false;
+  return w === '.' || w === '..' || w.startsWith('~') || /[\\/]/.test(w);
 }
 
 /**

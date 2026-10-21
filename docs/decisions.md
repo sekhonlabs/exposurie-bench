@@ -143,3 +143,17 @@ Dated, newest last. Each entry says what was decided and why.
   A stream shows its strategy, so area 9 cannot be scored blind. Its checks are scripts, and every run is read by hand.
 - **Sonnet 5.5's list prices, as Claude Code estimates them,** fit part 7's 105 runs exactly: per million tokens, $2 for input, $4 for a cache write with the one-hour lifetime, $0.10 for a cache read, and $10 for output. A long session writes each token into the cache once and reads it back on every later call, so filling one to 500,000 tokens comes to about $5–7, and each strategy after the fork to a few dollars.
 - **The runner is tested against the fake before any real long session.** `check/long.mjs` runs a made-up long task to the fork and through all three strategies, with exposurie's real sync, and with a usage limit, a read outside the folder, a compaction nobody asked for, an unsaved session, a session that runs out of steps, and one a stopped runner left in the home. `long.mjs probe` then runs the same procedure on a tiny real task, to see what only a real run shows.
+- **What the probe showed.** A tiny real long session went through all of it for about $0.32: two steps, the fork, keep, compact, and the sync after its five-minute wait. In every strategy the file came out as asked.
+  - **Sessions:** a headless step saves its session where `--resume` finds it. `--fork-session --session-id` writes a new transcript that holds the whole history under its own ID, so a fork stands on its own. Claude Code wrote nothing else into its config folder for a saved session.
+  - **`/compact`** prints, in order:
+    - two status lines, "compacting" and then success
+    - its start-up line
+    - one `compact_boundary`, with the trigger and the tokens before and after
+    - the summary, as a user message
+    - its own output, `Compacted`
+
+    Its result has no turns and no usage. The summary's tokens are in `modelUsage`, which is what the runner counts. The fake now prints the same.
+  - **The sync** read the probe's session and filed it. It found nothing worth a page.
+  - **With edits accepted, Claude Code lets a shell command that writes inside the run's folder run by itself.** `printf 'three\n' >> notes.txt` went through in two strategies. So area 9 counts a shell command that writes into a file (a redirect, `tee` or `sed -i`) among what the agent wrote, beside Write and Edit.
+  - **The audit read quoted text as a place**, the third false flag of its kind. The sync session's `printf '\n## …' >> log.md` opens on `\n` and holds a backtick. Claude Code denied it, so it was only a note, but a run whose command went through would have been thrown out. Text in quotes is no longer a place, and nothing in single quotes counts as a substitution. `check/build.mjs` tests both, and part 7's batches re-audit unchanged.
+  - **Every saved transcript holds the sandbox login's identity.** Claude Code 2.1.302 keeps request lines in a session's transcript. The transcripts stay in `../runs`. exposurie's reader keeps only what was said, and the probe's synced brain and staged batch hold none of it.

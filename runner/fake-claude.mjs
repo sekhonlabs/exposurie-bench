@@ -311,11 +311,19 @@ if (!args.includes('--no-session-persistence')) {
     call([{ type: 'tool_use', id, name, input }], 120);
     toolResult(id, result, fakeTokens);
   };
+  // What a real /compact prints, seen in the probe: the boundary, the summary
+  // as a user message, and the command's own output; its result has no turns
+  // and no usage, and the summary's tokens are in modelUsage alone.
+  let summarised = 0;
   const compact = (trigger) => {
     const pre = contextOf();
-    add({ type: 'system', subtype: 'compact_boundary', compactMetadata: { trigger, preTokens: pre } });
-    out.push({ type: 'system', subtype: 'compact_boundary', compact_metadata: { trigger, pre_tokens: pre }, session_id: session });
-    add({ type: 'user', isCompactSummary: true, message: { role: 'user', content: `This session is being continued from a previous conversation. Summary of the work so far: ${phase} work in ${task.folder}.` }, fakeTokens: 12_000 });
+    summarised += pre;
+    const summary = `This session is being continued from a previous conversation that ran out of context. The summary below covers the earlier portion of the conversation.\n\nSummary: ${phase} work in ${task.folder}.`;
+    add({ type: 'system', subtype: 'compact_boundary', compactMetadata: { trigger, preTokens: pre, postTokens: 12_000 } });
+    out.push({ type: 'system', subtype: 'compact_boundary', compact_metadata: { trigger, pre_tokens: pre, post_tokens: 12_000 }, session_id: session });
+    add({ type: 'user', isCompactSummary: true, message: { role: 'user', content: summary }, fakeTokens: 12_000 });
+    out.push({ type: 'user', message: { role: 'user', content: summary }, session_id: session });
+    if (trigger === 'manual') out.push({ type: 'user', message: { role: 'user', content: '<local-command-stdout>Compacted </local-command-stdout>' }, session_id: session });
   };
 
   let answer = 'Done.';
@@ -347,6 +355,15 @@ if (!args.includes('--no-session-persistence')) {
 
   const has = (rel) => existsSync(join(HOME, rel));
   const skills = [...BUILT_IN_SKILLS, ...(has('.claude/skills/exposurie/SKILL.md') ? ['exposurie'] : [])];
+  const limit = kind === 'limit';
+  const rate = { type: 'rate_limit_event', rate_limit_info: { status: limit ? 'rejected' : 'allowed', rateLimitType: 'five_hour', unifiedWindows: { five_hour: { utilization: limit ? 1 : 0.4 }, seven_day: { utilization: 0.1 } } }, session_id: session };
+  // A real /compact reports its progress before the start-up line.
+  const compacting = phase === 'compact' && n === 0;
+  if (compacting) {
+    print({ type: 'system', subtype: 'status', status: 'compacting', session_id: session });
+    print(rate);
+    print({ type: 'system', subtype: 'status', status: null, compact_result: 'success', session_id: session });
+  }
   print({
     type: 'system', subtype: 'init', cwd, session_id: session, tools: (arg('--tools') ?? '').split(',').filter(Boolean),
     mcp_servers: [], model: arg('--model'), permissionMode: arg('--permission-mode') ?? 'default',
@@ -356,8 +373,6 @@ if (!args.includes('--no-session-persistence')) {
     plugins: [{ name: 'cc-plugin-agents-md', path: 'builtin', source: 'cc-plugin-agents-md@builtin' }],
   });
   if (kind === 'crash') process.exit(3);
-  const limit = kind === 'limit';
-  const rate = { type: 'rate_limit_event', rate_limit_info: { status: limit ? 'rejected' : 'allowed', rateLimitType: 'five_hour', unifiedWindows: { five_hour: { utilization: limit ? 1 : 0.4 }, seven_day: { utilization: 0.1 } } }, session_id: session };
   if (limit || kind === 'api-error') {
     print(rate);
     print({
@@ -376,13 +391,15 @@ if (!args.includes('--no-session-persistence')) {
     }
   }
   for (const m of out) print(m);
-  print(rate);
-  const read = prompts.reduce((t, p) => t + p - 402, 0);
+  if (!compacting) print(rate);
+  const read = prompts.reduce((t, p) => t + p - 402, 0) + summarised;
+  const output = 150 * prompts.length + (summarised ? 1500 : 0);
+  const zero = { input_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 0 };
   print({
-    type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: Math.max(1, prompts.length), duration_ms: 50,
-    session_id: session, result: phase === 'compact' && n === 0 ? (problems.length ? `FAKE-PROBLEM: ${problems.join('; ')}` : '') : answer, permission_denials: [],
-    usage: { input_tokens: 2 * prompts.length, cache_creation_input_tokens: 400 * prompts.length, cache_read_input_tokens: read, output_tokens: 150 * prompts.length },
-    modelUsage: { [PINS.model]: { inputTokens: 2 * prompts.length, outputTokens: 150 * prompts.length, cacheReadInputTokens: read, cacheCreationInputTokens: 400 * prompts.length, costUSD: 0 } },
+    type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: compacting ? 0 : prompts.length, duration_ms: 50,
+    session_id: session, result: compacting ? (problems.length ? `FAKE-PROBLEM: ${problems.join('; ')}` : '') : answer, permission_denials: [],
+    usage: compacting ? zero : { input_tokens: 2 * prompts.length, cache_creation_input_tokens: 400 * prompts.length, cache_read_input_tokens: read, output_tokens: output },
+    modelUsage: { [PINS.model]: { inputTokens: 2 * prompts.length, outputTokens: output, cacheReadInputTokens: read, cacheCreationInputTokens: 400 * prompts.length, costUSD: 0 } },
     total_cost_usd: 0,
   });
   process.exit(0);
