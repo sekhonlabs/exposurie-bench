@@ -1,0 +1,156 @@
+{
+  "batch": "stability-1",
+  "runs": [
+    {
+      "run": "r001",
+      "task": "changed-3",
+      "area": 3,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply states the site is hosted on Netlify, having moved from GitHub Pages, and does not name GitHub Pages as the current host.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1121,
+          "cache_read": 0,
+          "output": 58,
+          "all_input": 1123,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1121,
+              "cache_read": 0,
+              "output": 58
+            }
+          }
+        },
+        "at": "2026-10-21T12:17:18.318Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 31278,
+        "input": 8,
+        "cache_write": 3791,
+        "cache_read": 27479,
+        "output": 510
+      },
+      "turns": 4,
+      "duration_ms": 9221,
+      "tool_calls": 3,
+      "looked": true,
+      "reads": 6
+    },
+    {
+      "run": "r002",
+      "task": "changed-2",
+      "area": 3,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says tickets live in Linear (key ENG) and treats Jira (TW-) only as the former system, which matches the rubric.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1060,
+          "cache_read": 0,
+          "output": 57,
+          "all_input": 1062,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1060,
+              "cache_read": 0,
+              "output": 57
+            }
+          }
+        },
+        "at": "2026-10-21T12:17:22.392Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 21545,
+        "input": 6,
+        "cache_write": 2250,
+        "cache_read": 19289,
+        "output": 333
+      },
+      "turns": 3,
+      "duration_ms": 6882,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 2
+    },
+    {
+      "run": "r003",
+      "task": "changed-1",
+      "area": 3,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true,
+          false
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply states the user's own projects now use node:test (Node's built-in runner), and it does not present Vitest or Jest as the current runner.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1244,
+          "cache_read": 0,
+          "output": 58,
+          "all_input": 1246,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1244,
+              "cache_read": 0,
+              "output": 58
+            }
+          }
+        },
+        "at": "2026-10-21T12:17:26.173Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 29894,
+        "input": 8,
+        "cache_write": 2296,
+        "cache_read": 27590,
+        "output": 577
+      },
+      "turns": 4,
+      "duration_ms": 9395,
+      "tool_calls": 3,
+      "looked": true,
+      "reads": 3
+    }
+  ]
+}
