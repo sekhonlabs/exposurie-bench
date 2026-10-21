@@ -16,10 +16,14 @@
 // environment, its folder, the condition in the home, and whether `exposurie`
 // resolves through Git Bash, as an agent's shell would find it. Anything wrong
 // goes into the answer as FAKE-PROBLEM, which check/runner.mjs looks for.
+//
+// A step of a long session (area 9, part 8) saves its session, which nothing
+// else does, so that is how the fake tells one apart. See the long session's
+// own section below.
 
 import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PINS, TOOLS, sandboxEnv } from './sandbox.mjs';
@@ -91,7 +95,8 @@ if (arg('-p') === '/exposurie-sync') {
   };
   for (const [k, v] of Object.entries(want)) if (arg(k) !== v) problems.push(`${k} is ${arg(k)}, not ${v}`);
   for (const f of ['--verbose', '--strict-mcp-config', '--no-session-persistence']) if (!args.includes(f)) problems.push(`no ${f}`);
-  const own = new Set([...Object.keys(sandboxEnv()), 'EXPOSURIE_BENCH_FAKE'].map((k) => k.toUpperCase()));
+  // A long session's sync (area 9) runs with auto-compact off, as every process there does.
+  const own = new Set([...Object.keys(sandboxEnv()), 'EXPOSURIE_BENCH_FAKE', 'DISABLE_AUTO_COMPACT'].map((k) => k.toUpperCase()));
   const inherited = Object.keys(process.env).filter((k) => !own.has(k.toUpperCase()));
   if (inherited.length) problems.push(`inherited ${inherited.join(', ')}`);
   if (resolve(brain).toLowerCase() !== resolve(HOME, 'brain').toLowerCase()) problems.push(`syncs in ${brain}, not the brain`);
@@ -184,6 +189,201 @@ if (arg('-p') === '/exposurie-sync') {
   print({
     type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: out.length / 2 + 1, duration_ms: 60,
     session_id: session, result: said, permission_denials: [], ...spent,
+  });
+  process.exit(0);
+}
+
+// ---------------------------------------------------------------- a long session (area 9)
+
+// The fake keeps a long session the way Claude Code does, as a transcript in
+// the history folder: --session-id starts one, --resume carries one on, and
+// with --fork-session the carried-on copy gets the new ID. Each line it writes
+// says how many tokens it stands for (fakeTokens), so the context grows step by
+// step, and a step's usage says how big it has become. /compact leaves a
+// boundary and a summary in place of everything before them.
+//
+// The scenario's `long` holds the task (its folder, steps and examples, as a
+// steps file has them), how many tokens a fill step and a later step add
+// (`grow`, `grow_after`), which example each strategy's later steps write
+// (`write`: right, retry or forgot), whether the transcript it saves is dated
+// ten minutes back so a sync takes it at once (`backdate`), and what a step
+// does instead, once (`steps`, keyed like "fill/3": limit, crash, api-error,
+// outside, compact-itself, no-save). It checks each step's arguments,
+// environment, folder, condition and message against the task, and for the
+// fresh session, that its brain filed the long session.
+if (!args.includes('--no-session-persistence')) {
+  const long = scenario.long ?? {};
+  const task = long.task ?? {};
+  const cwd = process.cwd();
+  const problems = [];
+  const want = {
+    '--model': PINS.model, '--output-format': 'stream-json', '--tools': TOOLS.join(','),
+    '--allowedTools': 'Bash(exposurie:*)', '--permission-mode': 'acceptEdits',
+  };
+  for (const [k, v] of Object.entries(want)) if (arg(k) !== v) problems.push(`${k} is ${arg(k)}, not ${v}`);
+  for (const f of ['--verbose', '--strict-mcp-config']) if (!args.includes(f)) problems.push(`no ${f}`);
+  if (process.env.DISABLE_AUTO_COMPACT !== '1') problems.push('auto-compact is not off');
+  const own = new Set([...Object.keys(sandboxEnv()), 'EXPOSURIE_BENCH_FAKE', 'DISABLE_AUTO_COMPACT'].map((k) => k.toUpperCase()));
+  const inherited = Object.keys(process.env).filter((k) => !own.has(k.toUpperCase()));
+  if (inherited.length) problems.push(`inherited ${inherited.join(', ')}`);
+  if (basename(cwd) !== task.folder) problems.push(`runs in ${basename(cwd)}, not ${task.folder}`);
+  if (!existsSync(join(CONFIG, 'CLAUDE.md')) || !readFileSync(join(CONFIG, 'CLAUDE.md'), 'utf8').includes('<!-- exposurie:start -->')) problems.push('no exposurie pointer in the home');
+  for (const rel of ['.claude/skills/exposurie/SKILL.md', '.claude/commands/exposurie-sync.md', 'brain']) if (!existsSync(join(HOME, rel))) problems.push(`no ${rel} in the home`);
+  const bash = (command) => spawnSync(process.env.CLAUDE_CODE_GIT_BASH_PATH, ['-c', command], { encoding: 'utf8', windowsHide: true });
+  if (bash('command -v exposurie').status !== 0) problems.push('exposurie is not on the PATH');
+
+  // Where Claude Code keeps a folder's sessions, as the fake spells it.
+  const store = join(CONFIG, 'projects', cwd.replace(/[^A-Za-z0-9]/g, '-'));
+  const fileOf = (id) => join(store, `${id}.jsonl`);
+  const ask = arg('-p');
+  const resume = arg('--resume');
+  const fork = args.includes('--fork-session');
+  const named = arg('--session-id');
+  const refuse = (msg) => {
+    process.stderr.write(`${msg}\n`);
+    process.exit(1);
+  };
+  if (named && resume && !fork) refuse('Error: --session-id can only be used with --continue or --resume if --fork-session is also specified.');
+  if (resume && !existsSync(fileOf(resume))) refuse(`No conversation found with session ID: ${resume}`);
+  if (named && existsSync(fileOf(named))) refuse(`Error: Session ID ${named} is already in use.`);
+  const session = named ?? resume ?? randomUUID();
+  const lines = resume ? readFileSync(fileOf(resume), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
+  for (const l of lines) if (l.sessionId) l.sessionId = session;
+
+  // Which phase and step this is, read off the session the way the runner sets it up.
+  let phase = lines.findLast((l) => l.type === 'fake-meta')?.phase ?? null;
+  const resumeNote = String(task.resume_note ?? '');
+  if (!resume) phase = resumeNote && ask?.startsWith(resumeNote) ? 'sync' : 'fill';
+  else if (fork) phase = ask === '/compact' ? 'compact' : 'keep';
+  if (!resume || fork) lines.push({ type: 'fake-meta', phase, sessionId: session });
+  const since = lines.slice(lines.findLastIndex((l) => l.type === 'fake-meta'));
+  const asked = since.filter((l) => l.type === 'user' && typeof l.message?.content === 'string' && !l.isCompactSummary).length;
+  // The compact strategy's own step is 0; its later steps count from 1, as everyone else's do.
+  const compacted = since.some((l) => l.subtype === 'compact_boundary');
+  const n = phase === 'compact' && !compacted ? 0 : asked + 1;
+  const after = (task.after ?? []).map((s) => (typeof s === 'string' ? s : s.say));
+  const expected = {
+    fill: [...(task.core ?? []), ...(task.more ?? [])].map((s) => (typeof s === 'string' ? s : s.say))[n - 1],
+    keep: after[n - 1],
+    compact: n === 0 ? '/compact' : after[n - 1],
+    sync: n === 1 ? `${resumeNote}\n\n${after[0]}` : after[n - 1],
+  }[phase];
+  if (ask !== expected) problems.push(`${phase} step ${n} asked ${JSON.stringify(String(ask).slice(0, 80))}, not ${JSON.stringify(String(expected).slice(0, 80))}`);
+  const key = `${phase}/${n}`;
+  const flag = join(dirname(process.env.EXPOSURIE_BENCH_FAKE ?? '.'), `long-done-${key.replace('/', '-')}`);
+  const kind = long.steps?.[key] && !existsSync(flag) ? long.steps[key] : null;
+  if (kind) writeFileSync(flag, '');
+
+  if (phase === 'sync') {
+    // The fresh session's brain must have filed the long session, which ran in this same folder.
+    let st = {};
+    try {
+      st = JSON.parse(readFileSync(join(HOME, 'brain', '.exposurie', 'state.json'), 'utf8'));
+    } catch {
+      // No state: the check below says so.
+    }
+    if (!Object.keys(st.files ?? {}).some((p) => p.replace(/\\/g, '/').includes(`/projects/${basename(store)}/`))) problems.push("the fresh session's brain never filed the long session");
+  }
+
+  const contextOf = () => 6400 + lines.slice(Math.max(0, lines.findLastIndex((l) => l.subtype === 'compact_boundary'))).reduce((t, l) => t + (l.fakeTokens ?? 0), 0);
+  const stamp = { sessionId: session, cwd, entrypoint: 'sdk-cli', version: PINS.claudeCode, isSidechain: false, userType: 'external' };
+  let parent = lines.findLast((l) => l.uuid)?.uuid ?? null;
+  const add = (l) => {
+    const uuid = randomUUID();
+    lines.push({ ...l, ...stamp, uuid, parentUuid: parent, timestamp: new Date().toISOString() });
+    parent = uuid;
+  };
+  const out = [];
+  const prompts = [];
+  const call = (content, fakeTokens) => {
+    const prompt = contextOf();
+    prompts.push(prompt);
+    const message = { id: `msg_${randomUUID()}`, role: 'assistant', model: PINS.model, content, usage: { input_tokens: 2, cache_creation_input_tokens: 400, cache_read_input_tokens: prompt - 402, output_tokens: 150 } };
+    add({ type: 'assistant', message, fakeTokens });
+    out.push({ type: 'assistant', message, session_id: session });
+  };
+  const toolResult = (id, content, fakeTokens) => {
+    add({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: id, content }] }, fakeTokens });
+    out.push({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: id, content }] }, session_id: session });
+  };
+  const tool = (name, input, result, fakeTokens) => {
+    const id = `toolu_${randomUUID().replace(/-/g, '').slice(0, 24)}`;
+    call([{ type: 'tool_use', id, name, input }], 120);
+    toolResult(id, result, fakeTokens);
+  };
+  const compact = (trigger) => {
+    const pre = contextOf();
+    add({ type: 'system', subtype: 'compact_boundary', compactMetadata: { trigger, preTokens: pre } });
+    out.push({ type: 'system', subtype: 'compact_boundary', compact_metadata: { trigger, pre_tokens: pre }, session_id: session });
+    add({ type: 'user', isCompactSummary: true, message: { role: 'user', content: `This session is being continued from a previous conversation. Summary of the work so far: ${phase} work in ${task.folder}.` }, fakeTokens: 12_000 });
+  };
+
+  let answer = 'Done.';
+  if (phase === 'compact' && n === 0) {
+    compact('manual');
+  } else {
+    add({ type: 'user', message: { role: 'user', content: ask }, fakeTokens: Math.ceil(String(ask).length / 3) });
+    tool('Read', { file_path: join(cwd, 'README.md') }, 'the readme', phase === 'fill' ? long.grow ?? 60_000 : long.grow_after ?? 20_000);
+    if (phase === 'fill') {
+      const note = join(cwd, 'notes', `fill-${n}.md`);
+      mkdirSync(dirname(note), { recursive: true });
+      writeFileSync(note, `Step ${n}.\n`);
+      tool('Write', { file_path: note, content: `Step ${n}.\n` }, `File created successfully at: ${note}`, 100);
+    } else {
+      const example = (task.examples ?? {})[long.write?.[phase] ?? 'right']?.[n - 1] ?? { files: [], answer: 'Done.' };
+      for (const f of example.files ?? []) {
+        const to = join(cwd, f.path);
+        mkdirSync(dirname(to), { recursive: true });
+        writeFileSync(to, f.text);
+        tool('Write', { file_path: to, content: f.text }, `File created successfully at: ${to}`, Math.ceil(f.text.length / 3));
+      }
+      answer = example.answer ?? 'Done.';
+    }
+    if (kind === 'outside') tool('Read', { file_path: join(REPO, 'tasks', 'index.json') }, '{"tasks": []}', 50);
+    if (kind === 'compact-itself') compact('auto');
+    if (problems.length) answer = `FAKE-PROBLEM: ${problems.join('; ')}\n\n${answer}`;
+    call([{ type: 'text', text: answer }], 150);
+  }
+
+  const has = (rel) => existsSync(join(HOME, rel));
+  const skills = [...BUILT_IN_SKILLS, ...(has('.claude/skills/exposurie/SKILL.md') ? ['exposurie'] : [])];
+  print({
+    type: 'system', subtype: 'init', cwd, session_id: session, tools: (arg('--tools') ?? '').split(',').filter(Boolean),
+    mcp_servers: [], model: arg('--model'), permissionMode: arg('--permission-mode') ?? 'default',
+    slash_commands: [...skills, 'compact', 'context', ...(has('.claude/commands/exposurie-sync.md') ? ['exposurie-sync'] : [])],
+    apiKeySource: 'none', claude_code_version: PINS.claudeCode, output_style: 'default',
+    agents: ['claude', 'Explore', 'general-purpose', 'Plan', 'statusline-setup'], skills,
+    plugins: [{ name: 'cc-plugin-agents-md', path: 'builtin', source: 'cc-plugin-agents-md@builtin' }],
+  });
+  if (kind === 'crash') process.exit(3);
+  const limit = kind === 'limit';
+  const rate = { type: 'rate_limit_event', rate_limit_info: { status: limit ? 'rejected' : 'allowed', rateLimitType: 'five_hour', unifiedWindows: { five_hour: { utilization: limit ? 1 : 0.4 }, seven_day: { utilization: 0.1 } } }, session_id: session };
+  if (limit || kind === 'api-error') {
+    print(rate);
+    print({
+      type: 'result', subtype: 'success', is_error: true, terminal_reason: 'api_error', num_turns: 1, session_id: session,
+      api_error_status: limit ? 429 : 529, api_error: limit ? 'usage_limit_reached' : 'overloaded_error',
+      result: limit ? "You've hit your session limit · resets 5pm" : 'API Error: 529 Overloaded', permission_denials: [], ...usage(0, 0),
+    });
+    process.exit(1);
+  }
+  if (kind !== 'no-save') {
+    mkdirSync(store, { recursive: true });
+    writeFileSync(fileOf(session), lines.map((l) => JSON.stringify(l)).join('\n') + '\n');
+    if (long.backdate) {
+      const then = new Date(Date.now() - 10 * 60 * 1000);
+      utimesSync(fileOf(session), then, then);
+    }
+  }
+  for (const m of out) print(m);
+  print(rate);
+  const read = prompts.reduce((t, p) => t + p - 402, 0);
+  print({
+    type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: Math.max(1, prompts.length), duration_ms: 50,
+    session_id: session, result: phase === 'compact' && n === 0 ? (problems.length ? `FAKE-PROBLEM: ${problems.join('; ')}` : '') : answer, permission_denials: [],
+    usage: { input_tokens: 2 * prompts.length, cache_creation_input_tokens: 400 * prompts.length, cache_read_input_tokens: read, output_tokens: 150 * prompts.length },
+    modelUsage: { [PINS.model]: { inputTokens: 2 * prompts.length, outputTokens: 150 * prompts.length, cacheReadInputTokens: read, cacheCreationInputTokens: 400 * prompts.length, costUSD: 0 } },
+    total_cost_usd: 0,
   });
   process.exit(0);
 }

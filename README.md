@@ -40,9 +40,9 @@ The questions are spread across nine areas, from recall to long sessions, with t
 | [tasks/starters/](tasks/starters/) | the projects the work tasks start from |
 | [tasks/conditions/](tasks/conditions/) | what conditions B and D put in the agent's instructions file: each user's whole history, and the facts each task needs |
 | [gen/](gen/) | the generator that writes each session from its brief, and the converter that turns the sessions into Claude Code transcripts and a claude.ai export |
-| [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, the runner and scorer, and the brain build to the method |
+| [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, the runner and scorer, the brain build and the long sessions to the method |
 | [score/](score/) | how a task's checks read a run, the scorer, and the judge for what the checks cannot settle |
-| [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, and the fake `claude` they are tested against |
+| [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, the long sessions of area 9, and the fake `claude` they are tested against |
 | [results/](results/) | scores saved from real runs: the pilot, the full run and the stability check |
 
 ## License

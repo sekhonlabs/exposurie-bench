@@ -100,15 +100,24 @@ A common rule of thumb says an agent's quality falls past about half its context
 
 Quality does fall as input grows ([Context Rot](sources.md#context-rot)), but no source we found gives 50%. Also, `exposurie sync` files the person and their decisions, not where a task stands. This area tests whether that is enough.
 
-Two long tasks are each interrupted at half the context window. Then one of three things happens:
+Two long tasks, both the developer's, are each interrupted at half the context window: 500,000 tokens of Sonnet 5.5's 1,000,000. Then one of three things happens:
 
 1. **Keep going** in the same session.
 2. **`/compact`**, Claude Code's built-in summarise-and-continue.
 3. **`exposurie sync`, then a fresh session.**
 
-We measure whether the task gets finished, the tokens used, and how often the agent retries an approach that already failed. Retrying a failed approach is the clearest sign of lost context.
+How a long session is made:
 
-This area needs sessions to be saved, so they can be resumed and synced. It is the one exception to the run hygiene below, and it is built last.
+- **It is filled live,** in condition C. The developer gives the agent one written step at a time, in one saved session, in their own repository. First come the core steps, which build the first half of a feature. Along the way the developer makes decisions that only later steps need, and three times asks for an approach that then fails on their real data. They say why it failed and have it replaced. Then come more steps of the same project's work, until the session reaches the mark.
+- **It is interrupted at the first step boundary past 500,000 tokens,** counted as the prompt of the session's last call to the model. A person stops there when they see it.
+- **Each strategy starts from that same point:** the same saved session, forked, and the same repository.
+- **Every strategy then gets the same steps,** which finish the feature. The fresh session's first step also says it picks up from the last session.
+- **Auto-compact is off throughout,** so only the second strategy compacts.
+- **The sync runs in a session of its own,** once the long session has been still for five minutes, because exposurie leaves anything newer for the next sync, and never files the session it runs in.
+
+We measure whether the task gets finished, whether the decisions made in conversation are kept, the tokens used after the interruption, and how often the agent retries an approach that already failed. Retrying a failed approach is the clearest sign of lost context. Each of the three failed approaches leaves a mark in code, so the measure counts every file write after the interruption, including ones the agent later took back.
+
+This area needs sessions to be saved, so they can be resumed and synced. It is the one exception to the run hygiene below, and it is built last. A stream shows which strategy made it, so area 9 cannot be scored blind; its checks are scripts, and every run is read by hand.
 
 ## Scoring
 

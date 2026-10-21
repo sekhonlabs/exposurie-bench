@@ -18,7 +18,8 @@
 // it moves everything exposurie wrote into the sandbox home out to
 // ../sandbox/brains/<user>/, along with the raw history, so that only C's runs
 // see a brain and none sees the history. `probe` is one small run that shows
-// what Claude Code itself allows a headless run outside its folder.
+// what Claude Code itself allows a headless run outside its folder. Area 9's
+// long sessions run from runner/long.mjs, which builds on what is here.
 //
 // Each run gets a fresh folder, ../runs/<batch>/<run>/<folder>, holding a copy
 // of its starter or nothing, and runs there. Before it starts, the sandbox home
@@ -53,9 +54,9 @@ import {
 import { convertUser } from '../gen/convert.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const TASKS = join(REPO, 'tasks');
+export const TASKS = join(REPO, 'tasks');
 const USERS = ['developer', 'delegator'];
-const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'));
+export const readJson = (file) => JSON.parse(readFileSync(file, 'utf8'));
 
 export const CONDITIONS = ['A', 'B', 'C', 'D'];
 /** Area 8 needs no past, so it has no D; area 9 is built in part 8. */
@@ -68,7 +69,7 @@ const BUILT_LATER = 9;
  * say yes, and the shell may run only `exposurie`.
  */
 export const PERMISSION_MODE = 'acceptEdits';
-const ALLOWED = 'Bash(exposurie:*)';
+export const ALLOWED = 'Bash(exposurie:*)';
 const TIMEOUT_MS = 30 * 60 * 1000;
 
 /**
@@ -100,7 +101,7 @@ export function sandboxContext() {
   };
 }
 
-const envFor = (ctx, condition) => ({ ...sandboxEnv({ home: ctx.home, exposurie: condition === 'C' }), ...ctx.env });
+export const envFor = (ctx, condition) => ({ ...sandboxEnv({ home: ctx.home, exposurie: condition === 'C' }), ...ctx.env });
 
 /** A reason the runner stops. Thrown, so check/runner.mjs can see it; the command line prints it. */
 export class Stop extends Error {}
@@ -111,7 +112,7 @@ const fail = (msg) => {
 // ---------------------------------------------------------------- files
 
 /** Every file under `dir`, as paths with `/`, or none when it is absent. */
-function filesUnder(dir) {
+export function filesUnder(dir) {
   const out = [];
   const walk = (d, rel) => {
     for (const name of readdirSync(d).sort()) {
@@ -127,7 +128,7 @@ function filesUnder(dir) {
 const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
 
 /** One hash for a file or a whole folder, names included. */
-function hashPath(p) {
+export function hashPath(p) {
   if (!statSync(p).isDirectory()) return sha256(readFileSync(p));
   const h = createHash('sha256');
   for (const f of filesUnder(p)) h.update(`${f}\n`).update(readFileSync(join(p, f)));
@@ -137,7 +138,7 @@ function hashPath(p) {
 const hashes = (dir) => new Map(filesUnder(dir).map((f) => [f, sha256(readFileSync(join(dir, f)))]));
 
 /** The files a run created, changed or deleted, compared with its starter. */
-function changedFiles(work, starter) {
+export function changedFiles(work, starter) {
   const before = starter ? hashes(starter) : new Map();
   const after = hashes(work);
   const out = [];
@@ -149,10 +150,10 @@ function changedFiles(work, starter) {
   return out.sort((a, b) => a.path.localeCompare(b.path));
 }
 
-const isText = (buf) => !buf.subarray(0, 8192).includes(0);
+export const isText = (buf) => !buf.subarray(0, 8192).includes(0);
 
 /** A run folder already used by an earlier attempt is kept beside the new one. */
-function keepEarlier(dir) {
+export function keepEarlier(dir) {
   if (!existsSync(dir)) return;
   let n = 1;
   while (existsSync(`${dir}-try${n}`)) n += 1;
@@ -236,7 +237,7 @@ const DAY = 86_400_000;
  * and synced to the end within the last 7 days: from 7 days, or with anything
  * left unfiled, exposurie's own status line asks the agent to sync.
  */
-function setupProblems(ctx, condition, task) {
+export function setupProblems(ctx, condition, task) {
   const missing = conditionFiles(ctx, condition, task).filter((f) => !existsSync(f.from));
   if (missing.length) {
     return condition === 'C'
@@ -260,7 +261,11 @@ function setupProblems(ctx, condition, task) {
 
 /** Put a run's condition in the home. The marker goes first, so a stop part-way can be undone. */
 function place(ctx, run, condition, task) {
-  const items = conditionFiles(ctx, condition, task);
+  return placeItems(ctx, run, conditionFiles(ctx, condition, task));
+}
+
+/** Put files in the home, each `{ rel, from }`, and say what each one hashes to once there. */
+export function placeItems(ctx, run, items) {
   writeFileSync(ctx.placed, JSON.stringify({ run, paths: items.map((i) => i.rel) }, null, 2) + '\n');
   return items.map((i) => {
     const to = join(ctx.home, i.rel);
@@ -273,7 +278,7 @@ function place(ctx, run, condition, task) {
 const PLACEABLE = new Set(['.claude/CLAUDE.md', ...C_PATHS]);
 
 /** Take a condition back out of the home: only what the marker lists, and only paths a condition uses. */
-function unplace(ctx) {
+export function unplace(ctx) {
   if (!existsSync(ctx.placed)) return false;
   const { paths } = readJson(ctx.placed);
   for (const rel of paths) {
@@ -350,7 +355,7 @@ export const runArgs = (ask) => [
   '--no-session-persistence',
 ];
 
-const samePath = (a, b) => resolve(String(a)).toLowerCase() === resolve(String(b)).toLowerCase();
+export const samePath = (a, b) => resolve(String(a)).toLowerCase() === resolve(String(b)).toLowerCase();
 
 /** Why a run's start-up line rules it out, if it does. */
 export function startupProblems(init, condition, work) {
@@ -385,10 +390,10 @@ function killTree(pid) {
  * soon as it arrives (`startup` lists what is wrong with it), and a wrong one
  * stops the run before it spends anything.
  */
-function launch(ctx, { ask, cwd, env, startup, timeoutMs }) {
+export function launch(ctx, { args, cwd, env, startup, timeoutMs }) {
   return new Promise((done) => {
     const [cmd, ...pre] = ctx.claude;
-    const child = spawn(cmd, [...pre, ...runArgs(ask)], {
+    const child = spawn(cmd, [...pre, ...args], {
       cwd, env, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true,
     });
     const r = { lines: [], stderr: '', exit: null, init: null, refused: null, timedOut: false };
@@ -432,7 +437,7 @@ function launch(ctx, { ask, cwd, env, startup, timeoutMs }) {
   });
 }
 
-function parseLine(line) {
+export function parseLine(line) {
   try {
     return JSON.parse(line);
   } catch {
@@ -443,13 +448,13 @@ function parseLine(line) {
 /** Every message of a saved run, in order. */
 export const readStream = (file) => readFileSync(file, 'utf8').split('\n').map(parseLine).filter(Boolean);
 
-const firstLine = (s) => String(s ?? '').trim().split('\n')[0].slice(0, 200);
+export const firstLine = (s) => String(s ?? '').trim().split('\n')[0].slice(0, 200);
 const isLimit = (r) => r.api_error === 'usage_limit_reached' || /hit your [\w\s-]*limit/i.test(String(r.result ?? ''));
 const span = (ms) => (ms >= 60_000 ? `${Math.round(ms / 60_000)} minutes` : `${Math.round(ms / 1000)} seconds`);
 const withStderr = (what, stderr) => (firstLine(stderr) ? `${what}: ${firstLine(stderr)}` : what);
 
 /** done, not-run or thrown-out, from how the process ended. The checks after a run come on top. */
-function outcome(l, result, timeoutMs) {
+export function outcome(l, result, timeoutMs) {
   if (l.refused) return { status: 'thrown-out', reason: `start-up line: ${l.refused.join('; ')}` };
   if (l.timedOut) return { status: 'not-run', reason: `no result within ${span(timeoutMs)}` };
   if (!l.init) return { status: 'not-run', reason: withStderr(`no start-up line (exit ${l.exit})`, l.stderr) };
@@ -493,7 +498,7 @@ function pathsOf(call, work, home) {
   return [];
 }
 
-const inside = (p, root) => {
+export const inside = (p, root) => {
   const a = resolve(p).toLowerCase();
   const r = resolve(root).toLowerCase();
   return a === r || a.startsWith(r.endsWith(sep) ? r : r + sep);
@@ -614,7 +619,7 @@ export function audit(msgs, { work, home, condition, roots = null }) {
 }
 
 /** Every `exposurie` command a run's shell ran, in order. */
-const exposurieCommands = (msgs) => msgs
+export const exposurieCommands = (msgs) => msgs
   .filter((m) => m.type === 'assistant')
   .flatMap((m) => (m.message?.content ?? []).filter((b) => b.type === 'tool_use' && b.name === 'Bash'))
   .flatMap((b) => commands(b.input?.command).filter((s) => EXPOSURIE_CMD.test(s)));
@@ -667,7 +672,7 @@ async function runCell(ctx, b, cell, versions) {
   let home;
   try {
     l = await launch(ctx, {
-      ask: task.ask, cwd: work, env: envFor(ctx, cell.condition), timeoutMs: ctx.timeoutMs,
+      args: runArgs(task.ask), cwd: work, env: envFor(ctx, cell.condition), timeoutMs: ctx.timeoutMs,
       startup: (m) => startupProblems(m, cell.condition, work),
     });
     home = homeAfterRun(ctx, placed, dir, strayBefore);
@@ -728,7 +733,7 @@ async function runCell(ctx, b, cell, versions) {
 }
 
 /** The versions every run records. exposurie prints its state line first, so the version is found by its shape. */
-function versionsOf(ctx) {
+export function versionsOf(ctx) {
   const env = sandboxEnv({ home: ctx.home });
   const out = (cmd, args) => {
     const r = spawnSync(cmd, args, { env, cwd: ctx.runs, encoding: 'utf8', windowsHide: true });
@@ -822,7 +827,7 @@ function exposurie(ctx, args) {
   });
 }
 
-function brainState(brain) {
+export function brainState(brain) {
   try {
     return readJson(join(brain, '.exposurie', 'state.json'));
   } catch {
@@ -831,8 +836,8 @@ function brainState(brain) {
 }
 
 /** Synced to the end: exposurie's own record says nothing is staged or waiting. */
-const filed = (st) => !!st?.lastSyncUtc && !st.pendingBatch && (st.unfiled ?? 0) === 0;
-const pagesIn = (brain) => filesUnder(join(brain, 'wiki')).filter((f) => f.endsWith('.md')).length;
+export const filed = (st) => !!st?.lastSyncUtc && !st.pendingBatch && (st.unfiled ?? 0) === 0;
+export const pagesIn = (brain) => filesUnder(join(brain, 'wiki')).filter((f) => f.endsWith('.md')).length;
 
 /** The fresh start: the history converted into the home, the brain scaffolded, and the steps for the person answered. */
 function startBuild(ctx, user) {
@@ -884,7 +889,7 @@ function startBuild(ctx, user) {
 }
 
 /** Why a build session's start-up line rules it out: a run's checks, plus the command it is asked to type. */
-function buildStartupProblems(init, brain) {
+export function buildStartupProblems(init, brain) {
   const p = startupProblems(init, 'C', brain);
   if (!(init.slash_commands ?? []).includes('exposurie-sync')) p.push('no /exposurie-sync among the slash commands');
   return p;
@@ -922,7 +927,7 @@ async function buildSession(ctx, b, versions) {
   const before = Object.keys(brainState(brain)?.files ?? {}).length;
   const started = new Date().toISOString();
   const l = await launch(ctx, {
-    ask: BUILD_ASK, cwd: brain, env: envFor(ctx, 'C'), timeoutMs: ctx.buildTimeoutMs,
+    args: runArgs(BUILD_ASK), cwd: brain, env: envFor(ctx, 'C'), timeoutMs: ctx.buildTimeoutMs,
     startup: (m) => buildStartupProblems(m, brain),
   });
   writeFileSync(join(dir, 'stream.jsonl'), l.lines.join('\n') + '\n');
@@ -977,7 +982,7 @@ async function buildSession(ctx, b, versions) {
 }
 
 /** Tokens over every session of a build. */
-function sumTokens(sessions) {
+export function sumTokens(sessions) {
   const t = { input: 0, cache_write: 0, cache_read: 0, output: 0, all_input: 0, by_model: {} };
   for (const s of sessions) {
     for (const k of ['input', 'cache_write', 'cache_read', 'output', 'all_input']) t[k] += s.tokens?.[k] ?? 0;
@@ -1109,7 +1114,7 @@ export async function probe(ctx) {
     const marker = 'The probe read this file.';
     writeFileSync(join(dir, 'outside.txt'), `${marker}\n`);
     const l = await launch(ctx, {
-      ask: PROBE_ASK, cwd: work, env: envFor(ctx, 'A'), timeoutMs: ctx.timeoutMs,
+      args: runArgs(PROBE_ASK), cwd: work, env: envFor(ctx, 'A'), timeoutMs: ctx.timeoutMs,
       startup: (m) => startupProblems(m, 'A', work),
     });
     writeFileSync(join(dir, 'stream.jsonl'), l.lines.join('\n') + '\n');
@@ -1155,7 +1160,7 @@ export async function probe(ctx) {
 
 // ---------------------------------------------------------------- after a brain build
 
-function move(from, to) {
+export function move(from, to) {
   mkdirSync(dirname(to), { recursive: true });
   renameSync(from, to);
 }

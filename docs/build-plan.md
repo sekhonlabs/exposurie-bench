@@ -12,9 +12,9 @@ Claude Code builds and runs all of it.
 | `users/<user>/plan.json` | the session plan: each session's time, project or chat, and surface (part 1), and which facts come up in it and how (part 2) |
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
-| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5) and the brain build check (part 6) |
+| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5), the brain build check (part 6) and the long-session check (part 8) |
 | `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6 and 7 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`) and example answers (`tasks/examples.json`) |
-| `runner/` | sandbox setup, the runner and the brain build, and the fake `claude` they are tested against |
+| `runner/` | sandbox setup, the runner and the brain build, area 9's long sessions (`long.mjs`), and the fake `claude` they are tested against |
 | `score/` | how a task's checks read a run (part 4), and the scorer and the judge (part 5) |
 | `results/` | summaries and charts. Raw run output stays outside the repository |
 
@@ -278,6 +278,97 @@ What Claude Code 2.1.302's binary says about the window:
 
 - `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets where auto-compact fires, from 100K to 1M, and it takes precedence over every other source. `DISABLE_AUTO_COMPACT` turns auto-compact off, and `DISABLE_COMPACT` turns off `/compact` too. So the fill and the keep-going strategy can be kept from compacting on their own.
 - `CLAUDE_CODE_DISABLE_1M_CONTEXT` does not shrink a window that is natively 1M. Claude Code's own warning says the 200K limit is then not enforced.
+- `/compact` runs headless (`supportsNonInteractive`). `--session-id` may name the new session beside `--resume` only with `--fork-session`. Clearing old tool results after an idle hour, and compacting while idle, are switched by remote flags that are off by default, and the sandbox never loads remote flags.
+
+**The runner is built and tested against the fake (2026-10-21).** The method is in [design.md](design.md#area-9-long-sessions), and the decisions behind it in [decisions.md](decisions.md).
+
+```
+node runner/long.mjs <task> [--accept "<why>"]   fill, fork, then each strategy: spends plan usage
+node runner/long.mjs status <task>
+node runner/long.mjs probe                       the same on a tiny task: spends a little, waits five minutes for the sync
+node check/long.mjs
+```
+
+- **A long task** is an entry of area 9 in `tasks/index.json`, with its folder, its starter, and `steps`, the path of its steps file in `tasks/long/`. The steps file holds `fork_at` (500000), `resume_note`, the `core`, `more` and `after` steps, the checks, and examples for the fake. A step is its text, or `{ "say", "files" }`, where `files` copies material from `tasks/long/<task>/` into the repository before the step, as what the developer saved for the agent to read.
+- **What a run leaves**, in `../runs/area-9/r001/` for the first task and `r002/` for the second:
+  - `long.json`: every step's record, the fork, each strategy's tokens
+  - the repository folder, where every step runs
+  - `fill/`, `keep/`, `compact/`, `sync/`, each with one folder per step (`stream.jsonl`), `work/` (the repository after the last finished step) and `session/` (the saved session)
+  - `fork/`: the repository and the session at the fork, never changed
+  - `sync/sync/`, `sync/kit/` and `sync/staged/`: the sync session, the brain it left, and its staged batch
+  - for each strategy, what the scorer reads: `files/` and `files.json` (changed since the fork), `answer.md` (the last reply) and `writes.json` (every Write and Edit after the fork)
+- **A step that ends without a result** puts the repository and the session back as they were, and runs again next time. After three such ends, it waits for a person. A step that breaks a check stops the run until `--accept "<why>"`.
+- **`check/long.mjs` passes:** a made-up task through the fill, the fork and all three strategies, with exposurie's real sync, a usage limit, a read outside the folder accepted by hand, a compaction nobody asked for, an unsaved session, a session that runs out of steps, and one a stopped runner left in the home. `check/runner.mjs` and `check/build.mjs` still pass.
+
+**Next, in order:**
+
+1. **The probe, with the owner's go.** It shows what the fake can't: that a headless step saves a session that resumes and forks, what `/compact` prints, what else Claude Code writes into its config folder with a session saved, and that exposurie files a real 2.1.302 transcript. Whatever it shows that the fake does not do, the fake is changed to match before anything else runs.
+2. **long-1's content**, then `check/tasks.mjs` extended to hold area 9's steps files to the method, and their examples to their checks.
+3. **long-1's live runs**, with the owner's go, after the seven-day reset. Their cost decides long-2.
+4. **long-2's content and runs**, if the cost allows.
+
+**long-1, Satchel (personal): import from other read-later services.**
+
+- **Starter:** Satchel before the session. Hono and htmx, better-sqlite3 in WAL mode with every query in a `.sql` file, a jobs table polled by a worker, Postmark, magic links, FTS5, `node:test` and Biome. It has no CSV reader yet. Fixtures: made-up exports from Pocket (CSV), Instapaper (CSV) and Omnivore (JSON).
+- **Core steps:**
+  1. Read the code, and say where an import fits.
+  2. The decisions, then the Pocket import as a first cut. The developer asks for it inside the upload request, splitting each line on commas, with `INSERT OR REPLACE` for links already saved.
+  3. It fails: the proxy cuts the request at 60 seconds. So it moves to a job, with the upload saved to `/data/imports/` and deleted after.
+  4. It fails: titles with commas shift the columns. So comes a small CSV reader in `src/lib/csv.js`, with no new dependency.
+  5. It fails: re-importing deleted highlights, through `ON DELETE CASCADE`. So comes `ON CONFLICT DO NOTHING`, with duplicates counted.
+  6. Batches of 500.
+  7. The summary email.
+  8. Tests.
+  9. The import page.
+- **Decisions said only in conversation, for later steps:**
+  - Instapaper's folders become `folder:<name>` tags, except Unread and Archive.
+  - Anything archived comes in as read.
+  - Highlights, Instapaper's Selection and Omnivore's highlights, come in as highlights with source `import`.
+  - Every imported link gets `imported:<service>`.
+- **More steps:** production questions, answered from what the developer saved into `tmp/`:
+  - the worker log of a digest that went out late
+  - saved pages that read empty
+  - Fly and Litestream logs
+  - Paddle webhooks
+  - Postmark bounces
+  - a slow search's query plan
+  - an access log
+- **After steps:**
+  1. Instapaper.
+  2. Omnivore.
+  3. The import page's list, the README, and the commit message.
+- **Checks:**
+  - *Finished:* both importers run as jobs, the page lists them, the README says so, and the reply gives a commit message in the developer's style.
+  - *Kept:* the `folder:` tags; Unread and Archive kept out of them; archived links in as read; highlights with source `import`; `imported:<service>` on every link.
+  - *Retried:* `INSERT OR REPLACE` or `REPLACE INTO`; a line split on commas; an importer called from a route instead of a job.
+
+**long-2, tidewell-api (work): webhooks for project events, under one Linear ticket.**
+
+- **Starter:** the cut-down tidewell-api of area 6, grown. Express 5, Prisma with raw SQL only in migrations, Jest, and a worker process that polls. The team's conventions are known only from the history and the brain.
+- **Core steps:**
+  1. Read the code.
+  2. The decisions, then a first cut. Retries are scheduled with `setTimeout`, the signature is a SHA-256 of the secret and the body through `createHash`, and claiming and sending happen in one interactive Prisma transaction.
+  3. It fails: a deploy replaced the task, and the pending retries vanished. So comes `next_attempt_at`, and polling.
+  4. It fails: the partner cannot verify the signature. So comes HMAC-SHA256 over the timestamp and the body, with `createHmac`.
+  5. It fails: the transaction timed out while a partner's endpoint hung. So rows are claimed in a short transaction, and sent outside it.
+  6. The backoff schedule, and dead-lettering after eight attempts.
+  7. Tests.
+  8. The migration.
+- **Decisions said only in conversation:**
+  - Event names are `project.<verb in the past tense>`.
+  - The envelope is `{ id, type, created_at, data }`.
+  - The dead-letter endpoints are admin-only.
+  - The nightly cleanup deletes deliveries older than 30 days.
+- **More steps:** staging logs, a partner's bug report with their verification code, a slow query, the feature flag's configuration, and a Terraform plan for the worker.
+- **After steps:**
+  1. `project.renamed`.
+  2. Replaying a dead-lettered delivery, through an admin endpoint under `/v2`.
+  3. `PR.md` with the branch, the title and the sections, the note for the migration's reviewer, and the deploy note.
+- **Checks:**
+  - *Finished, kept and retried,* as for long-1. *Retried:* `setTimeout` for a retry, `createHash` for the signature, and an HTTP call inside a Prisma transaction.
+  - *The team's conventions,* as in area 6.
+
+**Done when** both tasks ran under all three strategies, or the first one's cost stopped the second, and every run is scored and read by hand.
 
 ### 9. Results
 
