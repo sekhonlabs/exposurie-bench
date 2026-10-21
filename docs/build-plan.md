@@ -272,7 +272,12 @@ What part 7 did, in order: `build delegator`, `keep-brain delegator`, `plan full
 
 This area needs sessions to be saved, so they can be resumed and synced. Every other area turns saving off, so the exception gets its own entry in [decisions.md](decisions.md) when this part is built. It also needs a check that `/compact` works in a headless run.
 
-Sonnet 5.5's window in Claude Code 2.1.302 is 1,000,000 tokens (seen in the pilot), so "half the context window" is 500K tokens a session, and every turn past that point re-reads it. Where to interrupt is decided in this part, with the owner, before anything runs.
+Sonnet 5.5's window in Claude Code 2.1.302 is 1,000,000 tokens (seen in the pilot), so "half the context window" is 500K tokens a session, and every turn past that point re-reads it. **Decided 2026-10-21, with the owner, before anything was built:** each long session is interrupted at 500K. Each task's session is filled once and forked three ways with `--resume <id> --fork-session`. One task runs first, and its measured cost decides whether the second runs (see [decisions.md](decisions.md)).
+
+What Claude Code 2.1.302's binary says about the window:
+
+- `CLAUDE_CODE_AUTO_COMPACT_WINDOW` sets where auto-compact fires, from 100K to 1M, and it takes precedence over every other source. `DISABLE_AUTO_COMPACT` turns auto-compact off, and `DISABLE_COMPACT` turns off `/compact` too. So the fill and the keep-going strategy can be kept from compacting on their own.
+- `CLAUDE_CODE_DISABLE_1M_CONTEXT` does not shrink a window that is natively 1M. Claude Code's own warning says the 200K limit is then not enforced.
 
 ### 9. Results
 
