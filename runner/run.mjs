@@ -499,9 +499,30 @@ const inside = (p, root) => {
   return a === r || a.startsWith(r.endsWith(sep) ? r : r + sep);
 };
 
-/** A shell command, split where it chains or pipes into another one, outside quotes. `2>&1` stays whole. */
+/**
+ * A shell command without the bodies of its here-documents, which are text
+ * fed to a command rather than commands. An agent appends to a log with
+ * `cat >> log.md <<'EOF'`, and a backtick in the text would otherwise read
+ * as a command of its own.
+ */
+function withoutHeredocs(cmd) {
+  const out = [];
+  let until = null;
+  for (const line of String(cmd ?? '').split('\n')) {
+    if (until) {
+      if (until.test(line)) until = null;
+      continue;
+    }
+    out.push(line);
+    const m = /<<(-?)\s*(['"]?)([A-Za-z_][\w-]*)\2/.exec(line);
+    if (m) until = new RegExp(`^${m[1] ? '\\t*' : ''}${m[3]}\\s*$`);
+  }
+  return out.join('\n');
+}
+
+/** A shell command, split where it chains or pipes into another one, outside quotes and here-documents. `2>&1` stays whole. */
 function commands(cmd) {
-  const s = String(cmd ?? '');
+  const s = withoutHeredocs(cmd);
   const out = [];
   let cur = '';
   let quote = null;

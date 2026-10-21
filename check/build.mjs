@@ -15,6 +15,7 @@
 //   trouble          a session that reads the answer key (accepted by hand),
 //                    one that writes a transcript, one that never syncs, no
 //                    retention set, a history folder already holding a session
+//   the shell        the audit reads here-documents as text, not commands
 //
 // Run it with the sandbox's own Node. Exit 0 when everything holds; exit 1
 // lists every problem.
@@ -24,7 +25,7 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSyn
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { HOME, RUNS, ownNodeOnly } from '../runner/sandbox.mjs';
-import { C_PATHS, DECLINED, Stop, build, go, keepBrain, neutralProblems, plan, readRun } from '../runner/run.mjs';
+import { C_PATHS, DECLINED, Stop, audit, build, go, keepBrain, neutralProblems, plan, readRun } from '../runner/run.mjs';
 
 ownNodeOnly();
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -212,6 +213,28 @@ function kept(ctx, user, b) {
   writeFileSync(join(ctx.home, '.claude', 'projects', 'E--somewhere', 'login.jsonl'), '{}\n');
   expect(/holds a history/.test((await stops(() => build(ctx, 'developer'))) ?? ''), 'a build placed history beside a session already there');
   expect(!existsSync(join(ctx.home, 'brain')), 'a brain was scaffolded beside a session already there');
+}
+
+// ---------------------------------------------------------------- the audit's reading of the shell
+
+{
+  // The real build's first session appended to its log with a here-document
+  // whose text held a backtick, and the audit read that line as a command.
+  const work = join(root, 'audit', 'brain');
+  const home = join(root, 'audit');
+  const shell = (command) => audit(
+    [{ type: 'assistant', message: { content: [{ type: 'tool_use', id: 't1', name: 'Bash', input: { command } }] } }, { type: 'result', permission_denials: [] }],
+    { work, home, roots: [work] },
+  );
+  const log = "cat >> log.md <<'EOF'\n\n## [2026-10-21] sync\n- Open: the input is both `sha` and `image_tag`; see ../notes and ~/x\nEOF\nexposurie sync --done";
+  let a = shell(log);
+  expect(!a.problems.length && JSON.stringify(a.notes) === JSON.stringify(["ran cat >> log.md <<'EOF', which Claude Code allows by itself"]), `a here-document's text read as commands: ${JSON.stringify(a)}`);
+  a = shell("cat > notes.txt <<-END\n\tline with $(whoami)\n\tEND\ncat ../outside.txt");
+  expect(a.problems.length === 1 && /cat \.\.\/outside\.txt/.test(a.problems[0]), `a command after a here-document went unread: ${JSON.stringify(a.problems)}`);
+  a = shell('ls -R wiki | head -30; cat index.md');
+  expect(!a.problems.length && a.notes.length === 3, `read-only commands inside the folder: ${JSON.stringify(a)}`);
+  a = shell('cat ~/.claude/.credentials.json');
+  expect(a.problems.length === 1, 'a shell read of the home went unflagged');
 }
 
 // ---------------------------------------------------------------- the real home
