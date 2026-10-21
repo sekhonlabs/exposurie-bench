@@ -1,18 +1,24 @@
-// The runner (part 5): every benchmark run, one at a time, in the sandbox.
+// The runner (parts 5 and 6): every benchmark run and brain build, one at a
+// time, in the sandbox.
 //
 //   node runner/run.mjs plan <batch> [--users u,u] [--tasks id,id] [--conditions A,B,C,D] [--seed text]
 //   node runner/run.mjs go <batch> [--again r001,r002]
 //   node runner/run.mjs status <batch>
+//   node runner/run.mjs build <user> [--accept "<why>"]
 //   node runner/run.mjs keep-brain <user>
+//   node runner/run.mjs probe
 //
 // `plan` fixes a batch: every task and condition asked for, in a mixed order
 // worked out from the seed, each with a run ID that says nothing about either.
 // `go` runs whatever in it has not run, in that order, and can be stopped and
 // started again: a run stopped by a usage limit is "not run", and the next `go`
-// runs it. `--again` reruns named runs. `keep-brain` comes after a brain build
-// (part 6): it moves everything exposurie wrote into the sandbox home out to
+// runs it. `--again` reruns named runs. `build` (part 6) puts a user's history
+// in the sandbox home and has Claude Code sync it into a brain with exposurie,
+// recording the tokens in ../runs/build-<user>/. `keep-brain` comes after it:
+// it moves everything exposurie wrote into the sandbox home out to
 // ../sandbox/brains/<user>/, along with the raw history, so that only C's runs
-// see a brain and none sees the history.
+// see a brain and none sees the history. `probe` is one small run that shows
+// what Claude Code itself allows a headless run outside its folder.
 //
 // Each run gets a fresh folder, ../runs/<batch>/<run>/<folder>, holding a copy
 // of its starter or nothing, and runs there. Before it starts, the sandbox home
@@ -39,11 +45,12 @@ import { createHash } from 'node:crypto';
 import {
   cpSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmdirSync, rmSync, statSync, writeFileSync,
 } from 'node:fs';
-import { dirname, join, parse, resolve, sep } from 'node:path';
+import { dirname, join, parse, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
   CLAUDE, EXPOSURIE, HOME, PINS, RUNS, SANDBOX, TOOLS, lockSandbox, ownNodeOnly, sandboxEnv, strays,
 } from './sandbox.mjs';
+import { convertUser } from '../gen/convert.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const TASKS = join(REPO, 'tasks');
@@ -89,6 +96,7 @@ export function sandboxContext() {
     claude: [CLAUDE],
     env: {},
     timeoutMs: TIMEOUT_MS,
+    buildTimeoutMs: BUILD_TIMEOUT_MS,
   };
 }
 
@@ -374,20 +382,21 @@ function killTree(pid) {
 
 /**
  * Start Claude Code and collect its output. The start-up line is checked as
- * soon as it arrives, and a wrong one stops the run before it spends anything.
+ * soon as it arrives (`startup` lists what is wrong with it), and a wrong one
+ * stops the run before it spends anything.
  */
-function launch(ctx, condition, task, work) {
+function launch(ctx, { ask, cwd, env, startup, timeoutMs }) {
   return new Promise((done) => {
     const [cmd, ...pre] = ctx.claude;
-    const child = spawn(cmd, [...pre, ...runArgs(task.ask)], {
-      cwd: work, env: envFor(ctx, condition), stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true,
+    const child = spawn(cmd, [...pre, ...runArgs(ask)], {
+      cwd, env, stdio: ['ignore', 'pipe', 'pipe'], windowsHide: true,
     });
     const r = { lines: [], stderr: '', exit: null, init: null, refused: null, timedOut: false };
     let buf = '';
     const timer = setTimeout(() => {
       r.timedOut = true;
       killTree(child.pid);
-    }, ctx.timeoutMs);
+    }, timeoutMs);
     child.stdout.setEncoding('utf8');
     child.stdout.on('data', (d) => {
       buf += d;
@@ -399,7 +408,7 @@ function launch(ctx, condition, task, work) {
         const m = parseLine(line);
         if (m?.type === 'system' && m.subtype === 'init') {
           r.init = m;
-          const p = startupProblems(m, condition, work);
+          const p = startup(m);
           if (p.length) {
             r.refused = p;
             killTree(child.pid);
@@ -440,9 +449,9 @@ const span = (ms) => (ms >= 60_000 ? `${Math.round(ms / 60_000)} minutes` : `${M
 const withStderr = (what, stderr) => (firstLine(stderr) ? `${what}: ${firstLine(stderr)}` : what);
 
 /** done, not-run or thrown-out, from how the process ended. The checks after a run come on top. */
-function outcome(l, result, ctx) {
+function outcome(l, result, timeoutMs) {
   if (l.refused) return { status: 'thrown-out', reason: `start-up line: ${l.refused.join('; ')}` };
-  if (l.timedOut) return { status: 'not-run', reason: `no result within ${span(ctx.timeoutMs)}` };
+  if (l.timedOut) return { status: 'not-run', reason: `no result within ${span(timeoutMs)}` };
   if (!l.init) return { status: 'not-run', reason: withStderr(`no start-up line (exit ${l.exit})`, l.stderr) };
   if (!result) return { status: 'not-run', reason: withStderr(`no result line (exit ${l.exit})`, l.stderr) };
   if (!result.is_error) return { status: 'done' };
@@ -521,8 +530,8 @@ const EXPOSURIE_READ = /^exposurie\s+read\b/;
  * nothing, so it is only noted. `looked` is whether the agent ran
  * `exposurie read` at all, and `reads` how often.
  */
-export function audit(msgs, { work, home, condition }) {
-  const allowed = [work, ...(condition === 'C' ? [join(home, 'brain'), join(home, '.exposurie')] : [])];
+export function audit(msgs, { work, home, condition, roots = null }) {
+  const allowed = roots ?? [work, ...(condition === 'C' ? [join(home, 'brain'), join(home, '.exposurie')] : [])];
   const result = msgs.findLast((m) => m.type === 'result');
   const denied = new Set((result?.permission_denials ?? []).map((d) => d.tool_use_id));
   const calls = new Map();
@@ -553,6 +562,12 @@ export function audit(msgs, { work, home, condition }) {
   }
   return { calls: calls.size, denied: denied.size, problems, notes, looked: reads > 0, reads };
 }
+
+/** Every `exposurie` command a run's shell ran, in order. */
+const exposurieCommands = (msgs) => msgs
+  .filter((m) => m.type === 'assistant')
+  .flatMap((m) => (m.message?.content ?? []).filter((b) => b.type === 'tool_use' && b.name === 'Bash'))
+  .flatMap((b) => commands(b.input?.command).filter((s) => EXPOSURIE_CMD.test(s)));
 
 // ---------------------------------------------------------------- tokens
 
@@ -601,7 +616,10 @@ async function runCell(ctx, b, cell, versions) {
   let l;
   let home;
   try {
-    l = await launch(ctx, cell.condition, task, work);
+    l = await launch(ctx, {
+      ask: task.ask, cwd: work, env: envFor(ctx, cell.condition), timeoutMs: ctx.timeoutMs,
+      startup: (m) => startupProblems(m, cell.condition, work),
+    });
     home = homeAfterRun(ctx, placed, dir, strayBefore);
   } finally {
     unplace(ctx);
@@ -611,7 +629,7 @@ async function runCell(ctx, b, cell, versions) {
   writeFileSync(join(dir, 'stderr.txt'), l.stderr);
   const msgs = l.lines.map(parseLine).filter(Boolean);
   const result = msgs.findLast((m) => m.type === 'result');
-  const o = outcome(l, result, ctx);
+  const o = outcome(l, result, ctx.timeoutMs);
   const a = audit(msgs, { work, home: ctx.home, condition: cell.condition });
   const limits = msgs.filter((m) => m.type === 'rate_limit_event').at(-1)?.rate_limit_info?.unifiedWindows;
 
@@ -722,6 +740,369 @@ export function status(ctx, batch) {
   return counts;
 }
 
+// ---------------------------------------------------------------- the brain build
+
+/** What a person types to bring their brain up to date: exposurie's own slash command. */
+export const BUILD_ASK = '/exposurie-sync';
+/** A build session still going after this long is stopped, and the next one picks up from the brain's state. */
+const BUILD_TIMEOUT_MS = 3 * 60 * 60 * 1000;
+/** Sessions a build may take before it stops and waits for a person. */
+const MAX_BUILD_SESSIONS = 6;
+/**
+ * exposurie's steps for the person, said no to before the build, with no reason
+ * recorded since nobody gave one. The synthetic users can't be asked, and
+ * either step left open would be written into the brain by any later sync:
+ * Obsidian is never installed, and the claude.ai export leaves the home with
+ * the history. Retention is not here: the sandbox's settings keep transcripts
+ * for 3650 days already, and exposurie detects that.
+ */
+export const DECLINED = ['claude-web-export', 'obsidian'];
+/** What the sandbox home holds during a build besides what runs leave: the brain, exposurie's pointer to it, and the export. */
+const BUILD_HOME = ['brain', '.exposurie', 'Downloads'];
+
+const buildDir = (ctx, user) => join(ctx.runs, `build-${user}`);
+const buildFile = (ctx, user) => join(buildDir(ctx, user), 'build.json');
+const saveBuild = (ctx, b) => writeFileSync(buildFile(ctx, b.user), JSON.stringify(b, null, 2) + '\n');
+const historyDir = (ctx) => join(ctx.home, '.claude', 'projects');
+
+/** exposurie itself, for the steps of a build that need no model. */
+function exposurie(ctx, args) {
+  return spawnSync(process.execPath, [EXPOSURIE, ...args], {
+    env: sandboxEnv({ home: ctx.home }), cwd: ctx.home, encoding: 'utf8', windowsHide: true,
+  });
+}
+
+function brainState(brain) {
+  try {
+    return readJson(join(brain, '.exposurie', 'state.json'));
+  } catch {
+    return null;
+  }
+}
+
+/** Synced to the end: exposurie's own record says nothing is staged or waiting. */
+const filed = (st) => !!st?.lastSyncUtc && !st.pendingBatch && (st.unfiled ?? 0) === 0;
+const pagesIn = (brain) => filesUnder(join(brain, 'wiki')).filter((f) => f.endsWith('.md')).length;
+
+/** The fresh start: the history converted into the home, the brain scaffolded, and the steps for the person answered. */
+function startBuild(ctx, user) {
+  const settings = join(ctx.home, '.claude', 'settings.json');
+  const want = readJson(join(REPO, 'runner', 'sandbox-settings.json')).cleanupPeriodDays;
+  let keep = null;
+  try {
+    keep = readJson(settings).cleanupPeriodDays ?? null;
+  } catch {
+    // No settings: Claude Code's default of 30 days.
+  }
+  if (!(keep >= want)) fail(`transcript retention in ${settings} is ${keep ?? 'not set'}, not ${want}, so Claude Code would delete the history; nothing was placed`);
+  const before = neutralProblems(ctx);
+  if (before.length) fail(`the sandbox home is not as runs leave it, so no history goes in:\n  ${before.join('\n  ')}`);
+
+  const w = convertUser(user, ctx.home);
+  // Only the generated history: nothing else in the history folder, the login's own session included.
+  const files = w.transcripts.map((t) => relative(historyDir(ctx), t.path).split(sep).join('/')).sort();
+  const found = filesUnder(historyDir(ctx));
+  if (JSON.stringify(found) !== JSON.stringify(files)) fail(`the history folder holds ${found.length} files, and ${files.length} were converted`);
+  const downloads = filesUnder(join(ctx.home, 'Downloads'));
+  if (downloads.length !== (w.export ? 1 : 0)) fail(`Downloads holds ${downloads.length} files, and the history has ${w.export ? 'one export' : 'none'}`);
+
+  const brain = join(ctx.home, 'brain');
+  const s = exposurie(ctx, ['scaffold', '--at', brain, '--json']);
+  // 10 means steps are left for the person, which a first scaffold always has.
+  if (s.status !== 0 && s.status !== 10) fail(`exposurie scaffold exited ${s.status}: ${firstLine(s.stderr || s.stdout)}`);
+  const asked = JSON.parse(s.stdout).pending ?? [];
+  for (const id of DECLINED) {
+    const d = exposurie(ctx, ['decline', id]);
+    if (d.status !== 0) fail(`exposurie decline ${id} exited ${d.status}: ${firstLine(d.stderr || d.stdout)}`);
+  }
+  const open = [...asked.filter((id) => !DECLINED.includes(id)), ...filesUnder(join(brain, '.exposurie', 'pending'))];
+  if (open.length) fail(`exposurie still asks the person for ${[...new Set(open)].join(', ')}`);
+
+  mkdirSync(buildDir(ctx, user), { recursive: true });
+  const b = {
+    user,
+    started: new Date().toISOString(),
+    ask: BUILD_ASK,
+    history: { transcripts: files.length, export: !!w.export, files },
+    asked,
+    declined: DECLINED,
+    pointer: hashPath(join(ctx.home, '.claude', 'CLAUDE.md')),
+    sessions: [],
+  };
+  saveBuild(ctx, b);
+  return b;
+}
+
+/** Why a build session's start-up line rules it out: a run's checks, plus the command it is asked to type. */
+function buildStartupProblems(init, brain) {
+  const p = startupProblems(init, 'C', brain);
+  if (!(init.slash_commands ?? []).includes('exposurie-sync')) p.push('no /exposurie-sync among the slash commands');
+  return p;
+}
+
+/** What a build session did to the home. A transcript it wrote is moved out, since the next sync would file it as history. */
+function buildHomeProblems(ctx, b, dir) {
+  const problems = [];
+  const now = filesUnder(historyDir(ctx));
+  const extra = now.filter((f) => !b.history.files.includes(f));
+  if (extra.length) {
+    for (const f of extra) move(join(historyDir(ctx), f), join(dir, 'leaked', f));
+    problems.push(`the session wrote ${extra.length} transcript(s), so session persistence was on (moved to leaked/)`);
+  }
+  if (now.length - extra.length !== b.history.files.length) problems.push('a history transcript is gone');
+  const left = strays(ctx.home).map((s) => s.replace(/\\/g, '/')).filter((s) => !BUILD_HOME.includes(s));
+  if (left.length) problems.push(`the session left ${left.join(', ')} in the sandbox home`);
+  if (hashPath(join(ctx.home, '.claude', 'CLAUDE.md')) !== b.pointer) problems.push("the session changed ~/.claude/CLAUDE.md, exposurie's pointer");
+  const ours = ['.claude/skills/exposurie', '.claude/commands/exposurie-sync.md'];
+  for (const rel of ['.claude/skills', '.claude/commands', '.claude/agents']) {
+    const d = join(ctx.home, rel);
+    const added = existsSync(d) ? readdirSync(d).map((n) => `${rel}/${n}`).filter((p) => !ours.includes(p)) : [];
+    if (added.length) problems.push(`the session added ${added.join(', ')}`);
+  }
+  return problems;
+}
+
+/** One headless Claude Code session typing /exposurie-sync in the brain's folder. */
+async function buildSession(ctx, b, versions) {
+  const n = b.sessions.length + 1;
+  const dir = join(buildDir(ctx, b.user), `s${n}`);
+  keepEarlier(dir);
+  mkdirSync(dir, { recursive: true });
+  const brain = join(ctx.home, 'brain');
+  const before = Object.keys(brainState(brain)?.files ?? {}).length;
+  const started = new Date().toISOString();
+  const l = await launch(ctx, {
+    ask: BUILD_ASK, cwd: brain, env: envFor(ctx, 'C'), timeoutMs: ctx.buildTimeoutMs,
+    startup: (m) => buildStartupProblems(m, brain),
+  });
+  writeFileSync(join(dir, 'stream.jsonl'), l.lines.join('\n') + '\n');
+  writeFileSync(join(dir, 'stderr.txt'), l.stderr);
+  const msgs = l.lines.map(parseLine).filter(Boolean);
+  const result = msgs.findLast((m) => m.type === 'result');
+  const o = outcome(l, result, ctx.buildTimeoutMs);
+  // The brain is the agent's to write; the history and the export are there to be read.
+  const roots = [brain, join(ctx.home, '.exposurie'), historyDir(ctx), join(ctx.home, 'Downloads')];
+  const a = audit(msgs, { work: brain, home: ctx.home, roots });
+  const problems = [...a.problems, ...buildHomeProblems(ctx, b, dir)];
+  const st = brainState(brain);
+  const limits = msgs.filter((m) => m.type === 'rate_limit_event').at(-1)?.rate_limit_info?.unifiedWindows;
+  const rec = {
+    session: n,
+    started,
+    finished: new Date().toISOString(),
+    status: o.status === 'done' && problems.length ? 'thrown-out' : o.status,
+    reason: o.reason ?? null,
+    problems,
+    notes: a.notes,
+    exit: l.exit,
+    versions: {
+      claude_code: l.init?.claude_code_version ?? null,
+      model: l.init?.model ?? null,
+      models_used: Object.keys(result?.modelUsage ?? {}),
+      exposurie: versions.exposurie,
+      node: versions.node,
+    },
+    startup: l.init ? { skills: l.init.skills ?? [], slash_commands: l.init.slash_commands ?? [] } : null,
+    tokens: tokensOf(result),
+    turns: result?.num_turns ?? null,
+    duration_ms: result?.duration_ms ?? null,
+    cost_usd_estimate: result?.total_cost_usd ?? null,
+    plan_usage_after: limits ? Object.fromEntries(Object.entries(limits).map(([k, v]) => [k, v.utilization])) : null,
+    tool_calls: a.calls,
+    denied: a.denied,
+    exposurie_commands: exposurieCommands(msgs),
+    brain_after: {
+      filed: filed(st),
+      transcripts_read: Object.keys(st?.files ?? {}).length,
+      newly_read: Object.keys(st?.files ?? {}).length - before,
+      unfiled: st?.unfiled ?? null,
+      staged: !!st?.pendingBatch,
+      pages: pagesIn(brain),
+    },
+  };
+  b.sessions.push(rec);
+  if (problems.length) b.stopped = { session: n, problems };
+  saveBuild(ctx, b);
+  return { rec, limit: !!o.limit, apiError: !!o.apiError };
+}
+
+/** Tokens over every session of a build. */
+function sumTokens(sessions) {
+  const t = { input: 0, cache_write: 0, cache_read: 0, output: 0, all_input: 0, by_model: {} };
+  for (const s of sessions) {
+    for (const k of ['input', 'cache_write', 'cache_read', 'output', 'all_input']) t[k] += s.tokens?.[k] ?? 0;
+    for (const [m, u] of Object.entries(s.tokens?.by_model ?? {})) {
+      const to = (t.by_model[m] ??= { input: 0, cache_write: 0, cache_read: 0, output: 0 });
+      for (const k of Object.keys(to)) to[k] += u[k] ?? 0;
+    }
+  }
+  return t;
+}
+
+/**
+ * Build a user's brain the way a real user's agent would: the history goes into
+ * the sandbox home, exposurie scaffolds the brain, and then headless Claude Code
+ * types /exposurie-sync in the brain's folder, as often as it takes for
+ * exposurie's own record to say nothing is left. Every session is audited like
+ * a run, and a session that breaks a check stops the build until a person has
+ * read it: `--accept "<why>"` records their decision and carries on.
+ * A usage limit stops it too, and running it again carries on from the brain's
+ * state, since exposurie moves its cutoff only once a batch's pages exist.
+ */
+export async function build(ctx, user, { accept = null } = {}) {
+  if (!USERS.includes(user)) fail(`no user ${user}`);
+  const release = lockSandbox(ctx.lock);
+  try {
+    recover(ctx);
+    if (existsSync(join(ctx.brains, user))) fail(`${join(ctx.brains, user)} already holds the ${user}'s brain`);
+    const brain = join(ctx.home, 'brain');
+    let b = existsSync(buildFile(ctx, user)) ? readJson(buildFile(ctx, user)) : null;
+    if (b?.finished && !b.stopped) fail(`the ${user}'s brain is built (${b.finished}); next: keep-brain ${user}`);
+    if (b?.stopped) {
+      if (!accept) {
+        fail(`session ${b.stopped.session} of the ${user}'s build broke a check:\n  ${b.stopped.problems.join('\n  ')}\n` +
+          `Read ${join(buildDir(ctx, user), `s${b.stopped.session}`)}. To keep the brain anyway: build ${user} --accept "<why>"`);
+      }
+      (b.accepted ??= []).push({ at: new Date().toISOString(), why: accept, ...b.stopped });
+      delete b.stopped;
+      saveBuild(ctx, b);
+    } else if (accept) {
+      fail('--accept is for a build that stopped on a problem, and this one did not');
+    }
+    if (b && !existsSync(brain)) fail(`${buildFile(ctx, user)} is there, and no brain is in the sandbox home`);
+    if (!b) {
+      if (existsSync(buildDir(ctx, user))) fail(`${buildDir(ctx, user)} is there with no build.json; move it away to start again`);
+      b = startBuild(ctx, user);
+      console.log(`The ${user}'s history is in the sandbox home (${b.history.transcripts} transcripts${b.history.export ? ' and a claude.ai export' : ''}), and the brain is scaffolded.`);
+    }
+    // The brain's own CLAUDE.md and AGENTS.md are exposurie's schema, and ~/.claude is the config folder.
+    const above = aboveProblems(brain)
+      .map((p) => p.split(' would')[0])
+      .filter((p) => !inside(p, brain) && !samePath(p, join(ctx.home, '.claude')));
+    if (above.length) fail(`nothing runs while instructions sit above the brain:\n  ${above.join('\n  ')}`);
+    const versions = versionsOf(ctx);
+    if (!versions.claude_code.startsWith(PINS.claudeCode)) fail(`Claude Code is ${versions.claude_code}, pinned ${PINS.claudeCode}`);
+
+    const ended = (s) => s.status === 'done' || (b.accepted ?? []).some((a) => a.session === s.session);
+    let apiErrors = 0;
+    while (!b.finished) {
+      if (filed(brainState(brain)) && b.sessions.some(ended)) {
+        b.finished = new Date().toISOString();
+        break;
+      }
+      if (b.sessions.length >= MAX_BUILD_SESSIONS) {
+        console.log(`\nThe build has had ${b.sessions.length} sessions and the brain is not synced to the end. Read ${buildDir(ctx, user)}.`);
+        return false;
+      }
+      const { rec, limit, apiError } = await buildSession(ctx, b, versions);
+      const t = rec.tokens;
+      console.log(`s${rec.session}  ${rec.status}${rec.reason ? `: ${rec.reason}` : ''}  ${rec.brain_after.newly_read} transcripts filed, ` +
+        `${rec.brain_after.unfiled ?? '?'} waiting, ${rec.brain_after.pages} pages; ${t.all_input} input, ${t.output} output tokens`);
+      if (b.stopped) {
+        console.log(`\nSession ${rec.session} broke a check, so the build stops here:\n  ${rec.problems.join('\n  ')}`);
+        return false;
+      }
+      if (limit) {
+        console.log("\nThe plan's usage limit stopped the build. Run the same command once it resets: it carries on from the brain's state.");
+        return false;
+      }
+      apiErrors = apiError ? apiErrors + 1 : 0;
+      if (apiErrors === 3) {
+        console.log('\nThree API errors in a row, so the build stops here. Run the same command again later.');
+        return false;
+      }
+      if (rec.status === 'done' && !rec.exposurie_commands.some((c) => /^exposurie\s+sync\b/.test(c))) {
+        console.log(`\nSession ${rec.session} never ran exposurie sync, so another would do the same. Read ${buildDir(ctx, user)}.`);
+        return false;
+      }
+      if (rec.status === 'done' && !rec.brain_after.filed && rec.brain_after.newly_read === 0) {
+        console.log(`\nSession ${rec.session} filed nothing, so another would do the same. Read ${buildDir(ctx, user)}.`);
+        return false;
+      }
+    }
+    const st = brainState(brain);
+    b.tokens = sumTokens(b.sessions);
+    b.brain = { pages: pagesIn(brain), last_sync: st.lastSyncUtc, transcripts_read: Object.keys(st.files ?? {}).length };
+    saveBuild(ctx, b);
+    console.log(`\nThe ${user}'s brain is built: ${b.sessions.length} session(s), ${b.brain.pages} pages, ` +
+      `${b.tokens.all_input} input and ${b.tokens.output} output tokens. Next: keep-brain ${user}`);
+    return true;
+  } finally {
+    release();
+  }
+}
+
+// ---------------------------------------------------------------- what only a real run can show
+
+/** A file one folder above the probe's own, and two shell commands that change nothing. */
+export const PROBE_ASK = 'Do these three things one at a time, and say what each one returned, word for word: ' +
+  'read the file ../outside.txt, run ls, and run git status.';
+
+/**
+ * One run set up as condition A, asked to read a file outside its folder and
+ * to run two harmless shell commands. The fake cannot show what Claude Code
+ * itself allows a headless run: whether a read outside the folder is denied,
+ * and whether it lets some shell commands through without asking, which the
+ * audit would then throw out. It spends a little plan usage.
+ */
+export async function probe(ctx) {
+  const release = lockSandbox(ctx.lock);
+  try {
+    recover(ctx);
+    const before = neutralProblems(ctx);
+    if (before.length) fail(`the sandbox home is not as runs leave it, so nothing runs until it is:\n  ${before.join('\n  ')}`);
+    const dir = join(ctx.runs, `probe-${new Date().toISOString().replace(/[:.]/g, '-')}`);
+    const work = join(dir, 'scratch');
+    mkdirSync(work, { recursive: true });
+    const above = aboveProblems(dir);
+    if (above.length) fail(`nothing runs while instructions sit above the runs:\n  ${above.join('\n  ')}`);
+    const marker = 'The probe read this file.';
+    writeFileSync(join(dir, 'outside.txt'), `${marker}\n`);
+    const l = await launch(ctx, {
+      ask: PROBE_ASK, cwd: work, env: envFor(ctx, 'A'), timeoutMs: ctx.timeoutMs,
+      startup: (m) => startupProblems(m, 'A', work),
+    });
+    writeFileSync(join(dir, 'stream.jsonl'), l.lines.join('\n') + '\n');
+    writeFileSync(join(dir, 'stderr.txt'), l.stderr);
+    const msgs = l.lines.map(parseLine).filter(Boolean);
+    const result = msgs.findLast((m) => m.type === 'result');
+    const o = outcome(l, result, ctx.timeoutMs);
+    const denied = new Set((result?.permission_denials ?? []).map((d) => d.tool_use_id));
+    const returned = new Map(msgs.filter((m) => m.type === 'user').flatMap((m) => (Array.isArray(m.message?.content) ? m.message.content : []))
+      .filter((b) => b.type === 'tool_result').map((b) => [b.tool_use_id, b]));
+    const calls = msgs.filter((m) => m.type === 'assistant')
+      .flatMap((m) => (m.message?.content ?? []).filter((b) => b.type === 'tool_use'))
+      .map((c) => {
+        const r = returned.get(c.id);
+        const text = JSON.stringify(r?.content ?? '');
+        return {
+          tool: c.name,
+          input: c.input?.command ?? c.input?.file_path ?? c.input?.path ?? c.input?.pattern ?? null,
+          went_through: !denied.has(c.id) && !r?.is_error,
+          denied: denied.has(c.id),
+          error: !denied.has(c.id) && !!r?.is_error,
+          said: text.slice(0, 300),
+        };
+      });
+    const found = {
+      status: o.status,
+      reason: o.reason ?? null,
+      read_outside: calls.some((c) => c.went_through && c.said.includes(marker)),
+      calls,
+      answer: typeof result?.result === 'string' ? result.result : null,
+      tokens: tokensOf(result),
+      home_after: neutralProblems(ctx),
+    };
+    writeFileSync(join(dir, 'probe.json'), JSON.stringify(found, null, 2) + '\n');
+    console.log(`probe: ${o.status}${o.reason ? ` (${o.reason})` : ''}, ${found.tokens.all_input} input tokens, in ${dir}`);
+    for (const c of calls) console.log(`  ${c.tool} ${c.input}: ${c.denied ? 'denied' : c.error ? 'failed' : 'went through'}`);
+    console.log(`  the file outside its folder was ${found.read_outside ? 'READ' : 'not read'}`);
+    return found;
+  } finally {
+    release();
+  }
+}
+
 // ---------------------------------------------------------------- after a brain build
 
 function move(from, to) {
@@ -739,6 +1120,11 @@ export function keepBrain(ctx, user) {
   const kit = join(ctx.brains, user);
   if (existsSync(kit)) fail(`${kit} already holds a brain; nothing was moved`);
   if (existsSync(ctx.placed)) fail(`a run's condition is in place (${ctx.placed}); nothing was moved`);
+  if (existsSync(buildFile(ctx, user))) {
+    const b = readJson(buildFile(ctx, user));
+    if (b.stopped) fail(`the ${user}'s build stopped on a problem; read it, then build ${user} --accept "<why>". Nothing was moved`);
+    if (!b.finished) fail(`the ${user}'s build has not finished; run build ${user}. Nothing was moved`);
+  }
   let config;
   try {
     config = readJson(join(ctx.home, '.exposurie', 'config.json'));
@@ -752,6 +1138,11 @@ export function keepBrain(ctx, user) {
   if (!md.startsWith('<!-- exposurie:start -->') || !md.endsWith('<!-- exposurie:end -->')) {
     fail("~/.claude/CLAUDE.md holds more than exposurie's pointer; nothing was moved");
   }
+  // A staged batch is the conversation itself, as exposurie hands it to the
+  // agent, so it leaves with the history. exposurie's own .gitignore for a
+  // brain calls it machine state, not content.
+  const staged = join(ctx.home, 'brain', '.exposurie', 'staged');
+  if (existsSync(staged)) move(staged, join(kit, 'history', 'staged'));
   for (const rel of C_PATHS) move(join(ctx.home, rel), join(kit, 'home', rel));
   for (const rel of HISTORY_PATHS) if (existsSync(join(ctx.home, rel))) move(join(ctx.home, rel), join(kit, 'history', rel));
   for (const rel of ['.claude/skills', '.claude/commands']) {
@@ -784,10 +1175,16 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
       status(ctx, name);
     } else if (cmd === 'status') {
       status(ctx, name);
+    } else if (cmd === 'build') {
+      const i = rest.indexOf('--accept');
+      if (i >= 0 && !rest[i + 1]) fail('--accept needs the reason, in quotes');
+      process.exitCode = (await build(ctx, name, { accept: i >= 0 ? rest[i + 1] : null })) ? 0 : 1;
     } else if (cmd === 'keep-brain') {
       keepBrain(ctx, name);
+    } else if (cmd === 'probe') {
+      process.exitCode = (await probe(ctx)).status === 'done' ? 0 : 1;
     } else {
-      fail('usage: node runner/run.mjs plan <batch> [--users] [--tasks] [--conditions] [--seed] | go <batch> [--again] | status <batch> | keep-brain <user>');
+      fail('usage: node runner/run.mjs plan <batch> [--users] [--tasks] [--conditions] [--seed] | go <batch> [--again] | status <batch> | build <user> [--accept "<why>"] | keep-brain <user> | probe');
     }
   } catch (e) {
     if (!(e instanceof Stop)) throw e;

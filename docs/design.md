@@ -172,7 +172,7 @@ Every rule here exists because breaking it produces a wrong number.
 - **stdin closed on every run.** An earlier exposurie pointer test overstated its result because each headless session read the remaining questions from stdin.
 - **No session persistence** (`--no-session-persistence`), so runs never become part of a user's history at the next sync.
 - **The same tools in every condition:** read, write, edit, search, and a shell that may run only `exposurie`. No web tools: this repository is public, so an agent allowed to search could find the answers. The runner checks the tool list at the start of every run and throws out any run where it is wrong.
-- **Brains built before any task runs**, with their build tokens recorded. Then the raw history leaves the sandbox home, so C can only use the brain. The brain is hidden during A, B and D.
+- **Brains built before any task runs**, with their build tokens recorded. Then the raw history leaves the sandbox home, and so do exposurie's staged copies of it, so C can only use the brain. The brain is hidden during A, B and D.
 - **C runs finish within 7 days of their brain build.** After 7 days exposurie's status line asks the agent to sync, and an agent that syncs mid-task changes both the brain and the token count.
 - **Conditions are mixed together in the run order.**
 - **A run stopped by a usage limit counts as "not run", never "wrong"**, and is run again later.

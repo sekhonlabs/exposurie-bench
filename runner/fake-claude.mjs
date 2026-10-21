@@ -1,9 +1,10 @@
-// A fake `claude` (part 5), so the runner and the scorer can be tested end to
-// end without spending anything. check/runner.mjs runs it with the sandbox's
-// Node where the sandbox's Claude Code would be. It reads its arguments and
-// the sandbox home as the real one would, prints its output in the real format
-// (stream-json for a run, json for the judge), and writes files into its
-// folder as an agent would.
+// A fake `claude` (parts 5 and 6), so the runner, the scorer and the brain
+// build can be tested end to end without spending anything. check/runner.mjs
+// and check/build.mjs run it with the sandbox's Node where the sandbox's Claude
+// Code would be. It reads its arguments and the sandbox home as the real one
+// would, prints its output in the real format (stream-json for a run or a
+// build, json for the judge), and writes files into its folder as an agent
+// would.
 //
 // Its answers come from tasks/examples.json: a wrong one in condition A, and a
 // right one in B, C and D. A task scored by the judge gets a made-up answer
@@ -69,6 +70,121 @@ if (arg('--system-prompt-file') !== undefined) {
   const verdict = problems.length ? 'wrong' : said ?? 'wrong';
   const reason = problems.length ? `FAKE-PROBLEM: ${problems.join('; ')}` : said ? `the answer was marked ${said}` : 'no marker';
   print({ type: 'result', subtype: 'success', is_error: false, num_turns: 1, duration_ms: 5, result: `VERDICT: ${verdict}\nREASON: ${reason}`, ...usage(Math.ceil(material.length / 4), 40) });
+  process.exit(0);
+}
+
+// ---------------------------------------------------------------- a brain build
+
+// A build types /exposurie-sync in the brain's folder. The fake does what the
+// command asks, with exposurie 1.2.0's real sync through Git Bash: stage a
+// batch, read it, write a page, file it, and again until nothing is waiting.
+// The scenario's `build` names the user, and what a numbered session does
+// instead: hit a usage limit before filing ('limit'), stop after one batch
+// ('stop-early'), never sync ('idle'), read the answer key ('outside'), read
+// the raw history ('read-history'), or write a transcript ('persist').
+if (arg('-p') === '/exposurie-sync') {
+  const brain = process.cwd();
+  const problems = [];
+  const want = {
+    '--model': PINS.model, '--output-format': 'stream-json', '--tools': TOOLS.join(','),
+    '--allowedTools': 'Bash(exposurie:*)', '--permission-mode': 'acceptEdits',
+  };
+  for (const [k, v] of Object.entries(want)) if (arg(k) !== v) problems.push(`${k} is ${arg(k)}, not ${v}`);
+  for (const f of ['--verbose', '--strict-mcp-config', '--no-session-persistence']) if (!args.includes(f)) problems.push(`no ${f}`);
+  const own = new Set([...Object.keys(sandboxEnv()), 'EXPOSURIE_BENCH_FAKE'].map((k) => k.toUpperCase()));
+  const inherited = Object.keys(process.env).filter((k) => !own.has(k.toUpperCase()));
+  if (inherited.length) problems.push(`inherited ${inherited.join(', ')}`);
+  if (resolve(brain).toLowerCase() !== resolve(HOME, 'brain').toLowerCase()) problems.push(`syncs in ${brain}, not the brain`);
+  if (!existsSync(join(CONFIG, 'commands', 'exposurie-sync.md'))) problems.push('no /exposurie-sync in the home');
+  if (!existsSync(join(CONFIG, 'projects'))) problems.push('no history in the home');
+
+  const user = scenario.build?.user ?? '?';
+  const counter = join(dirname(process.env.EXPOSURIE_BENCH_FAKE ?? '.'), `build-sessions-${user}`);
+  const n = (existsSync(counter) ? Number(readFileSync(counter, 'utf8')) : 0) + 1;
+  writeFileSync(counter, String(n));
+  const kind = scenario.build?.sessions?.[n] ?? null;
+  const session = randomUUID();
+  const out = [];
+  const tool = (name, input, output) => {
+    const id = `toolu_${randomUUID().replace(/-/g, '').slice(0, 24)}`;
+    out.push({ type: 'assistant', message: { id: `msg_${id}`, role: 'assistant', model: PINS.model, content: [{ type: 'tool_use', id, name, input }] }, session_id: session });
+    out.push({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: id, is_error: false, content: output }] }, session_id: session });
+  };
+  const sh = (command) => spawnSync(process.env.CLAUDE_CODE_GIT_BASH_PATH, ['-c', command], { cwd: brain, encoding: 'utf8', windowsHide: true });
+  const state = () => {
+    try {
+      return JSON.parse(readFileSync(join(brain, '.exposurie', 'state.json'), 'utf8'));
+    } catch {
+      return null;
+    }
+  };
+
+  let read = 0;
+  let limited = false;
+  for (let i = 0; kind !== 'idle' && i < 12; i += 1) {
+    const s = sh('exposurie sync');
+    tool('Bash', { command: 'exposurie sync' }, s.stdout);
+    const batch = state()?.pendingBatch;
+    if (!batch) break;
+    const conv = join(brain, '.exposurie', 'staged', batch.id, 'conversations.md');
+    const text = existsSync(conv) ? readFileSync(conv, 'utf8') : '';
+    if (!text) problems.push(`batch ${batch.id} has no conversations.md`);
+    read += text.length;
+    tool('Read', { file_path: conv }, text.slice(0, 300));
+    // Numbered rather than named after the batch: the fake stages batches within the same second, and a batch's ID is the second it was staged.
+    const pages = join(brain, 'wiki', 'sources');
+    mkdirSync(pages, { recursive: true });
+    const title = `The ${user}, batch ${readdirSync(pages).length + 1}`;
+    const page = join(pages, `${title}.md`);
+    const body = `---\ntype: source\n---\n\n# ${title}\n\nThis brain belongs to the ${user}. Batch ${batch.id}, ${(text.match(/^## /gm) ?? []).length} sessions.\n`;
+    writeFileSync(page, body);
+    tool('Write', { file_path: page, content: body }, `File created successfully at: ${page}`);
+    if (kind === 'limit') {
+      limited = true;
+      break;
+    }
+    const d = sh('exposurie sync --done');
+    tool('Bash', { command: 'exposurie sync --done' }, d.stdout);
+    if (d.status !== 0) problems.push(`exposurie sync --done exited ${d.status}: ${d.stdout.slice(0, 300)}`);
+    if (kind === 'stop-early') break;
+  }
+  if (kind === 'outside') tool('Read', { file_path: join(REPO, 'users', user, 'facts.json') }, '{"facts": []}');
+  if (kind === 'read-history') {
+    const first = readdirSync(join(CONFIG, 'projects'))[0];
+    const file = join(CONFIG, 'projects', first, readdirSync(join(CONFIG, 'projects', first))[0]);
+    tool('Read', { file_path: file }, readFileSync(file, 'utf8').slice(0, 300));
+  }
+  if (kind === 'persist') {
+    mkdirSync(join(CONFIG, 'projects', 'fake-build'), { recursive: true });
+    writeFileSync(join(CONFIG, 'projects', 'fake-build', `${session}.jsonl`), '{}\n');
+  }
+
+  const has = (rel) => existsSync(join(HOME, rel));
+  const skills = [...BUILT_IN_SKILLS, ...(has('.claude/skills/exposurie/SKILL.md') ? ['exposurie'] : [])];
+  print({
+    type: 'system', subtype: 'init', cwd: brain, session_id: session, tools: (arg('--tools') ?? '').split(',').filter(Boolean),
+    mcp_servers: [], model: arg('--model'), permissionMode: arg('--permission-mode') ?? 'default',
+    slash_commands: [...skills, 'compact', 'context', ...(has('.claude/commands/exposurie-sync.md') ? ['exposurie-sync'] : [])],
+    apiKeySource: 'none', claude_code_version: PINS.claudeCode, output_style: 'default',
+    agents: ['claude', 'Explore', 'general-purpose', 'Plan', 'statusline-setup'], skills,
+    plugins: [{ name: 'cc-plugin-agents-md', path: 'builtin', source: 'cc-plugin-agents-md@builtin' }],
+  });
+  for (const m of out) print(m);
+  const said = `${problems.length ? `FAKE-PROBLEM: ${problems.join('; ')}\n\n` : ''}The brain is synced.`;
+  print({ type: 'assistant', message: { id: `msg_${randomUUID()}`, role: 'assistant', model: PINS.model, content: [{ type: 'text', text: said }] }, session_id: session });
+  print({ type: 'rate_limit_event', rate_limit_info: { status: limited ? 'rejected' : 'allowed', rateLimitType: 'five_hour', unifiedWindows: { five_hour: { utilization: limited ? 1 : 0.5 }, seven_day: { utilization: 0.2 } } }, session_id: session });
+  const spent = usage(6400 + Math.ceil(read / 4), 300 + 200 * out.length);
+  if (limited) {
+    print({
+      type: 'result', subtype: 'success', is_error: true, terminal_reason: 'api_error', num_turns: out.length / 2 + 1, session_id: session,
+      api_error_status: 429, api_error: 'usage_limit_reached', result: "You've hit your session limit · resets 5pm", permission_denials: [], ...spent,
+    });
+    process.exit(1);
+  }
+  print({
+    type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: out.length / 2 + 1, duration_ms: 60,
+    session_id: session, result: said, permission_denials: [], ...spent,
+  });
   process.exit(0);
 }
 

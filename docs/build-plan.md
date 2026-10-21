@@ -12,9 +12,9 @@ Claude Code builds and runs all of it.
 | `users/<user>/plan.json` | the session plan: each session's time, project or chat, and surface (part 1), and which facts come up in it and how (part 2) |
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
-| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4) and the runner and scorer check (part 5) |
+| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5) and the brain build check (part 6) |
 | `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6 and 7 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`) and example answers (`tasks/examples.json`) |
-| `runner/` | sandbox setup, the runner, and the fake `claude` the runner and scorer are tested against |
+| `runner/` | sandbox setup, the runner and the brain build, and the fake `claude` they are tested against |
 | `score/` | how a task's checks read a run (part 4), and the scorer and the judge (part 5) |
 | `results/` | summaries and charts. Raw run output stays outside the repository |
 
@@ -208,15 +208,35 @@ node check/runner.mjs
 
 ### 6. Brain build and pilot
 
-**Plan usage:** yes. **Needs the owner's go.**
+**Plan usage:** yes. **Needs the owner's go.** **Built and tested offline 2026-10-21:** `check/build.mjs` passes, and so does `check/runner.mjs` again.
 
-- Check that the sandbox's history folder holds only the generated history. Nothing else may be in it, including the owner's login session.
-- Build the first user's brain: exposurie syncs and Claude Code writes the pages, until nothing is left. Record the tokens. exposurie's `scaffold` leaves three asks for the person (transcript retention, the claude.ai export, Obsidian), and the build settles them so C's reads stay clean.
-- Move the brain and the raw history out of the sandbox home: `node runner/run.mjs keep-brain <user>`.
-- Run the pilot, one task under all four conditions: `plan pilot --tasks <id>`, then `go pilot`.
+The brain build, `node runner/run.mjs build <user>`:
+
+- **Before any history goes in,** it refuses unless the sandbox's settings keep transcripts for 3650 days and the home is as runs leave it, with nothing in the history folder, the owner's login session included.
+- It converts the user's history straight into the sandbox home (`gen/convert.mjs`), then checks that the history folder holds exactly the converted transcripts, and Downloads exactly the export or nothing.
+- `exposurie scaffold --at ~/brain` makes the brain and writes the pointer, the skill and `/exposurie-sync`. This takes no model.
+- Of the steps exposurie leaves for the person, retention is already done. The claude.ai export and Obsidian are declined, with no reason recorded (see [decisions.md](decisions.md)).
+- Then headless Claude Code types `/exposurie-sync` in the brain's folder, with a run's model, tools and permission mode, as many times as it takes for exposurie's own state to say nothing is staged or waiting.
+- Every session is checked like a run: its start-up line (with `/exposurie-sync` among its commands), every tool call (the brain may be written, and the history and the export read), the shell (`exposurie` only), the pointer unchanged, no transcript written, nothing left in the home.
+- Each session's stream, tokens and the brain's state after it go to `../runs/build-<user>/`, in `build.json`, with the tokens summed over every session and model.
+- A session that breaks a check stops the build until a person has read it: `build <user> --accept "<why>"` records their decision and carries on. A usage limit stops it too, and the same command carries on after the reset. exposurie moves its cutoff only once a batch's pages exist, so nothing is lost. A build also stops after six sessions, or when a session never runs `exposurie sync` or files nothing.
+- `keep-brain` refuses a build that has not finished or stopped on a problem. It also moves the staged batches out of the brain, with the raw history.
+
+`node runner/run.mjs probe` is one small run, set up as condition A, asked to read a file one folder up and to run `ls` and `git status`. It shows what Claude Code itself allows a headless run, which the fake can't.
+
+`check/build.mjs` runs all of it against the fake `claude`, whose build agent drives exposurie 1.2.0's real sync through Git Bash:
+
+- the developer, through a usage limit before the first batch is filed and a second build that finishes; then `keep-brain`, and a C run on the brain
+- the delegator, through a session that stops after one batch, so the build starts another
+- a session that reads the answer key (stopped, then accepted by hand), one that writes a transcript, one that never syncs, a home with no retention set, and a history folder already holding a session
+
+What part 6 does live, with the owner's go:
+
+- `probe`, then the first user's brain: `build developer`, then `keep-brain developer`.
+- Run the pilot, one task under all four conditions: `plan pilot --tasks recall-1`, then `go pilot`.
 - Check that B's input tokens show the whole history arrived, and that C saw the pointer.
 - Check what the fake could not show. Were reads outside the run's folder denied, as headless runs should be? Do exposurie's skill and command appear in C's start-up line? Was any run thrown out for a harmless shell command, such as one Claude Code allows by itself?
-- Use the pilot's numbers to estimate the plan usage of the full run.
+- Use the build's and the pilot's numbers to estimate the plan usage of the full run.
 
 ### 7. Full run
 
