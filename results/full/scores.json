@@ -836,8 +836,8 @@
       "area": 1,
       "user": "delegator",
       "status": "done",
-      "verdict": "right",
-      "by": "checks",
+      "verdict": "wrong",
+      "by": "hand",
       "checks": {
         "required": [
           true
@@ -845,7 +845,7 @@
         "forbidden": []
       },
       "judge": null,
-      "hand": null,
+      "hand": "wrong",
       "tokens": {
         "all_input": 13030,
         "input": 4,
@@ -2297,8 +2297,8 @@
       "area": 3,
       "user": "delegator",
       "status": "done",
-      "verdict": "right",
-      "by": "checks",
+      "verdict": "wrong",
+      "by": "hand",
       "checks": {
         "required": [
           true
@@ -2308,7 +2308,7 @@
         ]
       },
       "judge": null,
-      "hand": null,
+      "hand": "wrong",
       "tokens": {
         "all_input": 20086,
         "input": 6,
