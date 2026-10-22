@@ -4,7 +4,8 @@
 //
 // A check, from tasks/index.json:
 //
-//   in        "answer", "files" or "files+answer": what it reads
+//   in        "answer", "files" or "files+answer": what it reads; area 9 also
+//             has "writes", everything the agent wrote after the fork
 //   file      a glob that narrows "files", such as "PR.md" or "**/*.html"
 //   text      "visible": an HTML file's visible text only
 //   any       passes when one of these spellings appears
@@ -68,6 +69,26 @@ export function holds(check, run) {
 
 /** True when the check has something to look for: judged tasks list their facts without spellings. */
 export const looks = (check) => !!(check.any || check.all || check.none || check.patterns);
+
+/** The groups of an area 9 task's checks (part 8). */
+export const LONG_GROUPS = ['finished', 'kept', 'retried'];
+
+/**
+ * An area 9 strategy's checks, by group and id: true or false from a script,
+ * or null for a check read only by hand. `run` holds the last reply
+ * (`answer`), the files changed since the fork (`files`), and everything the
+ * agent wrote after the fork (`writes`, `{ path, text }`, path null for a
+ * shell command). A check reading "writes" reads them as files, so an
+ * approach tried and taken back still counts.
+ */
+export function longScores(checks, run) {
+  const score = (c) => {
+    if (!looks(c)) return null;
+    if (c.in !== 'writes') return holds(c, run);
+    return holds({ ...c, in: 'files' }, { files: (run.writes ?? []).map((w) => ({ path: w.path ?? '', text: w.text })) });
+  };
+  return Object.fromEntries(LONG_GROUPS.map((g) => [g, Object.fromEntries((checks[g] ?? []).map((c) => [c.id, score(c)]))]));
+}
 
 /**
  * A run's verdict from its checks alone: "right", "wrong", or "judge" when the

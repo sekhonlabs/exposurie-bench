@@ -1,0 +1,423 @@
+{
+  "note": "Written by tasks/long/long-1.mjs: change that file and run it, never this one. The fields are explained in docs/build-plan.md, part 8.",
+  "fork_at": 500000,
+  "resume_note": "I'm carrying on from my last session, where we were adding imports from other read-later services.",
+  "core": [
+    "New feature tonight: importing from other read-later services. Most of the people I want on Satchel have years of links in Pocket, Instapaper or Omnivore, and nobody moves to a read-later app without their library. Before you write anything, read the code and tell me where an import like this fits: what the link-list import already does, how jobs, tags and highlights work, and what you would reuse. Don't change anything yet.",
+    "Here is how imports behave, for all three services. Some of it only matters for Instapaper and Omnivore, which come after Pocket, but I want it settled now.\n\n- Every imported link gets the tag imported:<service>: imported:pocket, imported:instapaper, imported:omnivore. Then I can find an import, and undo one.\n- Anything I'd archived in the old service comes in as read, not archived. Archived links drop out of search in Satchel, and the whole point is to be able to search my old archive.\n- Instapaper's folders become tags named folder:<name>, so my Recipes folder becomes folder:Recipes. Not Unread and Archive: those are states, not folders, and the rule above already covers Archive.\n- Highlights come in as highlights: Instapaper's Selection column, and Omnivore's highlights. They get a source of import, so I can tell them apart from the ones I made in Satchel.\n\nNow the first cut, and only Pocket: nothing for Instapaper or Omnivore yet, not even stubs. Keep it as simple as the link-list import and do the whole thing inside the upload request, the same way, so I can see it work end to end tonight. Pocket's export is title,url,time_added,tags,status. Split each line on commas: I want the dumbest parser that works on my file. time_added is when I saved the link, so it becomes saved_at, and the tags are separated by |. For links I already have, use INSERT OR REPLACE, so Pocket's copy wins. I know the link-list import skips links I already have; for Pocket I want its titles and dates.\n\nThere's a small made-up export from each service in test/fixtures/. No new dependency.",
+    "I deployed it and imported my real Pocket export: 14,212 links, 2.3 MB. The browser got a 502 after exactly 60 seconds: Fly's proxy logged that the request timed out after 60s, since it gives up on any request that hasn't answered by then. The import itself carried on with nobody waiting for it, and the app's request log shows it finishing with a 200 after 192 seconds. An import that size can't live inside a request.\n\nMove it to a job. The upload request saves the file under /data/imports/, named by a ULID, enqueues an import job, and answers straight away. The worker reads the file from there and deletes it when the job is over, whether it worked or not. The jobs table is the pattern for everything slow here, so no new machinery.",
+    {
+      "say": "Second problem, from the same real export: titles with commas. Pocket puts quotes around any field with a comma in it, and splitting on commas cuts those titles in two and shifts every column after them. 1,312 of my 14,212 rows have a comma in the title, and not one of them came in right. A few of the raw rows, and what a split on commas makes of them, are in tmp/pocket-commas.txt.\n\nWrite a small CSV reader in src/lib/csv.js: quoted fields, doubled quotes inside them, commas and newlines inside quotes, CRLF line endings, and a trailing newline. No dependency: it's thirty lines, and Instapaper's export will need it too. A row that still doesn't have the right number of fields is skipped and counted, never guessed at.",
+      "files": {
+        "tmp/pocket-commas.txt": "pocket-commas.txt"
+      }
+    },
+    "Something worse. I imported the same file a second time, to check that running it twice is harmless, and 37 links lost their highlights and their tags. INSERT OR REPLACE doesn't update a row: it deletes the old one and inserts a new one, and highlights, link_tags and articles all point at links with ON DELETE CASCADE, so the delete took all of that with it. Those links got new ids as well. I restored the database from Litestream, so nothing is lost, but that was my call and it was wrong: never REPLACE a row that other tables point at.\n\nUse INSERT ... ON CONFLICT (user_id, url) DO NOTHING, the way the link-list import does, and count the links that were already there, so the summary can say how many were skipped because I already had them.",
+    "Now the writes. Make the job commit in batches of 500 rows, each batch its own BEGIN IMMEDIATE transaction, with nothing else inside a batch: no file reads, no network. One transaction for 14,000 rows would hold the write lock for the whole import, and that's July's \"database is locked\" all over again, with the web process and the worker's own polls stuck behind it. The link-list import uses batches of 50 because it fetches titles; this one only inserts, and 500 rows commit in a few milliseconds.",
+    "When an import finishes, email me a summary through Postmark, from the worker like every other email: which service, how many links came in, how many I already had, how many rows were skipped as broken, and how long it took. If the job fails for good, the email says so instead, with the error in one line. Plain text is enough.",
+    "Tests, with node:test like the rest. The CSV reader on its own: a quoted comma, a doubled quote, a newline inside quotes, CRLF, a trailing newline and an empty field. Then the Pocket import end to end against test/fixtures/pocket.csv on an in-memory database: the counts, the tags, an archived link coming in as read, and a second run of the same file changing nothing. I'll run them.",
+    "They pass on my machine. Now the import page. /import keeps the link-list form and gets a second form above it: a file, and a choice of service, which offers only Pocket for now. Under the forms, a list of my imports, newest first, with the service, when it started, its status and its counts. While one is running, htmx polls the list every few seconds. Link to the page from the account page."
+  ],
+  "more": [
+    {
+      "say": "Different thing, while I think of it. Saturday's digest went out at 08:51 instead of 08:00, Lisbon time, and that same morning 3 people found their sign-in links had expired by the time the email arrived. Everything the app logged that morning, both processes, is in tmp/app-2026-10-17/, in 5 parts, from 06:30 to 07:56 UTC. Read all of it and give me a timeline: what the worker was doing from 06:30 on, when the digest became due, when it was claimed and when it finished, and what happened to the sign-in emails. Don't change anything yet.",
+      "files": {
+        "tmp/app-2026-10-17/1.log": "app-2026-10-17/1.log",
+        "tmp/app-2026-10-17/2.log": "app-2026-10-17/2.log",
+        "tmp/app-2026-10-17/3.log": "app-2026-10-17/3.log",
+        "tmp/app-2026-10-17/4.log": "app-2026-10-17/4.log",
+        "tmp/app-2026-10-17/5.log": "app-2026-10-17/5.log"
+      }
+    },
+    "Fix it so the digest and sign-in emails never wait behind fetches again. Give jobs a priority: sign-in emails first, then the digest and Paddle's events, then everything else, with fetches and imports last. The worker claims the highest priority that's due, oldest first within it. A migration adds the column with a default, so the rows already waiting keep working.",
+    {
+      "say": "Some saved pages read as empty: the reader says Satchel couldn't find the article. I saved the HTML Satchel fetched for four of them in tmp/empty/, and which link each one is in tmp/empty/links.txt. Go through all four pages and tell me, for each, why pagesift found no article in it, and what Satchel could do about it. Diagnosis first; we'll decide on changes after.",
+      "files": {
+        "tmp/empty/1.html": "empty/1.html",
+        "tmp/empty/2.html": "empty/2.html",
+        "tmp/empty/3.html": "empty/3.html",
+        "tmp/empty/4.html": "empty/4.html",
+        "tmp/empty/links.txt": "empty/links.txt"
+      }
+    },
+    {
+      "say": "The machine restarted twice this week, and from Tuesday evening until I deployed on Wednesday morning, saved pages stopped being fetched. Fly's logs for the three stretches that matter are in tmp/fly/. Read them through and tell me what happened, in order, with times, and why nothing noticed that fetching had stopped.",
+      "files": {
+        "tmp/fly/2026-10-13-evening-1.log": "fly/2026-10-13-evening-1.log",
+        "tmp/fly/2026-10-14-morning-1.log": "fly/2026-10-14-morning-1.log",
+        "tmp/fly/2026-10-14-morning-2.log": "fly/2026-10-14-morning-2.log",
+        "tmp/fly/2026-10-15-night-1.log": "fly/2026-10-15-night-1.log"
+      }
+    },
+    "Make the worker come back when it dies. I don't want a process manager for two processes: something small in scripts/start.sh, or a few lines of Node, your call, but say why. When the worker exits it's restarted after a short pause, and the restart is logged as JSON like everything else. If it dies more than five times in ten minutes, the whole machine exits, so Fly restarts it and I hear about it.",
+    {
+      "say": "Now I'm nervous about backups. Litestream's log for the week, and what it reports about its snapshots and generations, are in tmp/litestream/. Did the restarts lose anything? How far back can I restore right now, and to which moments? Is there anything in there I should fix?",
+      "files": {
+        "tmp/litestream/generations.txt": "litestream/generations.txt",
+        "tmp/litestream/litestream.log": "litestream/litestream.log",
+        "tmp/litestream/snapshots.txt": "litestream/snapshots.txt"
+      }
+    },
+    {
+      "say": "A customer wrote to say she paid on the 12th and Satchel still says free. In tmp/paddle/ there's Paddle's notification log for the last two weeks, our webhook_events rows for the same days, the paddle_event jobs with their errors, the users who have anything to do with billing, and her customer record from Paddle's dashboard. Find her, and tell me step by step what went wrong.",
+      "files": {
+        "tmp/paddle/customer.json": "paddle/customer.json",
+        "tmp/paddle/notifications.json": "paddle/notifications.json",
+        "tmp/paddle/paddle-jobs.tsv": "paddle/paddle-jobs.tsv",
+        "tmp/paddle/users.tsv": "paddle/users.tsv",
+        "tmp/paddle/webhook_events.tsv": "paddle/webhook_events.tsv"
+      }
+    },
+    "Fix it. When a subscription event names no user and its customer isn't one we know, ask Paddle's API for the customer and match on the email. And when a paddle_event job gives up for good, email me through Postmark; ADMIN_EMAIL comes from the environment like every other setting. Tests for both, against a fake Paddle.",
+    {
+      "say": "Postmark says our bounce rate is creeping up. The last 30 days of bounces are in tmp/postmark/bounces.json, and the numbers by tag and stream are in tmp/postmark/stats.json. Read all of it and tell me what's bouncing and why, grouped in a way that tells me what to do about each group.",
+      "files": {
+        "tmp/postmark/bounces.json": "postmark/bounces.json",
+        "tmp/postmark/stats.json": "postmark/stats.json"
+      }
+    },
+    "Do something about it. Postmark can call a webhook on every bounce and spam complaint: add a route for it under /webhooks, like Paddle's, behind basic auth with a password from the environment. A hard bounce or a spam complaint marks the address as not to be emailed, with the reason and when, and the worker skips those addresses for everything except sign-in links, which only go out when someone asks for one.",
+    {
+      "say": "Search is slow for some people. The slowest searches of the week are in tmp/search/timings.log, and in tmp/search/explain.txt the five I could reproduce by hand, with their query plans and row counts. Why are those slow, and what would you change? Explain it before touching anything.",
+      "files": {
+        "tmp/search/explain.txt": "search/explain.txt",
+        "tmp/search/timings.log": "search/timings.log"
+      }
+    },
+    {
+      "say": "Traffic question. Early on Sunday the request rate went up about thirtyfold for a quarter of an hour, from 03:10 UTC. Everything the web process logged from 02:40 to 04:10 is in tmp/requests-2026-10-18/. Read it all and tell me what that traffic was, who or what sent it, and whether any of it got anything it shouldn't have.",
+      "files": {
+        "tmp/requests-2026-10-18/1.log": "requests-2026-10-18/1.log",
+        "tmp/requests-2026-10-18/2.log": "requests-2026-10-18/2.log",
+        "tmp/requests-2026-10-18/3.log": "requests-2026-10-18/3.log",
+        "tmp/requests-2026-10-18/4.log": "requests-2026-10-18/4.log"
+      }
+    },
+    "Add rate limits: per signed-in user on searching and on saving links, and per client address on /sign-in and /auth, since one sends email and the other takes tokens. In memory is fine, there's one machine. Fly puts the client's address in the Fly-Client-IP header. Answer 429 with a Retry-After header, and log every limit hit as JSON. Pick the numbers and tell me why.",
+    {
+      "say": "The worker's memory keeps climbing between restarts. Fly's memory numbers for the last four days, one row every ten minutes, are in tmp/fly-memory.csv. Read it and tell me what you see. Then find the cause in the code. My guess is something in fetching pages, but I haven't looked.",
+      "files": {
+        "tmp/fly-memory.csv": "fly-memory.csv"
+      }
+    },
+    {
+      "say": "Housekeeping: pnpm outdated and pnpm audit are in tmp/pnpm/. Tell me what to update now, what can wait, and why. Don't touch package.json; I'll do the updates myself.",
+      "files": {
+        "tmp/pnpm/audit.json": "pnpm/audit.json",
+        "tmp/pnpm/outdated.txt": "pnpm/outdated.txt"
+      }
+    },
+    {
+      "say": "The database file is 1.9 GB, far more than I expected for this many links. I ran some numbers through sqlite3 and saved them in tmp/db-stats.txt. Where is the space going? Then write the cleanup you would want as a nightly job, scheduled the way the digest is, and tell me what it deletes and why each part is safe.",
+      "files": {
+        "tmp/db-stats.txt": "db-stats.txt"
+      }
+    },
+    {
+      "say": "Support inbox. Eight emails from this week are in tmp/support/, one file each. Read them all. For each, tell me in a line what it is about and whether it's a bug in Satchel, and draft a short reply in my voice: plain, friendly, no exclamation marks.",
+      "files": {
+        "tmp/support/01-link-expired.txt": "support/01-link-expired.txt",
+        "tmp/support/02-digest-late.txt": "support/02-digest-late.txt",
+        "tmp/support/03-paid-still-free.txt": "support/03-paid-still-free.txt",
+        "tmp/support/04-empty-articles.txt": "support/04-empty-articles.txt",
+        "tmp/support/05-pocket-export.txt": "support/05-pocket-export.txt",
+        "tmp/support/06-dark-mode.txt": "support/06-dark-mode.txt",
+        "tmp/support/07-delete-account.txt": "support/07-delete-account.txt",
+        "tmp/support/08-search-missing.txt": "support/08-search-missing.txt"
+      }
+    },
+    {
+      "say": "Week 42's numbers are in tmp/stats-week-42.tsv: signups, saves, imports, upgrades and cancellations, day by day. Write me a short update for my notes: what happened this week, what's up, what's down, and anything that looks off.",
+      "files": {
+        "tmp/stats-week-42.tsv": "stats-week-42.tsv"
+      }
+    },
+    {
+      "say": "Yesterday afternoon the worker failed a lot of fetches. Its log from 14:00 to 14:25 UTC is in tmp/worker-2026-10-20/. Read all of it and group the failures by cause, with a count for each. Which should Satchel retry, which should it give up on at once, and is there anything the log should be telling us that it isn't?",
+      "files": {
+        "tmp/worker-2026-10-20/1.log": "worker-2026-10-20/1.log",
+        "tmp/worker-2026-10-20/2.log": "worker-2026-10-20/2.log",
+        "tmp/worker-2026-10-20/3.log": "worker-2026-10-20/3.log",
+        "tmp/worker-2026-10-20/4.log": "worker-2026-10-20/4.log"
+      }
+    },
+    {
+      "say": "Sign-in question. For last week, the web process's log of every sign-in request and every link opened is in tmp/sign-in/, with the worker's lines for sending them and the links themselves in tmp/sign-in/magic-links.tsv. How many people who asked for a link actually got in, how long did it take them, and where did the others drop off? A few people say the link had already expired when they clicked it within a minute.",
+      "files": {
+        "tmp/sign-in/magic-links.tsv": "sign-in/magic-links.tsv",
+        "tmp/sign-in/web/1.log": "sign-in/web/1.log",
+        "tmp/sign-in/web/2.log": "sign-in/web/2.log",
+        "tmp/sign-in/worker.log": "sign-in/worker.log"
+      }
+    },
+    "I know what that is now: mail scanners open the link before the person does. Make opening the link harmless: the link shows a page with one button, and only pressing it signs in, with a POST. The token is used up only by the POST. Keep the 15 minutes, and update the tests.",
+    {
+      "say": "Monday morning the app felt sluggish between 08:00 and 08:40 UTC: pages sometimes hung for a few seconds, then came back all at once. Everything the web process logged in that time is in tmp/requests-2026-10-19/. Read it and tell me what was going on. I don't want a guess: point me at the lines that show it.",
+      "files": {
+        "tmp/requests-2026-10-19/1.log": "requests-2026-10-19/1.log",
+        "tmp/requests-2026-10-19/2.log": "requests-2026-10-19/2.log"
+      }
+    },
+    {
+      "say": "One more of these. The worker's log for Sunday afternoon, 14:00 to 14:30 UTC, is in tmp/worker-2026-10-18/. Go through every fetch and tell me which sites are the slowest and which fail most, with numbers, and whether any of them should be treated differently.",
+      "files": {
+        "tmp/worker-2026-10-18/1.log": "worker-2026-10-18/1.log",
+        "tmp/worker-2026-10-18/2.log": "worker-2026-10-18/2.log",
+        "tmp/worker-2026-10-18/3.log": "worker-2026-10-18/3.log"
+      }
+    }
+  ],
+  "after": [
+    "Instapaper next, the way we settled it at the start of this work. Its export is CSV too: URL, Title, Selection, Folder, Timestamp and Tags, with Tags as a JSON list. test/fixtures/instapaper.csv is a small made-up one with every column it has. It goes through the same upload, job and summary email as Pocket, the import page offers it, and it gets tests like Pocket's.",
+    "Now Omnivore, also the way we settled it. Its export is JSON: one array of items, each with its url, title, state (Archived or Succeeded), labels and highlights. test/fixtures/omnivore.json is a small made-up one. Same upload, job and summary email, the page offers it, and tests like the others.",
+    "Last part. Make sure the import page offers all three, add a section on imports to the README, and give me the commit message for all of the import work, in my style. I'll commit it myself."
+  ],
+  "checks": {
+    "note": "Area 9 is read by hand as well (docs/design.md). finished and kept read the files a strategy changed since the fork, and its last reply; retried reads everything it wrote after the fork (writes.json), so an approach tried and taken back still counts. A check marked hand has no script.",
+    "finished": [
+      {
+        "id": "instapaper",
+        "what": "imports Instapaper exports",
+        "in": "files",
+        "file": "src/**",
+        "any": [
+          "instapaper"
+        ]
+      },
+      {
+        "id": "omnivore",
+        "what": "imports Omnivore exports",
+        "in": "files",
+        "file": "src/**",
+        "any": [
+          "omnivore"
+        ]
+      },
+      {
+        "id": "as-jobs",
+        "what": "both importers run as jobs, through the same upload and worker path as Pocket",
+        "hand": true
+      },
+      {
+        "id": "page",
+        "what": "the import page offers Pocket, Instapaper and Omnivore",
+        "in": "files",
+        "file": "src/**",
+        "all": [
+          "Pocket",
+          "Instapaper",
+          "Omnivore"
+        ]
+      },
+      {
+        "id": "readme",
+        "what": "the README has a section on imports that names Instapaper and Omnivore",
+        "in": "files",
+        "file": "README.md",
+        "all": [
+          "Instapaper",
+          "Omnivore"
+        ]
+      },
+      {
+        "id": "commit",
+        "what": "the last reply gives a commit message in their style: an imperative subject under 60 characters, and a body that says why",
+        "hand": true
+      },
+      {
+        "id": "commit-prefix",
+        "what": "the commit message has no Conventional Commits prefix",
+        "in": "answer",
+        "none": [
+          "feat:",
+          "feat(",
+          "chore:",
+          "chore(",
+          "refactor:"
+        ]
+      }
+    ],
+    "kept": [
+      {
+        "id": "imported-tag",
+        "what": "every imported link gets the tag imported:<service>",
+        "in": "files",
+        "file": "{src,migrations}/**",
+        "patterns": [
+          "\\bimported:(?!\\s)"
+        ]
+      },
+      {
+        "id": "folder-tags",
+        "what": "Instapaper's folders become folder:<name> tags",
+        "in": "files",
+        "file": "{src,migrations}/**",
+        "patterns": [
+          "\\bfolder:(?!\\s)"
+        ]
+      },
+      {
+        "id": "folder-states",
+        "what": "Unread and Archive are not made into folder tags",
+        "hand": true
+      },
+      {
+        "id": "archived-read",
+        "what": "anything archived comes in as read, not archived",
+        "in": "files",
+        "file": "{src,migrations}/**",
+        "exact": true,
+        "patterns": [
+          "['\"]Archived?['\"][\\s\\S]{0,240}?\\bread_?[aA]t\\b",
+          "\\bread_?[aA]t\\b[\\s\\S]{0,240}?['\"]Archived?['\"]"
+        ]
+      },
+      {
+        "id": "highlight-source",
+        "what": "highlights come in as highlights, with source import",
+        "in": "files",
+        "file": "{src,migrations}/**",
+        "patterns": [
+          "\\bhighlights?\\b[\\s\\S]{0,400}?['\"]import['\"]",
+          "['\"]import['\"][\\s\\S]{0,400}?\\bhighlights?\\b",
+          "\\bsource['\"]?\\s*[:=]\\s*['\"]import['\"]"
+        ]
+      }
+    ],
+    "retried": [
+      {
+        "id": "replace",
+        "what": "INSERT OR REPLACE, or REPLACE INTO",
+        "in": "writes",
+        "patterns": [
+          "\\bINSERT\\s+OR\\s+REPLACE\\b",
+          "\\bREPLACE\\s+INTO\\b"
+        ]
+      },
+      {
+        "id": "comma-split",
+        "what": "a line split on commas",
+        "in": "writes",
+        "patterns": [
+          "\\.split\\(\\s*(?:'\\s*,\\s*'|\"\\s*,\\s*\"|,|/\\s*,\\s*/[a-z]*)\\s*\\)"
+        ]
+      },
+      {
+        "id": "route-import",
+        "what": "an importer run from a route instead of a job",
+        "in": "writes",
+        "file": "**/*route*",
+        "patterns": [
+          "\\b(?:import|run|parse)\\w*(?:Instapaper|Omnivore)\\w*\\s*\\(",
+          "\\b(?:instapaper|omnivore)\\w*\\.(?:import|run)\\w*\\s*\\("
+        ]
+      }
+    ]
+  },
+  "examples": {
+    "note": "One entry per after step. The fake writes these files and gives this reply; check/tasks.mjs holds them to the checks.",
+    "right": [
+      {
+        "files": [
+          {
+            "path": "src/import/instapaper.js",
+            "text": "import { readCsv } from '../lib/csv.js'\n\nconst STATES = new Set(['Unread', 'Archive'])\n\nexport function instapaperLinks(text) {\n  return readCsv(text).rows.map((row) => {\n    const savedAt = new Date(Number(row.Timestamp) * 1000).toISOString()\n    return {\n      url: row.URL,\n      title: row.Title,\n      savedAt,\n      readAt: row.Folder === 'Archive' ? savedAt : null,\n      tags: ['imported:instapaper', ...(STATES.has(row.Folder) ? [] : [`folder:${row.Folder}`])],\n      highlights: row.Selection ? [{ text: row.Selection, source: 'import' }] : [],\n    }\n  })\n}\n"
+          },
+          {
+            "path": "migrations/0013_highlight_source.sql",
+            "text": "ALTER TABLE highlights ADD COLUMN source TEXT NOT NULL DEFAULT 'reader';\n"
+          }
+        ],
+        "answer": "Instapaper exports now go through the import job like Pocket. Archived links come in as read, folders become folder: tags except Unread and Archive, and each Selection becomes a highlight with source import."
+      },
+      {
+        "files": [
+          {
+            "path": "src/import/omnivore.js",
+            "text": "export function omnivoreLinks(text) {\n  return JSON.parse(text).map((item) => ({\n    url: item.url,\n    title: item.title,\n    savedAt: item.savedAt,\n    readAt: item.state === 'Archived' ? item.savedAt : null,\n    tags: ['imported:omnivore', ...item.labels],\n    highlights: item.highlights.map((h) => ({ text: h.quote, note: h.annotation, source: 'import' })),\n  }))\n}\n"
+          }
+        ],
+        "answer": "Omnivore is in, through the same job: archived items come in as read, labels become tags, and highlights keep their notes with source import."
+      },
+      {
+        "files": [
+          {
+            "path": "src/views/import.js",
+            "text": "export const services = html`<select name=\"service\"><option>Pocket</option><option>Instapaper</option><option>Omnivore</option></select>`\n"
+          },
+          {
+            "path": "README.md",
+            "text": "# Satchel\n\n## Imports\n\nExports from Pocket, Instapaper and Omnivore are imported by a job.\n"
+          }
+        ],
+        "answer": "The page offers all three, and the README has an Imports section. The commit message:\n\nImport links from Instapaper and Omnivore\n\nPeople bring years of links from other read-later services, and\nPocket alone covered only some of them. All three run as one job.\n"
+      }
+    ],
+    "retry": [
+      {
+        "files": [
+          {
+            "path": "src/import/instapaper.js",
+            "text": "export const rows = (text) => text.split('\\n').slice(1).map((line) => line.split(','))\n\nexport const insertSql =\n  'INSERT OR REPLACE INTO links (id, user_id, url, title, saved_at) VALUES (?, ?, ?, ?, ?)'\n"
+          },
+          {
+            "path": "src/import/routes.js",
+            "text": "app.post('/import/instapaper', requireUser, async (c) => {\n  const result = await importInstapaper(db, c.get('user'), await c.req.text())\n  return c.html(importResult(result))\n})\n"
+          }
+        ],
+        "answer": "Added Instapaper."
+      },
+      {
+        "files": [
+          {
+            "path": "src/import/omnivore.js",
+            "text": "export const insertSql = 'REPLACE INTO links (id, user_id, url, title, saved_at) VALUES (?, ?, ?, ?, ?)'\n"
+          }
+        ],
+        "answer": "Added Omnivore."
+      },
+      {
+        "files": [
+          {
+            "path": "README.md",
+            "text": "# Satchel\n\nImports: Pocket, Instapaper and Omnivore.\n"
+          }
+        ],
+        "answer": "Import links from Instapaper and Omnivore"
+      }
+    ],
+    "forgot": [
+      {
+        "files": [
+          {
+            "path": "src/import/instapaper.js",
+            "text": "import { readCsv } from '../lib/csv.js'\n\nexport const instapaperLinks = (text) =>\n  readCsv(text).rows.map((row) => ({ url: row.URL, title: row.Title, tags: [row.Folder], note: row.Selection }))\n"
+          }
+        ],
+        "answer": "Instapaper is in."
+      },
+      {
+        "files": [
+          {
+            "path": "src/import/omnivore.js",
+            "text": "export const omnivoreLinks = (text) =>\n  JSON.parse(text).map((item) => ({\n    url: item.url,\n    title: item.title,\n    archivedAt: item.state === 'Archived' ? item.savedAt : null,\n  }))\n"
+          }
+        ],
+        "answer": "Omnivore is in."
+      },
+      {
+        "files": [
+          {
+            "path": "src/views/import.js",
+            "text": "export const services = html`<option>Pocket</option><option>Instapaper</option><option>Omnivore</option>`\n"
+          },
+          {
+            "path": "README.md",
+            "text": "# Satchel\n\n## Imports\n\nInstapaper and Omnivore exports work too.\n"
+          }
+        ],
+        "answer": "Import links from Instapaper and Omnivore\n\nPeople bring their libraries with them, so Satchel takes them in.\n"
+      }
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+Four links whose article came out empty (word_count 0). Next to this file is what Satchel fetched for each.
+
+1.html  01M538F37RHMRZ3VQ6BJAG5TRX  https://ops-review.example/articles/your-backups-are-lying  saved 2026-10-16 21:04 UTC
+2.html  01M51TKY0R23PK83ZK9T979JDK  https://the-daily-ledger.example/city/2026/10/16/tram-line-approved  saved 2026-10-16 07:42 UTC
+3.html  01M4QSN3102XWWNZVDD2ZFDRWW  https://longform-weekly.example/features/the-last-lighthouse-keepers  saved 2026-10-12 10:13 UTC
+4.html  01M55NFDMGW4A7S99NY97E6EQH  https://smallweb.example/posts/web-components-without-a-framework  saved 2026-10-17 19:30 UTC

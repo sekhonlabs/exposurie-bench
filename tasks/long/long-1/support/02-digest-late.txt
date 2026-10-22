@@ -1,0 +1,8 @@
+From: Sofia <sofia.m@mailbox.example>
+To: hello@satchel.example
+Subject: Digest at 9 instead of 8?
+Date: Sat, 17 Oct 2026 09:20:44 +0100
+
+Morning! Small thing: the Saturday digest used to land at 8 sharp and I read it with my coffee. Today it came just before 9. Has the time changed? Not complaining, just curious.
+
+Sofia

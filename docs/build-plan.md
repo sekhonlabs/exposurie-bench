@@ -13,9 +13,9 @@ Claude Code builds and runs all of it.
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
 | `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5), the brain build check (part 6) and the long-session check (part 8) |
-| `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6 and 7 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`) and example answers (`tasks/examples.json`) |
+| `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6, 7 and 9 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`), example answers (`tasks/examples.json`), and area 9's steps files, the material their steps hand over, and the scripts that write both (`tasks/long/`) |
 | `runner/` | sandbox setup, the runner and the brain build, area 9's long sessions (`long.mjs`), and the fake `claude` they are tested against |
-| `score/` | how a task's checks read a run (part 4), and the scorer and the judge (part 5) |
+| `score/` | how a task's checks read a run (part 4), the scorer and the judge (part 5), and area 9's scorer (`long.mjs`) |
 | `results/` | summaries and charts. Raw run output stays outside the repository |
 
 The sandbox and the raw output (`sandbox/` and `runs/`) sit next to this repository's folder, never inside it.
@@ -286,21 +286,23 @@ What Claude Code 2.1.302's binary says about the window:
 node runner/long.mjs <task> [--accept "<why>"]   fill, fork, then each strategy: spends plan usage
 node runner/long.mjs status <task>
 node runner/long.mjs probe                       the same on a tiny task: spends a little, waits five minutes for the sync
+node score/long.mjs <task>                       each strategy's checks, into scores.json beside long.json
+node tasks/long/long-1.mjs                       writes long-1's steps file and its material
 node check/long.mjs
 ```
 
 - **A long task** is an entry of area 9 in `tasks/index.json`, with its folder, its starter, and `steps`, the path of its steps file in `tasks/long/`. The steps file holds `fork_at` (500000), `resume_note`, the `core`, `more` and `after` steps, the checks, and examples for the fake. A step is its text, or `{ "say", "files" }`, where `files` copies material from `tasks/long/<task>/` into the repository before the step, as what the developer saved for the agent to read.
 - **What a run leaves**, in `../runs/area-9/r001/` for the first task and `r002/` for the second:
-  - `long.json`: every step's record, the fork, each strategy's tokens
+  - `long.json`: every step's record, the fork, each strategy's tokens. A step's `tokens` are its own: Claude Code's result for a resumed or forked session counts the whole session from its start, so the runner takes away what the session carried in, and keeps the result's own count as `session_tokens` (2026-10-22, see [decisions.md](decisions.md))
   - the repository folder, where every step runs
   - `fill/`, `keep/`, `compact/`, `sync/`, each with one folder per step (`stream.jsonl`), `work/` (the repository after the last finished step) and `session/` (the saved session)
   - `fork/`: the repository and the session at the fork, never changed
   - `sync/sync/`, `sync/kit/` and `sync/staged/`: the sync session, the brain it left, and its staged batch
   - for each strategy, what the scorer reads: `files/` and `files.json` (changed since the fork), `answer.md` (the last reply) and `writes.json` (every Write and Edit after the fork)
 - **A step that ends without a result** puts the repository and the session back as they were, and runs again next time. After three such ends, it waits for a person. A step that breaks a check stops the run until `--accept "<why>"`.
-- **`check/long.mjs` passes:** a made-up task through the fill, the fork and all three strategies, with exposurie's real sync, a usage limit, a read outside the folder accepted by hand, a compaction nobody asked for, an unsaved session, a session that runs out of steps, and one a stopped runner left in the home. `check/runner.mjs` and `check/build.mjs` still pass.
+- **`check/long.mjs` passes:** a made-up task through the fill, the fork and all three strategies, with exposurie's real sync, a usage limit, a read outside the folder accepted by hand, a compaction nobody asked for, an unsaved session, a session that runs out of steps, and one a stopped runner left in the home. Every step's tokens come out as its own. Then each long task with a steps file runs through the fill and all three strategies: its starter and the files its steps hand over reach the fork, and `score/long.mjs` scores each strategy's examples the way they were written. `check/runner.mjs` and `check/build.mjs` still pass.
 
-**The probe ran on 2026-10-21, with the owner's go,** for about $0.32 (`../runs/probe-long-*`). Every phase ran, and the file came out as asked under all three strategies.
+**The probe ran on 2026-10-21, with the owner's go,** for about $0.17 (`../runs/probe-long-*`), counted as each step's own cost. The $0.32 first written for it counted each resumed step's carried totals again. Every phase ran, and the file came out as asked under all three strategies.
 - A saved session resumes, and a fork stands on its own.
 - `/compact` leaves one boundary, with the tokens before and after.
 - The sync filed the session.
@@ -310,10 +312,25 @@ node check/long.mjs
 
   See [decisions.md](decisions.md).
 
+**long-1's content is written (2026-10-22).** `check/tasks.mjs` holds it to the method, and `check/long.mjs` runs it through the fake. What it is, beside the blueprint below:
+
+- **The starter** (`tasks/starters/long-1/`, 124 text files, about 94K characters) is Satchel in JavaScript, the shape of its latest sessions in the history. It already has the link-list import from the 2026-07-22 session: it runs inside the request, fetches titles first and writes in chunks of 50. That is why the developer's first cut goes "inside the upload request, the same way". Its 36 tests pass and Biome is clean, with the developer's own library, pagesift, stubbed. It holds no failed approach a strategy could copy, and passes none of the checks on its own.
+- **The steps** come from `tasks/long/long-1.mjs`, which writes `long-1.json` and the material in `tasks/long/long-1/`. Both are seeded, so the script always writes the same bytes, and `check/tasks.mjs` holds them to that.
+  - 9 core steps follow the blueprint, word for word in the developer's voice.
+  - 23 more steps are production questions about the same app, each answered from what the developer saved into `tmp/`: 57 files, about 1.31 million characters, each about 46K characters at most, so it is one Read. There are more steps than the fill needs, since it stops at the first step boundary past 500,000 tokens.
+  - 3 after steps finish the feature.
+- **No step assumes what the agent wrote.** A failure is told as what the developer saw. Where a step states a fact about its material, such as when the digest went out, the fact is read off the material, and every file agrees with the others.
+- **The checks** are scripts where a script can tell, and the rest are marked to be read by hand:
+  - *finished:* Instapaper, Omnivore, the page offering all three, the README, and no Conventional Commits prefix; by hand, both importers run as jobs, and the commit message is in the developer's style
+  - *kept:* `imported:<service>`, `folder:<name>`, archived in as read, and highlights with source `import`; by hand, Unread and Archive kept out of the folder tags
+  - *retried:* `INSERT OR REPLACE` or `REPLACE INTO`, a line split on commas, and an importer run from a route
+
+  Two of the four decisions also apply to Pocket, so the agent will likely have written them into the code by the fork. The other two, the folder tags and the highlights' source, exist only in the conversation. The hand read records which were in the fork's code.
+
 **Next, in order:**
 
-1. **long-1's content**, then `check/tasks.mjs` extended to hold area 9's steps files to the method, and their examples to their checks.
-2. **long-1's live runs**, with the owner's go, after the seven-day reset. Their cost decides long-2.
+1. **long-1's live runs**, with the owner's go, after the seven-day reset. Their cost decides long-2.
+2. **long-1 scored** with `score/long.mjs`, and every strategy read by hand.
 3. **long-2's content and runs**, if the cost allows.
 
 **long-1, Satchel (personal): import from other read-later services.**

@@ -1,0 +1,42 @@
+{
+  "Period": {
+    "From": "2026-09-20",
+    "To": "2026-10-19"
+  },
+  "Sent": 9421,
+  "Bounced": 97,
+  "SMTPApiErrors": 0,
+  "BounceRate": 1.03,
+  "SpamComplaints": 5,
+  "SpamComplaintsRate": 0.09,
+  "Tags": [
+    {
+      "Tag": "magic-link",
+      "Sent": 3642,
+      "Bounced": 51,
+      "SpamComplaints": 0
+    },
+    {
+      "Tag": "digest",
+      "Sent": 5779,
+      "Bounced": 46,
+      "SpamComplaints": 5
+    }
+  ],
+  "Streams": [
+    {
+      "Stream": "outbound",
+      "Sent": 3642,
+      "Bounced": 60,
+      "ReturnPath": "pm-bounces.satchel.example",
+      "DKIM": "satchel.example"
+    },
+    {
+      "Stream": "broadcast",
+      "Sent": 5779,
+      "Bounced": 37,
+      "ReturnPath": "pm.mtasv.net",
+      "DKIM": "pm.mtasv.net"
+    }
+  ]
+}

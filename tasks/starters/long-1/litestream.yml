@@ -1,0 +1,9 @@
+dbs:
+  - path: /data/satchel.db
+    replicas:
+      - type: s3
+        bucket: satchel-db
+        path: satchel
+        endpoint: https://s3.eu-central-003.backblazeapi.net
+        region: eu-central-003
+        retention: 168h

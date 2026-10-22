@@ -157,3 +157,37 @@ Dated, newest last. Each entry says what was decided and why.
   - **With edits accepted, Claude Code lets a shell command that writes inside the run's folder run by itself.** `printf 'three\n' >> notes.txt` went through in two strategies. So area 9 counts a shell command that writes into a file (a redirect, `tee` or `sed -i`) among what the agent wrote, beside Write and Edit.
   - **The audit read quoted text as a place**, the third false flag of its kind. The sync session's `printf '\n## …' >> log.md` opens on `\n` and holds a backtick. Claude Code denied it, so it was only a note, but a run whose command went through would have been thrown out. Text in quotes is no longer a place, and nothing in single quotes counts as a substitution. `check/build.mjs` tests both, and part 7's batches re-audit unchanged.
   - **Every saved transcript holds the sandbox login's identity.** Claude Code 2.1.302 keeps request lines in a session's transcript. The transcripts stay in `../runs`. exposurie's reader keeps only what was said, and the probe's synced brain and staged batch hold none of it.
+
+## 2026-10-22
+
+- **A step's tokens are its own.** Claude Code 2.1.302's result for a resumed or forked session counts the whole session from its start. Its `modelUsage` and `total_cost_usd` carry the totals of the session it carried on, through `--fork-session` and through `/compact`, while its `usage` is the process's own. The probe shows it exactly: a step's totals less those of the step it resumed equal its own calls' input, token for token.
+  - The runner records each step's own tokens and cost: its totals less what it carried in. It keeps the result's figures as `session_tokens` and `session_cost_usd`.
+  - It also keeps the step's own calls' count as `call_tokens`, as a cross-check. Its input counts are exact. Its output count is lower than the call's, because a stream line carries the output as of when the line was printed.
+  - A fresh session carries nothing in. No other area resumes a session, and neither does a brain build, so only area 9 was affected.
+  - The probe cost about $0.17, not the $0.32 first written for it, which counted each resumed step's carried totals again.
+  - The fake now counts the same way, and `check/long.mjs` holds the runner to it.
+- **long-1's starter is Satchel in JavaScript.** The history shows Satchel in two shapes: TypeScript in June, and JavaScript in its August sessions. The developer's brain itself records the difference as unexplained. The starter takes the latest shape, with each query beside the code that runs it, as the fact sheet says.
+  - It holds what the history built: the link-list import of 2026-07-22 (in the request, titles fetched first, chunks of 50, a 3-second busy timeout), the jobs table and its worker, Postmark, Paddle with each webhook event recorded once, the Saturday digest on Lisbon time, the PWA files and the JSON logs.
+  - Its 36 tests pass and Biome is clean, with pagesift, the developer's own made-up library, stubbed.
+- **The developer's first cut runs inside the request because the link-list import does.** The blueprint has the developer ask for the Pocket import "inside the upload request". With the starter's one import working that way, the ask is the natural one.
+- **No step assumes what the agent wrote.** The steps are fixed text, written before any run, so a failure is told as what the developer saw: a 502 at 60 seconds, titles cut in two, highlights gone after a second import. It is never a claim about the agent's code.
+  - Where a step states a fact about its material, such as when the digest went out, the script reads the fact off the material.
+  - The material's files agree with one another: wherever two of them cover the same moment, they show the same sign-ins, jobs and times.
+- **Two of the four decisions also apply to Pocket.** Every imported link's `imported:<service>` tag, and archived links coming in as read, apply to Pocket's export too, so the agent will likely have written both into the code by the fork. The folder tags and the highlights' source apply only to Instapaper and Omnivore, and exist only in the conversation. The hand read records which decisions the fork's code already held, and the results report the two kinds apart.
+- **The more steps are production questions about the same app.** There are 23, each answered from what the developer saved into `tmp/`: logs, webhook and bounce exports, a memory series, query plans and support emails. Some ask for a fix, as a person working through a week would.
+  - The material is about 1.31 million characters in 57 files, made up and seeded, and `tasks/long/long-1.mjs` writes it with the steps file.
+  - No file is much over 46,000 characters, so the agent can read each one whole in one call.
+  - There are more steps than the fill needs, since it stops at the first step boundary past 500,000 tokens.
+- **Area 9's checks are scripts where a script can tell.** The rest are marked `hand` and read by hand.
+  - `finished` and `kept` read the files a strategy changed since the fork, and its last reply. `kept` reads only the code, so a README that names a decision does not count as keeping it.
+  - `retried` reads every write after the fork.
+  - `check/tasks.mjs` holds each long task to the method:
+    - the mark at 500,000 tokens, and a one-sentence resume note
+    - every handed-over file present, and every material file handed over
+    - no after step giving away a decision made in conversation
+    - a starter that passes no check on its own and holds no failed approach
+    - examples that score as written
+    - the steps file and its material exactly as their script writes them
+
+    A fault test broke it six ways, and every break was caught.
+- **`score/long.mjs` scores a long task's strategies** from what the runner left (`files/`, `answer.md` and `writes.json`). It writes `scores.json` beside `long.json`, and lists the checks to read by hand.

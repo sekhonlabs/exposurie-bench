@@ -134,6 +134,49 @@ export function contextOf(msgs) {
   return u ? (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0) + (u.cache_read_input_tokens ?? 0) : null;
 }
 
+/**
+ * A step's own tokens. Claude Code counts a resumed or forked session's usage
+ * from the session's start: a result's modelUsage and total_cost_usd carry the
+ * totals of the session it carried on, across --fork-session and /compact (seen
+ * in the probe), while its usage is the process's own. So a step's share is the
+ * totals after it less the totals it carried in. Totals that come out smaller
+ * than what was carried in were not carried, and stand as they are.
+ */
+export function ownTokens(total, carried) {
+  if (!carried) return total;
+  const by = {};
+  for (const [m, u] of Object.entries(total.by_model)) {
+    const c = carried.by_model?.[m] ?? {};
+    by[m] = Object.fromEntries(Object.entries(u).map(([k, v]) => [k, v - (c[k] ?? 0)]));
+  }
+  const carriedOn = Object.keys(carried.by_model ?? {}).every((m) => by[m]) && Object.values(by).every((u) => Object.values(u).every((v) => v >= 0));
+  if (!carriedOn) return total;
+  const sum = (k) => Object.values(by).reduce((n, u) => n + u[k], 0);
+  const t = { input: sum('input'), cache_write: sum('cache_write'), cache_read: sum('cache_read'), output: sum('output') };
+  return { ...t, all_input: t.input + t.cache_write + t.cache_read, by_model: by };
+}
+
+/**
+ * The pinned model's usage over a step's own calls, each once: Claude Code
+ * prints a line per content block, each with its call's usage. Its input
+ * counts are exact; its output count is as of when the line was printed, so
+ * lower than the call's own (seen in the probe).
+ */
+export function callTokens(msgs) {
+  const calls = new Map();
+  for (const m of msgs) {
+    if (m.type === 'assistant' && m.message?.usage && String(m.message.model ?? '').startsWith(PINS.model)) calls.set(m.message.id, m.message.usage);
+  }
+  const t = { input: 0, cache_write: 0, cache_read: 0, output: 0 };
+  for (const u of calls.values()) {
+    t.input += u.input_tokens ?? 0;
+    t.cache_write += u.cache_creation_input_tokens ?? 0;
+    t.cache_read += u.cache_read_input_tokens ?? 0;
+    t.output += u.output_tokens ?? 0;
+  }
+  return { ...t, all_input: t.input + t.cache_write + t.cache_read, calls: calls.size };
+}
+
 /** Every compaction a stream shows: Claude Code's boundary markers, and the API clearing old tool results. */
 export function compactionsIn(msgs) {
   const out = [];
@@ -295,6 +338,13 @@ const lastTry = (ph, n) => ph.steps.filter((r) => r.n === n).at(-1) ?? null;
 const counts = (r) => !!r && (r.status === 'done' || !!r.accepted);
 const tries = (ph, n) => ph.steps.filter((r) => r.n === n).length;
 
+/** The step whose session a step carries on, which holds the totals it carries in: none for a fresh session, the fork's step for a strategy's first. */
+function carriedFrom(L, phase, n) {
+  if (n > 0) return lastTry(L[phase], n - 1);
+  if (phase === 'keep' || phase === 'compact') return L.fill.steps.findLast((r) => r.step === L.fill.forked?.after && counts(r)) ?? null;
+  return null;
+}
+
 /** The run folders of area 9: one per long task, numbered in the order of tasks/index.json. */
 function runDir(ctx, task) {
   const file = join(ctx.runs, BATCH, 'batch.json');
@@ -361,6 +411,16 @@ async function longStep(ctx, { dir, task, L, phase, n, step, kit, versions }) {
     problems.push(`the session compacted without being asked: ${compactions.map((c) => c.kind).join(', ')}`);
   }
   const notes = [...a.notes, ...moveExtras(ctx, configBefore, sdir)];
+  const from = carriedFrom(L, phase, n);
+  const session = tokensOf(result);
+  const tokens = result ? ownTokens(session, from?.session_tokens) : session;
+  const calls = callTokens(msgs);
+  const pinned = tokens.by_model[PINS.model];
+  if (result && step.kind !== 'compact' && pinned && ['input', 'cache_write', 'cache_read'].some((k) => pinned[k] !== calls[k])) {
+    notes.push(`the step's input tokens (${pinned.input}, ${pinned.cache_write}, ${pinned.cache_read}) differ from its own calls' (${calls.input}, ${calls.cache_write}, ${calls.cache_read})`);
+  }
+  const sessionCost = result?.total_cost_usd ?? null;
+  const carriedCost = from?.session_cost_usd ?? null;
   const thrown = o.status === 'done' && problems.length > 0;
   const ok = o.status === 'done' && !thrown;
   // A finished step's session is the phase's from now on; anything else stays beside the step.
@@ -387,10 +447,13 @@ async function longStep(ctx, { dir, task, L, phase, n, step, kit, versions }) {
       exposurie: versions.exposurie,
       node: versions.node,
     },
-    tokens: tokensOf(result),
+    tokens,
+    session_tokens: session,
+    call_tokens: calls,
     turns: result?.num_turns ?? null,
     duration_ms: result?.duration_ms ?? null,
-    cost_usd_estimate: result?.total_cost_usd ?? null,
+    cost_usd_estimate: sessionCost == null ? null : carriedCost != null && sessionCost >= carriedCost && tokens !== session ? sessionCost - carriedCost : sessionCost,
+    session_cost_usd: sessionCost,
     plan_usage_after: limits ? Object.fromEntries(Object.entries(limits).map(([k, v]) => [k, v.utilization])) : null,
     context_after: contextOf(msgs),
     compactions,

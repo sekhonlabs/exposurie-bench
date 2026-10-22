@@ -1,0 +1,75 @@
+The slowest searches I could reproduce, run by hand against a copy of production, for the account that searches most.
+That account has 11,204 links and 10,962 articles. The whole database has 61,388 articles from 214 accounts.
+Each search is src/search/search.sql with the terms quoted the way ftsTerms() quotes them.
+
+-- "data": 2912 ms
+sqlite> SELECT count(*) FROM articles_fts WHERE articles_fts MATCH '"data"';
+9874
+sqlite> SELECT count(*) FROM articles_fts JOIN articles a ON a.rowid = articles_fts.rowid JOIN links l ON l.id = a.link_id WHERE articles_fts MATCH '"data"' AND l.user_id = '01KZ2ESJD13Z2ZJSGW443FAEJY';
+1207
+sqlite> EXPLAIN QUERY PLAN <src/search/search.sql with these terms>
+QUERY PLAN
+|--SCAN articles_fts VIRTUAL TABLE INDEX 0:M2
+|--SEARCH a USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH l USING INDEX sqlite_autoindex_links_1 (id=?)
+`--USE TEMP B-TREE FOR ORDER BY
+Run Time: real 2.912 user 2.416960 sys 0.349440
+
+-- "sqlite": 1034 ms
+sqlite> SELECT count(*) FROM articles_fts WHERE articles_fts MATCH '"sqlite"';
+3120
+sqlite> SELECT count(*) FROM articles_fts JOIN articles a ON a.rowid = articles_fts.rowid JOIN links l ON l.id = a.link_id WHERE articles_fts MATCH '"sqlite"' AND l.user_id = '01KZ2ESJD13Z2ZJSGW443FAEJY';
+412
+sqlite> EXPLAIN QUERY PLAN <src/search/search.sql with these terms>
+QUERY PLAN
+|--SCAN articles_fts VIRTUAL TABLE INDEX 0:M2
+|--SEARCH a USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH l USING INDEX sqlite_autoindex_links_1 (id=?)
+`--USE TEMP B-TREE FOR ORDER BY
+Run Time: real 1.034 user 0.858220 sys 0.124080
+
+-- "the" "web": 9480 ms
+sqlite> SELECT count(*) FROM articles_fts WHERE articles_fts MATCH '"the" "web"';
+41602
+sqlite> SELECT count(*) FROM articles_fts JOIN articles a ON a.rowid = articles_fts.rowid JOIN links l ON l.id = a.link_id WHERE articles_fts MATCH '"the" "web"' AND l.user_id = '01KZ2ESJD13Z2ZJSGW443FAEJY';
+3088
+sqlite> EXPLAIN QUERY PLAN <src/search/search.sql with these terms>
+QUERY PLAN
+|--SCAN articles_fts VIRTUAL TABLE INDEX 0:M2
+|--SEARCH a USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH l USING INDEX sqlite_autoindex_links_1 (id=?)
+`--USE TEMP B-TREE FOR ORDER BY
+Run Time: real 9.480 user 7.868400 sys 1.137600
+
+-- "design": 3607 ms
+sqlite> SELECT count(*) FROM articles_fts WHERE articles_fts MATCH '"design"';
+12455
+sqlite> SELECT count(*) FROM articles_fts JOIN articles a ON a.rowid = articles_fts.rowid JOIN links l ON l.id = a.link_id WHERE articles_fts MATCH '"design"' AND l.user_id = '01KZ2ESJD13Z2ZJSGW443FAEJY';
+966
+sqlite> EXPLAIN QUERY PLAN <src/search/search.sql with these terms>
+QUERY PLAN
+|--SCAN articles_fts VIRTUAL TABLE INDEX 0:M2
+|--SEARCH a USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH l USING INDEX sqlite_autoindex_links_1 (id=?)
+`--USE TEMP B-TREE FOR ORDER BY
+Run Time: real 3.607 user 2.993810 sys 0.432840
+
+-- "lighthouse": 4 ms
+sqlite> SELECT count(*) FROM articles_fts WHERE articles_fts MATCH '"lighthouse"';
+21
+sqlite> SELECT count(*) FROM articles_fts JOIN articles a ON a.rowid = articles_fts.rowid JOIN links l ON l.id = a.link_id WHERE articles_fts MATCH '"lighthouse"' AND l.user_id = '01KZ2ESJD13Z2ZJSGW443FAEJY';
+3
+sqlite> EXPLAIN QUERY PLAN <src/search/search.sql with these terms>
+QUERY PLAN
+|--SCAN articles_fts VIRTUAL TABLE INDEX 0:M2
+|--SEARCH a USING INTEGER PRIMARY KEY (rowid=?)
+|--SEARCH l USING INDEX sqlite_autoindex_links_1 (id=?)
+Run Time: real 0.004 user 0.003320 sys 0.000480
+
+-- for comparison, the same account, the bm25 and snippet calls taken out:
+sqlite> SELECT l.id FROM articles_fts JOIN articles a ON a.rowid = articles_fts.rowid JOIN links l ON l.id = a.link_id WHERE articles_fts MATCH '"the" "web"' AND l.user_id = '01KZ2ESJD13Z2ZJSGW443FAEJY' LIMIT 50;
+Run Time: real 0.412 user 0.351904 sys 0.048112
+
+sqlite> PRAGMA compile_options;  (abridged)
+ENABLE_FTS5
+THREADSAFE=1

@@ -8,9 +8,9 @@
 
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { loginIdentity } from '../runner/sandbox.mjs';
-import { holds, looks, verdict } from '../score/checks.mjs';
+import { LONG_GROUPS, holds, longScores, looks, verdict } from '../score/checks.mjs';
 import { USERS, checkHistory } from './history.mjs';
 import { CONDITIONS, conditionFiles, factsFor } from '../tasks/conditions.mjs';
 import { find } from './text.mjs';
@@ -186,6 +186,149 @@ for (const t of built.filter((t) => t.score === 'script')) {
   }
 }
 
+// ---- area 9: the long sessions (part 8), held to design.md's method
+const long = tasks.filter((t) => t.area === BUILT_LATER);
+const LONG_SCOPES = [...SCOPES, 'writes'];
+const stepText = (s) => (typeof s === 'string' ? s : s?.say);
+let longSteps = 0;
+let longMaterial = 0;
+for (const t of long) {
+  if (t.user !== 'developer') fail(t.id, "both long tasks are the developer's");
+  if (!t.steps) continue;
+  for (const k of ['folder', 'starter', 'steps']) if (typeof t[k] !== 'string' || !t[k]) fail(t.id, `needs ${k}`);
+  const file = join(TASKS, t.steps);
+  if (!existsSync(file)) {
+    fail(t.id, `steps file ${t.steps} does not exist`);
+    continue;
+  }
+  const s = JSON.parse(readFileSync(file, 'utf8'));
+  const where = `tasks/${t.steps}`;
+  // Interrupted at half of Sonnet 5.5's 1,000,000-token window, as decided on 2026-10-21.
+  if (s.fork_at !== 500_000) fail(where, `fork_at is ${s.fork_at}, not 500000`);
+  if (typeof s.resume_note !== 'string' || !/^[^.!?]+[.!?]$/.test(s.resume_note.trim())) fail(where, 'the resume note is one sentence');
+  const steps = ['core', 'more', 'after'].flatMap((phase) => {
+    if (!Array.isArray(s[phase]) || !s[phase].length) fail(where, `needs ${phase} steps`);
+    return (s[phase] ?? []).map((step, i) => ({ phase, i, step }));
+  });
+  longSteps += steps.length;
+
+  // Each step is its text, and what the developer saved for it, from the task's material.
+  const material = join(dirname(file), t.id);
+  const handed = new Set();
+  for (const { phase, i, step } of steps) {
+    const at = `${where} ${phase}[${i}]`;
+    const say = stepText(step);
+    if (typeof say !== 'string' || !say.trim()) fail(at, 'has no text');
+    // Windows caps a whole command line at 32,767 characters, and a step goes in as one argument.
+    else if (say.length > 8000) fail(at, `is ${say.length} characters, too long to pass as an argument`);
+    if (typeof step !== 'string' && Object.keys(step).some((k) => !['say', 'files'].includes(k))) fail(at, 'a step is { say, files }');
+    for (const [to, from] of Object.entries(step.files ?? {})) {
+      if (!to.startsWith('tmp/')) fail(at, `${to}: what the developer saves goes in tmp/`);
+      if (!existsSync(join(material, from))) fail(at, `${from} is not in tasks/long/${t.id}/`);
+      handed.add(from);
+    }
+  }
+  if (s.after?.some((step) => typeof step !== 'string' && step.files)) fail(where, 'an after step hands over nothing, so every strategy gets the same steps');
+  const materialFiles = existsSync(material) ? filesIn(material) : [];
+  longMaterial += materialFiles.length;
+  for (const f of materialFiles) if (!handed.has(f.path)) fail(`tasks/long/${t.id}/${f.path}`, 'no step hands it over');
+
+  // The checks: finished, kept and retried, each a script or read by hand.
+  const ids = new Set();
+  for (const g of LONG_GROUPS) {
+    if (!s.checks?.[g]?.length) fail(where, `needs ${g} checks`);
+    for (const c of s.checks?.[g] ?? []) {
+      const at = `${where} ${g} ${c.id}`;
+      if (!c.id || ids.has(c.id)) fail(at, 'needs an id of its own');
+      ids.add(c.id);
+      if (typeof c.what !== 'string' || !c.what) fail(at, 'needs what');
+      if (c.hand) {
+        if (looks(c)) fail(at, 'a check read by hand has no script');
+        continue;
+      }
+      if (!looks(c)) {
+        fail(at, 'needs spellings or patterns, or hand');
+        continue;
+      }
+      if (!LONG_SCOPES.includes(c.in)) fail(at, `reads "${c.in}", not one of ${LONG_SCOPES.join(', ')}`);
+      if (g === 'retried' && c.in !== 'writes') fail(at, 'a retried check reads every write after the fork');
+      if (c.file && c.in === 'answer') fail(at, 'narrows to a file but reads no files');
+      const kinds = ['all', 'none'].filter((k) => c[k]);
+      if (kinds.length > 1 || (kinds.length && (c.any || c.patterns))) fail(at, 'mixes all, none and any');
+      for (const p of c.patterns ?? []) {
+        try {
+          new RegExp(p, 'mu');
+        } catch (e) {
+          fail(at, `pattern ${p}: ${e.message}`);
+        }
+      }
+    }
+  }
+  const scripted = (g) => (s.checks?.[g] ?? []).filter((c) => !c.hand && looks(c));
+
+  // A decision said only in conversation must not come back in the steps after the fork.
+  for (const text of [s.resume_note, ...(s.after ?? []).map(stepText)]) {
+    for (const c of scripted('kept')) {
+      if (holds({ ...c, in: 'answer', file: undefined }, { answer: text ?? '' })) fail(`${where} kept ${c.id}`, `an after step gives it away: "${String(text).slice(0, 60)}…"`);
+    }
+  }
+
+  // The examples score the way they were written to.
+  for (const kind of ['right', 'retry', 'forgot']) {
+    const ex = s.examples?.[kind];
+    if (!Array.isArray(ex) || ex.length !== (s.after ?? []).length) {
+      fail(where, `needs ${kind} examples, one per after step`);
+      continue;
+    }
+    const files = new Map();
+    for (const e of ex) for (const f of e.files ?? []) files.set(f.path, f.text);
+    const run = { answer: ex.at(-1).answer ?? '', files: [...files].map(([path, text]) => ({ path, text })), writes: ex.flatMap((e) => e.files ?? []) };
+    const got = longScores(s.checks ?? {}, run);
+    const off = (g, want) => Object.entries(got[g]).filter(([, v]) => v !== null && v !== want).map(([id]) => id);
+    if (kind === 'right') {
+      for (const g of ['finished', 'kept']) if (off(g, true).length) fail(`${where} right`, `${g} misses ${off(g, true).join(', ')}`);
+      if (off('retried', false).length) fail(`${where} right`, `retried finds ${off('retried', false).join(', ')}`);
+    }
+    if (kind === 'retry' && off('retried', true).length) fail(`${where} retry`, `retried misses ${off('retried', true).join(', ')}`);
+    if (kind === 'forgot') {
+      if (off('finished', true).length) fail(`${where} forgot`, `finished misses ${off('finished', true).join(', ')}`);
+      if (!Object.values(got.kept).some((v) => v === false)) fail(`${where} forgot`, 'loses no decision');
+    }
+  }
+
+  // The starter is the repository before the session: no file of it passes a
+  // check on its own, since a strategy that changes the file brings it all into
+  // scope, and none holds a failed approach a rewrite would carry along.
+  const starter = join(TASKS, t.starter ?? '');
+  if (!t.starter || !existsSync(starter)) fail(t.id, `starter ${t.starter} does not exist`);
+  else {
+    for (const f of filesIn(starter).filter((f) => isText(f.path))) {
+      const one = { path: f.path, text: readFileSync(f.full, 'utf8') };
+      for (const c of [...scripted('finished'), ...scripted('kept')].filter((c) => c.in !== 'answer')) {
+        if (holds(c, { answer: '', files: [one] })) fail(`${t.id} starter`, `${f.path} already passes ${c.id}`);
+      }
+      for (const c of scripted('retried')) {
+        if (holds({ ...c, in: 'files' }, { files: [one] })) fail(`${t.id} starter`, `${f.path} already holds ${c.id}`);
+      }
+    }
+  }
+
+  // The steps file and the material are what the task's own script writes.
+  const script = join(TASKS, 'long', `${t.id}.mjs`);
+  if (!existsSync(script)) fail(t.id, `no tasks/long/${t.id}.mjs writes its steps`);
+  else {
+    const { build } = await import(pathToFileURL(script).href);
+    const { steps: want, material: wantMaterial } = build();
+    if (`${JSON.stringify(want, null, 2)}\n` !== readFileSync(file, 'utf8')) fail(where, `is out of date; run node tasks/long/${t.id}.mjs`);
+    const have = new Map(materialFiles.map((f) => [f.path, f.full]));
+    for (const [path, text] of wantMaterial) {
+      if (!have.has(path)) fail(`tasks/long/${t.id}/${path}`, `is missing; run node tasks/long/${t.id}.mjs`);
+      else if (readFileSync(have.get(path), 'utf8') !== text) fail(`tasks/long/${t.id}/${path}`, `is out of date; run node tasks/long/${t.id}.mjs`);
+    }
+    for (const path of have.keys()) if (!wantMaterial.has(path)) fail(`tasks/long/${t.id}/${path}`, `is not written by tasks/long/${t.id}.mjs`);
+  }
+}
+
 // ---- no question appears in the history (the history checker's own rule)
 for (const user of USERS) {
   const r = await checkHistory(user);
@@ -199,7 +342,8 @@ console.log(
     `${by((t) => t.score === 'script')} scored by their checks, ${by((t) => t.score === 'judge')} by the judge, ` +
     `${by((t) => t.starter)} with a starter. ${want.size} condition files: ` +
     `${[...want.keys()].filter((n) => n.startsWith('history-')).length} for B, ${[...want.keys()].filter((n) => n.startsWith('facts-')).length} for D. ` +
-    `${examples.length} examples scored.`,
+    `${examples.length} examples scored. Long tasks written: ${long.filter((t) => t.steps).map((t) => t.id).join(', ') || 'none'}, ` +
+    `${longSteps} steps, ${longMaterial} files of material.`,
 );
 if (problems.length) {
   console.log(`\n${problems.length} problem${problems.length === 1 ? '' : 's'}:`);

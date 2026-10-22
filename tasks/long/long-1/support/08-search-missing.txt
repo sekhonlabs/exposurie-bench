@@ -1,0 +1,10 @@
+From: Paulo <paulo.f@post.example>
+To: hello@satchel.example
+Subject: Search cannot find an article I saved
+Date: Sat, 17 Oct 2026 15:40:21 +0100
+
+Hi,
+
+I saved an article about the new tram line a few weeks ago, read it, and archived it. Now search finds nothing for "tram line", even though the words are right there in the title. Did it get deleted?
+
+Paulo

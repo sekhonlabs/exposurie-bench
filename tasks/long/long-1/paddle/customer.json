@@ -1,0 +1,17 @@
+{
+  "data": {
+    "id": "ctm_01m12jn3k0j0k7ewarwx3wbbhc",
+    "name": "Marta Reis",
+    "email": "marta.reis@post.example",
+    "marketing_consent": false,
+    "status": "active",
+    "custom_data": null,
+    "locale": "pt",
+    "created_at": "2026-08-27T21:40:12.481203Z",
+    "updated_at": "2026-10-12T19:04:02.118204Z",
+    "import_meta": null
+  },
+  "meta": {
+    "request_id": "6215ccb5-195b-821c-a3e4-ad6355bde037"
+  }
+}

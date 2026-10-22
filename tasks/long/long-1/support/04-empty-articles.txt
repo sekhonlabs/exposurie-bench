@@ -1,0 +1,11 @@
+From: Tomas <tomas.k@inbox.example>
+To: hello@satchel.example
+Subject: Articles from the Daily Ledger are blank
+Date: Fri, 16 Oct 2026 12:48:30 +0100
+
+Hi there,
+
+Anything I save from the Daily Ledger shows up empty in Satchel: just the title and "Satchel couldn't find the article on this page". Other sites are fine. Is that something on their end?
+
+Cheers,
+Tomas

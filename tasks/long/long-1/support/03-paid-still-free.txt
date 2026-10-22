@@ -1,0 +1,11 @@
+From: Marta Reis <marta.reis@post.example>
+To: hello@satchel.example
+Subject: I paid but it still says free
+Date: Wed, 14 Oct 2026 20:02:19 +0100
+
+Hello,
+
+I paid for Satchel on Monday the 12th (I finally used the link from your email in August, sorry it took me so long). Paddle sent me a receipt, but Satchel still says free and stops me at 100 links. Can you check?
+
+Obrigada,
+Marta

@@ -12,7 +12,13 @@
 //                     500,000 tokens and the fork; keep, with a read outside
 //                     its folder accepted by hand; compact, which tries a
 //                     failed approach and takes it back; sync, which files the
-//                     long session into a copy of the brain for a fresh session
+//                     long session into a copy of the brain for a fresh session;
+//                     and every step's tokens its own, though a resumed
+//                     session's result counts the session from its start
+//   each long task    every task with a steps file, filled and forked: its
+//                     starter and the files its steps hand over reach the
+//                     fork, and score/long.mjs scores each strategy's examples
+//                     the way they were written
 //   trouble           a compaction nobody asked for, a step whose session was
 //                     not saved, a session that runs out of steps short of the
 //                     mark, and a session a stopped runner left in the home
@@ -28,7 +34,8 @@ import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { EXPOSURIE, HOME, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
 import { DECLINED, Stop, keepBrain, neutralProblems } from '../runner/run.mjs';
-import { STRATEGIES, long, stepsFor, writesIn } from '../runner/long.mjs';
+import { STRATEGIES, long, longTask, longTasks, stepsFor, writesIn } from '../runner/long.mjs';
+import { scoreLong } from '../score/long.mjs';
 
 ownNodeOnly();
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -87,8 +94,8 @@ const TASK = {
   material,
 };
 
-/** A sandbox of its own, with the developer's brain as keep-brain leaves it, and the fake `claude`. */
-function sandbox(name) {
+/** A sandbox of its own, with the developer's brain as keep-brain leaves it, and the fake `claude` playing `task`. */
+function sandbox(name, task = TASK) {
   const dir = join(root, name);
   const home = join(dir, 'home');
   for (const d of ['.claude', 'AppData/Local', 'AppData/Roaming']) mkdirSync(join(home, d), { recursive: true });
@@ -116,7 +123,7 @@ function sandbox(name) {
   writeFileSync(join(home, 'brain', 'wiki', 'entities', 'Owner developer.md'), '---\ntype: entity\n---\n\n# Owner developer\n\nThis brain belongs to the developer.\n');
   writeFileSync(join(home, 'brain', '.exposurie', 'state.json'), JSON.stringify({ lastSyncUtc: new Date().toISOString(), unfiled: 0, files: {} }) + '\n');
   keepBrain(ctx, 'developer');
-  const scenario = (sc) => writeFileSync(scenarioFile, JSON.stringify({ build: { user: 'developer' }, ...sc, long: { task: TASK, ...sc.long } }, null, 2) + '\n');
+  const scenario = (sc) => writeFileSync(scenarioFile, JSON.stringify({ build: { user: 'developer' }, ...sc, long: { task, ...sc.long } }, null, 2) + '\n');
   return { ctx, scenario, run: join(dir, 'runs', 'r001') };
 }
 
@@ -178,6 +185,28 @@ const noLeftovers = (ctx, where) => {
   const compacting = lastTry(L.compact, 0);
   expect(compacting.kind === 'compact' && compacting.compactions.length === 1 && compacting.compactions[0].meta?.trigger === 'manual', `the compact step: ${JSON.stringify(compacting.compactions)}`);
   expect(lastTry(L.compact, 1).context_after < 50_000 && lastTry(L.keep, 0).context_after > TASK.fork_at, 'compact did not shrink the session, or keep did not carry it whole');
+  // A resumed or forked session's result carries the session's totals from its
+  // start, so each step's own share is the totals less what it carried in.
+  const price = (t) => (t.input * 2 + t.cache_write * 4 + t.cache_read * 0.1 + t.output * 10) / 1e6;
+  const same = (a, b) => ['input', 'cache_write', 'cache_read'].every((k) => a[k] === b[k]);
+  const counted = (ph) => ph.steps.filter((r) => r.status === 'done' || r.accepted);
+  const fillDone = counted(L.fill);
+  const forkStep = fillDone.at(-1);
+  expect(L.fill.steps.filter((r) => r.status === 'not-run').every((r) => r.tokens.all_input === 0), 'the step a usage limit stopped counted tokens it never used');
+  for (const p of ['fill', ...STRATEGIES]) {
+    for (const r of counted(L[p])) {
+      expect(r.kind === 'compact' || same(r.tokens, r.call_tokens), `${p}/${r.step}: its tokens ${JSON.stringify(r.tokens)} are not its own calls' ${JSON.stringify(r.call_tokens)}`);
+      expect(Math.abs(r.cost_usd_estimate - price(r.tokens)) < 1e-9, `${p}/${r.step}: its cost ${r.cost_usd_estimate} is not its own tokens' ${price(r.tokens)}`);
+    }
+  }
+  expect(fillDone.reduce((t, r) => t + r.tokens.all_input, 0) === forkStep.session_tokens.all_input && L.fill.forked.tokens.all_input === forkStep.session_tokens.all_input,
+    `the fill's tokens: ${L.fill.forked.tokens.all_input} counted, ${forkStep.session_tokens.all_input} in the session`);
+  for (const p of ['keep', 'compact']) {
+    const first = lastTry(L[p], 0);
+    expect(first.session_tokens.all_input - first.tokens.all_input === forkStep.session_tokens.all_input, `${p}'s first step counted the fill's tokens again`);
+    expect(L[p].tokens.all_input === counted(L[p]).reduce((t, r) => t + r.tokens.all_input, 0), `${p}'s tokens after the fork: ${L[p].tokens.all_input}`);
+  }
+  expect(same(lastTry(L.sync, 0).tokens, lastTry(L.sync, 0).session_tokens), "the fresh session's first step carried tokens in");
   const writes = (p) => readJson(join(run, p, 'writes.json')).map((w) => w.text).join('\n');
   expect(writes('compact').includes('INSERT OR REPLACE') && !writes('keep').includes('INSERT OR REPLACE'), 'the approach compact tried and took back is not in its writes');
   const synced = L.sync.sync.at(-1);
@@ -224,6 +253,33 @@ const noLeftovers = (ctx, where) => {
   expect(!L.fill.forked && L.fill.steps.length === stepsFor(TASK, 'fill').length, `the short session: ${L.fill.steps.length} steps, forked ${JSON.stringify(L.fill.forked)}`);
   expect(readdirSync(run).some((n) => n.startsWith('recovered-')), 'the session left in the home was not kept in its run');
   noLeftovers(ctx, 'after the short session');
+}
+
+// ---------------------------------------------------------------- each written long task, through the fake
+
+for (const t of longTasks().filter((x) => x.steps)) {
+  const task = longTask(t.id);
+  const { ctx, scenario, run } = sandbox(`task-${t.id}`, task);
+  // About 16,000 tokens a fill step, so the fork comes late and most steps hand over their files.
+  // Each strategy writes a different set of examples: keep the right one, compact the retry, sync the forgotten.
+  scenario({ long: { backdate: true, grow: 15_500, write: { keep: 'right', compact: 'retry', sync: 'forgot' } } });
+  expect((await long(ctx, task.id, { task, dir: run })) === true, `${t.id} did not run through`);
+  const L = record(run);
+  const fill = stepsFor(task, 'fill');
+  const filled = fill.map((_, i) => lastTry(L.fill, i)).filter((r) => r?.status === 'done');
+  expect(L.fill.forked?.core === task.core.length && L.fill.forked.more > 0, `${t.id}'s fork: ${JSON.stringify(L.fill.forked)}`);
+  const fork = filesIn(join(run, 'fork', 'work'));
+  const starter = filesIn(join(REPO, 'tasks', task.starter));
+  expect(starter.length > 0 && starter.every((f) => fork.includes(f)), `${t.id}: the starter is not all in the fork`);
+  const given = fill.slice(0, filled.length).flatMap((s) => Object.keys(s.files ?? {}));
+  expect(given.length > 0 && given.every((f) => fork.includes(f)), `${t.id}: handed-over files missing from the fork: ${given.filter((f) => !fork.includes(f)).slice(0, 5)}`);
+  for (const s of streamsUnder(run)) expect(!s.includes('FAKE-PROBLEM'), `${t.id}: ${s.match(/FAKE-PROBLEM[^"]*/)?.[0]}`);
+  const scores = scoreLong(run, task).strategies;
+  const all = (phase, g, want) => Object.values(scores[phase]?.checks[g] ?? {}).filter((v) => v !== null).every((v) => v === want);
+  expect(all('keep', 'finished', true) && all('keep', 'kept', true) && all('keep', 'retried', false), `${t.id}: keep wrote the right examples and scored ${JSON.stringify(scores.keep?.checks)}`);
+  expect(all('compact', 'retried', true), `${t.id}: compact wrote the retries and scored ${JSON.stringify(scores.compact?.checks.retried)}`);
+  expect(all('sync', 'finished', true) && Object.values(scores.sync?.checks.kept ?? {}).includes(false), `${t.id}: sync forgot and scored ${JSON.stringify(scores.sync?.checks)}`);
+  noLeftovers(ctx, `after ${t.id}`);
 }
 
 // ---------------------------------------------------------------- what counts as a write

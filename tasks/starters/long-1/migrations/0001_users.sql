@@ -1,0 +1,5 @@
+CREATE TABLE users (
+  id TEXT PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE COLLATE NOCASE,
+  created_at TEXT NOT NULL
+);

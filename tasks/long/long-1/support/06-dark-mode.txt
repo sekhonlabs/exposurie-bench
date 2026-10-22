@@ -1,0 +1,8 @@
+From: Rafael <rafael.p@mailbox.example>
+To: hello@satchel.example
+Subject: Dark mode?
+Date: Sun, 18 Oct 2026 23:11:05 +0100
+
+Hey, I mostly read in bed and the reader is very bright at night. Any chance of a dark mode? Following the system setting would be enough for me.
+
+Rafael

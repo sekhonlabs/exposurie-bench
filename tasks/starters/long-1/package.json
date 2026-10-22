@@ -1,0 +1,30 @@
+{
+  "name": "satchel",
+  "version": "0.9.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.18.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "worker": "node src/worker.js",
+    "dev": "node --watch src/server.js",
+    "dev:worker": "node --watch src/worker.js",
+    "test": "node --test",
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "seed:digest": "node scripts/seed-digest.js"
+  },
+  "dependencies": {
+    "@hono/node-server": "1.19.5",
+    "better-sqlite3": "12.4.1",
+    "hono": "4.10.1",
+    "htmx.org": "2.0.7",
+    "pagesift": "0.4.2"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.6"
+  }
+}

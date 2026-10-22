@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Building a web component without a framework</title>
+<link rel="alternate" type="application/rss+xml" href="/feed.xml">
+<style>:root{--measure:36rem;--ink:#222}body{margin:0;font:18px/1.6 Georgia,serif;color:var(--ink)}header,footer{max-width:var(--measure);margin:2rem auto}</style>
+<script type="module" src="/js/series-list.js"></script>
+</head>
+<body>
+<header><a href="/">smallweb</a> · <a href="/archive">archive</a> · <a href="/about">about</a></header>
+<blog-post slug="web-components-without-a-framework">
+  <template shadowrootmode="open">
+    <style>:host{display:block;max-width:var(--measure);margin:0 auto}h1{font-size:2rem;line-height:1.2}p{margin:1.2em 0}.meta{color:#666;font-size:.9rem}</style>
+    <article>
+      <h1>Building a web component without a framework</h1>
+      <p class="meta">17 October 2026 · part 3 of <a href="/series/no-build">No build step</a></p>
+      <p>I wanted a small widget for this blog: a list of the posts in a series, with the current one marked. Every tutorial I found started by installing a framework, a compiler and a dev server. I wanted none of them.</p>
+      <p>Custom elements are built into every current browser. A class that extends HTMLElement, one call to customElements.define, and the browser does the rest.</p>
+      <p>The trick that made it pleasant is declarative shadow DOM. The server sends the element's markup inside a template element marked shadowrootmode, and the browser attaches it as the element's shadow root while it parses the page, before any script runs.</p>
+      <p>That means the widget renders without JavaScript, and the script only adds behaviour: marking the current post and remembering whether the list was collapsed.</p>
+      <p>The styles live inside the template too, so nothing leaks out into the rest of the page, and nothing from the page leaks in.</p>
+      <p>The whole thing is forty lines. It will still work in ten years, which is more than I can say for anything I have built with a framework.</p>
+      <series-list series="no-build"><template shadowrootmode="open"><ol><li><a href="/posts/web-walking-bridges">Part 1</a></li><li><a href="/posts/weather-html-html">Part 2</a></li><li><a href="/posts/maps-printing-coffee-records">Part 3</a></li><li><a href="/posts/chairs-trams-lisbon-zones-bikes">Part 4</a></li><li><a href="/posts/types-zones-layouts-keepers-notes-bread">Part 5</a></li><li><a href="/posts/energy-bikes-field-trams">Part 6</a></li></ol></template></series-list>
+    </article>
+  </template>
+</blog-post>
+<footer><p>Written by hand. No tracking. <a href="/feed.xml">RSS</a></p><ul><li><a href="/posts/solar-database-retries-caching-radio">backups scheduling notes islands types radio</a></li><li><a href="/posts/soil-notebooks-memory-islands-furniture-compost">night furniture backups habits bridges notes</a></li><li><a href="/posts/history-backoff-sqlite-retries-music-letters">weather zones photography search backoff unicode</a></li><li><a href="/posts/backoff-layouts-reading">travel mountains tests climate unicode running</a></li><li><a href="/posts/kitchens-daylight-chairs-queues-essays">bread production europe mountains records</a></li><li><a href="/posts/chairs-css-guide-database-paper-weather">transit web bikes wind</a></li><li><a href="/posts/bikes-night-htmx-scheduling-coverage-quiet">maps compost memory memory</a></li><li><a href="/posts/bikes-travel-weather-ranking-letters">sqlite leaks ferries</a></li><li><a href="/posts/keepers-small-lighthouse-guide-islands">chairs bikes html design</a></li><li><a href="/posts/photography-tests-coffee">radio small memory running islands</a></li><li><a href="/posts/essays-caching-travel-climate">weather wind weather lisbon</a></li><li><a href="/posts/repair-htmx-trains-zones">attention chairs history</a></li><li><a href="/posts/coffee-database-backups-production-trams">letters compost weather fermentation</a></li><li><a href="/posts/light-retries-ferries-indexes">batteries film ferries</a></li><li><a href="/posts/islands-reading-keepers-types">bikes energy web design css</a></li><li><a href="/posts/notes-tests-ink-email-music-trams">caching history retries</a></li><li><a href="/posts/ink-web-soil-chairs-bikes">weather radio htmx lighthouse fixtures night</a></li><li><a href="/posts/wind-letters-ranking-roads-htmx-paper">zones maps html islands</a></li><li><a href="/posts/sqlite-sqlite-rivers-running-backoff-radio">html backups paper time</a></li><li><a href="/posts/walking-batteries-habits-cities-maps">europe design roads</a></li><li><a href="/posts/habits-ink-sqlite-light-batteries">maps attention music compost bread</a></li><li><a href="/posts/types-daylight-keepers-field">memory knives walking unicode time keepers</a></li><li><a href="/posts/climate-chairs-sourdough-memory-unicode">solar fermentation bikes coffee records</a></li><li><a href="/posts/energy-transit-film-sourdough-music-knives">tools travel soil bread photography</a></li><li><a href="/posts/light-html-tests-zones">bikes production ranking travel light islands</a></li><li><a href="/posts/design-travel-small-search-radio">ferries light indexes history kitchens</a></li><li><a href="/posts/database-records-indexes">transit writing reading night backups islands</a></li><li><a href="/posts/records-gardens-scheduling-essays-production-photography">ferries mountains backups</a></li><li><a href="/posts/music-small-notes">queues gardens email mountains wind writing</a></li><li><a href="/posts/caching-printing-scheduling-zones-small-backoff">indexes bread quiet layouts</a></li></ul></footer>
+</body>
+</html>

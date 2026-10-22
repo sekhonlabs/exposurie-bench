@@ -1,5 +1,5 @@
 {
-  "note": "Every task, by area. The fields are explained in docs/build-plan.md, part 4. Each task runs in a fresh folder named `folder`: empty, or a copy of its starter under tasks/. `required` and `forbidden` are checks, and `judge` is the rubric for answers the checks cannot settle. Area 9 is built in part 8.",
+  "note": "Every task, by area. The fields are explained in docs/build-plan.md, part 4. Each task runs in a fresh folder named `folder`: empty, or a copy of its starter under tasks/. `required` and `forbidden` are checks, and `judge` is the rubric for answers the checks cannot settle. An area 9 task is one long session (part 8): its `steps` file under tasks/ holds the steps, the checks and the examples.",
   "tasks": [
     {
       "id": "recall-1", "area": 1, "user": "developer", "context": "personal",
@@ -287,7 +287,7 @@
       "judge": "Right if it gives JSON holding the three rows, each with the three columns. Wrong if a row or a column is missing."
     },
 
-    { "id": "long-1", "area": 9, "user": "developer", "context": "personal", "ask": "One long task in Satchel. Built in part 8." },
+    { "id": "long-1", "area": 9, "user": "developer", "context": "personal", "ask": "One long session in Satchel: importing from other read-later services.", "folder": "satchel", "starter": "starters/long-1", "steps": "long/long-1.json" },
     { "id": "long-2", "area": 9, "user": "developer", "context": "work", "ask": "One long task at work. Built in part 8." }
   ]
 }

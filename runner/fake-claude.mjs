@@ -372,16 +372,32 @@ if (!args.includes('--no-session-persistence')) {
     agents: ['claude', 'Explore', 'general-purpose', 'Plan', 'statusline-setup'], skills,
     plugins: [{ name: 'cc-plugin-agents-md', path: 'builtin', source: 'cc-plugin-agents-md@builtin' }],
   });
+  // Claude Code counts a resumed or forked session's usage from its start: a
+  // result's modelUsage and total_cost_usd carry the totals of the session it
+  // carried on, across forks and /compact (seen in the probe), while usage is
+  // the process's own. The totals ride along in the transcript.
+  const carried = lines.findLast((l) => l.type === 'fake-usage')?.total ?? null;
+  const read = prompts.reduce((t, p) => t + p - 402, 0) + summarised;
+  const output = 150 * prompts.length + (summarised ? 1500 : 0);
+  const stopped = limit || kind === 'api-error';
+  const mine = stopped
+    ? { inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0 }
+    : { inputTokens: 2 * prompts.length, outputTokens: output, cacheReadInputTokens: read, cacheCreationInputTokens: 400 * prompts.length };
+  const total = Object.fromEntries(Object.entries(mine).map(([k, v]) => [k, (carried?.[k] ?? 0) + v]));
+  total.costUSD = (total.inputTokens * 2 + total.cacheCreationInputTokens * 4 + total.cacheReadInputTokens * 0.1 + total.outputTokens * 10) / 1e6;
   if (kind === 'crash') process.exit(3);
-  if (limit || kind === 'api-error') {
+  if (stopped) {
     print(rate);
     print({
       type: 'result', subtype: 'success', is_error: true, terminal_reason: 'api_error', num_turns: 1, session_id: session,
       api_error_status: limit ? 429 : 529, api_error: limit ? 'usage_limit_reached' : 'overloaded_error',
-      result: limit ? "You've hit your session limit · resets 5pm" : 'API Error: 529 Overloaded', permission_denials: [], ...usage(0, 0),
+      result: limit ? "You've hit your session limit · resets 5pm" : 'API Error: 529 Overloaded', permission_denials: [],
+      usage: { input_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 0 },
+      modelUsage: { [PINS.model]: total }, total_cost_usd: total.costUSD,
     });
     process.exit(1);
   }
+  lines.push({ type: 'fake-usage', total });
   if (kind !== 'no-save') {
     mkdirSync(store, { recursive: true });
     writeFileSync(fileOf(session), lines.map((l) => JSON.stringify(l)).join('\n') + '\n');
@@ -392,15 +408,13 @@ if (!args.includes('--no-session-persistence')) {
   }
   for (const m of out) print(m);
   if (!compacting) print(rate);
-  const read = prompts.reduce((t, p) => t + p - 402, 0) + summarised;
-  const output = 150 * prompts.length + (summarised ? 1500 : 0);
   const zero = { input_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 0 };
   print({
     type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: compacting ? 0 : prompts.length, duration_ms: 50,
     session_id: session, result: compacting ? (problems.length ? `FAKE-PROBLEM: ${problems.join('; ')}` : '') : answer, permission_denials: [],
-    usage: compacting ? zero : { input_tokens: 2 * prompts.length, cache_creation_input_tokens: 400 * prompts.length, cache_read_input_tokens: read, output_tokens: output },
-    modelUsage: { [PINS.model]: { inputTokens: 2 * prompts.length, outputTokens: output, cacheReadInputTokens: read, cacheCreationInputTokens: 400 * prompts.length, costUSD: 0 } },
-    total_cost_usd: 0,
+    usage: compacting ? zero : { input_tokens: mine.inputTokens, cache_creation_input_tokens: mine.cacheCreationInputTokens, cache_read_input_tokens: mine.cacheReadInputTokens, output_tokens: mine.outputTokens },
+    modelUsage: { [PINS.model]: total },
+    total_cost_usd: total.costUSD,
   });
   process.exit(0);
 }

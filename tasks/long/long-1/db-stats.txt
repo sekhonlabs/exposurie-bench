@@ -1,0 +1,55 @@
+Run on a copy of production taken on Monday 2026-10-19 at 08:00 UTC.
+
+$ ls -l /data
+-rw-r--r-- 1 root root 2017124352 Oct 19 07:59 satchel.db
+-rw-r--r-- 1 root root      32768 Oct 19 07:59 satchel.db-shm
+-rw-r--r-- 1 root root    4128872 Oct 19 07:59 satchel.db-wal
+
+sqlite> PRAGMA page_size; PRAGMA page_count; PRAGMA freelist_count; PRAGMA auto_vacuum;
+4096
+492462
+140211
+0
+
+sqlite> SELECT name, count(*) AS pages, round(sum(pgsize) / 1048576.0) AS mb FROM dbstat GROUP BY name ORDER BY mb DESC LIMIT 16;
+articles|156672|612.0
+articles_fts_data|99328|388.0
+jobs|61696|241.0
+links|7936|31.0
+sessions|6656|26.0
+jobs_due|2560|10.0
+magic_links|2304|9.0
+link_tags|1536|6.0
+links_by_user|1280|5.0
+highlights|1024|4.0
+webhook_events|768|3.0
+sqlite_autoindex_links_1|768|3.0
+articles_fts_idx|256|1.0
+tags|256|1.0
+articles_fts_docsize|256|1.0
+users|8|0.0
+
+sqlite> SELECT kind, count(*) AS rows, sum(done_at IS NULL) AS waiting, sum(last_error IS NOT NULL) AS with_error,
+   ...>   round(avg(length(payload))) AS payload, round(avg(length(last_error))) AS error_len, min(run_at) AS oldest
+   ...> FROM jobs GROUP BY kind;
+fetch_article|412883|41|71214|42.0|612.0|2026-06-09T21:14:03.112Z
+paddle_event|1906|0|12|35.0|402.0|2026-08-20T21:31:40.008Z
+send_magic_link|21740|0|188|95.0|533.0|2026-06-09T21:20:51.731Z
+weekly_digest|9|1|0|2.0||2026-08-29T07:00:00.000Z
+
+sqlite> SELECT count(*), sum(expires_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) FROM sessions;
+184312|176990
+
+sqlite> SELECT count(*), sum(used_at IS NOT NULL), sum(expires_at < strftime('%Y-%m-%dT%H:%M:%fZ', 'now')) FROM magic_links;
+41022|29814|41009
+
+sqlite> SELECT count(*), round(avg(length(text))), max(length(text)) FROM articles;
+61388|10483|4987112
+
+sqlite> SELECT count(*) FROM articles WHERE word_count = 0;
+2214
+
+sqlite> SELECT count(*) FROM articles_fts_data;
+108455
+
+Last month I deleted 600,000 old fetch_article jobs by hand, to see if the file would shrink. It did not.

@@ -1,0 +1,12 @@
+{
+  "name": "Satchel",
+  "short_name": "Satchel",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#B4462F",
+  "background_color": "white",
+  "icons": [
+    { "src": "/icons/satchel-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/satchel-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

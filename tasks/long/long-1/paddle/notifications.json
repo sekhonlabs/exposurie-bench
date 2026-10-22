@@ -1,0 +1,2127 @@
+[
+  {
+    "id": "ntf_01m4dq9phm9jjy2zhb377f2meb",
+    "type": "customer.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4dq9p88sj8yj39ct4by8ggw",
+      "event_type": "customer.created",
+      "occurred_at": "2026-10-08T12:20:05.000883Z",
+      "notification_id": "ntf_01m4dq9phm9jjy2zhb377f2meb",
+      "data": {
+        "id": "ctm_01m4dq9p8836ebe7b0mesedrn8",
+        "email": "olga.k@inbox.example",
+        "created_at": "2026-10-08T12:20:05.000136Z",
+        "name": null,
+        "marketing_consent": false,
+        "status": "active",
+        "custom_data": null,
+        "locale": "en",
+        "updated_at": "2026-10-08T12:20:05.000136Z",
+        "import_meta": null
+      }
+    },
+    "occurred_at": "2026-10-08T12:20:05.000883Z",
+    "delivered_at": "2026-10-08T12:20:07.252414Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-08T12:20:05.954382Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4dq9ybmxmgbeavb95rejzpc",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4dq9y28hch5maxzacztb95p",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-08T12:20:13.000254Z",
+      "notification_id": "ntf_01m4dq9ybmxmgbeavb95rejzpc",
+      "data": {
+        "id": "txn_01m4dq9y286a9exq2pjk8tg10k",
+        "status": "completed",
+        "customer_id": "ctm_01m4dq9p8836ebe7b0mesedrn8",
+        "address_id": "add_01m4dq9p8836ebe7b0mesedrn8",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01M1KKCH88HN6X7FV58M85SRYR"
+        },
+        "origin": "web",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m4dq9z1gw7f9etrxxvmdcwt5",
+        "invoice_id": "inv_01m4dq9y28ca2merphxe5waxfv",
+        "invoice_number": "14729-58521",
+        "billing_period": {
+          "starts_at": "2026-10-08T12:20:13.000326Z",
+          "ends_at": "2026-11-07T12:20:13.000635Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "84",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-08T12:20:13.000407Z",
+        "updated_at": "2026-10-08T12:20:15.000207Z",
+        "billed_at": "2026-10-08T12:20:15.000917Z"
+      }
+    },
+    "occurred_at": "2026-10-08T12:20:13.000254Z",
+    "delivered_at": "2026-10-08T12:20:13.786243Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-08T12:20:14.206951Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4dq9zawtc0fphtfpm23kfbg",
+    "type": "subscription.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4dq9z1gbxnf12tcs96eer6x",
+      "event_type": "subscription.created",
+      "occurred_at": "2026-10-08T12:20:14.000551Z",
+      "notification_id": "ntf_01m4dq9zawtc0fphtfpm23kfbg",
+      "data": {
+        "id": "sub_01m4dq9z1gw7f9etrxxvmdcwt5",
+        "status": "active",
+        "customer_id": "ctm_01m4dq9p8836ebe7b0mesedrn8",
+        "address_id": "add_01m4dq9p8836ebe7b0mesedrn8",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-10-08T12:20:05.000108Z",
+        "updated_at": "2026-10-08T12:20:14.000399Z",
+        "started_at": "2026-10-08T12:20:05.000681Z",
+        "first_billed_at": "2026-10-08T12:20:05.000683Z",
+        "next_billed_at": "2026-11-07T12:20:14.000101Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-08T12:20:14.000181Z",
+          "ends_at": "2026-11-07T12:20:14.000427Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-10-08T12:20:05.000492Z",
+            "updated_at": "2026-10-08T12:20:14.000436Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01M1KKCH88HN6X7FV58M85SRYR"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-08T12:20:14.000551Z",
+    "delivered_at": "2026-10-08T12:20:14.795512Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-08T12:20:15.062662Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4dq9zqc0b815j5v3pys050j",
+    "type": "subscription.activated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4dq9ze0pbpbxahrdh3ebdvh",
+      "event_type": "subscription.activated",
+      "occurred_at": "2026-10-08T12:20:14.400318Z",
+      "notification_id": "ntf_01m4dq9zqc0b815j5v3pys050j",
+      "data": {
+        "id": "sub_01m4dq9z1gw7f9etrxxvmdcwt5",
+        "status": "active",
+        "customer_id": "ctm_01m4dq9p8836ebe7b0mesedrn8",
+        "address_id": "add_01m4dq9p8836ebe7b0mesedrn8",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-10-08T12:20:05.000676Z",
+        "updated_at": "2026-10-08T12:20:14.400951Z",
+        "started_at": "2026-10-08T12:20:05.000921Z",
+        "first_billed_at": "2026-10-08T12:20:05.000837Z",
+        "next_billed_at": "2026-11-07T12:20:14.400392Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-08T12:20:14.400878Z",
+          "ends_at": "2026-11-07T12:20:14.400224Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-10-08T12:20:05.000457Z",
+            "updated_at": "2026-10-08T12:20:14.400737Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01M1KKCH88HN6X7FV58M85SRYR"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-08T12:20:14.400318Z",
+    "delivered_at": "2026-10-08T12:20:15.822394Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-08T12:20:15.871555Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4h5tn5cs5ef6w0m7p1q1anr",
+    "type": "subscription.updated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4h5tmw0h24qn2vx88a57mrc",
+      "event_type": "subscription.updated",
+      "occurred_at": "2026-10-09T20:31:44.000739Z",
+      "notification_id": "ntf_01m4h5tn5cs5ef6w0m7p1q1anr",
+      "data": {
+        "id": "sub_01kwxx9cprebcsn5m45kh54c1f",
+        "status": "active",
+        "customer_id": "ctm_01kwxx85mrf4vvt5sq9mgbfsec",
+        "address_id": "add_01kwxx85mrf4vvt5sq9mgbfsec",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-07-07T09:06:23.000599Z",
+        "updated_at": "2026-10-09T20:31:44.000885Z",
+        "started_at": "2026-07-07T09:06:23.000352Z",
+        "first_billed_at": "2026-07-07T09:06:23.000951Z",
+        "next_billed_at": "2026-11-08T20:31:44.000159Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-09T20:31:44.000575Z",
+          "ends_at": "2026-11-08T20:31:44.000679Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": {
+          "action": "cancel",
+          "effective_at": "2026-10-24T13:02:11.000448Z",
+          "resume_at": null
+        },
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-07-07T09:06:23.000907Z",
+            "updated_at": "2026-10-09T20:31:44.000725Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01M01BFR002WE8MVF0YZ5S6ECB"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-09T20:31:44.000739Z",
+    "delivered_at": "2026-10-09T20:31:46.161165Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-09T20:31:45.341681Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4kq2cjcw3ngk87n551r5ksa",
+    "type": "transaction.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4kq2c90n0jyp84m73b7zkzt",
+      "event_type": "transaction.created",
+      "occurred_at": "2026-10-10T20:11:32.000271Z",
+      "notification_id": "ntf_01m4kq2cjcw3ngk87n551r5ksa",
+      "data": {
+        "id": "txn_01m4kq2c90vmq0p8d2e220rgvb",
+        "status": "ready",
+        "customer_id": "ctm_01m26f541g9hvvadg3tsvbkep1",
+        "address_id": "add_01m26f541g9hvvadg3tsvbkep1",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KTQD8A001P3KKZW98W7C81YN"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m26f6b3g8jehwgezkbakpjwr",
+        "invoice_id": null,
+        "invoice_number": null,
+        "billing_period": {
+          "starts_at": "2026-10-10T20:11:32.000534Z",
+          "ends_at": "2026-11-09T20:11:32.000516Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-10T20:11:32.000154Z",
+        "updated_at": "2026-10-10T20:11:34.000741Z",
+        "billed_at": null
+      }
+    },
+    "occurred_at": "2026-10-10T20:11:32.000271Z",
+    "delivered_at": "2026-10-10T20:11:32.382487Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-10T20:11:32.642523Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4kq2pawa3bcmqwvvwe22qj5",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4kq2p1g9tqqetpexvm6qvs1",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-10T20:11:42.000364Z",
+      "notification_id": "ntf_01m4kq2pawa3bcmqwvvwe22qj5",
+      "data": {
+        "id": "txn_01m4kq2p1gxsck5w8sxeg42r1g",
+        "status": "completed",
+        "customer_id": "ctm_01m26f541g9hvvadg3tsvbkep1",
+        "address_id": "add_01m26f541g9hvvadg3tsvbkep1",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KTQD8A001P3KKZW98W7C81YN"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m26f6b3g8jehwgezkbakpjwr",
+        "invoice_id": "inv_01m4kq2p1g1bhk82d5t9sq4b7y",
+        "invoice_number": "15919-11225",
+        "billing_period": {
+          "starts_at": "2026-10-10T20:11:42.000785Z",
+          "ends_at": "2026-11-09T20:11:42.000860Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-10T20:11:42.000193Z",
+        "updated_at": "2026-10-10T20:11:44.000606Z",
+        "billed_at": "2026-10-10T20:11:44.000946Z"
+      }
+    },
+    "occurred_at": "2026-10-10T20:11:42.000364Z",
+    "delivered_at": "2026-10-10T20:11:43.269468Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-10T20:11:43.933984Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4kq2r9ce0pe2vw1823apepw",
+    "type": "subscription.updated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4kq2r00j617a564y9d01t4n",
+      "event_type": "subscription.updated",
+      "occurred_at": "2026-10-10T20:11:44.000993Z",
+      "notification_id": "ntf_01m4kq2r9ce0pe2vw1823apepw",
+      "data": {
+        "id": "sub_01m26f6b3g8jehwgezkbakpjwr",
+        "status": "active",
+        "customer_id": "ctm_01m26f541g9hvvadg3tsvbkep1",
+        "address_id": "add_01m26f541g9hvvadg3tsvbkep1",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-09-10T20:11:42.000135Z",
+        "updated_at": "2026-10-10T20:11:42.000307Z",
+        "started_at": "2026-09-10T20:11:42.000783Z",
+        "first_billed_at": "2026-09-10T20:11:42.000966Z",
+        "next_billed_at": "2026-11-09T20:11:42.000669Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-10T20:11:42.000316Z",
+          "ends_at": "2026-11-09T20:11:42.000141Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-09-10T20:11:42.000560Z",
+            "updated_at": "2026-10-10T20:11:42.000674Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01KTQD8A001P3KKZW98W7C81YN"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-10T20:11:44.000993Z",
+    "delivered_at": "2026-10-10T20:11:45.712324Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-10T20:11:44.620932Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4nzn5nm3w2n6spsvxnmddbs",
+    "type": "transaction.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4nzn5c8frvk9903tf8gfjsk",
+      "event_type": "transaction.created",
+      "occurred_at": "2026-10-11T17:20:05.000283Z",
+      "notification_id": "ntf_01m4nzn5nm3w2n6spsvxnmddbs",
+      "data": {
+        "id": "txn_01m4nzn5c8czx9eypq0s9tegvw",
+        "status": "ready",
+        "customer_id": "ctm_01kzvftb4rffgzcwn320t2302m",
+        "address_id": "add_01kzvftb4rffgzcwn320t2302m",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KVEJTS00T59NJFBZM2GED0C6"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01kzvfvj6rrwj1wab7v1qv6me2",
+        "invoice_id": null,
+        "invoice_number": null,
+        "billing_period": {
+          "starts_at": "2026-10-11T17:20:05.000469Z",
+          "ends_at": "2026-11-10T17:20:05.000171Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "76",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-11T17:20:05.000888Z",
+        "updated_at": "2026-10-11T17:20:07.000725Z",
+        "billed_at": null
+      }
+    },
+    "occurred_at": "2026-10-11T17:20:05.000283Z",
+    "delivered_at": "2026-10-11T17:20:07.274225Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-11T17:20:05.959942Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4nznfe4wff8kmtw4zez6yh8",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4nznf4rj72ca1dka4hyefcq",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-11T17:20:15.000801Z",
+      "notification_id": "ntf_01m4nznfe4wff8kmtw4zez6yh8",
+      "data": {
+        "id": "txn_01m4nznf4rexkt3jh7nhm407rx",
+        "status": "completed",
+        "customer_id": "ctm_01kzvftb4rffgzcwn320t2302m",
+        "address_id": "add_01kzvftb4rffgzcwn320t2302m",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KVEJTS00T59NJFBZM2GED0C6"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01kzvfvj6rrwj1wab7v1qv6me2",
+        "invoice_id": "inv_01m4nznf4rn3m3hje45w4dp3xz",
+        "invoice_number": "14354-74867",
+        "billing_period": {
+          "starts_at": "2026-10-11T17:20:15.000306Z",
+          "ends_at": "2026-11-10T17:20:15.000523Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "92",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-11T17:20:15.000150Z",
+        "updated_at": "2026-10-11T17:20:17.000782Z",
+        "billed_at": "2026-10-11T17:20:17.000492Z"
+      }
+    },
+    "occurred_at": "2026-10-11T17:20:15.000801Z",
+    "delivered_at": "2026-10-11T17:20:16.100120Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-11T17:20:16.289879Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4nznhcmqvdv032nksdff68z",
+    "type": "subscription.updated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4nznh386wmfmbbm8pvaeqhv",
+      "event_type": "subscription.updated",
+      "occurred_at": "2026-10-11T17:20:17.000638Z",
+      "notification_id": "ntf_01m4nznhcmqvdv032nksdff68z",
+      "data": {
+        "id": "sub_01kzvfvj6rrwj1wab7v1qv6me2",
+        "status": "active",
+        "customer_id": "ctm_01kzvftb4rffgzcwn320t2302m",
+        "address_id": "add_01kzvftb4rffgzcwn320t2302m",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-08-12T17:20:15.000132Z",
+        "updated_at": "2026-10-11T17:20:15.000105Z",
+        "started_at": "2026-08-12T17:20:15.000445Z",
+        "first_billed_at": "2026-08-12T17:20:15.000706Z",
+        "next_billed_at": "2026-11-10T17:20:15.000852Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-11T17:20:15.000767Z",
+          "ends_at": "2026-11-10T17:20:15.000105Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-08-12T17:20:15.000635Z",
+            "updated_at": "2026-10-11T17:20:15.000686Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01KVEJTS00T59NJFBZM2GED0C6"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-11T17:20:17.000638Z",
+    "delivered_at": "2026-10-11T17:20:18.047462Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-11T17:20:17.739763Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4rr06gm8nnebyfcrt56wwx9",
+    "type": "transaction.paid",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4rr0678x6c6vyh80n5ch0kw",
+      "event_type": "transaction.paid",
+      "occurred_at": "2026-10-12T19:04:01.000247Z",
+      "notification_id": "ntf_01m4rr06gm8nnebyfcrt56wwx9",
+      "data": {
+        "id": "txn_01m12jn4j8q5jjrabgtar3vm6k",
+        "status": "paid",
+        "customer_id": "ctm_01m12jn3k0j0k7ewarwx3wbbhc",
+        "address_id": "add_01m12jn3k0j0k7ewarwx3wbbhc",
+        "business_id": null,
+        "custom_data": null,
+        "origin": "web",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m4rr0e18x143jnt9wtg8ekv9",
+        "invoice_id": null,
+        "invoice_number": null,
+        "billing_period": {
+          "starts_at": "2026-10-12T19:04:01.000743Z",
+          "ends_at": "2026-11-11T19:04:01.000578Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "84",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-08-27T21:40:13.552781Z",
+        "updated_at": "2026-10-12T19:04:03.000736Z",
+        "billed_at": null
+      }
+    },
+    "occurred_at": "2026-10-12T19:04:01.000247Z",
+    "delivered_at": "2026-10-12T19:04:02.352882Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-12T19:04:01.722560Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4rr0eam8pmxrqrrgwy67cff",
+    "type": "subscription.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4rr0e1846944hw4gr08jn4c",
+      "event_type": "subscription.created",
+      "occurred_at": "2026-10-12T19:04:09.000186Z",
+      "notification_id": "ntf_01m4rr0eam8pmxrqrrgwy67cff",
+      "data": {
+        "id": "sub_01m4rr0e18x143jnt9wtg8ekv9",
+        "status": "active",
+        "customer_id": "ctm_01m12jn3k0j0k7ewarwx3wbbhc",
+        "address_id": "add_01m12jn3k0j0k7ewarwx3wbbhc",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-10-12T19:04:09.000763Z",
+        "updated_at": "2026-10-12T19:04:09.000762Z",
+        "started_at": "2026-10-12T19:04:09.000480Z",
+        "first_billed_at": "2026-10-12T19:04:09.000711Z",
+        "next_billed_at": "2026-11-11T19:04:09.000780Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-12T19:04:09.000151Z",
+          "ends_at": "2026-11-11T19:04:09.000159Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-10-12T19:04:09.000829Z",
+            "updated_at": "2026-10-12T19:04:09.000777Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": null,
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        },
+        "transaction_id": "txn_01m12jn4j8q5jjrabgtar3vm6k"
+      }
+    },
+    "occurred_at": "2026-10-12T19:04:09.000186Z",
+    "delivered_at": "2026-10-12T19:04:09.482708Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-12T19:04:10.027749Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4rr0em00r4qp4twqdjcaa4g",
+    "type": "subscription.activated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4rr0eamdxzqd5an8wpa0xzb",
+      "event_type": "subscription.activated",
+      "occurred_at": "2026-10-12T19:04:09.300842Z",
+      "notification_id": "ntf_01m4rr0em00r4qp4twqdjcaa4g",
+      "data": {
+        "id": "sub_01m4rr0e18x143jnt9wtg8ekv9",
+        "status": "active",
+        "customer_id": "ctm_01m12jn3k0j0k7ewarwx3wbbhc",
+        "address_id": "add_01m12jn3k0j0k7ewarwx3wbbhc",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-10-12T19:04:09.000175Z",
+        "updated_at": "2026-10-12T19:04:09.300400Z",
+        "started_at": "2026-10-12T19:04:09.000993Z",
+        "first_billed_at": "2026-10-12T19:04:09.000747Z",
+        "next_billed_at": "2026-11-11T19:04:09.300733Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-12T19:04:09.300333Z",
+          "ends_at": "2026-11-11T19:04:09.300110Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-10-12T19:04:09.000123Z",
+            "updated_at": "2026-10-12T19:04:09.300950Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": null,
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-12T19:04:09.300842Z",
+    "delivered_at": "2026-10-12T19:04:11.321430Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-12T19:04:10.342884Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4rr0g94kkcr3n5vfg91544m",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4rr0fzr4n7rmngbtkaazatb",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-12T19:04:11.000541Z",
+      "notification_id": "ntf_01m4rr0g94kkcr3n5vfg91544m",
+      "data": {
+        "id": "txn_01m12jn4j8q5jjrabgtar3vm6k",
+        "status": "completed",
+        "customer_id": "ctm_01m12jn3k0j0k7ewarwx3wbbhc",
+        "address_id": "add_01m12jn3k0j0k7ewarwx3wbbhc",
+        "business_id": null,
+        "custom_data": null,
+        "origin": "web",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m4rr0e18x143jnt9wtg8ekv9",
+        "invoice_id": "inv_01m4rr0fzrcqeqb9anhf4xtnfg",
+        "invoice_number": "14738-98813",
+        "billing_period": {
+          "starts_at": "2026-10-12T19:04:11.000464Z",
+          "ends_at": "2026-11-11T19:04:11.000930Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-08-27T21:40:13.552781Z",
+        "updated_at": "2026-10-12T19:04:13.000656Z",
+        "billed_at": "2026-10-12T19:04:13.000826Z"
+      }
+    },
+    "occurred_at": "2026-10-12T19:04:11.000541Z",
+    "delivered_at": "2026-10-12T19:04:11.778595Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-12T19:04:12.438478Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4xr7yd4yy5pr7hmn6ythena",
+    "type": "transaction.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4xr7y3rtkmwr9xhhh05zgde",
+      "event_type": "transaction.created",
+      "occurred_at": "2026-10-14T17:44:27.000125Z",
+      "notification_id": "ntf_01m4xr7yd4yy5pr7hmn6ythena",
+      "data": {
+        "id": "txn_01m4xr7y3rme9erybqxjrh2yk0",
+        "status": "ready",
+        "customer_id": "ctm_01m038d3w8s6prky18v8esa8pt",
+        "address_id": "add_01m038d3w8s6prky18v8esa8pt",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KWTBK000M4THYSZF6G2G4PCP"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m038eay8s3sfe822pnsh1ame",
+        "invoice_id": null,
+        "invoice_number": null,
+        "billing_period": {
+          "starts_at": "2026-10-14T17:44:27.000307Z",
+          "ends_at": "2026-11-13T17:44:27.000844Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-14T17:44:27.000983Z",
+        "updated_at": "2026-10-14T17:44:29.000352Z",
+        "billed_at": null
+      }
+    },
+    "occurred_at": "2026-10-14T17:44:27.000125Z",
+    "delivered_at": "2026-10-14T17:44:28.230826Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-14T17:44:27.923320Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4xr885msw8gc5t8wtq9hmnq",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4xr87w8d96exh42qs7fjx3g",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-14T17:44:37.000988Z",
+      "notification_id": "ntf_01m4xr885msw8gc5t8wtq9hmnq",
+      "data": {
+        "id": "txn_01m4xr87w8nzmhxxwxjt52m2vg",
+        "status": "completed",
+        "customer_id": "ctm_01m038d3w8s6prky18v8esa8pt",
+        "address_id": "add_01m038d3w8s6prky18v8esa8pt",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KWTBK000M4THYSZF6G2G4PCP"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m038eay8s3sfe822pnsh1ame",
+        "invoice_id": "inv_01m4xr87w88576zvmvtx7zf9d4",
+        "invoice_number": "14378-60080",
+        "billing_period": {
+          "starts_at": "2026-10-14T17:44:37.000346Z",
+          "ends_at": "2026-11-13T17:44:37.000124Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-14T17:44:37.000193Z",
+        "updated_at": "2026-10-14T17:44:39.000939Z",
+        "billed_at": "2026-10-14T17:44:39.000356Z"
+      }
+    },
+    "occurred_at": "2026-10-14T17:44:37.000988Z",
+    "delivered_at": "2026-10-14T17:44:38.658165Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-14T17:44:37.331412Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4xr8a44jg7s2n1r5b1xg58b",
+    "type": "subscription.updated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4xr89trxd7mr64dz3k4eeft",
+      "event_type": "subscription.updated",
+      "occurred_at": "2026-10-14T17:44:39.000510Z",
+      "notification_id": "ntf_01m4xr8a44jg7s2n1r5b1xg58b",
+      "data": {
+        "id": "sub_01m038eay8s3sfe822pnsh1ame",
+        "status": "active",
+        "customer_id": "ctm_01m038d3w8s6prky18v8esa8pt",
+        "address_id": "add_01m038d3w8s6prky18v8esa8pt",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-08-15T17:44:37.000149Z",
+        "updated_at": "2026-10-14T17:44:37.000406Z",
+        "started_at": "2026-08-15T17:44:37.000416Z",
+        "first_billed_at": "2026-08-15T17:44:37.000271Z",
+        "next_billed_at": "2026-11-13T17:44:37.000792Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-14T17:44:37.000812Z",
+          "ends_at": "2026-11-13T17:44:37.000197Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-08-15T17:44:37.000778Z",
+            "updated_at": "2026-10-14T17:44:37.000966Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01KWTBK000M4THYSZF6G2G4PCP"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-14T17:44:39.000510Z",
+    "delivered_at": "2026-10-14T17:44:39.675789Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-14T17:44:40.347181Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4zz6bqczfnva7crkayppwj8",
+    "type": "transaction.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4zz6be00aa3zgszhdfbk8cx",
+      "event_type": "transaction.created",
+      "occurred_at": "2026-10-15T14:24:24.000590Z",
+      "notification_id": "ntf_01m4zz6bqczfnva7crkayppwj8",
+      "data": {
+        "id": "txn_01m4zz6be00bnq68aydx2egw2e",
+        "status": "ready",
+        "customer_id": "ctm_01kxr7dz6gwyy78hvhbd4r2aaz",
+        "address_id": "add_01kxr7dz6gwyy78hvhbd4r2aaz",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KZ7KGJ00FE4KQEQP1D8ZM2CY"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01kxr7f68gffv56sk85pf70hme",
+        "invoice_id": null,
+        "invoice_number": null,
+        "billing_period": {
+          "starts_at": "2026-10-15T14:24:24.000188Z",
+          "ends_at": "2026-11-14T14:24:24.000853Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-15T14:24:24.000195Z",
+        "updated_at": "2026-10-15T14:24:26.000751Z",
+        "billed_at": null
+      }
+    },
+    "occurred_at": "2026-10-15T14:24:24.000590Z",
+    "delivered_at": "2026-10-15T14:24:25.445843Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-15T14:24:26.219484Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4zz6nfw9dw2cezfa9zy0db0",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4zz6n6g2xj579dstwxqddp6",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-15T14:24:34.000779Z",
+      "notification_id": "ntf_01m4zz6nfw9dw2cezfa9zy0db0",
+      "data": {
+        "id": "txn_01m4zz6n6g9ad7yz3zzyg1mgd9",
+        "status": "completed",
+        "customer_id": "ctm_01kxr7dz6gwyy78hvhbd4r2aaz",
+        "address_id": "add_01kxr7dz6gwyy78hvhbd4r2aaz",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KZ7KGJ00FE4KQEQP1D8ZM2CY"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01kxr7f68gffv56sk85pf70hme",
+        "invoice_id": "inv_01m4zz6n6g8mbrvxf6039r2jg0",
+        "invoice_number": "14440-64382",
+        "billing_period": {
+          "starts_at": "2026-10-15T14:24:34.000244Z",
+          "ends_at": "2026-11-14T14:24:34.000586Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-15T14:24:34.000132Z",
+        "updated_at": "2026-10-15T14:24:36.000631Z",
+        "billed_at": "2026-10-15T14:24:36.000938Z"
+      }
+    },
+    "occurred_at": "2026-10-15T14:24:34.000779Z",
+    "delivered_at": "2026-10-15T14:24:34.998102Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-15T14:24:34.772200Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m4zz6qecykhqw6c4bh1dx7q7",
+    "type": "subscription.updated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m4zz6q5098ggbm7b1gg7ykp6",
+      "event_type": "subscription.updated",
+      "occurred_at": "2026-10-15T14:24:36.000755Z",
+      "notification_id": "ntf_01m4zz6qecykhqw6c4bh1dx7q7",
+      "data": {
+        "id": "sub_01kxr7f68gffv56sk85pf70hme",
+        "status": "active",
+        "customer_id": "ctm_01kxr7dz6gwyy78hvhbd4r2aaz",
+        "address_id": "add_01kxr7dz6gwyy78hvhbd4r2aaz",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-07-17T14:24:34.000560Z",
+        "updated_at": "2026-10-15T14:24:34.000614Z",
+        "started_at": "2026-07-17T14:24:34.000281Z",
+        "first_billed_at": "2026-07-17T14:24:34.000974Z",
+        "next_billed_at": "2026-11-14T14:24:34.000613Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-15T14:24:34.000812Z",
+          "ends_at": "2026-11-14T14:24:34.000810Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-07-17T14:24:34.000965Z",
+            "updated_at": "2026-10-15T14:24:34.000381Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01KZ7KGJ00FE4KQEQP1D8ZM2CY"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-15T14:24:36.000755Z",
+    "delivered_at": "2026-10-15T14:24:37.792218Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-15T14:24:36.847194Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m51yhsn48xgp945sfx61dvc7",
+    "type": "customer.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m51yhsbrnzydn7ht2e7pbaeq",
+      "event_type": "customer.created",
+      "occurred_at": "2026-10-16T08:51:39.000453Z",
+      "notification_id": "ntf_01m51yhsn48xgp945sfx61dvc7",
+      "data": {
+        "id": "ctm_01m51yhsbrvc7qwmptbqn2z76s",
+        "email": "pedro.g@inbox.example",
+        "created_at": "2026-10-16T08:51:39.000983Z",
+        "name": null,
+        "marketing_consent": false,
+        "status": "active",
+        "custom_data": null,
+        "locale": "en",
+        "updated_at": "2026-10-16T08:51:39.000983Z",
+        "import_meta": null
+      }
+    },
+    "occurred_at": "2026-10-16T08:51:39.000453Z",
+    "delivered_at": "2026-10-16T08:51:39.864529Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-16T08:51:40.668382Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m51yj1f4k6q2q3703fp1hr8b",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m51yj15rmdbe78gasr7tqn4b",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-16T08:51:47.000207Z",
+      "notification_id": "ntf_01m51yj1f4k6q2q3703fp1hr8b",
+      "data": {
+        "id": "txn_01m51yj15rrrj8qqvrat26aq4p",
+        "status": "completed",
+        "customer_id": "ctm_01m51yhsbrvc7qwmptbqn2z76s",
+        "address_id": "add_01m51yhsbrvc7qwmptbqn2z76s",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01M3KKCVBR4977Z13H87NFJCQ7"
+        },
+        "origin": "web",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m51yj2505wmva0v9rz9ky5q4",
+        "invoice_id": "inv_01m51yj15rttnm9jz47nm930w5",
+        "invoice_number": "14447-73162",
+        "billing_period": {
+          "starts_at": "2026-10-16T08:51:47.000841Z",
+          "ends_at": "2026-11-15T08:51:47.000626Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "92",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-16T08:51:47.000734Z",
+        "updated_at": "2026-10-16T08:51:49.000385Z",
+        "billed_at": "2026-10-16T08:51:49.000980Z"
+      }
+    },
+    "occurred_at": "2026-10-16T08:51:47.000207Z",
+    "delivered_at": "2026-10-16T08:51:47.751690Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-16T08:51:49.105522Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m51yj2ectmsqgr68y8kw19yg",
+    "type": "subscription.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m51yj250y314rxf45vecscyv",
+      "event_type": "subscription.created",
+      "occurred_at": "2026-10-16T08:51:48.000970Z",
+      "notification_id": "ntf_01m51yj2ectmsqgr68y8kw19yg",
+      "data": {
+        "id": "sub_01m51yj2505wmva0v9rz9ky5q4",
+        "status": "active",
+        "customer_id": "ctm_01m51yhsbrvc7qwmptbqn2z76s",
+        "address_id": "add_01m51yhsbrvc7qwmptbqn2z76s",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-10-16T08:51:39.000681Z",
+        "updated_at": "2026-10-16T08:51:48.000149Z",
+        "started_at": "2026-10-16T08:51:39.000234Z",
+        "first_billed_at": "2026-10-16T08:51:39.000510Z",
+        "next_billed_at": "2026-11-15T08:51:48.000745Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-16T08:51:48.000299Z",
+          "ends_at": "2026-11-15T08:51:48.000731Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-10-16T08:51:39.000766Z",
+            "updated_at": "2026-10-16T08:51:48.000786Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01M3KKCVBR4977Z13H87NFJCQ7"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-16T08:51:48.000970Z",
+    "delivered_at": "2026-10-16T08:51:49.304255Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-16T08:51:48.448432Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m51yj2tw17e3vghjs6kkdk8n",
+    "type": "subscription.activated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m51yj2hg3vnkrmmntc4gmpjy",
+      "event_type": "subscription.activated",
+      "occurred_at": "2026-10-16T08:51:48.400250Z",
+      "notification_id": "ntf_01m51yj2tw17e3vghjs6kkdk8n",
+      "data": {
+        "id": "sub_01m51yj2505wmva0v9rz9ky5q4",
+        "status": "active",
+        "customer_id": "ctm_01m51yhsbrvc7qwmptbqn2z76s",
+        "address_id": "add_01m51yhsbrvc7qwmptbqn2z76s",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-10-16T08:51:39.000663Z",
+        "updated_at": "2026-10-16T08:51:48.400669Z",
+        "started_at": "2026-10-16T08:51:39.000891Z",
+        "first_billed_at": "2026-10-16T08:51:39.000311Z",
+        "next_billed_at": "2026-11-15T08:51:48.400551Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-16T08:51:48.400357Z",
+          "ends_at": "2026-11-15T08:51:48.400653Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-10-16T08:51:39.000898Z",
+            "updated_at": "2026-10-16T08:51:48.400583Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01M3KKCVBR4977Z13H87NFJCQ7"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-16T08:51:48.400250Z",
+    "delivered_at": "2026-10-16T08:51:50.790266Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-16T08:51:49.366772Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m55waph4w0whbcwqvefjb82r",
+    "type": "transaction.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m55wap7rh8begr0djj834kv8",
+      "event_type": "transaction.created",
+      "occurred_at": "2026-10-17T21:29:47.000352Z",
+      "notification_id": "ntf_01m55waph4w0whbcwqvefjb82r",
+      "data": {
+        "id": "txn_01m55wap7r693yqwapa0es6caz",
+        "status": "ready",
+        "customer_id": "ctm_01m0bcfw081r9x5eha4zpftgkr",
+        "address_id": "add_01m0bcfw081r9x5eha4zpftgkr",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KWAX6P00JFHTAQYGSNY4EG7Y"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m0bch328v8dncdvf6qqwqxem",
+        "invoice_id": null,
+        "invoice_number": null,
+        "billing_period": {
+          "starts_at": "2026-10-17T21:29:47.000403Z",
+          "ends_at": "2026-11-16T21:29:47.000600Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "76",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-17T21:29:47.000976Z",
+        "updated_at": "2026-10-17T21:29:49.000712Z",
+        "billed_at": null
+      }
+    },
+    "occurred_at": "2026-10-17T21:29:47.000352Z",
+    "delivered_at": "2026-10-17T21:29:47.934851Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-17T21:29:47.398722Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m55wb09mq57awdtnkn8wm4cz",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m55wb008f5t2dm4s35cye140",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-17T21:29:57.000370Z",
+      "notification_id": "ntf_01m55wb09mq57awdtnkn8wm4cz",
+      "data": {
+        "id": "txn_01m55wb008rkayr1cq7bh9b01f",
+        "status": "completed",
+        "customer_id": "ctm_01m0bcfw081r9x5eha4zpftgkr",
+        "address_id": "add_01m0bcfw081r9x5eha4zpftgkr",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KWAX6P00JFHTAQYGSNY4EG7Y"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m0bch328v8dncdvf6qqwqxem",
+        "invoice_id": "inv_01m55wb0081wgs3j75423fh1vv",
+        "invoice_number": "14405-14039",
+        "billing_period": {
+          "starts_at": "2026-10-17T21:29:57.000408Z",
+          "ends_at": "2026-11-16T21:29:57.000419Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "76",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-17T21:29:57.000642Z",
+        "updated_at": "2026-10-17T21:29:59.000102Z",
+        "billed_at": "2026-10-17T21:29:59.000156Z"
+      }
+    },
+    "occurred_at": "2026-10-17T21:29:57.000370Z",
+    "delivered_at": "2026-10-17T21:29:57.469349Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-17T21:29:59.267524Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m55wb284z3q4yjkpmxep6773",
+    "type": "subscription.updated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m55wb1yr8gm9wv00h3efq44g",
+      "event_type": "subscription.updated",
+      "occurred_at": "2026-10-17T21:29:59.000122Z",
+      "notification_id": "ntf_01m55wb284z3q4yjkpmxep6773",
+      "data": {
+        "id": "sub_01m0bch328v8dncdvf6qqwqxem",
+        "status": "active",
+        "customer_id": "ctm_01m0bcfw081r9x5eha4zpftgkr",
+        "address_id": "add_01m0bcfw081r9x5eha4zpftgkr",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-08-18T21:29:57.000524Z",
+        "updated_at": "2026-10-17T21:29:57.000473Z",
+        "started_at": "2026-08-18T21:29:57.000214Z",
+        "first_billed_at": "2026-08-18T21:29:57.000765Z",
+        "next_billed_at": "2026-11-16T21:29:57.000673Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-17T21:29:57.000621Z",
+          "ends_at": "2026-11-16T21:29:57.000233Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-08-18T21:29:57.000190Z",
+            "updated_at": "2026-10-17T21:29:57.000205Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01KWAX6P00JFHTAQYGSNY4EG7Y"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-17T21:29:59.000122Z",
+    "delivered_at": "2026-10-17T21:29:59.689143Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-17T21:29:59.976289Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m5afcdhc8b330jq4d6cqqqtw",
+    "type": "transaction.created",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m5afcd80fgvzg2krjq925ctj",
+      "event_type": "transaction.created",
+      "occurred_at": "2026-10-19T16:19:44.000380Z",
+      "notification_id": "ntf_01m5afcdhc8b330jq4d6cqqqtw",
+      "data": {
+        "id": "txn_01m5afcd80pkpra6f8n8dy8dhp",
+        "status": "ready",
+        "customer_id": "ctm_01m2x7f50grpgj3nz8vsja784h",
+        "address_id": "add_01m2x7f50grpgj3nz8vsja784h",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KY8PQY00R5FFRF80P5TFA5J7"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m2x7gc2gcgq5dspv6t6penzv",
+        "invoice_id": null,
+        "invoice_number": null,
+        "billing_period": {
+          "starts_at": "2026-10-19T16:19:44.000633Z",
+          "ends_at": "2026-11-18T16:19:44.000977Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "0",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-19T16:19:44.000463Z",
+        "updated_at": "2026-10-19T16:19:46.000794Z",
+        "billed_at": null
+      }
+    },
+    "occurred_at": "2026-10-19T16:19:44.000380Z",
+    "delivered_at": "2026-10-19T16:19:45.556326Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-19T16:19:45.412530Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m5afcq9wb6caag793xtbzjzb",
+    "type": "transaction.completed",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m5afcq0gpfgy8njbb1j52ffj",
+      "event_type": "transaction.completed",
+      "occurred_at": "2026-10-19T16:19:54.000731Z",
+      "notification_id": "ntf_01m5afcq9wb6caag793xtbzjzb",
+      "data": {
+        "id": "txn_01m5afcq0gzdbw731yt3fxxn89",
+        "status": "completed",
+        "customer_id": "ctm_01m2x7f50grpgj3nz8vsja784h",
+        "address_id": "add_01m2x7f50grpgj3nz8vsja784h",
+        "business_id": null,
+        "custom_data": {
+          "user_id": "01KY8PQY00R5FFRF80P5TFA5J7"
+        },
+        "origin": "subscription_recurring",
+        "collection_mode": "automatic",
+        "subscription_id": "sub_01m2x7gc2gcgq5dspv6t6penzv",
+        "invoice_id": "inv_01m5afcq0gr6k6bc2x6c7f6j4y",
+        "invoice_number": "15963-98956",
+        "billing_period": {
+          "starts_at": "2026-10-19T16:19:54.000144Z",
+          "ends_at": "2026-11-18T16:19:54.000350Z"
+        },
+        "currency_code": "USD",
+        "details": {
+          "totals": {
+            "subtotal": "400",
+            "tax": "84",
+            "discount": "0",
+            "total": "400",
+            "currency_code": "USD"
+          }
+        },
+        "items": [
+          {
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            },
+            "quantity": 1
+          }
+        ],
+        "created_at": "2026-10-19T16:19:54.000516Z",
+        "updated_at": "2026-10-19T16:19:56.000979Z",
+        "billed_at": "2026-10-19T16:19:56.000746Z"
+      }
+    },
+    "occurred_at": "2026-10-19T16:19:54.000731Z",
+    "delivered_at": "2026-10-19T16:19:55.778893Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-19T16:19:55.115750Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  },
+  {
+    "id": "ntf_01m5afcs8cn2qqx9fma3h8tqk3",
+    "type": "subscription.updated",
+    "status": "delivered",
+    "payload": {
+      "event_id": "evt_01m5afcrz09rkm4td5fd3rzakr",
+      "event_type": "subscription.updated",
+      "occurred_at": "2026-10-19T16:19:56.000492Z",
+      "notification_id": "ntf_01m5afcs8cn2qqx9fma3h8tqk3",
+      "data": {
+        "id": "sub_01m2x7gc2gcgq5dspv6t6penzv",
+        "status": "active",
+        "customer_id": "ctm_01m2x7f50grpgj3nz8vsja784h",
+        "address_id": "add_01m2x7f50grpgj3nz8vsja784h",
+        "business_id": null,
+        "currency_code": "USD",
+        "created_at": "2026-09-19T16:19:54.000779Z",
+        "updated_at": "2026-10-19T16:19:54.000494Z",
+        "started_at": "2026-09-19T16:19:54.000650Z",
+        "first_billed_at": "2026-09-19T16:19:54.000534Z",
+        "next_billed_at": "2026-11-18T16:19:54.000101Z",
+        "paused_at": null,
+        "canceled_at": null,
+        "collection_mode": "automatic",
+        "billing_details": null,
+        "current_billing_period": {
+          "starts_at": "2026-10-19T16:19:54.000774Z",
+          "ends_at": "2026-11-18T16:19:54.000644Z"
+        },
+        "billing_cycle": {
+          "interval": "month",
+          "frequency": 1
+        },
+        "scheduled_change": null,
+        "items": [
+          {
+            "status": "active",
+            "quantity": 1,
+            "recurring": true,
+            "created_at": "2026-09-19T16:19:54.000475Z",
+            "updated_at": "2026-10-19T16:19:54.000954Z",
+            "price": {
+              "id": "pri_01j4yq7p3z8m2c6v1k0t9w5r3n",
+              "description": "Satchel monthly",
+              "product_id": "pro_01j4yq5s0x2b7n4m8q1v3c6z9d",
+              "billing_cycle": {
+                "interval": "month",
+                "frequency": 1
+              },
+              "unit_price": {
+                "amount": "400",
+                "currency_code": "USD"
+              }
+            }
+          }
+        ],
+        "custom_data": {
+          "user_id": "01KY8PQY00R5FFRF80P5TFA5J7"
+        },
+        "management_urls": {
+          "update_payment_method": null,
+          "cancel": null
+        }
+      }
+    },
+    "occurred_at": "2026-10-19T16:19:56.000492Z",
+    "delivered_at": "2026-10-19T16:19:56.307339Z",
+    "replayed_at": null,
+    "origin": "event",
+    "last_attempt_at": "2026-10-19T16:19:58.038349Z",
+    "retry_at": null,
+    "times_attempted": 1,
+    "notification_setting_id": "ntfset_01j4yr2b8x6n0q3m7v5c9z1k4t"
+  }
+]

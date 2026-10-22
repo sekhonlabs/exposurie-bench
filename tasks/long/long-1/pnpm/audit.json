@@ -1,0 +1,167 @@
+{
+  "actions": [
+    {
+      "action": "update",
+      "module": "hono",
+      "target": "4.11.2",
+      "depth": 1,
+      "resolves": [
+        {
+          "id": 1104471,
+          "path": "hono",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "update",
+      "module": "tar-fs",
+      "target": "2.1.4",
+      "depth": 3,
+      "resolves": [
+        {
+          "id": 1104502,
+          "path": "better-sqlite3>prebuild-install>tar-fs",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    },
+    {
+      "action": "update",
+      "module": "@hono/node-server",
+      "target": "1.19.7",
+      "depth": 1,
+      "resolves": [
+        {
+          "id": 1104520,
+          "path": "@hono/node-server",
+          "dev": false,
+          "optional": false,
+          "bundled": false
+        }
+      ]
+    }
+  ],
+  "advisories": {
+    "1104471": {
+      "findings": [
+        {
+          "version": "4.10.1",
+          "paths": [
+            "hono"
+          ]
+        }
+      ],
+      "id": 1104471,
+      "created": "2026-09-30T14:02:11.000Z",
+      "updated": "2026-10-08T09:41:52.000Z",
+      "deleted": null,
+      "title": "serveStatic can read files outside its root on Windows when a path holds encoded backslashes",
+      "found_by": null,
+      "reported_by": null,
+      "module_name": "hono",
+      "cves": [],
+      "vulnerable_versions": "<4.11.2",
+      "patched_versions": ">=4.11.2",
+      "overview": "On Windows, the serveStatic middleware decoded a percent-encoded backslash after checking the path against its root, so a request such as /css/..%5c..%5cconfig could read files outside the static folder. Servers on Linux and macOS are not affected, since the backslash is not a path separator there.",
+      "recommendation": "Upgrade to version 4.11.2 or later",
+      "references": "",
+      "access": "public",
+      "severity": "moderate",
+      "cwe": [
+        "CWE-22"
+      ],
+      "metadata": {
+        "module_type": "",
+        "exploitability": 3,
+        "affected_components": ""
+      }
+    },
+    "1104502": {
+      "findings": [
+        {
+          "version": "2.1.2",
+          "paths": [
+            "better-sqlite3>prebuild-install>tar-fs"
+          ]
+        }
+      ],
+      "id": 1104502,
+      "created": "2026-09-30T14:02:11.000Z",
+      "updated": "2026-10-08T09:41:52.000Z",
+      "deleted": null,
+      "title": "Link following when extracting a crafted tarball",
+      "found_by": null,
+      "reported_by": null,
+      "module_name": "tar-fs",
+      "cves": [],
+      "vulnerable_versions": "<2.1.4",
+      "patched_versions": ">=2.1.4",
+      "overview": "A crafted tarball can make tar-fs write outside the directory it extracts into by way of a symbolic link. prebuild-install uses tar-fs to unpack the prebuilt binary it downloads at install time; the code that runs the application does not use it.",
+      "recommendation": "Upgrade to version 2.1.4 or later",
+      "references": "",
+      "access": "public",
+      "severity": "high",
+      "cwe": [
+        "CWE-59"
+      ],
+      "metadata": {
+        "module_type": "",
+        "exploitability": 6,
+        "affected_components": ""
+      }
+    },
+    "1104520": {
+      "findings": [
+        {
+          "version": "1.19.5",
+          "paths": [
+            "@hono/node-server"
+          ]
+        }
+      ],
+      "id": 1104520,
+      "created": "2026-09-30T14:02:11.000Z",
+      "updated": "2026-10-08T09:41:52.000Z",
+      "deleted": null,
+      "title": "Response headers may be written twice when a response stream errors",
+      "found_by": null,
+      "reported_by": null,
+      "module_name": "@hono/node-server",
+      "cves": [],
+      "vulnerable_versions": "<1.19.7",
+      "patched_versions": ">=1.19.7",
+      "overview": "When a streamed response body threw after the headers had been sent, the adapter could try to write them a second time and raise ERR_HTTP_HEADERS_SENT, which closed the connection without the rest of the response.",
+      "recommendation": "Upgrade to version 1.19.7 or later",
+      "references": "",
+      "access": "public",
+      "severity": "low",
+      "cwe": [
+        "CWE-755"
+      ],
+      "metadata": {
+        "module_type": "",
+        "exploitability": 3,
+        "affected_components": ""
+      }
+    }
+  },
+  "muted": [],
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 1,
+      "moderate": 1,
+      "high": 1,
+      "critical": 0
+    },
+    "dependencies": 47,
+    "devDependencies": 2,
+    "optionalDependencies": 0,
+    "totalDependencies": 49
+  }
+}

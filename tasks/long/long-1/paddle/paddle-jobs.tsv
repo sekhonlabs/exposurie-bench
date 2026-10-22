@@ -1,0 +1,14 @@
+id	kind	run_at	attempts	done_at	last_error
+01M4DQA0GC14ES12Q3SYMDBRND	paddle_event	2026-10-08T12:20:15.500Z	1	2026-10-08T12:20:19.378Z	
+01M4DQA0WWXN54QWZX6WXC6XSV	paddle_event	2026-10-08T12:20:15.900Z	1	2026-10-08T12:20:20.503Z	
+01M4H5TPAW8YT5YGSYDGGH6AWP	paddle_event	2026-10-09T20:31:45.500Z	1	2026-10-09T20:31:46.278Z	
+01M4KQ2SEWX3KAGM4XFSHS0WJA	paddle_event	2026-10-10T20:11:45.500Z	1	2026-10-10T20:11:47.961Z	
+01M4NZNJJ4EF97NJ5WP0FHKA9K	paddle_event	2026-10-11T17:20:18.500Z	1	2026-10-11T17:20:20.663Z	
+01M4RR0FG41RCJZK7HK44FQCAJ	paddle_event	2026-10-12T19:19:20.683Z	5	2026-10-12T19:19:20.702Z	Error: no user for paddle customer ctm_01m12jn3k0j0k7ewarwx3wbbhc\n    at paddleEvent (file:///app/src/jobs/handlers/paddle-event.js:16:21)\nat process.processTicksAndRejections (node:internal/process/task_queues:105:5)\nat async file:///app/src/worker.js:28:5
+01M4RR0FSG3Z3Y3Y5XKM0R1X0B	paddle_event	2026-10-12T19:19:23.117Z	5	2026-10-12T19:19:23.136Z	Error: no user for paddle customer ctm_01m12jn3k0j0k7ewarwx3wbbhc\n    at paddleEvent (file:///app/src/jobs/handlers/paddle-event.js:16:21)\nat process.processTicksAndRejections (node:internal/process/task_queues:105:5)\nat async file:///app/src/worker.js:28:5
+01M4XR8B9MJ7GNDZZ2ARSEG3XZ	paddle_event	2026-10-14T17:44:40.500Z	1	2026-10-14T17:44:45.093Z	
+01M4ZZ6RKW75A5937RNM94F8RN	paddle_event	2026-10-15T14:24:37.500Z	1	2026-10-15T14:24:40.342Z	
+01M51YJ3KWDJ853K7X54A4AK8M	paddle_event	2026-10-16T08:51:49.500Z	1	2026-10-16T08:51:54.286Z	
+01M51YJ40CXAH8G63FYKNW66Q0	paddle_event	2026-10-16T08:51:49.900Z	1	2026-10-16T08:51:52.516Z	
+01M55WB3DMDZAAY2TWJ2SNAA29	paddle_event	2026-10-17T21:30:00.500Z	1	2026-10-17T21:30:04.503Z	
+01M5AFCTDWD8R39STN4QGHX3J8	paddle_event	2026-10-19T16:19:57.500Z	1	2026-10-19T16:19:58.215Z	

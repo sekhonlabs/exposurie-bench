@@ -1,0 +1,67 @@
+A few rows from my real Pocket export that have a comma in the title, and what a split on commas makes of each.
+Pocket puts quotes around a field that has a comma in it, and doubles any quote inside one.
+The header is: title,url,time_added,tags,status
+
+"Thinking, Fast and Slow: My Notes",https://quietcraft.example/2021/03/thinking-fast-and-slow-notes,1615824000,books|psychology,archive
+  split on commas: 6 fields where there should be 5
+    1  "Thinking
+    2   Fast and Slow: My Notes"
+    3  https://quietcraft.example/2021/03/thinking-fast-and-slow-notes
+    4  1615824000
+    5  books|psychology
+    6  archive
+  so the url is " Fast and Slow: My Notes\"", and every field after it moves along by 1
+
+"Yes, You Can Run SQLite in Production",https://thecodelog.example/posts/sqlite-in-production,1648120000,sqlite,unread
+  split on commas: 6 fields where there should be 5
+    1  "Yes
+    2   You Can Run SQLite in Production"
+    3  https://thecodelog.example/posts/sqlite-in-production
+    4  1648120000
+    5  sqlite
+    6  unread
+  so the url is " You Can Run SQLite in Production\"", and every field after it moves along by 1
+
+"The ""Boring Technology"" Club, Revisited",https://ops-review.example/articles/2207-boring-technology-revisited,1661990000,,archive
+  split on commas: 6 fields where there should be 5
+    1  "The ""Boring Technology"" Club
+    2   Revisited"
+    3  https://ops-review.example/articles/2207-boring-technology-revisited
+    4  1661990000
+    5  
+    6  archive
+  so the url is " Revisited\"", and every field after it moves along by 1
+
+"Bread, Butter, and Backpressure",https://datahaus.example/2023/02/bread-butter-backpressure,1676000000,streams|distributed-systems,unread
+  split on commas: 7 fields where there should be 5
+    1  "Bread
+    2   Butter
+    3   and Backpressure"
+    4  https://datahaus.example/2023/02/bread-butter-backpressure
+    5  1676000000
+    6  streams|distributed-systems
+    7  unread
+  so the url is " Butter", and every field after it moves along by 2
+
+"Paris, London, Lisbon: Night Trains Compared",https://slowtravel.example/posts/night-trains-compared,1693000000,travel,archive
+  split on commas: 7 fields where there should be 5
+    1  "Paris
+    2   London
+    3   Lisbon: Night Trains Compared"
+    4  https://slowtravel.example/posts/night-trains-compared
+    5  1693000000
+    6  travel
+    7  archive
+  so the url is " London", and every field after it moves along by 2
+
+"Small, Sharp, and Boring: Tools I Still Use",https://bytesized.example/posts/small-sharp-boring-tools,1702300000,tools,unread
+  split on commas: 7 fields where there should be 5
+    1  "Small
+    2   Sharp
+    3   and Boring: Tools I Still Use"
+    4  https://bytesized.example/posts/small-sharp-boring-tools
+    5  1702300000
+    6  tools
+    7  unread
+  so the url is " Sharp", and every field after it moves along by 2
+

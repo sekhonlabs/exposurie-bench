@@ -1,0 +1,10 @@
+From: Leonor <leonor.a@post.example>
+To: hello@satchel.example
+Subject: Can I bring my Pocket export?
+Date: Thu, 15 Oct 2026 18:33:57 +0100
+
+Hi,
+
+I have about 6,000 links in a Pocket export (a CSV file). I would love to move everything to Satchel, tags included. Is there a way to import it? The import page seems to take only a list of links.
+
+Leonor
