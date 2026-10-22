@@ -12,11 +12,11 @@ Claude Code builds and runs all of it.
 | `users/<user>/plan.json` | the session plan: each session's time, project or chat, and surface (part 1), and which facts come up in it and how (part 2) |
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
-| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5), the brain build check (part 6) and the long-session check (part 8) |
+| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5), the brain build check (part 6), the long-session check (part 8) and the results check (part 9) |
 | `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6, 7 and 9 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`), example answers (`tasks/examples.json`), and area 9's steps files, the material their steps hand over, and the scripts that write both (`tasks/long/`) |
 | `runner/` | sandbox setup, the runner and the brain build, area 9's long sessions (`long.mjs`), and the fake `claude` they are tested against |
-| `score/` | how a task's checks read a run (part 4), the scorer and the judge (part 5), and area 9's scorer (`long.mjs`) |
-| `results/` | summaries and charts. Raw run output stays outside the repository |
+| `score/` | how a task's checks read a run (part 4), the scorer and the judge (part 5), area 9's scorer (`long.mjs`), and the results' numbers and charts (`results.mjs`, part 9) |
+| `results/` | each batch's scores and which run had which condition, the brain builds' tokens, every number (`numbers.json`) and the charts (`charts/`). Raw run output stays outside the repository |
 
 The sandbox and the raw output (`sandbox/` and `runs/`) sit next to this repository's folder, never inside it.
 
@@ -398,5 +398,24 @@ node check/long.mjs
 
 ### 9. Results
 
+**Plan usage:** none. **Done for areas 1–8 (2026-10-22).** Area 9's results join them once it has run.
+
 - Score the runs, check them by hand, and compute the numbers in [design.md](design.md#numbers).
 - Make the charts and the README's results section, in exposurie's look (see [CLAUDE.md](../CLAUDE.md#look)).
+
+What part 9 did for areas 1–8, whose runs were already scored and checked by hand in part 7:
+
+- **`score/results.mjs --save`** first publishes what the numbers need from `../runs`: each batch's conditions, as `results/<batch>/conditions.json`, and each brain build's tokens, as `results/builds.json`. Then it computes every number of design.md from `results/` alone into `results/numbers.json`, and draws three charts into `results/charts/`: right answers by area, tokens, and break-even. Without `--save` it prints the numbers. How each number is computed is in [decisions.md](decisions.md).
+- **`check/results.mjs` passes:**
+  - each batch holds each of its planned cells exactly once, and every run has its condition and a final verdict
+  - `results/` holds exactly what the script writes, and nothing else in `results/charts/`
+  - the charts use only the colours and fonts in CLAUDE.md's look, read from CLAUDE.md itself, and every line of their text fits inside the chart at Arial's widths
+  - nothing in `results/` holds the sandbox login's address or names, or a machine path
+
+  A fault test broke a copy of the repository twelve ways, one at a time, and every break was caught (`../runs/part9-fault-test`).
+- **The README's results section** answers its four questions, gives every number with the charts, C's three wrong answers, how the results compare with what design.md expected before any result, and what they do not show.
+
+```
+node score/results.mjs [--save]
+node check/results.mjs
+```

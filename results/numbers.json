@@ -1,0 +1,559 @@
+{
+  "note": "Written by score/results.mjs from results/ alone. Areas 1–8: area 9 has not run.",
+  "tokens": "Every input token, cached or not (all_input), is the primary number. Output is counted beside it.",
+  "conditions": {
+    "A": "fresh session",
+    "B": "whole history",
+    "C": "exposurie",
+    "D": "perfect memory"
+  },
+  "runs": {
+    "full": 93,
+    "stability": 6,
+    "scored_by": {
+      "checks": 54,
+      "judge": 0,
+      "hand": 39
+    }
+  },
+  "right_answers": {
+    "of": 21,
+    "pooled": {
+      "A": 3,
+      "B": 21,
+      "C": 18,
+      "D": 21
+    },
+    "by_user": {
+      "developer": {
+        "of": 11,
+        "A": 1,
+        "B": 11,
+        "C": 9,
+        "D": 11
+      },
+      "delegator": {
+        "of": 10,
+        "A": 2,
+        "B": 10,
+        "C": 9,
+        "D": 10
+      }
+    },
+    "by_area": [
+      {
+        "area": 1,
+        "name": "Recall",
+        "of": 3,
+        "A": 0,
+        "B": 3,
+        "C": 2,
+        "D": 3
+      },
+      {
+        "area": 2,
+        "name": "Across projects",
+        "of": 3,
+        "A": 0,
+        "B": 3,
+        "C": 2,
+        "D": 3
+      },
+      {
+        "area": 3,
+        "name": "Changed decisions",
+        "of": 3,
+        "A": 0,
+        "B": 3,
+        "C": 3,
+        "D": 3
+      },
+      {
+        "area": 4,
+        "name": "Never discussed",
+        "of": 3,
+        "A": 3,
+        "B": 3,
+        "C": 3,
+        "D": 3
+      },
+      {
+        "area": 5,
+        "name": "Your way",
+        "of": 3,
+        "A": 0,
+        "B": 3,
+        "C": 3,
+        "D": 3
+      },
+      {
+        "area": 6,
+        "name": "Real work",
+        "of": 3,
+        "A": 0,
+        "B": 3,
+        "C": 2,
+        "D": 3
+      },
+      {
+        "area": 7,
+        "name": "Chat to agent",
+        "of": 3,
+        "A": 0,
+        "B": 3,
+        "C": 3,
+        "D": 3
+      },
+      {
+        "area": 8,
+        "name": "No past needed",
+        "of": 3,
+        "A": 3,
+        "B": 3,
+        "C": 3
+      }
+    ]
+  },
+  "potential_reached": {
+    "pooled": {
+      "value": 0.833,
+      "closed": 15,
+      "of": 18
+    },
+    "developer": {
+      "value": 0.8,
+      "closed": 8,
+      "of": 10
+    },
+    "delegator": {
+      "value": 0.875,
+      "closed": 7,
+      "of": 8
+    }
+  },
+  "made_up_answers": {
+    "area": 4,
+    "of": 3,
+    "A": 0,
+    "B": 0,
+    "C": 0,
+    "D": 0
+  },
+  "looked_vs_found": {
+    "runs": 21,
+    "looked": 20,
+    "right_when_looked": 18,
+    "right_when_not": 0,
+    "reads_median": 5,
+    "misses": [
+      {
+        "task": "real-work-2",
+        "run": "r003",
+        "looked": false
+      },
+      {
+        "task": "across-3",
+        "run": "r009",
+        "looked": true
+      },
+      {
+        "task": "recall-1",
+        "run": "r049",
+        "looked": true
+      }
+    ]
+  },
+  "tokens_per_run": {
+    "median": {
+      "A": 13095,
+      "B": 125497,
+      "C": 34494,
+      "D": 6622
+    },
+    "median_questions": {
+      "A": 13047,
+      "B": 125495,
+      "C": 30089,
+      "D": 6607
+    },
+    "median_work": {
+      "A": 25505,
+      "B": 736844,
+      "C": 69938.5,
+      "D": 38593.5
+    },
+    "output_median": {
+      "A": 514,
+      "B": 658,
+      "C": 653,
+      "D": 439
+    }
+  },
+  "tokens_per_right_answer": {
+    "A": 126197,
+    "B": 277950,
+    "C": 49263,
+    "D": 17675
+  },
+  "token_totals": {
+    "A": {
+      "runs": 21,
+      "all_input": 378592,
+      "input": 106,
+      "cache_write": 39100,
+      "cache_read": 339386,
+      "output": 13522
+    },
+    "B": {
+      "runs": 21,
+      "all_input": 5836944,
+      "input": 98,
+      "cache_write": 2401599,
+      "cache_read": 3435247,
+      "output": 36336
+    },
+    "C": {
+      "runs": 21,
+      "all_input": 886737,
+      "input": 188,
+      "cache_write": 140143,
+      "cache_read": 746406,
+      "output": 36378
+    },
+    "D": {
+      "runs": 21,
+      "all_input": 371169,
+      "input": 92,
+      "cache_write": 53823,
+      "cache_read": 317254,
+      "output": 21152
+    }
+  },
+  "overhead": {
+    "area": 8,
+    "per_run_median": {
+      "A": 6423,
+      "B": 125509,
+      "C": 6721
+    },
+    "by_task": [
+      {
+        "task": "no-past-1",
+        "A": 6398,
+        "B": 125509,
+        "C": 6695
+      },
+      {
+        "task": "no-past-2",
+        "A": 6423,
+        "B": 125534,
+        "C": 6721
+      },
+      {
+        "task": "no-past-3",
+        "A": 6431,
+        "B": 108880,
+        "C": 6728
+      }
+    ],
+    "c_looked": 0,
+    "c_minus_a": 298,
+    "b_minus_a": 119086
+  },
+  "break_even": {
+    "developer": {
+      "build_tokens": 4008581,
+      "saving_per_session": {
+        "areas_1_to_7": 213438,
+        "questions": 90335,
+        "work": 767401
+      },
+      "sessions": {
+        "areas_1_to_7": 18.8,
+        "questions": 44.4,
+        "work": 5.2
+      }
+    },
+    "delegator": {
+      "build_tokens": 2996876,
+      "saving_per_session": {
+        "areas_1_to_7": 260239,
+        "questions": 79729,
+        "work": 531004
+      },
+      "sessions": {
+        "areas_1_to_7": 11.5,
+        "questions": 37.6,
+        "work": 5.6
+      }
+    }
+  },
+  "stability": {
+    "area": 3,
+    "condition": "C",
+    "batches": [
+      "full",
+      "stability-1",
+      "stability-2"
+    ],
+    "runs": 9,
+    "right": 9,
+    "changed": 0,
+    "by_task": [
+      {
+        "task": "changed-1",
+        "verdicts": [
+          "right",
+          "right",
+          "right"
+        ],
+        "all_input": [
+          29882,
+          29894,
+          29925
+        ]
+      },
+      {
+        "task": "changed-2",
+        "verdicts": [
+          "right",
+          "right",
+          "right"
+        ],
+        "all_input": [
+          21439,
+          21545,
+          21543
+        ]
+      },
+      {
+        "task": "changed-3",
+        "verdicts": [
+          "right",
+          "right",
+          "right"
+        ],
+        "all_input": [
+          31247,
+          31278,
+          29961
+        ]
+      }
+    ]
+  },
+  "by_task": [
+    {
+      "task": "recall-1",
+      "area": 1,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "wrong",
+      "D": "right"
+    },
+    {
+      "task": "recall-2",
+      "area": 1,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "recall-3",
+      "area": 1,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "across-1",
+      "area": 2,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "across-2",
+      "area": 2,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "across-3",
+      "area": 2,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "wrong",
+      "D": "right"
+    },
+    {
+      "task": "changed-1",
+      "area": 3,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "changed-2",
+      "area": 3,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "changed-3",
+      "area": 3,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "never-1",
+      "area": 4,
+      "user": "developer",
+      "A": "right",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "never-2",
+      "area": 4,
+      "user": "delegator",
+      "A": "right",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "never-3",
+      "area": 4,
+      "user": "delegator",
+      "A": "right",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "your-way-1",
+      "area": 5,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "your-way-2",
+      "area": 5,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "your-way-3",
+      "area": 5,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "real-work-1",
+      "area": 6,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "real-work-2",
+      "area": 6,
+      "user": "developer",
+      "A": "wrong",
+      "B": "right",
+      "C": "wrong",
+      "D": "right"
+    },
+    {
+      "task": "real-work-3",
+      "area": 6,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "chat-1",
+      "area": 7,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "chat-2",
+      "area": 7,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "chat-3",
+      "area": 7,
+      "user": "delegator",
+      "A": "wrong",
+      "B": "right",
+      "C": "right",
+      "D": "right"
+    },
+    {
+      "task": "no-past-1",
+      "area": 8,
+      "user": "developer",
+      "A": "right",
+      "B": "right",
+      "C": "right"
+    },
+    {
+      "task": "no-past-2",
+      "area": 8,
+      "user": "developer",
+      "A": "right",
+      "B": "right",
+      "C": "right"
+    },
+    {
+      "task": "no-past-3",
+      "area": 8,
+      "user": "delegator",
+      "A": "right",
+      "B": "right",
+      "C": "right"
+    }
+  ]
+}

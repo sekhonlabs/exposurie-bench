@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="542" viewBox="0 0 880 542" role="img" aria-label="Sessions until a brain pays for itself, by user and kind of session">
+<title>Sessions until a brain pays for itself, by user and kind of session</title>
+<rect x="0" y="0" width="880" height="542" fill="#FFFFFF"/>
+<text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">Sessions until a brain pays for itself</text>
+<text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">The tokens that built the brain, divided by the tokens a C session saves against B.</text>
+<text x="40" y="116" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">The developer: 4,008,581 tokens to build</text>
+<text x="40" y="147" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">A question, areas 1–5</text>
+<text x="40" y="165" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">C saves 90,335 tokens a session</text>
+<rect x="300" y="133" width="400" height="22" fill="#E37D4E"/>
+<text x="708" y="149" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">44.4 sessions</text>
+<text x="40" y="195" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">A work task, areas 6–7</text>
+<text x="40" y="213" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">C saves 767,401 tokens a session</text>
+<rect x="300" y="181" width="46.8" height="22" fill="#E37D4E"/>
+<text x="354.8" y="197" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">5.2 sessions</text>
+<text x="40" y="243" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Areas 1–7, as run here</text>
+<text x="40" y="261" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">C saves 213,438 tokens a session</text>
+<rect x="300" y="229" width="169.4" height="22" fill="#E37D4E"/>
+<text x="477.4" y="245" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">18.8 sessions</text>
+<text x="40" y="306" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">The delegator: 2,996,876 tokens to build</text>
+<text x="40" y="337" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">A question, areas 1–5</text>
+<text x="40" y="355" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">C saves 79,729 tokens a session</text>
+<rect x="300" y="323" width="338.7" height="22" fill="#E37D4E"/>
+<text x="646.7" y="339" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">37.6 sessions</text>
+<text x="40" y="385" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">A work task, areas 6–7</text>
+<text x="40" y="403" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">C saves 531,004 tokens a session</text>
+<rect x="300" y="371" width="50.5" height="22" fill="#E37D4E"/>
+<text x="358.5" y="387" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">5.6 sessions</text>
+<text x="40" y="433" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Areas 1–7, as run here</text>
+<text x="40" y="451" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">C saves 260,239 tokens a session</text>
+<rect x="300" y="419" width="103.6" height="22" fill="#E37D4E"/>
+<text x="411.6" y="435" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">11.5 sessions</text>
+<text x="40" y="496" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">B holds only what was said; a real long session also carries tool output, so B costs less here than</text>
+<text x="40" y="516" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">the habit it stands for. Keeping a brain synced as its history grows costs tokens too, not counted here.</text>
+</svg>

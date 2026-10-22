@@ -1,0 +1,33 @@
+{
+  "note": "Each brain build, as its own record gives it: every session of the build, every model, every token counted.",
+  "builds": {
+    "developer": {
+      "sessions": 1,
+      "turns": 113,
+      "duration_ms": 558091,
+      "tokens": {
+        "all_input": 4008581,
+        "input": 60,
+        "cache_write": 227226,
+        "cache_read": 3781295,
+        "output": 64842
+      },
+      "conversations_filed": 28,
+      "pages": 39
+    },
+    "delegator": {
+      "sessions": 1,
+      "turns": 70,
+      "duration_ms": 428941,
+      "tokens": {
+        "all_input": 2996876,
+        "input": 50,
+        "cache_write": 190106,
+        "cache_read": 2806720,
+        "output": 53890
+      },
+      "conversations_filed": 25,
+      "pages": 20
+    }
+  }
+}
