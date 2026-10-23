@@ -261,6 +261,19 @@ function kept(ctx, user, b) {
   expect(a.problems.length === 4, `a file beside a pattern went unflagged: ${JSON.stringify(a.problems)}`);
   a = shell('cd tmp/fly && cat ../app.log; cd .. && ls fly');
   expect(!a.problems.length, `a path after cd read from the wrong folder: ${JSON.stringify(a)}`);
+  // long-1's fill: a Grep printed 25 KB, Claude Code saved it to the session's
+  // tool-results folder, and the agent read it back from there.
+  const read = (file_path) => audit(
+    [{ type: 'assistant', message: { content: [{ type: 'tool_use', id: 't1', name: 'Read', input: { file_path } }] } }, { type: 'result', permission_denials: [] }],
+    { work, home, roots: [work] },
+  );
+  const session = join(home, '.claude', 'projects', 'E--runs-r001-satchel', '46f4fae9-e92a-4d09-875a-ff88318793f6');
+  a = read(join(session, 'tool-results', 'toolu_01NfzM5j6LZgcpR8feLQCTXq.txt'));
+  expect(!a.problems.length && a.notes.length === 1, `a read of Claude Code's own tool result read as a reach: ${JSON.stringify(a)}`);
+  for (const p of [`${session}.jsonl`, join(session, 'tool-results', '..', '..', 'other.jsonl'), join(home, '.claude', 'settings.json')]) {
+    a = read(p);
+    expect(a.problems.length === 1, `a read of ${p} went unflagged`);
+  }
 }
 
 // ---------------------------------------------------------------- the real home
