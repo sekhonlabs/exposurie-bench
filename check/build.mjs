@@ -250,6 +250,17 @@ function kept(ctx, user, b) {
   expect(!a.problems.length && a.notes.length === 2, `a path inside quoted text read as a place: ${JSON.stringify(a)}`);
   a = shell("cat '../outside.txt'; cat \"E:/somewhere else/x.txt\"; echo \"$HOME\" > x");
   expect(a.problems.length === 3, `a quoted place outside the folder went unflagged: ${JSON.stringify(a.problems)}`);
+  // long-1's fill: an agent went into tmp/fly and filtered a log with grep,
+  // and the audit read the quoted pattern '/health' as a place.
+  const at = work.replace(/\\/g, '/');
+  a = shell(`cd ${at}/tmp/fly && grep -v -e 'job claimed' -e '/health' -e '"msg":"request"' 2026-10-14-morning-2.log | cut -c1-330`);
+  expect(!a.problems.length && a.notes.length === 3, `a grep pattern read as a place: ${JSON.stringify(a)}`);
+  a = shell("grep '/health' app.log; sed -n '/claimed/p' app.log; awk -F '\\t' '/done/{print $2}' app.log; rg -g '*.log' -e '/links' .; jq '.items[0]' items.json; grep --regexp=/x/y app.log");
+  expect(!a.problems.length && a.notes.length === 6, `a pattern or a script read as a place: ${JSON.stringify(a)}`);
+  a = shell("grep -e '/health' ../outside.log; sed -n '1,5p' /etc/hosts; jq -f ../filter.jq x.json; cd tmp && cat ../../outside.txt");
+  expect(a.problems.length === 4, `a file beside a pattern went unflagged: ${JSON.stringify(a.problems)}`);
+  a = shell('cd tmp/fly && cat ../app.log; cd .. && ls fly');
+  expect(!a.problems.length, `a path after cd read from the wrong folder: ${JSON.stringify(a)}`);
 }
 
 // ---------------------------------------------------------------- the real home

@@ -198,3 +198,11 @@ Dated, newest last. Each entry says what was decided and why.
 - **Overhead is area 8's median C less its median A**, as design.md has it, with each task's own difference beside it. C never ran `exposurie read` in area 8, so the difference is the context exposurie installs.
 - **Potential reached is given for each user as well as pooled.** Each user has their own brain, and their tasks differ in number: 11 in areas 1–7 for the developer, 10 for the delegator.
 - **The charts are held to the look by a check.** Their colours and fonts must be among those in CLAUDE.md's look, read from CLAUDE.md itself rather than from the script that draws them. Every line of their text must fit inside the chart at Arial's widths, which are wider than Calibri's and are what a reader without Calibri or Carlito gets. A fault test broke a copy of the repository twelve ways, and `check/results.mjs` caught every break.
+
+## 2026-10-23
+
+- **long-1 runs live, on the owner's go, a day before the seven-day reset.** The plan had it after the reset. The owner chose to start it now; a usage limit stops it, and the same command carries on.
+- **The audit reads a pattern or a script as text, and follows a `cd`: its fourth false flag.** In long-1's fill, step 13 went into `tmp/fly` and ran `grep -v -e 'job claimed' -e '/health' … 2026-10-14-morning-2.log`. Claude Code let it run by itself, and every file it read was inside the run's folder, but the audit read the quoted pattern `/health` as a place at the drive's root and threw the step out.
+  - For `grep`, `egrep`, `fgrep`, `rg`, `sed`, `awk` and `jq`, the word after `-e` (or an attached `--regexp=…`), or else the first operand, is the command's pattern or script, which is how Claude Code reads them. A file given with `-f`, and every file the command reads, is still a place.
+  - A `cd` moves the commands after it, so a relative path is read from where the shell is.
+  - `check/build.mjs` tests both, including a file outside the folder beside a pattern. Part 7's four batches re-audit with no disagreement, and long-1's first twelve fill steps re-audit as they were saved. Step 13 re-audits clean, and is kept with `--accept`.
