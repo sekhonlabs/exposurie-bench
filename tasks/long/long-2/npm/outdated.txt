@@ -1,0 +1,15 @@
+Package                  Current   Wanted   Latest  Location                              Depended by
+@aws-sdk/client-sesv2    3.908.0  3.908.0  3.916.0  node_modules/@aws-sdk/client-sesv2    tidewell-api
+@prisma/client            6.17.1   6.17.1   6.18.2  node_modules/@prisma/client            tidewell-api
+@types/express             5.0.3    5.0.3    5.0.5  node_modules/@types/express             tidewell-api
+@types/node               24.7.2   24.7.2   24.9.1  node_modules/@types/node               tidewell-api
+eslint                    9.37.0   9.37.0   9.39.0  node_modules/eslint                    tidewell-api
+express                    5.1.0    5.1.0    5.1.2  node_modules/express                   tidewell-api
+jest                      30.2.0   30.2.0   30.3.1  node_modules/jest                      tidewell-api
+prettier                   3.6.2    3.6.2    3.7.3  node_modules/prettier                  tidewell-api
+prisma                    6.17.1   6.17.1   6.18.2  node_modules/prisma                    tidewell-api
+supertest                  7.1.4    7.1.4    7.2.0  node_modules/supertest                 tidewell-api
+ts-jest                   29.4.5   29.4.5   29.4.6  node_modules/ts-jest                   tidewell-api
+tsx                       4.20.6   4.20.6   4.21.1  node_modules/tsx                       tidewell-api
+typescript                 5.9.3    5.9.3    6.0.2  node_modules/typescript                tidewell-api
+unleash-client             6.7.0    6.7.0    6.9.1  node_modules/unleash-client            tidewell-api

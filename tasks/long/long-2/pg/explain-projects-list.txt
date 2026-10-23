@@ -1,0 +1,23 @@
+EXPLAIN (ANALYZE, BUFFERS) -- GET /v2/organizations/cf025c77-0c17-4b89-85a6-636728dd58b6/projects?page=100&page_size=50, run by hand on the read replica, 2026-10-22 09:31 UTC
+
+Limit  (cost=48211.39..48211.52 rows=50 width=146) (actual time=1183.912..1183.931 rows=50 loops=1)
+  Buffers: shared hit=21877 read=19644
+  ->  Sort  (cost=47974.21..48429.97 rows=182302 width=146) (actual time=1183.401..1183.792 rows=5000 loops=1)
+        Sort Key: created_at DESC
+        Sort Method: top-N heapsort  Memory: 2214kB
+        Buffers: shared hit=21877 read=19644
+        ->  Bitmap Heap Scan on projects  (cost=3862.41..41093.56 rows=182302 width=146) (actual time=38.554..1102.648 rows=179233 loops=1)
+              Recheck Cond: (organization_id = 'cf025c77-0c17-4b89-85a6-636728dd58b6'::text)
+              Filter: (status = 'ACTIVE'::"ProjectStatus")
+              Rows Removed by Filter: 3173
+              Heap Blocks: exact=41019
+              Buffers: shared hit=21877 read=19644
+              ->  Bitmap Index Scan on projects_organization_id_id_idx  (cost=0.00..3816.93 rows=182406 width=0) (actual time=31.774..31.775 rows=182406 loops=1)
+                    Index Cond: (organization_id = 'cf025c77-0c17-4b89-85a6-636728dd58b6'::text)
+                    Buffers: shared hit=1123
+Planning:
+  Buffers: shared hit=4
+Planning Time: 0.214 ms
+Execution Time: 1184.402 ms
+
+The same with page=1: Execution Time: 1012.884 ms. With page=3000: Execution Time: 1966.031 ms (Sort Method: external merge  Disk: 25936kB).

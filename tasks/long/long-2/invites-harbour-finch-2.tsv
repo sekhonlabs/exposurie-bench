@@ -1,0 +1,146 @@
+id	email	role	created_at	sent_at	accepted_at
+98231032-d743-44e5-ba66-62fcc5eb2946	zara.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.368Z	2026-10-20T09:18:43.262Z	
+b18cc181-c48c-482a-9e92-7b52144fe411	lena.rossi@harbourfinch.example	member	2026-10-20T09:12:06.374Z	2026-10-20T09:18:43.349Z	
+cf95e040-c3b7-4740-8752-89c533acc3bb	devon.rossi@harbourfinch.example	member	2026-10-20T09:12:06.380Z	2026-10-20T09:18:43.447Z	
+7b574e80-3da6-44fb-aea7-ab9c11f89503	ruth.brenner@harbourfinch.example	member	2026-10-20T09:12:06.386Z	2026-10-20T09:18:43.558Z	
+2781665c-45e4-48e9-8bb7-cff4bfda31cf	mei.brenner@harbourfinch.example	member	2026-10-20T09:12:06.392Z	2026-10-20T09:18:43.694Z	
+0059aa6d-a694-45f2-bef9-3433dd2aa886	yara.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.398Z	2026-10-20T09:18:43.815Z	
+419fb3ef-c78d-4724-ab4c-d562bc2bc7f2	zara.brenner@harbourfinch.example	member	2026-10-20T09:12:06.404Z	2026-10-20T09:18:43.895Z	
+5fbb77d0-05eb-45ba-ac3c-b1ff9fbb4829	xavier.andersen@harbourfinch.example	member	2026-10-20T09:12:06.410Z	2026-10-20T09:18:43.972Z	
+4a412553-1c64-426b-96e2-bd9757d63152	nadia.okonjo@harbourfinch.example	member	2026-10-20T09:12:06.416Z	2026-10-20T09:18:44.092Z	
+92db4f21-1cb1-4455-8cad-34f3d581eb85	mateo.berg@harbourfinch.example	member	2026-10-20T09:12:06.422Z	2026-10-20T09:18:44.194Z	2026-10-20T13:17:44.194Z
+84f9180e-528c-47dc-b367-35d2e30c2f55	sofia.haddad@harbourfinch.example	member	2026-10-20T09:12:06.428Z	2026-10-20T09:18:44.321Z	
+f33dad5a-be8b-4ac9-8187-6d3ec7885f64	elif.osei@harbourfinch.example	member	2026-10-20T09:12:06.434Z	2026-10-20T09:18:44.455Z	
+701b82f5-4bb9-41b2-9eac-4b3ac6b23fce	kofi.costa@harbourfinch.example	member	2026-10-20T09:12:06.440Z	2026-10-20T09:18:44.538Z	2026-10-20T11:25:44.538Z
+017f631a-443c-4626-b51d-301abc0a1062	una.sato@harbourfinch.example	member	2026-10-20T09:12:06.446Z	2026-10-20T09:18:44.656Z	
+42f2ca10-4456-4915-ba50-d02342985e6b	oskar.oliveira@harbourfinch.example	member	2026-10-20T09:12:06.452Z	2026-10-20T09:18:44.726Z	
+028163af-14ab-4333-9712-8b82c35246bb	petra.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.458Z	2026-10-20T09:18:44.842Z	2026-10-20T13:28:44.842Z
+14a76c4f-5ad2-4c05-af1e-c35d430a3a6f	felix.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.464Z	2026-10-20T09:18:44.951Z	
+9d8937ef-baee-4824-81cd-604fa44eb3c0	xavier.petrov@harbourfinch.example	member	2026-10-20T09:12:06.470Z	2026-10-20T09:18:45.038Z	2026-10-20T11:25:45.038Z
+5664d8f3-154c-4d6c-8569-b6329350a39d	amir.osei@harbourfinch.example	member	2026-10-20T09:12:06.476Z	2026-10-20T09:18:45.149Z	2026-10-20T10:58:45.149Z
+3f11a51d-ea41-4b15-946e-ee151449f97e	luca.kim@harbourfinch.example	member	2026-10-20T09:12:06.482Z	2026-10-20T09:18:45.247Z	2026-10-20T11:44:45.247Z
+be65d863-00d3-4c00-b003-6b4c20dcf023	tariq.novak@harbourfinch.example	member	2026-10-20T09:12:06.488Z	2026-10-20T09:18:45.324Z	
+dd9fed54-a91b-425f-8f02-2fa59d11207e	sofia.osei@harbourfinch.example	member	2026-10-20T09:12:06.494Z	2026-10-20T09:18:45.398Z	
+881db077-3205-489f-9d43-2e9365b89661	devon.mbeki@harbourfinch.example	member	2026-10-20T09:12:06.500Z	2026-10-20T09:18:45.505Z	
+69201a6a-56a3-4abd-b0ec-79f9a35cc9f0	oskar.keller@harbourfinch.example	member	2026-10-20T09:12:06.506Z	2026-10-20T09:18:45.617Z	2026-10-20T12:43:45.617Z
+8779db53-cbb2-4dbf-9647-fe9b299f8201	noor.berg@harbourfinch.example	member	2026-10-20T09:12:06.512Z	2026-10-20T09:18:45.700Z	2026-10-20T09:39:45.700Z
+63c76d95-0b51-4651-92a0-7ef86434a4b9	wen.petrov@harbourfinch.example	member	2026-10-20T09:12:06.518Z	2026-10-20T09:18:45.827Z	2026-10-20T13:39:45.827Z
+3163b0cc-fc18-4660-836f-922e6fb5e509	omar.costa@harbourfinch.example	member	2026-10-20T09:12:06.524Z	2026-10-20T09:18:45.945Z	
+8d78c436-1ff2-40e7-8d7a-6763635cc7f7	theo.costa@harbourfinch.example	member	2026-10-20T09:12:06.530Z	2026-10-20T09:18:46.032Z	
+06631266-0d2e-410d-8c7d-bd079ab491d1	carla.oliveira@harbourfinch.example	member	2026-10-20T09:12:06.536Z	2026-10-20T09:18:46.123Z	2026-10-20T12:33:46.123Z
+5c193835-d84f-4d45-a414-f39fc45c471f	tariq.dubois@harbourfinch.example	member	2026-10-20T09:12:06.542Z	2026-10-20T09:18:46.264Z	2026-10-20T09:30:46.264Z
+cc2bb519-8a21-4898-bba0-1e318e44d85a	mateo.haddad@harbourfinch.example	member	2026-10-20T09:12:06.548Z	2026-10-20T09:18:46.354Z	
+eee1e6ea-6b12-40bc-967c-e3008b39cc0b	raj.fischer@harbourfinch.example	member	2026-10-20T09:12:06.554Z	2026-10-20T09:18:46.440Z	
+12efd631-d419-4169-a806-34cfdbd44604	felix.lindqvist@harbourfinch.example	member	2026-10-20T09:12:06.560Z	2026-10-20T09:18:46.519Z	
+dc06c634-5c9b-4988-af9f-dae590dba4ee	noor.santos@harbourfinch.example	member	2026-10-20T09:12:06.566Z	2026-10-20T09:18:46.629Z	2026-10-20T13:05:46.629Z
+44814d84-b075-4e19-994f-785906c5897b	david.brenner@harbourfinch.example	member	2026-10-20T09:12:06.572Z	2026-10-20T09:18:46.748Z	
+a5eef28e-6158-4ba2-a202-c34c54b0a976	omar.mendes@harbourfinch.example	member	2026-10-20T09:12:06.578Z	2026-10-20T09:18:46.874Z	
+a0d759e8-5dc6-4b9a-be6f-6d8c02a73dc4	marta.ito@harbourfinch.example	member	2026-10-20T09:12:06.584Z	2026-10-20T09:18:46.973Z	2026-10-20T11:50:46.973Z
+7dc5b473-1162-41b7-a70c-30fb613c226c	sofia.moreau@harbourfinch.example	member	2026-10-20T09:12:06.590Z	2026-10-20T09:18:47.083Z	
+ca863a56-cf6e-4175-9e6a-7a8baac9a804	marta.lindqvist@harbourfinch.example	member	2026-10-20T09:12:06.596Z	2026-10-20T09:18:47.223Z	
+3aa9d890-6caf-4835-9eaa-1926c11c4c9e	pavel.osei@harbourfinch.example	member	2026-10-20T09:12:06.602Z	2026-10-20T09:18:47.299Z	2026-10-20T10:33:47.299Z
+9ac5226b-7279-4ea0-b0fe-798ab32e2998	ruth.oliveira@harbourfinch.example	member	2026-10-20T09:12:06.608Z	2026-10-20T09:18:47.398Z	2026-10-20T12:00:47.398Z
+62cc3764-ace2-4f44-9a0d-0287ce9a7244	jun.lindqvist@harbourfinch.example	member	2026-10-20T09:12:06.614Z	2026-10-20T09:18:47.534Z	
+0d03d835-34fe-4462-88ab-c92d9da01ab5	jun.berg@harbourfinch.example	member	2026-10-20T09:12:06.620Z	2026-10-20T09:18:47.616Z	
+65e269af-b481-4362-8cc3-b8be7a32f681	una.lindqvist@harbourfinch.example	member	2026-10-20T09:12:06.626Z	2026-10-20T09:18:47.726Z	
+a8ac3fec-a826-4f8c-96bd-fb61f4807e54	marta.sato@harbourfinch.example	member	2026-10-20T09:12:06.632Z	2026-10-20T09:18:47.837Z	2026-10-20T12:14:47.837Z
+da7198f7-4a78-4ae0-b6cf-6e5aca43dc63	theo.rahman@harbourfinch.example	member	2026-10-20T09:12:06.638Z	2026-10-20T09:18:47.963Z	
+286d3b07-ee4a-4dd1-bd96-ca9ef2c071c9	devon.petrov@harbourfinch.example	member	2026-10-20T09:12:06.644Z	2026-10-20T09:18:48.039Z	2026-10-20T11:53:48.039Z
+6f67093b-4799-4c33-94e6-c7d5ee277839	mateo.nakamura@harbourfinch.example	member	2026-10-20T09:12:06.650Z	2026-10-20T09:18:48.134Z	2026-10-20T13:40:48.134Z
+760140a3-5729-44a5-a3e2-e39f4c05dbb8	leila.okonjo@harbourfinch.example	member	2026-10-20T09:12:06.656Z	2026-10-20T09:18:48.270Z	2026-10-20T10:19:48.270Z
+be7cbd83-0a13-483c-b443-4402ba3b7f18	leila.sato@harbourfinch.example	member	2026-10-20T09:12:06.662Z	2026-10-20T09:18:48.350Z	
+ad1e4271-b081-4cc2-bc49-201c49329528	carla.andersen@harbourfinch.example	member	2026-10-20T09:12:06.668Z	2026-10-20T09:18:48.459Z	2026-10-20T10:22:48.459Z
+a9bdd681-a5ac-456f-bb09-c3b56a5b707a	yara.nakamura@harbourfinch.example	member	2026-10-20T09:12:06.674Z	2026-10-20T09:18:48.563Z	
+8086d9aa-ae21-48f5-b146-e6dc8f35d2a7	sofia.andersen@harbourfinch.example	member	2026-10-20T09:12:06.680Z	2026-10-20T09:18:48.684Z	
+2f3e1d40-40a5-4339-a61a-b49a6cc64886	tariq.rossi@harbourfinch.example	member	2026-10-20T09:12:06.686Z	2026-10-20T09:18:48.800Z	
+07b87421-475d-4e49-bcc8-fd9119289719	oskar.petrov@harbourfinch.example	member	2026-10-20T09:12:06.692Z	2026-10-20T09:18:48.910Z	
+56e7040d-a7f6-4dcc-b48f-ad0eed538f49	xavier.sato@harbourfinch.example	member	2026-10-20T09:12:06.698Z	2026-10-20T09:18:49.041Z	
+ea6a21e0-891b-467a-8954-3ad41c915f05	viktor.fischer@harbourfinch.example	member	2026-10-20T09:12:06.704Z	2026-10-20T09:18:49.130Z	
+93fa0e8c-9283-429d-85ed-c4aaca310713	wen.rossi@harbourfinch.example	member	2026-10-20T09:12:06.710Z	2026-10-20T09:18:49.238Z	2026-10-20T12:06:49.238Z
+5d28d54a-ae24-4045-891f-cb6c52368f84	lena.berg@harbourfinch.example	member	2026-10-20T09:12:06.716Z	2026-10-20T09:18:49.333Z	2026-10-20T11:49:49.333Z
+9fab6f5b-5931-4c1b-8929-f82fb374b7d2	tomas.osei@harbourfinch.example	member	2026-10-20T09:12:06.722Z	2026-10-20T09:18:49.455Z	2026-10-20T12:44:49.455Z
+93e0f567-a871-4aed-af65-69fb407a2228	luca.varga@harbourfinch.example	member	2026-10-20T09:12:06.728Z	2026-10-20T09:18:49.588Z	2026-10-20T12:25:49.588Z
+273bb4c0-55ee-4f1c-bafc-69f91a5f37b7	mei.mbeki@harbourfinch.example	member	2026-10-20T09:12:06.734Z	2026-10-20T09:18:49.680Z	2026-10-20T12:04:49.680Z
+4da4b49b-0121-48f5-a4bc-25affebca90a	leila.horvath@harbourfinch.example	member	2026-10-20T09:12:06.740Z	2026-10-20T09:18:49.783Z	
+af02f281-21c0-4899-a561-4a1a4bf2649f	elif.santos@harbourfinch.example	member	2026-10-20T09:12:06.746Z	2026-10-20T09:18:49.862Z	2026-10-20T13:48:49.862Z
+4cca030a-1569-4e77-a3ec-d085a9ec08b3	felix.santos@harbourfinch.example	member	2026-10-20T09:12:06.752Z	2026-10-20T09:18:49.969Z	
+338eaed4-578f-4309-9792-2e83e346b004	yara.costa@harbourfinch.example	member	2026-10-20T09:12:06.758Z	2026-10-20T09:18:45.078Z	2026-10-20T12:02:45.078Z
+91c66e32-a939-4085-a707-5ef89cfd13fb	lena.kim@harbourfinch.example	member	2026-10-20T09:12:06.764Z	2026-10-20T09:18:45.203Z	
+ecd422b5-f38b-44f5-94a0-5a094e0a8c44	raj.moreau@harbourfinch.example	member	2026-10-20T09:12:06.770Z	2026-10-20T09:18:45.331Z	2026-10-20T14:14:45.331Z
+019781ce-daee-4d6e-a0de-0099725f8d98	theo.oliveira@harbourfinch.example	member	2026-10-20T09:12:06.776Z	2026-10-20T09:18:45.469Z	2026-10-20T10:00:45.469Z
+4644888f-6a0c-4ab6-906e-46ebc61432b7	sofia.varga@harbourfinch.example	member	2026-10-20T09:12:06.782Z	2026-10-20T09:18:45.554Z	
+b965dbd3-3e42-4df0-bd08-c42c09f684aa	marta.larsen@harbourfinch.example	member	2026-10-20T09:12:06.788Z	2026-10-20T09:18:45.637Z	2026-10-20T11:07:45.637Z
+966e5a71-df9f-49b0-b16d-de77cee4f0b7	tariq.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.794Z	2026-10-20T09:18:45.709Z	
+4b39d2dc-1866-4f12-9d27-a4fa3125e05a	ivo.nakamura@harbourfinch.example	member	2026-10-20T09:12:06.800Z	2026-10-20T09:18:45.848Z	2026-10-20T11:15:45.848Z
+6cdc5936-f772-40df-8171-9a46b4d13acc	mateo.costa@harbourfinch.example	member	2026-10-20T09:12:06.806Z	2026-10-20T09:18:45.970Z	2026-10-20T13:48:45.970Z
+aff8c115-bba3-42da-a735-e52be3973d1b	ivo.silva@harbourfinch.example	member	2026-10-20T09:12:06.812Z	2026-10-20T09:18:46.067Z	
+76ce237e-c2c8-41a6-ba0a-71c5aae9f319	oskar.horvath@harbourfinch.example	member	2026-10-20T09:12:06.818Z	2026-10-20T09:18:46.168Z	
+b941a0d0-5800-4ccf-a2a8-89072bb2ad63	xavier.brenner@harbourfinch.example	member	2026-10-20T09:12:06.824Z	2026-10-20T09:18:46.248Z	
+1576b15f-bc38-400a-8e98-0aaad3d3afdb	kofi.andersen@harbourfinch.example	member	2026-10-20T09:12:06.830Z	2026-10-20T09:18:46.360Z	
+38ad35b1-be6f-4860-b0c6-601440733cf2	marta.horvath@harbourfinch.example	member	2026-10-20T09:12:06.836Z	2026-10-20T09:18:46.501Z	
+700cc97c-8489-4df9-b55e-9e51a1029cb6	devon.mendes@harbourfinch.example	member	2026-10-20T09:12:06.842Z	2026-10-20T09:18:46.619Z	2026-10-20T09:23:46.619Z
+05126a4d-09bb-4d42-8983-ecd8c4523693	jun.andersen@harbourfinch.example	member	2026-10-20T09:12:06.848Z	2026-10-20T09:18:46.738Z	2026-10-20T09:30:46.738Z
+dc96f4b3-c627-4ac7-8c5a-d359bf298c5b	wen.nakamura@harbourfinch.example	member	2026-10-20T09:12:06.854Z	2026-10-20T09:18:46.835Z	2026-10-20T09:43:46.835Z
+2dd04e25-857d-441d-a96b-8f384e8f041c	freya.oliveira@harbourfinch.example	member	2026-10-20T09:12:06.860Z	2026-10-20T09:18:46.933Z	2026-10-20T13:57:46.933Z
+46b919e7-bd11-4470-9d37-ea808ef5b09b	tomas.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.866Z	2026-10-20T09:18:47.055Z	2026-10-20T10:33:47.055Z
+7c207f92-801e-4e14-92a5-3bfe7e0406c1	oskar.kim@harbourfinch.example	member	2026-10-20T09:12:06.872Z	2026-10-20T09:18:47.155Z	2026-10-20T14:16:47.155Z
+e80d65b3-aed7-4a59-869e-81d9a6e56f04	viktor.mendes@harbourfinch.example	member	2026-10-20T09:12:06.878Z	2026-10-20T09:18:47.228Z	2026-10-20T11:42:47.228Z
+a178b183-0e9f-4692-958c-d84355465c26	carla.keller@harbourfinch.example	member	2026-10-20T09:12:06.884Z	2026-10-20T09:18:47.351Z	2026-10-20T10:02:47.351Z
+28176e42-3695-4292-bc82-98b93238a70f	clara.brenner@harbourfinch.example	member	2026-10-20T09:12:06.890Z	2026-10-20T09:18:47.465Z	
+3d0cb42f-88a1-42c4-acf6-b910d7bb75be	jun.kim@harbourfinch.example	member	2026-10-20T09:12:06.896Z	2026-10-20T09:18:47.592Z	2026-10-20T13:54:47.592Z
+1c5905b8-59a2-46aa-a52b-a189d16613a5	jonas.santos@harbourfinch.example	member	2026-10-20T09:12:06.902Z	2026-10-20T09:18:47.677Z	
+9cade929-f182-458f-a3da-6c4dc9a69dd2	carla.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.908Z	2026-10-20T09:18:47.779Z	
+ea3e9631-b733-4a92-9bd2-b46894e09850	freya.rossi@harbourfinch.example	member	2026-10-20T09:12:06.914Z	2026-10-20T09:18:47.863Z	
+3f325b84-bda9-4495-8a56-fb2983e7327d	amir.rahman@harbourfinch.example	member	2026-10-20T09:12:06.920Z	2026-10-20T09:18:47.943Z	2026-10-20T09:56:47.943Z
+ef002a1d-5f63-4098-9982-6edf0fab71fc	marta.petrov@harbourfinch.example	member	2026-10-20T09:12:06.926Z	2026-10-20T09:18:48.045Z	
+b41e41e9-ff62-4b66-ad2d-60063acf2605	maya.osei@harbourfinch.example	member	2026-10-20T09:12:06.932Z	2026-10-20T09:18:48.171Z	2026-10-20T09:48:48.171Z
+626d03b8-d1a1-4e5c-a1b8-6189d1a38c32	tomas.santos@harbourfinch.example	member	2026-10-20T09:12:06.938Z	2026-10-20T09:18:48.287Z	
+1108be67-498e-411f-b525-3c73afdeb65d	felix.berg@harbourfinch.example	member	2026-10-20T09:12:06.944Z	2026-10-20T09:18:48.380Z	
+3707093f-2441-44a3-a31d-25dd3afea696	theo.novak@harbourfinch.example	member	2026-10-20T09:12:06.950Z	2026-10-20T09:18:48.506Z	
+1af7b835-087c-493b-842e-559b0ac8b6f4	lena.fischer@harbourfinch.example	member	2026-10-20T09:12:06.956Z	2026-10-20T09:18:48.609Z	2026-10-20T13:16:48.609Z
+8efca81f-249d-4f00-9487-fc2873247aeb	freya.berg@harbourfinch.example	member	2026-10-20T09:12:06.962Z	2026-10-20T09:18:48.738Z	
+47d1099a-b839-4db2-ab72-03b99603468c	ivo.brenner@harbourfinch.example	member	2026-10-20T09:12:06.968Z	2026-10-20T09:18:48.838Z	2026-10-20T13:56:48.838Z
+bda20cb1-e566-4dd7-befe-0ef665a87211	jonas.mendes@harbourfinch.example	member	2026-10-20T09:12:06.974Z	2026-10-20T09:18:48.942Z	2026-10-20T11:03:48.942Z
+a36b5f37-6e92-4291-8040-5049004ecfde	devon.sato@harbourfinch.example	member	2026-10-20T09:12:06.980Z	2026-10-20T09:18:49.055Z	2026-10-20T10:35:49.055Z
+1c3aef58-1a6a-4a95-be8b-874183d565ae	sofia.achterberg@harbourfinch.example	member	2026-10-20T09:12:06.986Z	2026-10-20T09:18:49.146Z	2026-10-20T10:45:49.146Z
+801b86e1-895a-4349-9c70-5d750bcb7a69	petra.fischer@harbourfinch.example	member	2026-10-20T09:12:06.992Z	2026-10-20T09:18:49.226Z	
+4f9e587d-051e-4052-9d16-abf003ccfa0f	devon.andersen@harbourfinch.example	member	2026-10-20T09:12:06.998Z	2026-10-20T09:18:49.344Z	2026-10-20T13:53:49.344Z
+48ad6d4c-c169-4f0a-b7ff-d0e775f0fe36	raj.keller@harbourfinch.example	member	2026-10-20T09:12:07.004Z	2026-10-20T09:18:49.471Z	
+356eb2e4-58c4-4706-951f-d7b78883bb26	nadia.ito@harbourfinch.example	member	2026-10-20T09:12:07.010Z	2026-10-20T09:18:49.556Z	2026-10-20T11:30:49.556Z
+5633acd6-8f09-42c9-8202-286b470aba9b	lena.costa@harbourfinch.example	member	2026-10-20T09:12:07.016Z	2026-10-20T09:18:49.627Z	
+477bf672-e6c1-4fe7-b5fd-45ad08e1d49f	grace.silva@harbourfinch.example	member	2026-10-20T09:12:07.022Z	2026-10-20T09:18:49.764Z	2026-10-20T09:45:49.764Z
+be37a2d7-c7b9-450e-8aeb-cfd93ef0f5d0	lena.petrov@harbourfinch.example	member	2026-10-20T09:12:07.028Z	2026-10-20T09:18:49.874Z	2026-10-20T11:21:49.874Z
+e4e4f159-198b-47c8-a6e6-053464825ebb	arjun.dubois@harbourfinch.example	member	2026-10-20T09:12:07.034Z	2026-10-20T09:18:49.951Z	2026-10-20T12:09:49.951Z
+4d7cb86d-7c48-472e-a3f1-ea70ea38861d	pavel.berg@harbourfinch.example	member	2026-10-20T09:12:07.040Z	2026-10-20T09:18:50.086Z	
+33fb034c-ac80-4ae4-916d-85df08b5606d	felix.costa@harbourfinch.example	member	2026-10-20T09:12:07.046Z	2026-10-20T09:18:50.206Z	2026-10-20T13:34:50.206Z
+58745a1a-e5fb-4e50-a4a9-d50eda599871	wen.rahman@harbourfinch.example	member	2026-10-20T09:12:07.052Z	2026-10-20T09:18:50.333Z	2026-10-20T11:54:50.333Z
+e51f9b17-c47a-4718-916f-5f5fb2c2f90f	ingrid.berg@harbourfinch.example	member	2026-10-20T09:12:07.058Z	2026-10-20T09:18:50.070Z	
+97406787-a949-4b11-a033-52d9beca6b71	wen.moreau@harbourfinch.example	member	2026-10-20T09:12:07.064Z	2026-10-20T09:18:50.151Z	2026-10-20T11:54:50.151Z
+4a7fcbdb-bcb3-438b-bb00-b27a166988b1	nadia.berg@harbourfinch.example	member	2026-10-20T09:12:07.070Z	2026-10-20T09:18:50.233Z	2026-10-20T13:15:50.233Z
+19b2b04d-ca55-4867-9012-e4b447fe23ce	zara.kim@harbourfinch.example	member	2026-10-20T09:12:07.076Z	2026-10-20T09:18:50.361Z	
+c842306f-506d-4dd0-8b12-b7fb42c8246d	ivo.petrov@harbourfinch.example	member	2026-10-20T09:12:07.082Z	2026-10-20T09:18:50.471Z	
+db5ca516-51cd-4ed6-a87d-0460b487f1c0	mei.nakamura@harbourfinch.example	member	2026-10-20T09:12:07.088Z	2026-10-20T09:18:50.558Z	
+e7a5a093-c99a-42e0-b3b0-c4974ebf6163	petra.oliveira@harbourfinch.example	member	2026-10-20T09:12:07.094Z	2026-10-20T09:18:50.644Z	2026-10-20T14:00:50.644Z
+9fec2150-dd1b-4fc7-a603-b323a49b3c1b	oskar.osei@harbourfinch.example	member	2026-10-20T09:12:07.100Z	2026-10-20T09:18:50.727Z	
+a11cdd84-35f7-4049-964d-0fbda61bdf0e	jonas.lindqvist@harbourfinch.example	member	2026-10-20T09:12:07.106Z	2026-10-20T09:18:50.815Z	
+36ad0eae-51d7-4fd7-abb0-3ea985ea269a	una.novak@harbourfinch.example	member	2026-10-20T09:12:07.112Z	2026-10-20T09:18:50.924Z	
+b2eb7e10-d121-4cec-8b2c-7b2ff9ff7719	carla.rahman@harbourfinch.example	member	2026-10-20T09:12:07.118Z	2026-10-20T09:18:51.056Z	2026-10-20T13:02:51.056Z
+6e8c8121-793b-44f5-9250-54f3abd0e210	marta.santos@harbourfinch.example	member	2026-10-20T09:12:07.124Z	2026-10-20T09:18:51.178Z	2026-10-20T14:09:51.178Z
+4cd4c45d-83b5-42b5-bd92-e1865a2727c2	yusuf.haddad@harbourfinch.example	member	2026-10-20T09:12:07.130Z	2026-10-20T09:18:51.271Z	
+506ae120-eb80-4438-95cd-80026fce4a59	ivo.mendes@harbourfinch.example	member	2026-10-20T09:12:07.136Z	2026-10-20T09:18:51.378Z	2026-10-20T09:34:51.378Z
+0d16a214-b633-4865-8c87-201b2e37010a	clara.fischer@harbourfinch.example	member	2026-10-20T09:12:07.142Z	2026-10-20T09:18:51.475Z	
+4d8c6f11-c5c1-4fb4-b371-b8f1061b14a4	marta.haddad@harbourfinch.example	member	2026-10-20T09:12:07.148Z	2026-10-20T09:18:51.592Z	
+c3723094-f088-4343-aef0-cba0e30bb345	arjun.oliveira@harbourfinch.example	member	2026-10-20T09:12:07.154Z	2026-10-20T09:18:51.728Z	
+e8cce220-098c-4be2-85f6-d99e6a9d879a	elif.ito@harbourfinch.example	member	2026-10-20T09:12:07.160Z	2026-10-20T09:18:51.802Z	
+35426688-ba51-4828-8ecb-39c14d00c572	amir.larsen@harbourfinch.example	member	2026-10-20T09:12:07.166Z	2026-10-20T09:18:51.910Z	
+22b28301-4c44-445c-8119-f90acf6c5f6e	amir.santos@harbourfinch.example	member	2026-10-20T09:12:07.172Z	2026-10-20T09:18:51.989Z	2026-10-20T13:20:51.989Z
+c26723f9-afdf-4b9d-93d2-81605cd6c571	yusuf.kim@harbourfinch.example	member	2026-10-20T09:12:07.178Z	2026-10-20T09:18:52.115Z	
+7ab33c7c-4e2c-4f67-890a-756ae2c90f63	grace.almeida@harbourfinch.example	member	2026-10-20T09:12:07.184Z	2026-10-20T09:18:52.203Z	
+01f1a6a1-e86b-4458-9cd5-3d2009915076	yara.rahman@harbourfinch.example	member	2026-10-20T09:12:07.190Z	2026-10-20T09:18:52.315Z	
+e26a15aa-ffe6-4087-88ca-04fd43dd7b6d	devon.varga@harbourfinch.example	member	2026-10-20T09:12:07.196Z	2026-10-20T09:18:52.397Z	
+f98cff28-74b9-4e08-84d3-f422de30fbf9	devon.weber@harbourfinch.example	member	2026-10-20T09:12:07.202Z	2026-10-20T09:18:52.492Z	
+035a6f6d-5f9a-4e97-9a7c-f7cde3322ab6	ingrid.almeida@harbourfinch.example	member	2026-10-20T09:12:07.208Z	2026-10-20T09:18:52.607Z	2026-10-20T09:46:52.607Z
+430ab54a-2049-427e-b72b-bf4884c48515	mateo.moreau@harbourfinch.example	member	2026-10-20T09:12:07.214Z	2026-10-20T09:18:52.694Z	
+b4ee75a1-d97d-4641-96c0-c9d831418e18	noor.kim@harbourfinch.example	member	2026-10-20T09:12:07.220Z	2026-10-20T09:18:52.790Z	
+8e22e091-ebd1-4aa6-b8f3-e34b97ddc4df	oskar.lindqvist@harbourfinch.example	member	2026-10-20T09:12:07.226Z	2026-10-20T09:18:52.901Z	2026-10-20T14:02:52.901Z
+f34ab384-dee5-43eb-b420-b2384aba32a9	viktor.keller@harbourfinch.example	member	2026-10-20T09:12:07.232Z	2026-10-20T09:18:53.018Z	2026-10-20T10:40:53.018Z

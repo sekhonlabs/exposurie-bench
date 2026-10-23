@@ -1,0 +1,72 @@
+[
+  {
+    "name": "organizationId",
+    "description": "Tidewell organisation id, sent by tidewell-api",
+    "stickiness": true,
+    "sortOrder": 10,
+    "legalValues": [],
+    "createdAt": "2026-06-18T10:02:44.120Z",
+    "usedInFeatures": 9,
+    "usedInProjects": 1
+  },
+  {
+    "name": "orgId",
+    "description": "Organisation id as the web app sends it (web-app only)",
+    "stickiness": false,
+    "sortOrder": 20,
+    "legalValues": [],
+    "createdAt": "2025-11-03T14:41:09.334Z",
+    "usedInFeatures": 14,
+    "usedInProjects": 2
+  },
+  {
+    "name": "userId",
+    "description": "Allows you to constrain on userId",
+    "stickiness": true,
+    "sortOrder": 1,
+    "legalValues": [],
+    "createdAt": "2025-03-12T09:00:00.000Z",
+    "usedInFeatures": 21,
+    "usedInProjects": 3
+  },
+  {
+    "name": "environment",
+    "description": "Allows you to constrain on application environment",
+    "stickiness": false,
+    "sortOrder": 0,
+    "legalValues": [],
+    "createdAt": "2025-03-12T09:00:00.000Z",
+    "usedInFeatures": 0,
+    "usedInProjects": 0
+  },
+  {
+    "name": "appName",
+    "description": "Allows you to constrain on application name",
+    "stickiness": false,
+    "sortOrder": 2,
+    "legalValues": [],
+    "createdAt": "2025-03-12T09:00:00.000Z",
+    "usedInFeatures": 3,
+    "usedInProjects": 1
+  },
+  {
+    "name": "plan",
+    "description": "Billing plan, web app only",
+    "stickiness": false,
+    "sortOrder": 30,
+    "legalValues": [
+      {
+        "value": "free"
+      },
+      {
+        "value": "team"
+      },
+      {
+        "value": "business"
+      }
+    ],
+    "createdAt": "2026-01-20T11:15:02.904Z",
+    "usedInFeatures": 4,
+    "usedInProjects": 1
+  }
+]

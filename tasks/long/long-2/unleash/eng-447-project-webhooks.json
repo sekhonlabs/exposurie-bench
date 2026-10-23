@@ -1,0 +1,107 @@
+{
+  "name": "eng-447-project-webhooks",
+  "type": "release",
+  "description": "ENG-447: webhooks for project events",
+  "project": "default",
+  "stale": false,
+  "impressionData": false,
+  "createdAt": "2026-10-22T07:58:12.481Z",
+  "lastSeenAt": "2026-10-22T18:44:51.002Z",
+  "archived": false,
+  "environments": [
+    {
+      "name": "development",
+      "enabled": true,
+      "type": "development",
+      "lastSeenAt": "2026-10-22T16:20:11.512Z",
+      "strategies": [
+        {
+          "id": "356ccf4b-a2af-4fdf-a8b9-8197be18ff2f",
+          "name": "flexibleRollout",
+          "title": "everyone",
+          "disabled": false,
+          "sortOrder": 0,
+          "segments": [],
+          "constraints": [],
+          "parameters": {
+            "groupId": "eng-447-project-webhooks",
+            "rollout": "100",
+            "stickiness": "default"
+          },
+          "variants": []
+        }
+      ]
+    },
+    {
+      "name": "staging",
+      "enabled": true,
+      "type": "test",
+      "lastSeenAt": "2026-10-22T18:44:51.002Z",
+      "strategies": [
+        {
+          "id": "22af34ab-5def-4802-a23a-1cf416563fe6",
+          "name": "flexibleRollout",
+          "title": "Ferrowell sandbox",
+          "disabled": false,
+          "sortOrder": 0,
+          "segments": [],
+          "constraints": [
+            {
+              "values": [
+                "5c0f2a9e-7d41-4b8e-9a3f-1e6b2d8c4f70"
+              ],
+              "inverted": false,
+              "operator": "IN",
+              "contextName": "organizationId",
+              "caseInsensitive": false
+            }
+          ],
+          "parameters": {
+            "groupId": "eng-447-project-webhooks",
+            "rollout": "100",
+            "stickiness": "default"
+          },
+          "variants": []
+        },
+        {
+          "id": "92e6cc88-9da5-40e3-8d2b-0a7eef34565a",
+          "name": "flexibleRollout",
+          "title": "Ferrowell sandbox 2",
+          "disabled": false,
+          "sortOrder": 1,
+          "segments": [],
+          "constraints": [
+            {
+              "values": [
+                "b8e14d02-3a6c-4f19-8d7e-62c09a5f13be"
+              ],
+              "inverted": false,
+              "operator": "IN",
+              "contextName": "orgId",
+              "caseInsensitive": false
+            }
+          ],
+          "parameters": {
+            "groupId": "eng-447-project-webhooks",
+            "rollout": "100",
+            "stickiness": "default"
+          },
+          "variants": []
+        }
+      ]
+    },
+    {
+      "name": "production",
+      "enabled": false,
+      "type": "production",
+      "lastSeenAt": null,
+      "strategies": []
+    }
+  ],
+  "tags": [
+    {
+      "type": "simple",
+      "value": "core-api"
+    }
+  ]
+}

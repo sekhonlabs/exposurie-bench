@@ -1,0 +1,16 @@
+EXPLAIN (ANALYZE, BUFFERS) -- the worker's poll, with now = 2026-10-22 09:14:02.118
+
+Limit  (cost=12.69..13.18 rows=1 width=212) (actual time=341.208..341.209 rows=1 loops=1)
+  Buffers: shared hit=1281044
+  ->  Incremental Sort  (cost=12.69..1903226.42 rows=3889012 width=212) (actual time=341.206..341.206 rows=1 loops=1)
+        Sort Key: run_at, id
+        Presorted Key: run_at
+        Full-sort Groups: 1  Sort Method: quicksort  Average Memory: 25kB  Peak Memory: 25kB
+        Buffers: shared hit=1281044
+        ->  Index Scan using jobs_run_at_idx on jobs  (cost=0.43..1728221.88 rows=3889012 width=212) (actual time=341.161..341.180 rows=2 loops=1)
+              Index Cond: (run_at <= '2026-10-22 09:14:02.118'::timestamp without time zone)
+              Filter: ((done_at IS NULL) AND (failed_at IS NULL) AND ((locked_at IS NULL) OR (locked_at < '2026-10-22 09:13:02.118'::timestamp without time zone)))
+              Rows Removed by Filter: 3888917
+              Buffers: shared hit=1281044
+Planning Time: 0.311 ms
+Execution Time: 341.240 ms

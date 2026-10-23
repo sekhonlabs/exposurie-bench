@@ -1,0 +1,7 @@
+From: Devon Achterberg <devon@lindenhealth.example>
+Date: Wed, 21 Oct 2026 07:44 +0100
+Subject: 429 Too Many Requests in our nightly sync
+
+Our nightly job reads every project and its tasks for our 30 teams and started failing with 429s around 2am. We're a paying customer. Can you raise our limit? It's a batch job, it just needs to go fast.
+
+Devon

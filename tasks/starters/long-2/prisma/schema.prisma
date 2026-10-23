@@ -1,0 +1,107 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Organization {
+  id           String    @id @default(uuid())
+  name         String
+  billingEmail String?   @map("billing_email")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  projects     Project[]
+  apiKeys      ApiKey[]
+  invites      Invite[]
+
+  @@map("organizations")
+}
+
+model Project {
+  id             String        @id @default(uuid())
+  organizationId String        @map("organization_id")
+  name           String
+  description    String?
+  status         ProjectStatus @default(ACTIVE)
+  createdAt      DateTime      @default(now()) @map("created_at")
+  updatedAt      DateTime      @updatedAt @map("updated_at")
+  archivedAt     DateTime?     @map("archived_at")
+  organization   Organization  @relation(fields: [organizationId], references: [id])
+  tasks          Task[]
+
+  @@index([organizationId, id])
+  @@map("projects")
+}
+
+model Task {
+  id        String   @id @default(uuid())
+  projectId String   @map("project_id")
+  title     String
+  done      Boolean  @default(false)
+  createdAt DateTime @default(now()) @map("created_at")
+  project   Project  @relation(fields: [projectId], references: [id])
+
+  @@index([projectId])
+  @@map("tasks")
+}
+
+model ApiKey {
+  id             String       @id @default(uuid())
+  organizationId String       @map("organization_id")
+  prefix         String
+  hashedKey      String       @unique @map("hashed_key")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@map("api_keys")
+}
+
+model RateLimitWindow {
+  key         String
+  windowStart DateTime @map("window_start")
+  count       Int      @default(0)
+
+  @@id([key, windowStart])
+  @@map("rate_limit_windows")
+}
+
+model Invite {
+  id             String       @id @default(uuid())
+  organizationId String       @map("organization_id")
+  email          String
+  role           String       @default("member")
+  tokenHash      String       @unique @map("token_hash")
+  expiresAt      DateTime     @map("expires_at")
+  sentAt         DateTime?    @map("sent_at")
+  acceptedAt     DateTime?    @map("accepted_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, email])
+  @@map("invites")
+}
+
+model Job {
+  id        String    @id @default(uuid())
+  kind      String
+  payload   Json      @default("{}")
+  runAt     DateTime  @default(now()) @map("run_at")
+  attempts  Int       @default(0)
+  lockedBy  String?   @map("locked_by")
+  lockedAt  DateTime? @map("locked_at")
+  doneAt    DateTime? @map("done_at")
+  failedAt  DateTime? @map("failed_at")
+  lastError String?   @map("last_error")
+  dedupeKey String?   @unique @map("dedupe_key")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([runAt])
+  @@map("jobs")
+}
+
+enum ProjectStatus {
+  ACTIVE
+  ARCHIVED
+}

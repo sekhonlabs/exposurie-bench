@@ -288,6 +288,7 @@ node runner/long.mjs status <task>
 node runner/long.mjs probe                       the same on a tiny task: spends a little, waits five minutes for the sync
 node score/long.mjs <task>                       each strategy's checks, into scores.json beside long.json
 node tasks/long/long-1.mjs                       writes long-1's steps file and its material
+node tasks/long/long-2.mjs                       writes long-2's steps file and its material
 node check/long.mjs
 ```
 
@@ -327,11 +328,29 @@ node check/long.mjs
 
   Two of the four decisions also apply to Pocket, so the agent will likely have written them into the code by the fork. The other two, the folder tags and the highlights' source, exist only in the conversation. The hand read records which were in the fork's code.
 
+**long-1 runs live from 2026-10-23,** on the owner's go, a day before the seven-day reset. Its fill stopped twice on false flags of the audit, each fixed, tested and re-audited, and each step kept with `--accept` (see [decisions.md](decisions.md)).
+
+**long-2's content is written (2026-10-23).** `check/tasks.mjs` holds it to the method, and `check/long.mjs` runs it through the fake. What it is, beside the blueprint below:
+
+- **The starter** (`tasks/starters/long-2/`, 53 files, about 56K characters) is tidewell-api as the history leaves it, grown from area 6's copy: Express 5 and TypeScript, Prisma for every query with SQL migrations, Jest with Prisma mocked, the rate limiter of TW-1182, the bulk invites of ENG-402 behind their Unleash flag, and a worker that polls a jobs table, claiming a row with a conditional update and counting a claim older than a minute as abandoned. Its admin routes, for Tidewell's staff only, sit behind `requireAdmin`. Its 22 tests pass and the type check is clean, with its public dependencies installed and Prisma's client generated (`../runs/starter-check-long-2-*`); the team's own ESLint and Prettier configs are private, so lint is not run. That run found two type errors in the code area 6's copy had carried all along, fixed the way the starter's other routes read the organisation. It holds no webhook code, no failed approach, and nothing any check finds.
+- **The steps** come from `tasks/long/long-2.mjs`, which writes `long-2.json` and the material in `tasks/long/long-2/`, seeded.
+  - 8 core steps follow the blueprint in the developer's voice: ticket ENG-447, the decisions, a first cut with the three approaches that then fail on staging (a retry in a `setTimeout` lost to a deploy, a `createHash` signature the partner cannot verify, a send inside an interactive transaction that expired), the schedule, the tests and the migration.
+  - 25 more steps are the developer's on-call week, each answered from what they saved into `tmp/`, with six fixes among them: last night's database failover, the partner's report of stale signatures, a slow projects list, the flag on staging, a Terraform plan, a client's polling storm, the support inbox, npm, the backlog, a teammate's pull request, Tuesday's duplicate invites, the week's metrics, the bill, a security scan, usage, Tuesday's migration locks, the error tracker and the load balancer's 5xx. 64 files, about 1.30 million characters, each at most about 46,000.
+  - 3 after steps finish the ticket: an event when a project's name changes, replaying a dead letter with the cleanup of old deliveries, and `PR.md`.
+- **No step assumes what the agent wrote.** What the material shows of the new code (the signature header, an event's body, the retry schedule) is what the developer specified in a core step, and every other file is about code the starter already has.
+- **The team's conventions are never said in the session.** Branch, title, sections, who reviews migrations and where deploy notes go are known only from the history and the brain, so a strategy keeps them only by looking them up.
+- **The checks:**
+  - *finished:* the rename's event, a replay, the cleanup, `PR.md`, and the team's branch, title, sections and the note for Ana; by hand, the tests and the deploy note
+  - *kept:* `project.renamed`, replaying under the admin routes, and 45 days; by hand, the envelope
+  - *retried:* a retry scheduled with `setTimeout`, a signature made with `createHash`, and a network call inside an interactive Prisma transaction, found at any depth of its callback and never past it
+
+  The event's name and the envelope apply from the first cut, so they will be in the fork's code; the admin routes and the 45 days exist only in the conversation.
+
 **Next, in order:**
 
-1. **long-1's live runs**, with the owner's go, after the seven-day reset. Their cost decides long-2.
+1. **long-1's live runs**, under way. Their cost decides long-2.
 2. **long-1 scored** with `score/long.mjs`, and every strategy read by hand.
-3. **long-2's content and runs**, if the cost allows.
+3. **long-2's runs**, with the owner's go, if the cost allows, then scored and read the same way.
 
 **long-1, Satchel (personal): import from other read-later services.**
 

@@ -1,0 +1,39 @@
+{
+  "name": "tidewell-api",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "start:worker": "node dist/worker.js",
+    "dev": "tsx watch src/server.ts",
+    "dev:worker": "tsx watch src/worker.ts",
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --check .",
+    "prisma:generate": "prisma generate"
+  },
+  "dependencies": {
+    "@aws-sdk/client-sesv2": "3.908.0",
+    "@prisma/client": "6.17.1",
+    "express": "5.1.0",
+    "unleash-client": "6.7.0"
+  },
+  "devDependencies": {
+    "@tidewell/eslint-config": "4.2.0",
+    "@tidewell/prettier-config": "2.1.0",
+    "@types/express": "5.0.3",
+    "@types/jest": "30.0.0",
+    "@types/node": "24.7.2",
+    "@types/supertest": "6.0.3",
+    "eslint": "9.37.0",
+    "jest": "30.2.0",
+    "prettier": "3.6.2",
+    "prisma": "6.17.1",
+    "supertest": "7.1.4",
+    "ts-jest": "29.4.5",
+    "tsx": "4.20.6",
+    "typescript": "5.9.3"
+  },
+  "prettier": "@tidewell/prettier-config"
+}

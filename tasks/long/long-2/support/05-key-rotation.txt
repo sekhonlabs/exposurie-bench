@@ -1,0 +1,7 @@
+From: Felix Andersen <felix@alderlogistics.example>
+Date: Thu, 22 Oct 2026 08:20 +0100
+Subject: Rotating our API key
+
+Our security team wants us to rotate API keys every 90 days. How do we do that without our integration going down while we swap the key? I can't find anything about it in the docs.
+
+Felix

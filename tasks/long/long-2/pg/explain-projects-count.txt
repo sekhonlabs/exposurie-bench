@@ -1,0 +1,15 @@
+EXPLAIN (ANALYZE, BUFFERS) -- the count the same request runs, for cf025c77-0c17-4b89-85a6-636728dd58b6
+
+Aggregate  (cost=42915.31..42915.32 rows=1 width=8) (actual time=642.338..642.340 rows=1 loops=1)
+  Buffers: shared hit=40512 read=1630
+  ->  Bitmap Heap Scan on projects  (cost=3862.41..41093.56 rows=182302 width=0) (actual time=37.902..628.911 rows=179233 loops=1)
+        Recheck Cond: (organization_id = 'cf025c77-0c17-4b89-85a6-636728dd58b6'::text)
+        Filter: (status = 'ACTIVE'::"ProjectStatus")
+        Rows Removed by Filter: 3173
+        Heap Blocks: exact=41019
+        Buffers: shared hit=40512 read=1630
+        ->  Bitmap Index Scan on projects_organization_id_id_idx  (cost=0.00..3816.93 rows=182406 width=0) (actual time=30.661..30.662 rows=182406 loops=1)
+              Index Cond: (organization_id = 'cf025c77-0c17-4b89-85a6-636728dd58b6'::text)
+              Buffers: shared hit=1123
+Planning Time: 0.188 ms
+Execution Time: 642.471 ms

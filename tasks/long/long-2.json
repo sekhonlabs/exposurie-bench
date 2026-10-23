@@ -1,0 +1,456 @@
+{
+  "note": "Written by tasks/long/long-2.mjs: change that file and run it, never this one. The fields are explained in docs/build-plan.md, part 8.",
+  "fork_at": 500000,
+  "resume_note": "I'm carrying on from my last session, where we were adding webhooks for project events, ENG-447.",
+  "core": [
+    "New ticket this morning, ENG-447: webhooks for project events. Partners who build on our API poll the projects list to find out what changed, and Ferrowell, the biggest of them, polls every organisation it works for every few seconds. They want us to call them instead. I'm also on call this week, so other things will land in the middle of this. Before you write anything, read the code and tell me where webhooks fit: how projects change today, how the worker and the jobs table work, how flags work, and what you would reuse. Don't change anything yet.",
+    "Here is how the webhooks behave. Some of it only matters later, but I want it settled now.\n\n- Event names are project.<verb in the past tense>: project.created and project.archived now, and the same pattern for anything we add later.\n- Every delivery's body is one envelope: { id, type, created_at, data }. id is the event's id, the same on every attempt at it; type is the event's name; created_at is when the event happened; data is the project, exactly as GET /v2/organizations/:id/projects/:projectId returns it.\n- Dead letters are ours to deal with, not the customer's. Anything that lists or replays them goes under the admin routes, staff only; a customer's API key never sees them. Support talks to the customer.\n- We keep deliveries for 45 days. Partners reconcile monthly, and a month and a half covers a late one. A nightly job deletes anything older, delivered or dead.\n\nNow the first cut. An organisation registers an endpoint with POST /v2/organizations/:id/webhooks: a URL, and we answer with a secret, shown that once. The events are project.created and project.archived. When one happens, the API writes a delivery row for each endpoint of that organisation, and the worker sends them. Ship it dark behind the Unleash flag eng-447-project-webhooks, which I have created: an organisation without the flag gets no deliveries.\n\nKeep this cut simple, so I can see it work on staging today:\n- When a delivery fails, schedule its next attempt in the worker with setTimeout, a minute later. I don't want a row per attempt yet.\n- Sign each body: SHA-256 of the endpoint's secret followed by the body, hex, through createHash, in a Tidewell-Signature header.\n- Claim and send inside one interactive Prisma transaction, so a delivery is never marked sent unless it really went out.\n\nPrisma for the queries, like everything else. Change the schema as you need, but don't write the migration yet; I'll ask for it at the end.",
+    "It's on staging. Ferrowell pointed their sandbox receiver at it, and their receiver was down for a deploy of their own from 11:02 to 11:09 UTC, answering 503. At 11:05 a staging deploy, someone else's merge, replaced our worker's task. Every delivery that was waiting in a setTimeout went with the old task: 14 deliveries were never tried again, and nothing in the database says they were ever due. A retry has to outlive the process that scheduled it.\n\nMove retries into the database. A delivery row gets next_attempt_at, the worker polls for deliveries that are due, the way it polls the jobs table, and a failed attempt sets the next one. No timers holding state.",
+    "Second problem, from Ferrowell's developer: they can't verify any of our signatures. Every provider they take webhooks from signs with an HMAC, and their verifier is one function for all of them. They won't special-case us, and they're right: a hash of the secret glued to the body isn't a MAC.\n\nSign it properly: HMAC-SHA256 with the endpoint's secret, through createHmac, over the timestamp, a dot and the raw body. Send it as Tidewell-Signature: t=<unix seconds>,v1=<hex>. t is when that attempt is sent, so every attempt signs afresh. Write down in the README how a receiver checks it, including that they should refuse a t more than five minutes old.",
+    "Something worse on staging this afternoon. Ferrowell's sandbox hung on one request for 41 seconds before answering. Our interactive transaction had expired at 5 seconds, Prisma's default, and the worker logged P2028: \"Transaction API error: Transaction already closed: A commit cannot be executed on an expired transaction. The timeout for this transaction was 5000 ms, however 41230 ms passed since the start of the transaction.\" So the delivery went out but was never marked sent, the next poll sent it again, and they got the same event six times. While the transaction was open it also held one of the worker's five database connections, and invites queued up behind it.\n\nNever hold a transaction open across a network call. Claim the due rows in a short transaction that marks them taken until a lease runs out, send outside any transaction with a 10-second timeout, then record the result in its own small write. A lease that runs out makes the row claimable again, so a worker that dies mid-send doesn't strand it.",
+    "Now the schedule. After a failed attempt, the next one comes 1 minute later, then 5 minutes, 15 minutes, 1 hour, 3 hours, 6 hours and 12 hours. The eighth failure dead-letters the delivery: it stops, keeping its last status code and error. Any 2xx is a success. A 410 Gone means the endpoint is gone: the delivery dead-letters at once and the endpoint is disabled. Anything else, and a timeout, is a failure.",
+    "Tests, in Jest like the rest, with Prisma mocked the way the existing tests do it. The signature against a fixed vector: secret whsec_test, t=1792656000, body {\"a\":1}. The schedule attempt by attempt, and dead-lettering on the eighth failure and on a 410. Claiming: a row under a lease isn't claimed again until the lease runs out. The envelope's shape. I'll run them.",
+    "They pass on my machine. Now the migration for all of it: the tables, columns and indexes this needs, as one migration in prisma/migrations/, written the way our migrations are. The deliveries table will be large and polled every few seconds, so think about the index the worker's poll needs, and tell me what the migration locks."
+  ],
+  "more": [
+    {
+      "say": "On call: production's 5xx alarm fired at 03:11 UTC last night. The API's log from 02:55 to 03:40, all six tasks, without the successful GETs, is in tmp/prod-api-2026-10-22/, in 7 parts; the worker's log for the same time is in tmp/prod-worker-2026-10-22.log, and RDS's and ECS's events are in tmp/rds-events.json and tmp/ecs-events.json. Read all of it and give me the timeline, how many requests failed and for whom, and why the workers died when the API tasks didn't. Don't change anything yet.",
+      "files": {
+        "tmp/prod-api-2026-10-22/1.log": "prod-api-2026-10-22/1.log",
+        "tmp/prod-api-2026-10-22/2.log": "prod-api-2026-10-22/2.log",
+        "tmp/prod-api-2026-10-22/3.log": "prod-api-2026-10-22/3.log",
+        "tmp/prod-api-2026-10-22/4.log": "prod-api-2026-10-22/4.log",
+        "tmp/prod-api-2026-10-22/5.log": "prod-api-2026-10-22/5.log",
+        "tmp/prod-api-2026-10-22/6.log": "prod-api-2026-10-22/6.log",
+        "tmp/prod-api-2026-10-22/7.log": "prod-api-2026-10-22/7.log",
+        "tmp/prod-worker-2026-10-22.log": "prod-worker-2026-10-22.log",
+        "tmp/rds-events.json": "rds-events.json",
+        "tmp/ecs-events.json": "ecs-events.json"
+      }
+    },
+    "Fix the worker so a lost database connection doesn't kill it. A poll that fails is logged and tried again after a pause that grows, up to 30 seconds, and the loop carries on. A job whose handler failed because the database was gone is left for a worker to claim again, not counted as a failed attempt. Tests for it.",
+    {
+      "say": "Back to ENG-447 for a moment. Ferrowell's developer wrote again: since our last deploy, some of our test deliveries fail their check as stale, and those never get through. Her email, their verifier and their receiver's log from 14:45 UTC are in tmp/ferrowell/. Read them and tell me whose bug it is, and exactly why it hits some deliveries and not others.",
+      "files": {
+        "tmp/ferrowell/email.txt": "ferrowell/email.txt",
+        "tmp/ferrowell/receiver-1.log": "ferrowell/receiver-1.log",
+        "tmp/ferrowell/verify.ts": "ferrowell/verify.ts"
+      }
+    },
+    "Draft my reply to her: what they should change, with the corrected check in their own code, and nothing that sounds like blame. Plain and short.",
+    {
+      "say": "Meridian Logistics says their projects list takes seconds, and longer the further they page. pg_stat_statements for the past week is in tmp/pg/statements.tsv, the tables' sizes in tmp/pg/table-sizes.txt, and EXPLAIN ANALYZE of three statements in tmp/pg/explain-*.txt. Why are they slow, and what would you change? Explain before touching anything.",
+      "files": {
+        "tmp/pg/explain-jobs-poll.txt": "pg/explain-jobs-poll.txt",
+        "tmp/pg/explain-projects-count.txt": "pg/explain-projects-count.txt",
+        "tmp/pg/explain-projects-list.txt": "pg/explain-projects-list.txt",
+        "tmp/pg/statements.tsv": "pg/statements.tsv",
+        "tmp/pg/table-sizes.txt": "pg/table-sizes.txt"
+      }
+    },
+    "Do it for the projects list: the index as a migration, and a cursor on the list like the export's, with page and page_size still working for the clients that use them. Leave the jobs table alone for now; it gets a ticket of its own.",
+    {
+      "say": "ENG-447 again. On staging, Ferrowell's first sandbox organisation gets events and their second one never does. The flag's export from Unleash, the context fields Unleash knows, the playground's answer for each organisation, and all our flags, are in tmp/unleash/. Why does the second get nothing? And while you're in there, which of our flags look ready to delete?",
+      "files": {
+        "tmp/unleash/all-flags.json": "unleash/all-flags.json",
+        "tmp/unleash/context-fields.json": "unleash/context-fields.json",
+        "tmp/unleash/eng-447-project-webhooks.json": "unleash/eng-447-project-webhooks.json",
+        "tmp/unleash/playground-first-sandbox.json": "unleash/playground-first-sandbox.json",
+        "tmp/unleash/playground-second-sandbox.json": "unleash/playground-second-sandbox.json"
+      }
+    },
+    {
+      "say": "Infra question. The worker is moving to a task of its own size, 1 vCPU and 2 GB, on arm64. tidewell-infra's plan for production is in tmp/terraform/, in 1 parts. CI builds our image for linux/amd64. Read the whole plan before I apply it: what worries you, and what should change first?",
+      "files": {
+        "tmp/terraform/plan-1.txt": "terraform/plan-1.txt"
+      }
+    },
+    {
+      "say": "Yesterday from 14:10 UTC one client tripled the API's request rate for most of an hour. Everything one of the six API tasks logged from 14:24 to 14:27 is in tmp/prod-api-2026-10-21/, in 6 parts. Who was it, what exactly were they doing, and did our rate limiter do its job?",
+      "files": {
+        "tmp/prod-api-2026-10-21/1.log": "prod-api-2026-10-21/1.log",
+        "tmp/prod-api-2026-10-21/2.log": "prod-api-2026-10-21/2.log",
+        "tmp/prod-api-2026-10-21/3.log": "prod-api-2026-10-21/3.log",
+        "tmp/prod-api-2026-10-21/4.log": "prod-api-2026-10-21/4.log",
+        "tmp/prod-api-2026-10-21/5.log": "prod-api-2026-10-21/5.log",
+        "tmp/prod-api-2026-10-21/6.log": "prod-api-2026-10-21/6.log"
+      }
+    },
+    {
+      "say": "Support inbox. Six emails from this week are in tmp/support/, one file each. For each: what it's about, whether it's a bug on our side, and a two-line reply in my voice.",
+      "files": {
+        "tmp/support/01-invited-twice.txt": "support/01-invited-twice.txt",
+        "tmp/support/02-export-only-header.txt": "support/02-export-only-header.txt",
+        "tmp/support/03-rate-limit.txt": "support/03-rate-limit.txt",
+        "tmp/support/04-archived-missing.txt": "support/04-archived-missing.txt",
+        "tmp/support/05-key-rotation.txt": "support/05-key-rotation.txt",
+        "tmp/support/06-webhooks-when.txt": "support/06-webhooks-when.txt"
+      }
+    },
+    {
+      "say": "Housekeeping: npm outdated and npm audit for tidewell-api are in tmp/npm/. What should we update now, what can wait, and why? Don't touch package.json.",
+      "files": {
+        "tmp/npm/audit.json": "npm/audit.json",
+        "tmp/npm/outdated.txt": "npm/outdated.txt"
+      }
+    },
+    {
+      "say": "Rui wants the Core API backlog triaged before Monday's planning. The open tickets are in tmp/linear/, in 1 parts. Group them, point out the duplicates and anything this week has made more urgent, and pick the five you'd do next, a line each.",
+      "files": {
+        "tmp/linear/core-api-backlog-1.json": "linear/core-api-backlog-1.json"
+      }
+    },
+    {
+      "say": "A teammate asked me to review ENG-438 before I approve it. The diff is in tmp/review/ENG-438.diff and their description in tmp/review/ENG-438-description.txt. Review it the way I would: what is wrong, what is risky, and what is fine, with file and line.",
+      "files": {
+        "tmp/review/ENG-438-description.txt": "review/ENG-438-description.txt",
+        "tmp/review/ENG-438.diff": "review/ENG-438.diff"
+      }
+    },
+    {
+      "say": "Harbour & Finch says about half their people got two invite emails on Tuesday morning. The worker's log from 09:00 to 10:00 UTC, both tasks, is in tmp/prod-worker-2026-10-20.log; their invites are in tmp/invites-harbour-finch-*.tsv, and SES's sending events for their addresses are in tmp/ses-sends/, in 3 parts. Why did it happen, and to how many people? Don't change anything yet.",
+      "files": {
+        "tmp/prod-worker-2026-10-20.log": "prod-worker-2026-10-20.log",
+        "tmp/invites-harbour-finch-1.tsv": "invites-harbour-finch-1.tsv",
+        "tmp/invites-harbour-finch-2.tsv": "invites-harbour-finch-2.tsv",
+        "tmp/ses-sends/1.tsv": "ses-sends/1.tsv",
+        "tmp/ses-sends/2.tsv": "ses-sends/2.tsv",
+        "tmp/ses-sends/3.tsv": "ses-sends/3.tsv"
+      }
+    },
+    "Fix it in both places. Sending a batch of invites is safe to repeat: an invite already sent is skipped. And a job keeps its claim while it is running, however long it takes; only a job whose worker has stopped is claimed again. Tests for both.",
+    {
+      "say": "RDS's and ECS's numbers for the past week are in tmp/metrics/: RDS every 15 minutes, ECS every hour. Read both, and tell me what you see, especially anything this week's other files haven't explained yet.",
+      "files": {
+        "tmp/metrics/ecs.csv": "metrics/ecs.csv",
+        "tmp/metrics/rds.csv": "metrics/rds.csv"
+      }
+    },
+    {
+      "say": "Finance asked why October's AWS bill is up. Daily costs by service and usage type since 1 September are in tmp/costs/, in 2 parts. What went up, from when, why, and what would you cut?",
+      "files": {
+        "tmp/costs/1.csv": "costs/1.csv",
+        "tmp/costs/2.csv": "costs/2.csv"
+      }
+    },
+    {
+      "say": "Security sent their quarterly scan of the API: tmp/security-scan.json. Which findings are real for us, which are noise, and in what order would you fix the real ones?",
+      "files": {
+        "tmp/security-scan.json": "security-scan.json"
+      }
+    },
+    {
+      "say": "Rui wants numbers for the quarterly review: October so far, by organisation and by day, in tmp/usage/. Write the short summary he asked for: who uses the API most, how it is growing, error rates, and anything odd.",
+      "files": {
+        "tmp/usage/by-organization.csv": "usage/by-organization.csv",
+        "tmp/usage/daily.csv": "usage/daily.csv"
+      }
+    },
+    {
+      "say": "Tuesday at 13:05 UTC, while a teammate's migration ran, most of the API's requests failed for about six minutes. Snapshots of pg_stat_activity, with who was blocking whom, are in tmp/pg/locks/, and one API task's log from 13:03:30 to 13:08 is in tmp/prod-api-2026-10-20/, in 3 parts. What blocked what, and what would have avoided it?",
+      "files": {
+        "tmp/pg/locks/13-05-31.txt": "pg/locks/13-05-31.txt",
+        "tmp/pg/locks/13-07-02.txt": "pg/locks/13-07-02.txt",
+        "tmp/pg/locks/13-09-33.txt": "pg/locks/13-09-33.txt",
+        "tmp/pg/locks/13-11-12.txt": "pg/locks/13-11-12.txt",
+        "tmp/prod-api-2026-10-20/1.log": "prod-api-2026-10-20/1.log",
+        "tmp/prod-api-2026-10-20/2.log": "prod-api-2026-10-20/2.log",
+        "tmp/prod-api-2026-10-20/3.log": "prod-api-2026-10-20/3.log"
+      }
+    },
+    "Write the incident summary for Tuesday's migration, for the incident doc: what happened, the impact, the cause, and what we change. Plain, with times in UTC.",
+    {
+      "say": "Our error tracker's export from Monday until this morning, grouped, is in tmp/errors.json. Which groups are new this week, which are bugs in our code rather than the world, and which can we ignore?",
+      "files": {
+        "tmp/errors.json": "errors.json"
+      }
+    },
+    "Fix the two bugs in our code from that list: a malformed JSON body answered 500 instead of 400, and two bulk invites at once for the same address failing with P2002 instead of skipping it. Tests for both.",
+    {
+      "say": "Last one of these. The load balancer's log of every 5xx yesterday is in tmp/alb-5xx-2026-10-21/, in 2 parts. Group them by cause with counts, and tell me which ones our own code could have avoided.",
+      "files": {
+        "tmp/alb-5xx-2026-10-21/1.log": "alb-5xx-2026-10-21/1.log",
+        "tmp/alb-5xx-2026-10-21/2.log": "alb-5xx-2026-10-21/2.log"
+      }
+    },
+    "Write my on-call handover for next week's person: what happened this week, what's still open and who it's waiting on, and what to watch. Everything you need is in this session."
+  ],
+  "after": [
+    "Projects get renamed too, through PATCH. Send an event when a project's name changes, the way we settled events at the start of this work, with tests like the others.",
+    "Now the dead letters and the old deliveries, the way we settled them at the start of this work: a way to replay a dead-lettered delivery, under /v2, and the cleanup of old deliveries. Tests for both.",
+    "Last part. Write PR.md for ENG-447: the branch name, the pull request's title and its description, a note for whoever reviews the migration, and the deploy note. I'll open the pull request myself."
+  ],
+  "checks": {
+    "note": "Area 9 is read by hand as well (docs/design.md). finished and kept read the files a strategy changed since the fork, and its last reply; retried reads everything it wrote after the fork (writes.json), so an approach tried and taken back still counts. A check marked hand has no script. The checks named team- are the team's conventions, never said in the session: a pull request that breaks them isn't finished.",
+    "finished": [
+      {
+        "id": "renamed",
+        "what": "a change to a project's name sends an event",
+        "in": "files",
+        "file": "src/**",
+        "patterns": [
+          "\\brenam\\w*",
+          "\\bname_changed\\b"
+        ]
+      },
+      {
+        "id": "replay",
+        "what": "a dead-lettered delivery can be replayed",
+        "in": "files",
+        "file": "src/**",
+        "patterns": [
+          "\\breplay\\w*",
+          "\\bredeliver\\w*",
+          "\\bresend\\w*",
+          "/retry\\b"
+        ]
+      },
+      {
+        "id": "cleanup",
+        "what": "a nightly job deletes old deliveries",
+        "in": "files",
+        "file": "{src,prisma}/**",
+        "patterns": [
+          "\\b(?:purge|prune|clean|delete)\\w*[\\s\\S]{0,300}?deliver",
+          "\\bdeliver\\w*[\\s\\S]{0,300}?\\b(?:purge|prune|cleanup|deleteMany)\\b"
+        ]
+      },
+      {
+        "id": "tests",
+        "what": "the rename, the replay and the cleanup have tests",
+        "hand": true
+      },
+      {
+        "id": "pr",
+        "what": "PR.md is written for ENG-447",
+        "in": "files",
+        "file": "PR.md",
+        "any": [
+          "ENG-447"
+        ]
+      },
+      {
+        "id": "team-branch",
+        "what": "the team's branch: the ticket key and a slug, no prefix",
+        "in": "files",
+        "file": "PR.md",
+        "exact": true,
+        "patterns": [
+          "(?<![\\w/-])ENG-447-[a-z0-9]+(?:-[a-z0-9]+)*"
+        ]
+      },
+      {
+        "id": "team-title",
+        "what": "the team's title: it starts with the ticket key",
+        "in": "files",
+        "file": "PR.md",
+        "exact": true,
+        "patterns": [
+          "(?<![\\w/-])ENG-447: \\S"
+        ]
+      },
+      {
+        "id": "team-sections",
+        "what": "the team's sections: Why, What changed, How I tested, Rollback",
+        "in": "files",
+        "file": "PR.md",
+        "all": [
+          "What changed",
+          "How I tested",
+          "Rollback"
+        ]
+      },
+      {
+        "id": "team-reviewer",
+        "what": "the note for the migration is for Ana, who reviews every migration",
+        "in": "files",
+        "file": "PR.md",
+        "exact": true,
+        "any": [
+          "Ana"
+        ]
+      },
+      {
+        "id": "team-deploy-note",
+        "what": "the deploy note is for #eng-deploys, says the flag stays off, and gives the rollback as the promote workflow with the previous image",
+        "hand": true
+      }
+    ],
+    "kept": [
+      {
+        "id": "event-name",
+        "what": "the event is named project.renamed",
+        "in": "files",
+        "file": "src/**",
+        "exact": true,
+        "patterns": [
+          "\\bproject\\.renamed\\b"
+        ]
+      },
+      {
+        "id": "envelope",
+        "what": "it goes out in the same envelope, { id, type, created_at, data }, with data the project as the API returns it",
+        "hand": true
+      },
+      {
+        "id": "dead-letters-admin",
+        "what": "replaying a dead letter is under the admin routes, staff only",
+        "in": "files",
+        "file": "src/**",
+        "patterns": [
+          "requireAdmin[\\s\\S]{0,600}?\\b(?:replay|redeliver|resend|dead[\\s_-]?letter)\\w*",
+          "\\b(?:replay|redeliver|resend|dead[\\s_-]?letter)\\w*[\\s\\S]{0,600}?requireAdmin",
+          "\\badmin\\b[^\\n]{0,80}\\b(?:webhook|deliver|dead|replay)\\w*",
+          "\\badmin(?:Webhook|Deliver|Dead|Replay)\\w*"
+        ]
+      },
+      {
+        "id": "retention",
+        "what": "deliveries are kept for 45 days",
+        "in": "files",
+        "file": "{src,prisma}/**",
+        "patterns": [
+          "\\b45\\s*\\*\\s*(?:24\\b|\\w*day\\w*|86_?400)",
+          "\\b45\\b[^\\n]{0,40}\\bdays?\\b",
+          "\\bdays?\\b[^\\n]{0,30}\\b45\\b",
+          "\\b\\w*(?:retention|keep|retain|ttl)\\w*\\s*[:=]\\s*45\\b",
+          "\\w*days?\\(\\s*[^,()]*,\\s*45\\s*\\)"
+        ]
+      }
+    ],
+    "retried": [
+      {
+        "id": "timer-retry",
+        "what": "a retry scheduled with setTimeout",
+        "in": "writes",
+        "patterns": [
+          "setTimeout\\(\\s*(?:async\\s*)?\\(\\s*\\)\\s*=>\\s*\\{?\\s*(?:void\\s+|await\\s+|return\\s+)?(?:this\\.|\\w+\\.)?(?:deliver|send|dispatch|retry|attempt|post|redeliver)\\w*\\s*\\(",
+          "setTimeout\\(\\s*(?:this\\.|\\w+\\.)?(?:deliver|send|dispatch|retry|attempt)\\w*\\s*(?:,|\\.bind\\()"
+        ]
+      },
+      {
+        "id": "hash-signature",
+        "what": "a signature made with createHash instead of an HMAC",
+        "in": "writes",
+        "patterns": [
+          "createHash\\(\\s*['\"]sha256['\"]\\s*\\)[\\s\\S]{0,200}?\\b(?:secret|signing|signature)\\w*",
+          "\\b(?:secret|signing)\\w*[\\s\\S]{0,160}?\\bcreateHash\\("
+        ]
+      },
+      {
+        "id": "http-in-transaction",
+        "what": "a network call inside an interactive Prisma transaction",
+        "in": "writes",
+        "patterns": [
+          "\\$transaction\\(\\s*async\\s*(?:function\\s*)?(?:\\([^)]*\\)|\\w+)\\s*(?:=>\\s*)?\\{(?:[^{}]|\\{(?:[^{}]|\\{(?:[^{}]|\\{[^{}]*\\})*\\})*\\})*?(?:\\{(?:[^{}]|\\{(?:[^{}]|\\{(?:[^{}]|\\{[^{}]*\\})*\\})*\\})*?)*?\\b(?:fetch|deliver\\w*|send\\w*|post\\w*|dispatch\\w*|request|axios\\.\\w+|got|undici\\.\\w+)\\s*\\("
+        ]
+      }
+    ]
+  },
+  "examples": {
+    "note": "One entry per after step. The fake writes these files and gives this reply; check/tasks.mjs holds them to the checks.",
+    "right": [
+      {
+        "files": [
+          {
+            "path": "src/webhooks/events.ts",
+            "text": "import type { ApiProject } from '../services/projects';\n\nexport type EventType = 'project.created' | 'project.archived' | 'project.renamed';\n\nexport function envelope(id: string, type: EventType, createdAt: Date, data: ApiProject) {\n  return { id, type, created_at: createdAt.toISOString(), data };\n}\n"
+          },
+          {
+            "path": "src/services/projects.ts",
+            "text": "  if (before.name !== project.name) await recordEvent(organizationId, 'project.renamed', project);\n"
+          }
+        ],
+        "answer": "A name change now sends project.renamed, in the same envelope as the others, with the project as the API returns it."
+      },
+      {
+        "files": [
+          {
+            "path": "src/routes/v2/admin/index.ts",
+            "text": "admin.use(requireAdmin);\nadmin.use('/organizations', adminOrganizations);\nadmin.use('/webhook-deliveries', adminWebhookDeliveries);\n"
+          },
+          {
+            "path": "src/routes/v2/admin/webhookDeliveries.ts",
+            "text": "export const adminWebhookDeliveries = Router();\n\nadminWebhookDeliveries.post('/:deliveryId/replay', async (req, res) => {\n  res.status(202).json(await replayDelivery(req.params.deliveryId));\n});\n"
+          },
+          {
+            "path": "src/jobs/handlers/purgeWebhookDeliveries.ts",
+            "text": "export const KEEP_DELIVERIES_DAYS = 45;\n\nexport async function purgeWebhookDeliveries() {\n  const before = new Date(Date.now() - KEEP_DELIVERIES_DAYS * 24 * 60 * 60 * 1000);\n  await prisma.webhookDelivery.deleteMany({ where: { createdAt: { lt: before } } });\n}\n"
+          }
+        ],
+        "answer": "Staff can replay a dead letter under /v2/admin/webhook-deliveries, and a nightly job deletes deliveries older than 45 days."
+      },
+      {
+        "files": [
+          {
+            "path": "PR.md",
+            "text": "# ENG-447: Webhooks for project events\n\nBranch: `ENG-447-project-webhooks`\nTitle: ENG-447: Webhooks for project events\n\n## Why\n\nPartners poll the projects list to find out what changed. Webhooks tell them instead.\n\n## What changed\n\n- Endpoints, events and deliveries, behind eng-447-project-webhooks.\n\n## How I tested\n\nJest, and on staging against a partner sandbox.\n\n## Rollback\n\nTurn the flag off. To roll back the code, run the promote workflow again with the previous image.\n\n## Note for Ana\n\nThe migration creates two tables and their indexes, and locks nothing that exists.\n\n## Deploy note (#eng-deploys)\n\nENG-447 goes out dark: the flag stays off until we turn it on for one partner.\n"
+          }
+        ],
+        "answer": "PR.md is written: the branch, the title, the four sections, the note for Ana and the deploy note."
+      }
+    ],
+    "retry": [
+      {
+        "files": [
+          {
+            "path": "src/webhooks/send.ts",
+            "text": "export function sign(secret: string, body: string) {\n  return createHash('sha256').update(secret + body).digest('hex');\n}\n\nexport function retryLater(delivery: Delivery) {\n  setTimeout(() => void deliver(delivery), 60_000);\n}\n"
+          }
+        ],
+        "answer": "Added the rename."
+      },
+      {
+        "files": [
+          {
+            "path": "src/webhooks/worker.ts",
+            "text": "export async function sendDue() {\n  await prisma.$transaction(async (tx) => {\n    const due = await tx.webhookDelivery.findMany({ where: { status: 'pending' }, take: 10 });\n    for (const d of due) {\n      const res = await fetch(d.url, { method: 'POST', body: d.body });\n      await tx.webhookDelivery.update({ where: { id: d.id }, data: { status: res.ok ? 'delivered' : 'failed' } });\n    }\n  });\n}\n"
+          }
+        ],
+        "answer": "Replay and cleanup are in."
+      },
+      {
+        "files": [
+          {
+            "path": "PR.md",
+            "text": "# Webhooks\n"
+          }
+        ],
+        "answer": "PR.md is written."
+      }
+    ],
+    "forgot": [
+      {
+        "files": [
+          {
+            "path": "src/webhooks/events.ts",
+            "text": "export type EventType = 'project.created' | 'project.archived' | 'project.name_changed';\n"
+          }
+        ],
+        "answer": "A name change now sends project.name_changed."
+      },
+      {
+        "files": [
+          {
+            "path": "src/routes/v2/webhooks.ts",
+            "text": "webhooks.post('/:id/webhooks/deliveries/:deliveryId/replay', requireOrgAccess, async (req, res) => {\n  res.status(202).json(await replayDelivery(res.locals.organizationId, req.params.deliveryId));\n});\n"
+          },
+          {
+            "path": "src/jobs/handlers/purgeWebhookDeliveries.ts",
+            "text": "export async function purgeWebhookDeliveries() {\n  const before = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);\n  await prisma.webhookDelivery.deleteMany({ where: { createdAt: { lt: before } } });\n}\n"
+          }
+        ],
+        "answer": "An organisation can replay its own dead letters, and a nightly job deletes deliveries older than 30 days."
+      },
+      {
+        "files": [
+          {
+            "path": "PR.md",
+            "text": "# ENG-447: Webhooks for project events\n\nBranch: `ENG-447-project-webhooks`\nTitle: ENG-447: Webhooks for project events\n\n## Why\n\nPartners poll the projects list to find out what changed. Webhooks tell them instead.\n\n## What changed\n\n- Endpoints, events and deliveries, behind eng-447-project-webhooks.\n\n## How I tested\n\nJest, and on staging against a partner sandbox.\n\n## Rollback\n\nTurn the flag off. To roll back the code, run the promote workflow again with the previous image.\n\n## Note for Ana\n\nThe migration creates two tables and their indexes, and locks nothing that exists.\n\n## Deploy note (#eng-deploys)\n\nENG-447 goes out dark: the flag stays off until we turn it on for one partner.\n"
+          }
+        ],
+        "answer": "PR.md is written."
+      }
+    ]
+  }
+}

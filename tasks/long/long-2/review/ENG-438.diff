@@ -1,0 +1,193 @@
+diff --git a/prisma/migrations/20261019143000_project_transfers/migration.sql b/prisma/migrations/20261019143000_project_transfers/migration.sql
+new file mode 100644
+index 0000000..b41c2e9
+--- /dev/null
++++ b/prisma/migrations/20261019143000_project_transfers/migration.sql
+@@ -0,0 +1,18 @@
++-- ENG-438: move a project to another organisation.
++
++-- AlterTable
++ALTER TABLE "projects" ADD COLUMN "transferred_at" TIMESTAMP(3);
++
++-- CreateTable
++CREATE TABLE "project_transfers" (
++    "id" TEXT NOT NULL,
++    "project_id" TEXT NOT NULL,
++    "from_organization_id" TEXT NOT NULL,
++    "to_organization_id" TEXT NOT NULL,
++    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
++
++    CONSTRAINT "project_transfers_pkey" PRIMARY KEY ("id")
++);
++
++CREATE INDEX "project_transfers_project_id_idx" ON "project_transfers"("project_id");
+diff --git a/prisma/schema.prisma b/prisma/schema.prisma
+index 7a1e0c4..e9b3f21 100644
+--- a/prisma/schema.prisma
++++ b/prisma/schema.prisma
+@@ -27,6 +27,7 @@ model Project {
+   createdAt      DateTime      @default(now()) @map("created_at")
+   updatedAt      DateTime      @updatedAt @map("updated_at")
+   archivedAt     DateTime?     @map("archived_at")
++  transferredAt  DateTime?     @map("transferred_at")
+   organization   Organization  @relation(fields: [organizationId], references: [id])
+   tasks          Task[]
+ 
+@@ -95,6 +96,17 @@ model Job {
+   @@map("jobs")
+ }
+ 
++model ProjectTransfer {
++  id                 String   @id @default(uuid())
++  projectId          String   @map("project_id")
++  fromOrganizationId String   @map("from_organization_id")
++  toOrganizationId   String   @map("to_organization_id")
++  createdAt          DateTime @default(now()) @map("created_at")
++
++  @@index([projectId])
++  @@map("project_transfers")
++}
++
+ enum ProjectStatus {
+   ACTIVE
+   ARCHIVED
+diff --git a/src/routes/v2/projects.ts b/src/routes/v2/projects.ts
+index 3c9d0a2..58f17be 100644
+--- a/src/routes/v2/projects.ts
++++ b/src/routes/v2/projects.ts
+@@ -1,7 +1,15 @@
+ import { Router } from 'express';
+ import { requireOrgAccess } from '../../middleware/auth';
+ import { rateLimit } from '../../middleware/rateLimit';
+-import { archiveProject, createProject, getProject, listProjects, updateProject } from '../../services/projects';
++import {
++  archiveProject,
++  createProject,
++  getProject,
++  listProjects,
++  updateProject,
++} from '../../services/projects';
++import { transferProject } from '../../services/transfers';
+ 
+ export const projects = Router({ mergeParams: true });
+ 
+@@ -64,3 +72,22 @@ projects.post('/:projectId/archive', async (req, res) => {
+   }
+   res.json(project);
+ });
++
++// ENG-438: move a project, with its tasks, to another organisation.
++projects.post('/:projectId/transfer', async (req, res) => {
++  const target = req.body?.target_organization_id;
++  if (typeof target !== 'string' || !target) {
++    res.status(422).json({ error: 'target_required' });
++    return;
++  }
++  if (target === res.locals.organizationId) {
++    res.status(422).json({ error: 'same_organization' });
++    return;
++  }
++  const project = await transferProject(res.locals.organizationId, req.params.projectId, target);
++  if (!project) {
++    res.status(404).json({ error: 'not_found' });
++    return;
++  }
++  res.json(project);
++});
+diff --git a/src/services/transfers.ts b/src/services/transfers.ts
+new file mode 100644
+index 0000000..9d2a7c1
+--- /dev/null
++++ b/src/services/transfers.ts
+@@ -0,0 +1,41 @@
++import { Prisma } from '@prisma/client';
++import { prisma } from '../db/client';
++import { log } from '../log';
++import { getProject } from './projects';
++
++/**
++ * Move a project to another organisation. Its tasks go with it; tasks have
++ * no organisation of their own, but the activity feed's rows do, so those
++ * move too.
++ */
++export async function transferProject(from: string, projectId: string, to: string) {
++  const project = await prisma.project.findFirst({ where: { id: projectId, organizationId: from } });
++  if (!project) return null;
++
++  await prisma.project.update({
++    where: { id: projectId },
++    data: { organizationId: to, transferredAt: new Date() },
++  });
++
++  // Prisma has no UPDATE ... FROM, and updateMany would need the ids first.
++  await prisma.$executeRaw(
++    Prisma.sql`UPDATE "activity_events" SET "organization_id" = ${to} WHERE "project_id" = ${projectId}`,
++  );
++
++  await prisma.projectTransfer.create({
++    data: { projectId, fromOrganizationId: from, toOrganizationId: to },
++  });
++
++  log.info('project transferred', { projectId, from, to });
++  return getProject(to, projectId);
++}
+diff --git a/src/__tests__/transfers.test.ts b/src/__tests__/transfers.test.ts
+new file mode 100644
+index 0000000..4e8b0f3
+--- /dev/null
++++ b/src/__tests__/transfers.test.ts
+@@ -0,0 +1,52 @@
++import request from 'supertest';
++import { createApp } from '../app';
++import { prisma } from '../db/client';
++
++jest.mock('../db/client', () => ({
++  prisma: {
++    project: { findFirst: jest.fn(), update: jest.fn() },
++    projectTransfer: { create: jest.fn() },
++    $executeRaw: jest.fn(),
++  },
++}));
++jest.mock('../middleware/auth', () => ({
++  requireOrgAccess: (req: { params: { id: string } }, res: { locals: Record<string, unknown> }, next: () => void) => {
++    res.locals.organizationId = req.params.id;
++    next();
++  },
++}));
++jest.mock('../middleware/rateLimit', () => ({
++  rateLimit: (_req: unknown, _res: unknown, next: () => void) => next(),
++}));
++
++const project = prisma.project as unknown as { findFirst: jest.Mock; update: jest.Mock };
++
++const row = {
++  id: 'p1',
++  organizationId: 'org-1',
++  name: 'Website',
++  description: null,
++  status: 'ACTIVE',
++  createdAt: new Date('2026-10-01T09:00:00Z'),
++  updatedAt: new Date('2026-10-01T09:00:00Z'),
++  archivedAt: null,
++};
++
++it('moves a project to another organisation', async () => {
++  project.findFirst.mockResolvedValueOnce(row).mockResolvedValueOnce({ ...row, organizationId: 'org-2' });
++  project.update.mockResolvedValueOnce({ ...row, organizationId: 'org-2' });
++
++  const res = await request(createApp())
++    .post('/v2/organizations/org-1/projects/p1/transfer')
++    .send({ target_organization_id: 'org-2' });
++
++  expect(res.status).toBe(200);
++  expect(res.body.organization_id).toBe('org-2');
++  expect(prisma.$executeRaw).toHaveBeenCalled();
++});
++
++it('refuses the same organisation', async () => {
++  const res = await request(createApp())
++    .post('/v2/organizations/org-1/projects/p1/transfer')
++    .send({ target_organization_id: 'org-1' });
++
++  expect(res.status).toBe(422);
++});

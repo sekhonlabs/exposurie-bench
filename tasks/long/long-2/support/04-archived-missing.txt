@@ -1,0 +1,7 @@
+From: Ruth Okonjo <ruth.okonjo@copperworks.example>
+Date: Wed, 21 Oct 2026 16:15 +0100
+Subject: Archived projects vanished from the API
+
+After we archive a project in the app it no longer shows up when our reporting script calls the projects list. We need archived projects for our yearly report. Did you delete them?
+
+Ruth

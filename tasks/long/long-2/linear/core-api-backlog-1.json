@@ -1,0 +1,1257 @@
+{
+  "team": "ENG",
+  "project": "all",
+  "state": "open",
+  "exportedAt": "2026-10-22T08:12:40.000Z",
+  "count": 74,
+  "issues": [
+    {
+      "identifier": "ENG-214",
+      "title": "Projects list is slow for organisations with many projects",
+      "state": "Triage",
+      "priority": 2,
+      "estimate": 5,
+      "labels": [
+        "performance",
+        "customer"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-05-18T16:18:47.296Z",
+      "updatedAt": "2026-06-07T16:18:47.296Z",
+      "description": "Meridian reports multi-second list responses. OFFSET paging plus a count on every page.",
+      "comments": 0,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-218",
+      "title": "Paging the projects list gets slower the deeper you go",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "performance"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-05-25T09:06:56.795Z",
+      "updatedAt": "2026-06-21T09:06:56.795Z",
+      "description": "Deep pages take seconds. Probably the same as the slow list for big orgs.",
+      "comments": 5,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-220",
+      "title": "Clean up done rows in the jobs table",
+      "state": "Triage",
+      "priority": 2,
+      "estimate": 3,
+      "labels": [
+        "worker",
+        "tech-debt"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-07-07T02:00:15.999Z",
+      "updatedAt": "2026-07-28T02:00:15.999Z",
+      "description": "jobs keeps every finished row. The worker poll scans past millions of them.",
+      "comments": 5,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-223",
+      "title": "rate_limit_windows grows forever",
+      "state": "Todo",
+      "priority": 2,
+      "estimate": null,
+      "labels": [
+        "database",
+        "tech-debt"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-08-21T05:37:35.359Z",
+      "updatedAt": "2026-08-25T05:37:35.359Z",
+      "description": "One row per key per minute, never deleted. Over 60M rows.",
+      "comments": 0,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-224",
+      "title": "Worker exits when the database connection drops",
+      "state": "Triage",
+      "priority": 1,
+      "estimate": 8,
+      "labels": [
+        "worker",
+        "reliability"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-06-04T17:46:01.644Z",
+      "updatedAt": "2026-06-17T17:46:01.644Z",
+      "description": "A failed poll throws out of the loop and kills the process; ECS restarts it.",
+      "comments": 0,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-227",
+      "title": "Bulk invite sends duplicate emails when SES is slow",
+      "state": "Backlog",
+      "priority": 1,
+      "estimate": 8,
+      "labels": [
+        "worker",
+        "customer",
+        "bug"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-09-13T21:20:10.985Z",
+      "updatedAt": "2026-09-21T21:20:10.985Z",
+      "description": "A job running over a minute is claimed again by the other worker.",
+      "comments": 4,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-230",
+      "title": "Malformed JSON returns 500 instead of 400",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "bug",
+        "api"
+      ],
+      "assignee": "Jonas Berg",
+      "createdAt": "2026-10-05T08:24:49.201Z",
+      "updatedAt": "2026-10-05T08:24:49.201Z",
+      "description": "onError ignores the status body-parser sets.",
+      "comments": 6,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-233",
+      "title": "Concurrent bulk invites for the same address fail with P2002",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "bug",
+        "invites"
+      ],
+      "assignee": null,
+      "createdAt": "2026-06-27T01:45:45.281Z",
+      "updatedAt": "2026-07-18T01:45:45.281Z",
+      "description": "Two requests race between findMany and create.",
+      "comments": 6,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-236",
+      "title": "Per-partner rate limits",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": null,
+      "labels": [
+        "api",
+        "partners"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-07-20T13:05:46.937Z",
+      "updatedAt": "2026-07-29T13:05:46.937Z",
+      "description": "Partners like Ferrowell use many customer keys; per-key limits do not cap them.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-238",
+      "title": "Retry-After is ignored by some clients",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 8,
+      "labels": [
+        "api",
+        "docs"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-05-25T11:09:21.809Z",
+      "updatedAt": "2026-06-08T11:09:21.809Z",
+      "description": "Document it, and consider a longer penalty for clients that keep going.",
+      "comments": 1,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-241",
+      "title": "Graceful shutdown for the API",
+      "state": "Todo",
+      "priority": 2,
+      "estimate": 2,
+      "labels": [
+        "reliability",
+        "api"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-06-03T09:59:16.241Z",
+      "updatedAt": "2026-06-07T09:59:16.241Z",
+      "description": "SIGTERM kills in-flight requests during deploys; the load balancer logs 502s.",
+      "comments": 2,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-244",
+      "title": "keepAliveTimeout below the load balancer idle timeout",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": 8,
+      "labels": [
+        "reliability"
+      ],
+      "assignee": null,
+      "createdAt": "2026-08-09T23:36:36.742Z",
+      "updatedAt": "2026-08-18T23:36:36.742Z",
+      "description": "Node's default keep-alive is shorter than the ALB's 60 s, which causes sporadic 502s.",
+      "comments": 2,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-247",
+      "title": "Remove the stale export_ready_email job kind",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 1,
+      "labels": [
+        "worker",
+        "tech-debt"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-05-22T16:30:44.142Z",
+      "updatedAt": "2026-06-17T16:30:44.142Z",
+      "description": "Rows of a removed feature still sit in jobs and fail with no handler.",
+      "comments": 5,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-248",
+      "title": "CSV export: escape formulas",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": null,
+      "labels": [
+        "security",
+        "export"
+      ],
+      "assignee": null,
+      "createdAt": "2026-10-19T07:32:12.594Z",
+      "updatedAt": "2026-10-28T07:32:12.594Z",
+      "description": "A project name starting with = runs as a formula in Excel.",
+      "comments": 2,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-249",
+      "title": "Stop storing raw invite tokens in jobs.payload",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": 8,
+      "labels": [
+        "security",
+        "invites"
+      ],
+      "assignee": null,
+      "createdAt": "2026-09-19T05:07:10.978Z",
+      "updatedAt": "2026-10-04T05:07:10.978Z",
+      "description": "The send job carries the raw token. Generate it at send time instead.",
+      "comments": 4,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-250",
+      "title": "Disable X-Powered-By",
+      "state": "Todo",
+      "priority": 4,
+      "estimate": null,
+      "labels": [
+        "security"
+      ],
+      "assignee": "Jonas Berg",
+      "createdAt": "2026-05-16T14:20:00.063Z",
+      "updatedAt": "2026-05-31T14:20:00.063Z",
+      "description": "Express advertises itself.",
+      "comments": 0,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-252",
+      "title": "Rotate API keys without downtime",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": null,
+      "labels": [
+        "api",
+        "customer"
+      ],
+      "assignee": "Jonas Berg",
+      "createdAt": "2026-07-07T01:18:44.311Z",
+      "updatedAt": "2026-07-21T01:18:44.311Z",
+      "description": "Allow two active keys per organisation from the API, not only from support.",
+      "comments": 0,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-253",
+      "title": "Webhooks for project events",
+      "state": "Todo",
+      "priority": 1,
+      "estimate": 1,
+      "labels": [
+        "api",
+        "partners"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-07-27T18:48:13.280Z",
+      "updatedAt": "2026-08-03T18:48:13.280Z",
+      "description": "Partners want events instead of polling.",
+      "comments": 5,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-256",
+      "title": "Document status=all on the projects list",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 3,
+      "labels": [
+        "docs"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-09-06T17:23:51.890Z",
+      "updatedAt": "2026-09-30T17:23:51.890Z",
+      "description": "Customers think archived projects were deleted.",
+      "comments": 2,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-257",
+      "title": "API memory grows between deploys",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 2,
+      "labels": [
+        "reliability"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-06-08T17:31:09.995Z",
+      "updatedAt": "2026-06-12T17:31:09.995Z",
+      "description": "API tasks climb from about 38% to 60% memory over five days.",
+      "comments": 2,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-259",
+      "title": "Move the worker to arm64",
+      "state": "Todo",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "infra",
+        "cost"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-06-16T07:35:34.367Z",
+      "updatedAt": "2026-06-19T07:35:34.367Z",
+      "description": "Cheaper per vCPU; needs a multi-arch image.",
+      "comments": 2,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-263",
+      "title": "Build the image for arm64 and amd64",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "infra"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-06-20T17:23:31.666Z",
+      "updatedAt": "2026-07-18T17:23:31.666Z",
+      "description": "CI builds linux/amd64 only.",
+      "comments": 6,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-264",
+      "title": "Container Insights enhanced observability is expensive",
+      "state": "Triage",
+      "priority": 2,
+      "estimate": null,
+      "labels": [
+        "infra",
+        "cost"
+      ],
+      "assignee": null,
+      "createdAt": "2026-09-05T12:22:50.604Z",
+      "updatedAt": "2026-09-27T12:22:50.604Z",
+      "description": "CloudWatch metrics cost jumped in October.",
+      "comments": 4,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-267",
+      "title": "Upgrade Prisma to 6.18",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 5,
+      "labels": [
+        "dependencies"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-07-19T08:41:15.785Z",
+      "updatedAt": "2026-08-06T08:41:15.785Z",
+      "description": "Patch release; check the migration engine changes.",
+      "comments": 4,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-268",
+      "title": "Upgrade express to 5.1.2",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 2,
+      "labels": [
+        "dependencies",
+        "security"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-10-04T03:06:31.279Z",
+      "updatedAt": "2026-10-10T03:06:31.279Z",
+      "description": "path-to-regexp advisory.",
+      "comments": 0,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-271",
+      "title": "TypeScript 6",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 5,
+      "labels": [
+        "dependencies"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-08-04T16:23:48.650Z",
+      "updatedAt": "2026-08-07T16:23:48.650Z",
+      "description": "Major upgrade; check the strictness changes.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-274",
+      "title": "Add request ids to the log",
+      "state": "Todo",
+      "priority": 3,
+      "estimate": 2,
+      "labels": [
+        "observability"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-06-19T02:06:36.998Z",
+      "updatedAt": "2026-07-05T02:06:36.998Z",
+      "description": "Hard to tie an error line to its request line.",
+      "comments": 0,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-276",
+      "title": "Log the query string of list requests",
+      "state": "Todo",
+      "priority": 4,
+      "estimate": 3,
+      "labels": [
+        "observability"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-09-03T03:02:49.610Z",
+      "updatedAt": "2026-09-10T03:02:49.610Z",
+      "description": "We cannot see which page a client asked for.",
+      "comments": 5,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-277",
+      "title": "Alarm on worker restarts",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": 1,
+      "labels": [
+        "observability",
+        "worker"
+      ],
+      "assignee": null,
+      "createdAt": "2026-07-29T10:14:13.419Z",
+      "updatedAt": "2026-08-06T10:14:13.419Z",
+      "description": "We only found out about Thursday from the 5xx alarm.",
+      "comments": 1,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-278",
+      "title": "Statement timeout for API connections",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": 3,
+      "labels": [
+        "database",
+        "reliability"
+      ],
+      "assignee": null,
+      "createdAt": "2026-05-20T18:58:37.982Z",
+      "updatedAt": "2026-05-22T18:58:37.982Z",
+      "description": "A blocked query holds a pool connection forever.",
+      "comments": 4,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-281",
+      "title": "lock_timeout for migrations",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": 2,
+      "labels": [
+        "database",
+        "migrations"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-07-19T00:52:22.031Z",
+      "updatedAt": "2026-08-09T00:52:22.031Z",
+      "description": "A migration that waits for a lock should fail fast instead of queueing everything behind it.",
+      "comments": 4,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-282",
+      "title": "Split data backfills out of schema migrations",
+      "state": "Triage",
+      "priority": 2,
+      "estimate": 5,
+      "labels": [
+        "database",
+        "migrations"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-06-25T02:25:32.955Z",
+      "updatedAt": "2026-07-23T02:25:32.955Z",
+      "description": "Backfills inside the migration transaction hold locks for minutes.",
+      "comments": 6,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-286",
+      "title": "Project transfer between organisations",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "api",
+        "customer"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-06-15T13:14:46.421Z",
+      "updatedAt": "2026-07-03T13:14:46.421Z",
+      "description": "Customers merging accounts want to move projects.",
+      "comments": 5,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-287",
+      "title": "Activity feed pagination",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 2,
+      "labels": [
+        "api"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-09-21T18:18:05.764Z",
+      "updatedAt": "2026-09-26T18:18:05.764Z",
+      "description": "The feed endpoint has no cursor.",
+      "comments": 2,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-291",
+      "title": "Tasks endpoint: filter by done",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 3,
+      "labels": [
+        "api"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-06-26T15:39:22.960Z",
+      "updatedAt": "2026-07-23T15:39:22.960Z",
+      "description": "Customers fetch all tasks to count open ones.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-292",
+      "title": "Organisation-level usage endpoint",
+      "state": "Todo",
+      "priority": 4,
+      "estimate": 8,
+      "labels": [
+        "api"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-08-15T00:49:54.639Z",
+      "updatedAt": "2026-08-16T00:49:54.639Z",
+      "description": "Let customers see their own request counts.",
+      "comments": 5,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-293",
+      "title": "Health check that touches the database",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "reliability"
+      ],
+      "assignee": "Jonas Berg",
+      "createdAt": "2026-05-28T13:52:18.716Z",
+      "updatedAt": "2026-06-10T13:52:18.716Z",
+      "description": "GET /health never fails when Postgres is down; consider a separate readiness check.",
+      "comments": 5,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-294",
+      "title": "Retry Prisma P1017 once for idempotent reads",
+      "state": "Triage",
+      "priority": 3,
+      "estimate": 8,
+      "labels": [
+        "reliability",
+        "database"
+      ],
+      "assignee": null,
+      "createdAt": "2026-07-22T18:19:30.798Z",
+      "updatedAt": "2026-08-02T18:19:30.798Z",
+      "description": "A failover makes every in-flight GET fail.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-296",
+      "title": "Admin console: list failed jobs",
+      "state": "Triage",
+      "priority": 3,
+      "estimate": null,
+      "labels": [
+        "admin",
+        "worker"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-05-28T23:14:50.112Z",
+      "updatedAt": "2026-06-17T23:14:50.112Z",
+      "description": "Support asks engineering to look at failed jobs.",
+      "comments": 1,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-299",
+      "title": "Invite emails: plain-text only",
+      "state": "Triage",
+      "priority": 4,
+      "estimate": null,
+      "labels": [
+        "invites"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-07-05T02:00:04.846Z",
+      "updatedAt": "2026-07-30T02:00:04.846Z",
+      "description": "Some clients flag them as spam; add an HTML part?",
+      "comments": 6,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-300",
+      "title": "SES sending quota alarm",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": 2,
+      "labels": [
+        "observability",
+        "invites"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-07-24T15:09:42.213Z",
+      "updatedAt": "2026-07-28T15:09:42.213Z",
+      "description": "Throttling on Tuesday went unnoticed until customers wrote in.",
+      "comments": 1,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-304",
+      "title": "Unleash: clean up released flags",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 3,
+      "labels": [
+        "tech-debt"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-07-21T04:11:20.817Z",
+      "updatedAt": "2026-08-09T04:11:20.817Z",
+      "description": "Several flags are on everywhere and can be removed from code.",
+      "comments": 6,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-306",
+      "title": "Unleash context: organizationId vs orgId",
+      "state": "Triage",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "flags"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-09-10T00:28:16.392Z",
+      "updatedAt": "2026-10-02T00:28:16.392Z",
+      "description": "The web app and the API use different context field names.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-309",
+      "title": "OpenAPI spec is out of date",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 2,
+      "labels": [
+        "docs"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-10-19T11:11:42.226Z",
+      "updatedAt": "2026-10-19T11:11:42.226Z",
+      "description": "Invites and export are missing from the spec.",
+      "comments": 1,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-312",
+      "title": "Return 404 for an archived project on PATCH?",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 2,
+      "labels": [
+        "api"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-08-27T17:04:10.918Z",
+      "updatedAt": "2026-09-05T17:04:10.918Z",
+      "description": "Unclear behaviour when renaming an archived project.",
+      "comments": 2,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-316",
+      "title": "Export: include archived_at",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": null,
+      "labels": [
+        "export",
+        "customer"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-10-16T10:55:07.481Z",
+      "updatedAt": "2026-10-16T10:55:07.481Z",
+      "description": "Customers want the archive date in the CSV.",
+      "comments": 6,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-317",
+      "title": "Rate limit unauthenticated requests by IP",
+      "state": "Triage",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "security",
+        "api"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-09-28T16:39:53.077Z",
+      "updatedAt": "2026-09-28T16:39:53.077Z",
+      "description": "Bad-key requests are not limited at all.",
+      "comments": 0,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-320",
+      "title": "Reduce log volume of the request logger",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "cost",
+        "observability"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-07-24T13:53:51.319Z",
+      "updatedAt": "2026-08-23T13:53:51.319Z",
+      "description": "Successful GETs are most of the CloudWatch ingestion.",
+      "comments": 1,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-321",
+      "title": "jobs: index for the poll",
+      "state": "Triage",
+      "priority": 2,
+      "estimate": 3,
+      "labels": [
+        "worker",
+        "database"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-07-12T07:15:49.390Z",
+      "updatedAt": "2026-07-20T07:15:49.390Z",
+      "description": "The poll needs an index on due, unfinished rows.",
+      "comments": 2,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-322",
+      "title": "Test helpers for Prisma mocks",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 5,
+      "labels": [
+        "tests",
+        "tech-debt"
+      ],
+      "assignee": null,
+      "createdAt": "2026-06-26T16:55:35.120Z",
+      "updatedAt": "2026-07-05T16:55:35.120Z",
+      "description": "Every test hand-rolls its mocks.",
+      "comments": 5,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-323",
+      "title": "Flaky test: organizationsExport on CI",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "tests"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-07-18T18:53:03.540Z",
+      "updatedAt": "2026-07-23T18:53:03.540Z",
+      "description": "Fails about once a week with a timeout.",
+      "comments": 0,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-324",
+      "title": "Bulk invite: show which addresses were skipped",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": null,
+      "labels": [
+        "invites",
+        "api"
+      ],
+      "assignee": null,
+      "createdAt": "2026-09-24T00:30:10.770Z",
+      "updatedAt": "2026-10-12T00:30:10.770Z",
+      "description": "The response only gives a count.",
+      "comments": 4,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-328",
+      "title": "Remove /v1 after the sunset date",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 2,
+      "labels": [
+        "api"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-07-22T18:44:12.964Z",
+      "updatedAt": "2026-08-03T18:44:12.964Z",
+      "description": "Deprecation headers have been on since December.",
+      "comments": 2,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-331",
+      "title": "Postgres 17 upgrade plan",
+      "state": "Triage",
+      "priority": 4,
+      "estimate": 1,
+      "labels": [
+        "database",
+        "infra"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-10-05T00:09:05.585Z",
+      "updatedAt": "2026-10-23T00:09:05.585Z",
+      "description": "RDS minor versions keep being applied in the maintenance window; plan the major.",
+      "comments": 4,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-332",
+      "title": "Read replica for heavy list queries",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 8,
+      "labels": [
+        "database",
+        "performance"
+      ],
+      "assignee": "Carla Nunes",
+      "createdAt": "2026-06-15T07:00:18.010Z",
+      "updatedAt": "2026-07-09T07:00:18.010Z",
+      "description": "Send big organisations' lists to the replica.",
+      "comments": 2,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-334",
+      "title": "Follow-up: projects list is slow for organisations with many projects",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 1,
+      "labels": [
+        "performance",
+        "customer"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-05-08T13:07:08.176Z",
+      "updatedAt": "2026-05-13T13:07:08.176Z",
+      "description": "Meridian reports multi-second list responses. OFFSET paging plus a count on every page. Raised again by a different customer.",
+      "comments": 6,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-336",
+      "title": "Follow-up: worker exits when the database connection drops",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": null,
+      "labels": [
+        "worker",
+        "reliability"
+      ],
+      "assignee": null,
+      "createdAt": "2026-09-27T19:40:03.309Z",
+      "updatedAt": "2026-10-01T19:40:03.309Z",
+      "description": "A failed poll throws out of the loop and kills the process; ECS restarts it. Raised again by a different customer.",
+      "comments": 0,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-340",
+      "title": "Customer report: bulk invite sends duplicate emails when SES is slow",
+      "state": "Backlog",
+      "priority": 2,
+      "estimate": 8,
+      "labels": [
+        "worker",
+        "customer",
+        "bug"
+      ],
+      "assignee": null,
+      "createdAt": "2026-05-27T15:37:47.716Z",
+      "updatedAt": "2026-06-12T15:37:47.716Z",
+      "description": "A job running over a minute is claimed again by the other worker. Raised again by a different customer.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-344",
+      "title": "Follow-up: per-partner rate limits",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 1,
+      "labels": [
+        "api",
+        "partners"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-05-09T07:56:57.445Z",
+      "updatedAt": "2026-05-24T07:56:57.445Z",
+      "description": "Partners like Ferrowell use many customer keys; per-key limits do not cap them. Raised again by a different customer.",
+      "comments": 1,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-345",
+      "title": "Follow-up: cSV export: escape formulas",
+      "state": "Triage",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "security",
+        "export"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-07-30T20:49:56.667Z",
+      "updatedAt": "2026-08-09T20:49:56.667Z",
+      "description": "A project name starting with = runs as a formula in Excel. Raised again by a different customer.",
+      "comments": 5,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-348",
+      "title": "Investigate: build the image for arm64 and amd64",
+      "state": "Todo",
+      "priority": 4,
+      "estimate": 3,
+      "labels": [
+        "infra"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-07-09T02:04:20.788Z",
+      "updatedAt": "2026-07-16T02:04:20.788Z",
+      "description": "CI builds linux/amd64 only. Raised again by a different customer.",
+      "comments": 6,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-352",
+      "title": "Customer report: activity feed pagination",
+      "state": "Todo",
+      "priority": 4,
+      "estimate": 1,
+      "labels": [
+        "api"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-10-02T02:40:38.874Z",
+      "updatedAt": "2026-10-02T02:40:38.874Z",
+      "description": "The feed endpoint has no cursor. Raised again by a different customer.",
+      "comments": 1,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-355",
+      "title": "Customer report: sES sending quota alarm",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "observability",
+        "invites"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-05-04T12:39:58.264Z",
+      "updatedAt": "2026-05-31T12:39:58.264Z",
+      "description": "Throttling on Tuesday went unnoticed until customers wrote in. Raised again by a different customer.",
+      "comments": 1,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-357",
+      "title": "Projects list is slow for organisations with many projects (spike)",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 1,
+      "labels": [
+        "performance",
+        "customer",
+        "spike"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-06-15T00:34:43.299Z",
+      "updatedAt": "2026-07-08T00:34:43.299Z",
+      "description": "Time-boxed investigation before we commit to: Meridian reports multi-second list responses. OFFSET paging plus a count on every page.",
+      "comments": 5,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-359",
+      "title": "Clean up done rows in the jobs table (spike)",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "worker",
+        "tech-debt",
+        "spike"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-07-10T18:01:14.065Z",
+      "updatedAt": "2026-07-26T18:01:14.065Z",
+      "description": "Time-boxed investigation before we commit to: jobs keeps every finished row. The worker poll scans past millions of them.",
+      "comments": 0,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-360",
+      "title": "rate_limit_windows grows forever (spike)",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 2,
+      "labels": [
+        "database",
+        "tech-debt",
+        "spike"
+      ],
+      "assignee": "Lena Vogt",
+      "createdAt": "2026-08-10T23:31:57.363Z",
+      "updatedAt": "2026-09-07T23:31:57.363Z",
+      "description": "Time-boxed investigation before we commit to: One row per key per minute, never deleted. Over 60M rows.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-361",
+      "title": "Bulk invite sends duplicate emails when SES is slow (spike)",
+      "state": "Todo",
+      "priority": 2,
+      "estimate": 1,
+      "labels": [
+        "worker",
+        "customer",
+        "bug",
+        "spike"
+      ],
+      "assignee": "Bea Kowalski",
+      "createdAt": "2026-05-16T13:12:25.788Z",
+      "updatedAt": "2026-06-10T13:12:25.788Z",
+      "description": "Time-boxed investigation before we commit to: A job running over a minute is claimed again by the other worker.",
+      "comments": 5,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-363",
+      "title": "Malformed JSON returns 500 instead of 400 (spike)",
+      "state": "Triage",
+      "priority": 4,
+      "estimate": 3,
+      "labels": [
+        "bug",
+        "api",
+        "spike"
+      ],
+      "assignee": "Ivo Marques",
+      "createdAt": "2026-08-27T01:38:19.993Z",
+      "updatedAt": "2026-08-31T01:38:19.993Z",
+      "description": "Time-boxed investigation before we commit to: onError ignores the status body-parser sets.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-366",
+      "title": "Concurrent bulk invites for the same address fail with P2002 (spike)",
+      "state": "Todo",
+      "priority": 4,
+      "estimate": 2,
+      "labels": [
+        "bug",
+        "invites",
+        "spike"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-06-20T13:20:10.563Z",
+      "updatedAt": "2026-07-04T13:20:10.563Z",
+      "description": "Time-boxed investigation before we commit to: Two requests race between findMany and create.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-367",
+      "title": "Per-partner rate limits (spike)",
+      "state": "Backlog",
+      "priority": 3,
+      "estimate": 3,
+      "labels": [
+        "api",
+        "partners",
+        "spike"
+      ],
+      "assignee": null,
+      "createdAt": "2026-08-09T11:33:38.608Z",
+      "updatedAt": "2026-08-22T11:33:38.608Z",
+      "description": "Time-boxed investigation before we commit to: Partners like Ferrowell use many customer keys; per-key limits do not cap them.",
+      "comments": 1,
+      "project": "Reliability"
+    },
+    {
+      "identifier": "ENG-369",
+      "title": "Retry-After is ignored by some clients (spike)",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 1,
+      "labels": [
+        "api",
+        "docs",
+        "spike"
+      ],
+      "assignee": null,
+      "createdAt": "2026-09-19T00:33:04.118Z",
+      "updatedAt": "2026-10-10T00:33:04.118Z",
+      "description": "Time-boxed investigation before we commit to: Document it, and consider a longer penalty for clients that keep going.",
+      "comments": 6,
+      "project": "Partners"
+    },
+    {
+      "identifier": "ENG-372",
+      "title": "Graceful shutdown for the API (spike)",
+      "state": "Triage",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "reliability",
+        "api",
+        "spike"
+      ],
+      "assignee": null,
+      "createdAt": "2026-06-08T08:06:00.742Z",
+      "updatedAt": "2026-07-01T08:06:00.742Z",
+      "description": "Time-boxed investigation before we commit to: SIGTERM kills in-flight requests during deploys; the load balancer logs 502s.",
+      "comments": 3,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-375",
+      "title": "CSV export: escape formulas (spike)",
+      "state": "Todo",
+      "priority": 3,
+      "estimate": 5,
+      "labels": [
+        "security",
+        "export",
+        "spike"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-09-11T07:28:01.420Z",
+      "updatedAt": "2026-10-09T07:28:01.420Z",
+      "description": "Time-boxed investigation before we commit to: A project name starting with = runs as a formula in Excel.",
+      "comments": 6,
+      "project": "Core API"
+    },
+    {
+      "identifier": "ENG-379",
+      "title": "Document status=all on the projects list (spike)",
+      "state": "Backlog",
+      "priority": 4,
+      "estimate": 1,
+      "labels": [
+        "docs",
+        "spike"
+      ],
+      "assignee": "Tomás Reis",
+      "createdAt": "2026-10-13T10:03:08.728Z",
+      "updatedAt": "2026-10-13T10:03:08.728Z",
+      "description": "Time-boxed investigation before we commit to: Customers think archived projects were deleted.",
+      "comments": 1,
+      "project": "Reliability"
+    }
+  ]
+}

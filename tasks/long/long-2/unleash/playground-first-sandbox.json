@@ -1,0 +1,89 @@
+{
+  "input": {
+    "environments": [
+      "staging"
+    ],
+    "projects": "*",
+    "context": {
+      "appName": "tidewell-api",
+      "properties": {
+        "organizationId": "5c0f2a9e-7d41-4b8e-9a3f-1e6b2d8c4f70"
+      }
+    }
+  },
+  "features": [
+    {
+      "name": "eng-447-project-webhooks",
+      "projectId": "default",
+      "isEnabled": true,
+      "isEnabledInCurrentEnvironment": true,
+      "strategies": {
+        "result": true,
+        "data": [
+          {
+            "name": "flexibleRollout",
+            "id": "22af34ab-5def-4802-a23a-1cf416563fe6",
+            "title": "Ferrowell sandbox",
+            "disabled": false,
+            "parameters": {
+              "groupId": "eng-447-project-webhooks",
+              "rollout": "100",
+              "stickiness": "default"
+            },
+            "result": {
+              "enabled": true,
+              "evaluationStatus": "complete"
+            },
+            "constraints": [
+              {
+                "values": [
+                  "5c0f2a9e-7d41-4b8e-9a3f-1e6b2d8c4f70"
+                ],
+                "inverted": false,
+                "operator": "IN",
+                "contextName": "organizationId",
+                "caseInsensitive": false,
+                "value": "5c0f2a9e-7d41-4b8e-9a3f-1e6b2d8c4f70",
+                "result": true
+              }
+            ],
+            "segments": []
+          },
+          {
+            "name": "flexibleRollout",
+            "id": "92e6cc88-9da5-40e3-8d2b-0a7eef34565a",
+            "title": "Ferrowell sandbox 2",
+            "disabled": false,
+            "parameters": {
+              "groupId": "eng-447-project-webhooks",
+              "rollout": "100",
+              "stickiness": "default"
+            },
+            "result": {
+              "enabled": false,
+              "evaluationStatus": "complete"
+            },
+            "constraints": [
+              {
+                "values": [
+                  "b8e14d02-3a6c-4f19-8d7e-62c09a5f13be"
+                ],
+                "inverted": false,
+                "operator": "IN",
+                "contextName": "orgId",
+                "caseInsensitive": false,
+                "result": false
+              }
+            ],
+            "segments": []
+          }
+        ]
+      },
+      "variant": {
+        "name": "disabled",
+        "enabled": false,
+        "feature_enabled": true
+      }
+    }
+  ]
+}

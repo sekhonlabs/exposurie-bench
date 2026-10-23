@@ -1,0 +1,333 @@
+{
+  "auditReportVersion": 2,
+  "vulnerabilities": {
+    "path-to-regexp": {
+      "name": "path-to-regexp",
+      "severity": "moderate",
+      "isDirect": true,
+      "via": [
+        {
+          "source": "9wv6-86v2-598j",
+          "name": "path-to-regexp",
+          "dependency": "path-to-regexp",
+          "title": "path-to-regexp backtracks badly on a path with two parameters in one segment",
+          "url": "https://github.com/advisories/GHSA-9wv6-86v2-598j",
+          "severity": "moderate",
+          "cwe": [
+            "CWE-1333"
+          ],
+          "cvss": {
+            "score": 5.3,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:L"
+          },
+          "range": ">=8.0.0 <8.2.1"
+        }
+      ],
+      "effects": [
+        "router"
+      ],
+      "range": ">=8.0.0 <8.2.1",
+      "nodes": [
+        "node_modules/path-to-regexp"
+      ],
+      "fixAvailable": {
+        "name": "express",
+        "version": "5.1.2",
+        "isSemVerMajor": false
+      }
+    },
+    "router": {
+      "name": "router",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "path-to-regexp"
+      ],
+      "effects": [
+        "express"
+      ],
+      "range": "2.2.0",
+      "nodes": [
+        "node_modules/router"
+      ],
+      "fixAvailable": {
+        "name": "express",
+        "version": "5.1.2",
+        "isSemVerMajor": false
+      }
+    },
+    "express": {
+      "name": "express",
+      "severity": "moderate",
+      "isDirect": false,
+      "via": [
+        "router"
+      ],
+      "effects": [],
+      "range": "5.0.0 - 5.1.1",
+      "nodes": [
+        "node_modules/express"
+      ],
+      "fixAvailable": {
+        "name": "express",
+        "version": "5.1.2",
+        "isSemVerMajor": false
+      }
+    },
+    "@smithy/node-http-handler": {
+      "name": "@smithy/node-http-handler",
+      "severity": "low",
+      "isDirect": true,
+      "via": [
+        {
+          "source": "4c4p-7mq3-82xw",
+          "name": "@smithy/node-http-handler",
+          "dependency": "@smithy/node-http-handler",
+          "title": "Proxy credentials can be written to debug logs",
+          "url": "https://github.com/advisories/GHSA-4c4p-7mq3-82xw",
+          "severity": "low",
+          "cwe": [
+            "CWE-532"
+          ],
+          "cvss": {
+            "score": 3.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:L"
+          },
+          "range": "<4.3.1"
+        }
+      ],
+      "effects": [
+        "@aws-sdk/client-sesv2"
+      ],
+      "range": "<4.3.1",
+      "nodes": [
+        "node_modules/@smithy/node-http-handler"
+      ],
+      "fixAvailable": {
+        "name": "@aws-sdk/client-sesv2",
+        "version": "3.916.0",
+        "isSemVerMajor": false
+      }
+    },
+    "brace-expansion": {
+      "name": "brace-expansion",
+      "severity": "low",
+      "isDirect": true,
+      "via": [
+        {
+          "source": "v6h2-p8h4-qcjw",
+          "name": "brace-expansion",
+          "dependency": "brace-expansion",
+          "title": "brace-expansion Regular Expression Denial of Service",
+          "url": "https://github.com/advisories/GHSA-v6h2-p8h4-qcjw",
+          "severity": "low",
+          "cwe": [
+            "CWE-400"
+          ],
+          "cvss": {
+            "score": 3.1,
+            "vectorString": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:N/A:L"
+          },
+          "range": ">=2.0.0 <2.0.2"
+        }
+      ],
+      "effects": [
+        "minimatch"
+      ],
+      "range": ">=2.0.0 <2.0.2",
+      "nodes": [
+        "node_modules/brace-expansion"
+      ],
+      "fixAvailable": true,
+      "dev": true
+    },
+    "minimatch": {
+      "name": "minimatch",
+      "severity": "low",
+      "isDirect": false,
+      "via": [
+        "brace-expansion"
+      ],
+      "effects": [
+        "glob",
+        "jest-config"
+      ],
+      "range": "9.0.0 - 9.0.5",
+      "nodes": [
+        "node_modules/minimatch"
+      ],
+      "fixAvailable": true,
+      "dev": true
+    },
+    "form-data": {
+      "name": "form-data",
+      "severity": "critical",
+      "isDirect": true,
+      "via": [
+        {
+          "source": "fjxv-7rqg-78g4",
+          "name": "form-data",
+          "dependency": "form-data",
+          "title": "form-data uses an unsafe random function to choose its boundary",
+          "url": "https://github.com/advisories/GHSA-fjxv-7rqg-78g4",
+          "severity": "critical",
+          "cwe": [
+            "CWE-330"
+          ],
+          "cvss": {
+            "score": 9.4,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=4.0.0 <4.0.4"
+        }
+      ],
+      "effects": [
+        "superagent"
+      ],
+      "range": ">=4.0.0 <4.0.4",
+      "nodes": [
+        "node_modules/form-data"
+      ],
+      "fixAvailable": {
+        "name": "supertest",
+        "version": "7.2.0",
+        "isSemVerMajor": false
+      },
+      "dev": true
+    },
+    "superagent": {
+      "name": "superagent",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        "form-data"
+      ],
+      "effects": [
+        "supertest"
+      ],
+      "range": "10.0.0 - 10.2.2",
+      "nodes": [
+        "node_modules/superagent"
+      ],
+      "fixAvailable": {
+        "name": "supertest",
+        "version": "7.2.0",
+        "isSemVerMajor": false
+      },
+      "dev": true
+    },
+    "supertest": {
+      "name": "supertest",
+      "severity": "critical",
+      "isDirect": false,
+      "via": [
+        "superagent"
+      ],
+      "effects": [],
+      "range": "7.0.0 - 7.1.4",
+      "nodes": [
+        "node_modules/supertest"
+      ],
+      "fixAvailable": {
+        "name": "supertest",
+        "version": "7.2.0",
+        "isSemVerMajor": false
+      },
+      "dev": true
+    },
+    "tar-fs": {
+      "name": "tar-fs",
+      "severity": "high",
+      "isDirect": true,
+      "via": [
+        {
+          "source": "8cj5-5rvv-wf4v",
+          "name": "tar-fs",
+          "dependency": "tar-fs",
+          "title": "tar-fs can write outside its folder when it extracts a crafted archive",
+          "url": "https://github.com/advisories/GHSA-8cj5-5rvv-wf4v",
+          "severity": "high",
+          "cwe": [
+            "CWE-22"
+          ],
+          "cvss": {
+            "score": 7.5,
+            "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H"
+          },
+          "range": ">=3.0.0 <3.0.9"
+        }
+      ],
+      "effects": [
+        "@prisma/engines"
+      ],
+      "range": ">=3.0.0 <3.0.9",
+      "nodes": [
+        "node_modules/tar-fs"
+      ],
+      "fixAvailable": {
+        "name": "prisma",
+        "version": "6.18.2",
+        "isSemVerMajor": false
+      },
+      "dev": true
+    },
+    "@prisma/engines": {
+      "name": "@prisma/engines",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "tar-fs"
+      ],
+      "effects": [
+        "prisma"
+      ],
+      "range": "6.16.0 - 6.17.1",
+      "nodes": [
+        "node_modules/@prisma/engines"
+      ],
+      "fixAvailable": {
+        "name": "prisma",
+        "version": "6.18.2",
+        "isSemVerMajor": false
+      },
+      "dev": true
+    },
+    "prisma": {
+      "name": "prisma",
+      "severity": "high",
+      "isDirect": false,
+      "via": [
+        "@prisma/engines"
+      ],
+      "effects": [],
+      "range": "6.16.0 - 6.17.1",
+      "nodes": [
+        "node_modules/prisma"
+      ],
+      "fixAvailable": {
+        "name": "prisma",
+        "version": "6.18.2",
+        "isSemVerMajor": false
+      },
+      "dev": true
+    }
+  },
+  "metadata": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 3,
+      "moderate": 3,
+      "high": 3,
+      "critical": 3,
+      "total": 12
+    },
+    "dependencies": {
+      "prod": 214,
+      "dev": 512,
+      "optional": 41,
+      "peer": 6,
+      "peerOptional": 0,
+      "total": 726
+    }
+  }
+}

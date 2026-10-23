@@ -1,0 +1,183 @@
+date,service,usage_type,cost_usd
+2026-10-11,Amazon Route 53,HostedZone,0.04
+2026-10-11,AWS Data Transfer,EU-DataTransfer-Out-Bytes,1.52
+2026-10-12,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,12.18
+2026-10-12,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.72
+2026-10-12,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,22.05
+2026-10-12,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.67
+2026-10-12,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.10
+2026-10-12,Elastic Load Balancing,EU-LoadBalancerUsage,0.60
+2026-10-12,Elastic Load Balancing,EU-LCUUsage,1.41
+2026-10-12,EC2 - Other,EU-NatGateway-Hours,3.42
+2026-10-12,EC2 - Other,EU-NatGateway-Bytes,0.71
+2026-10-12,AmazonCloudWatch,EU-DataProcessing-Bytes,2.10
+2026-10-12,AmazonCloudWatch,EU-CW:MetricMonitorUsage,28.74
+2026-10-12,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.39
+2026-10-12,Amazon Simple Email Service,EU-Recipients,0.38
+2026-10-12,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.24
+2026-10-12,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.13
+2026-10-12,AWS Key Management Service,EU-KMS-Keys,0.10
+2026-10-12,Amazon Route 53,HostedZone,0.04
+2026-10-12,AWS Data Transfer,EU-DataTransfer-Out-Bytes,1.60
+2026-10-13,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,11.57
+2026-10-13,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.55
+2026-10-13,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,20.77
+2026-10-13,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.97
+2026-10-13,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.14
+2026-10-13,Elastic Load Balancing,EU-LoadBalancerUsage,0.61
+2026-10-13,Elastic Load Balancing,EU-LCUUsage,1.41
+2026-10-13,EC2 - Other,EU-NatGateway-Hours,3.37
+2026-10-13,EC2 - Other,EU-NatGateway-Bytes,0.74
+2026-10-13,AmazonCloudWatch,EU-DataProcessing-Bytes,1.93
+2026-10-13,AmazonCloudWatch,EU-CW:MetricMonitorUsage,29.15
+2026-10-13,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.39
+2026-10-13,Amazon Simple Email Service,EU-Recipients,0.36
+2026-10-13,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.25
+2026-10-13,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.13
+2026-10-13,AWS Key Management Service,EU-KMS-Keys,0.11
+2026-10-13,Amazon Route 53,HostedZone,0.04
+2026-10-13,AWS Data Transfer,EU-DataTransfer-Out-Bytes,1.55
+2026-10-14,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,12.22
+2026-10-14,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.61
+2026-10-14,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,20.95
+2026-10-14,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.79
+2026-10-14,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.07
+2026-10-14,Elastic Load Balancing,EU-LoadBalancerUsage,0.62
+2026-10-14,Elastic Load Balancing,EU-LCUUsage,3.71
+2026-10-14,EC2 - Other,EU-NatGateway-Hours,3.48
+2026-10-14,EC2 - Other,EU-NatGateway-Bytes,0.75
+2026-10-14,AmazonCloudWatch,EU-DataProcessing-Bytes,2.95
+2026-10-14,AmazonCloudWatch,EU-CW:MetricMonitorUsage,29.49
+2026-10-14,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.37
+2026-10-14,Amazon Simple Email Service,EU-Recipients,0.38
+2026-10-14,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.23
+2026-10-14,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.12
+2026-10-14,AWS Key Management Service,EU-KMS-Keys,0.11
+2026-10-14,Amazon Route 53,HostedZone,0.04
+2026-10-14,AWS Data Transfer,EU-DataTransfer-Out-Bytes,9.46
+2026-10-15,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,11.63
+2026-10-15,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.65
+2026-10-15,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,20.72
+2026-10-15,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.75
+2026-10-15,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.18
+2026-10-15,Elastic Load Balancing,EU-LoadBalancerUsage,0.57
+2026-10-15,Elastic Load Balancing,EU-LCUUsage,3.70
+2026-10-15,EC2 - Other,EU-NatGateway-Hours,3.24
+2026-10-15,EC2 - Other,EU-NatGateway-Bytes,0.74
+2026-10-15,AmazonCloudWatch,EU-DataProcessing-Bytes,2.80
+2026-10-15,AmazonCloudWatch,EU-CW:MetricMonitorUsage,28.66
+2026-10-15,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.39
+2026-10-15,Amazon Simple Email Service,EU-Recipients,0.38
+2026-10-15,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.23
+2026-10-15,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.14
+2026-10-15,AWS Key Management Service,EU-KMS-Keys,0.10
+2026-10-15,Amazon Route 53,HostedZone,0.04
+2026-10-15,AWS Data Transfer,EU-DataTransfer-Out-Bytes,9.25
+2026-10-16,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,11.46
+2026-10-16,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.50
+2026-10-16,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,21.37
+2026-10-16,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,4.00
+2026-10-16,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.16
+2026-10-16,Elastic Load Balancing,EU-LoadBalancerUsage,0.60
+2026-10-16,Elastic Load Balancing,EU-LCUUsage,3.49
+2026-10-16,EC2 - Other,EU-NatGateway-Hours,3.40
+2026-10-16,EC2 - Other,EU-NatGateway-Bytes,0.74
+2026-10-16,AmazonCloudWatch,EU-DataProcessing-Bytes,2.90
+2026-10-16,AmazonCloudWatch,EU-CW:MetricMonitorUsage,27.89
+2026-10-16,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.37
+2026-10-16,Amazon Simple Email Service,EU-Recipients,0.38
+2026-10-16,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.24
+2026-10-16,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.13
+2026-10-16,AWS Key Management Service,EU-KMS-Keys,0.10
+2026-10-16,Amazon Route 53,HostedZone,0.04
+2026-10-16,AWS Data Transfer,EU-DataTransfer-Out-Bytes,9.65
+2026-10-17,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,11.98
+2026-10-17,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.48
+2026-10-17,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,21.29
+2026-10-17,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.90
+2026-10-17,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.19
+2026-10-17,Elastic Load Balancing,EU-LoadBalancerUsage,0.59
+2026-10-17,Elastic Load Balancing,EU-LCUUsage,3.87
+2026-10-17,EC2 - Other,EU-NatGateway-Hours,3.63
+2026-10-17,EC2 - Other,EU-NatGateway-Bytes,0.71
+2026-10-17,AmazonCloudWatch,EU-DataProcessing-Bytes,2.94
+2026-10-17,AmazonCloudWatch,EU-CW:MetricMonitorUsage,27.89
+2026-10-17,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.39
+2026-10-17,Amazon Simple Email Service,EU-Recipients,0.37
+2026-10-17,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.24
+2026-10-17,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.12
+2026-10-17,AWS Key Management Service,EU-KMS-Keys,0.10
+2026-10-17,Amazon Route 53,HostedZone,0.04
+2026-10-17,AWS Data Transfer,EU-DataTransfer-Out-Bytes,9.20
+2026-10-18,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,11.47
+2026-10-18,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.58
+2026-10-18,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,20.20
+2026-10-18,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.84
+2026-10-18,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.17
+2026-10-18,Elastic Load Balancing,EU-LoadBalancerUsage,0.59
+2026-10-18,Elastic Load Balancing,EU-LCUUsage,3.77
+2026-10-18,EC2 - Other,EU-NatGateway-Hours,3.31
+2026-10-18,EC2 - Other,EU-NatGateway-Bytes,0.75
+2026-10-18,AmazonCloudWatch,EU-DataProcessing-Bytes,3.01
+2026-10-18,AmazonCloudWatch,EU-CW:MetricMonitorUsage,28.18
+2026-10-18,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.40
+2026-10-18,Amazon Simple Email Service,EU-Recipients,0.39
+2026-10-18,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.25
+2026-10-18,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.13
+2026-10-18,AWS Key Management Service,EU-KMS-Keys,0.10
+2026-10-18,Amazon Route 53,HostedZone,0.04
+2026-10-18,AWS Data Transfer,EU-DataTransfer-Out-Bytes,9.49
+2026-10-19,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,12.02
+2026-10-19,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.58
+2026-10-19,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,22.07
+2026-10-19,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.81
+2026-10-19,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.20
+2026-10-19,Elastic Load Balancing,EU-LoadBalancerUsage,0.61
+2026-10-19,Elastic Load Balancing,EU-LCUUsage,3.48
+2026-10-19,EC2 - Other,EU-NatGateway-Hours,3.40
+2026-10-19,EC2 - Other,EU-NatGateway-Bytes,1.02
+2026-10-19,AmazonCloudWatch,EU-DataProcessing-Bytes,2.92
+2026-10-19,AmazonCloudWatch,EU-CW:MetricMonitorUsage,26.68
+2026-10-19,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.40
+2026-10-19,Amazon Simple Email Service,EU-Recipients,0.38
+2026-10-19,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.24
+2026-10-19,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.13
+2026-10-19,AWS Key Management Service,EU-KMS-Keys,0.11
+2026-10-19,Amazon Route 53,HostedZone,0.04
+2026-10-19,AWS Data Transfer,EU-DataTransfer-Out-Bytes,9.51
+2026-10-20,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,12.03
+2026-10-20,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.50
+2026-10-20,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,20.62
+2026-10-20,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,4.04
+2026-10-20,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.23
+2026-10-20,Elastic Load Balancing,EU-LoadBalancerUsage,0.60
+2026-10-20,Elastic Load Balancing,EU-LCUUsage,3.72
+2026-10-20,EC2 - Other,EU-NatGateway-Hours,3.48
+2026-10-20,EC2 - Other,EU-NatGateway-Bytes,0.75
+2026-10-20,AmazonCloudWatch,EU-DataProcessing-Bytes,2.86
+2026-10-20,AmazonCloudWatch,EU-CW:MetricMonitorUsage,27.49
+2026-10-20,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.40
+2026-10-20,Amazon Simple Email Service,EU-Recipients,0.44
+2026-10-20,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.25
+2026-10-20,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.14
+2026-10-20,AWS Key Management Service,EU-KMS-Keys,0.10
+2026-10-20,Amazon Route 53,HostedZone,0.04
+2026-10-20,AWS Data Transfer,EU-DataTransfer-Out-Bytes,9.75
+2026-10-21,Amazon Elastic Container Service,EU-Fargate-vCPU-Hours:perCPU,13.17
+2026-10-21,Amazon Elastic Container Service,EU-Fargate-GB-Hours,2.59
+2026-10-21,Amazon Relational Database Service,EU-Multi-AZUsage:db.r6g.xlarge,21.47
+2026-10-21,Amazon Relational Database Service,EU-RDS:Multi-AZ-GP3-Storage,3.72
+2026-10-21,Amazon Relational Database Service,EU-RDS:ChargedBackupUsage,1.27
+2026-10-21,Elastic Load Balancing,EU-LoadBalancerUsage,0.61
+2026-10-21,Elastic Load Balancing,EU-LCUUsage,7.40
+2026-10-21,EC2 - Other,EU-NatGateway-Hours,3.44
+2026-10-21,EC2 - Other,EU-NatGateway-Bytes,1.06
+2026-10-21,AmazonCloudWatch,EU-DataProcessing-Bytes,4.66
+2026-10-21,AmazonCloudWatch,EU-CW:MetricMonitorUsage,30.05
+2026-10-21,AmazonCloudWatch,EU-TimedStorage-ByteHrs,0.42
+2026-10-21,Amazon Simple Email Service,EU-Recipients,0.39
+2026-10-21,Amazon EC2 Container Registry (ECR),EU-TimedStorage-ByteHrs,0.25
+2026-10-21,AWS Secrets Manager,EU-AWSSecretsManager-Secrets,0.14
+2026-10-21,AWS Key Management Service,EU-KMS-Keys,0.10
+2026-10-21,Amazon Route 53,HostedZone,0.04
+2026-10-21,AWS Data Transfer,EU-DataTransfer-Out-Bytes,15.63

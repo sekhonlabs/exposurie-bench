@@ -1,0 +1,7 @@
+From: Maya Brenner <maya@quarrystudio.example>
+Date: Mon, 19 Oct 2026 15:02 +0100
+Subject: Export is empty?
+
+Hello, I set up a new organisation for a client last week and wanted to test the CSV export before we import anything. The file I get has only one line, the column names, and nothing else. Is the export broken?
+
+Maya

@@ -1,0 +1,8 @@
+ENG-438: Transfer a project to another organisation
+
+Customers merging two accounts want to move projects across. This adds
+POST /v2/organizations/:id/projects/:projectId/transfer with
+{ "target_organization_id": "..." }, which moves the project and its tasks,
+records the transfer, and returns the project as the target sees it.
+
+Tested with the new Jest tests. Migration adds one column and one table.

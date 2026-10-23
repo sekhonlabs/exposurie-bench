@@ -1,0 +1,18 @@
+Table sizes and live rows, from pg_stat_user_tables and pg_total_relation_size, 2026-10-22 09:40 UTC
+
+ table              | live rows   | dead rows | total size | indexes                                             | last autovacuum
+--------------------+-------------+-----------+------------+-----------------------------------------------------+------------------------
+ rate_limit_windows |  61,904,227 |   212,604 | 5,512 MB   | rate_limit_windows_pkey                             | 2026-10-22 06:12:44+00
+ projects           |   2,418,330 |    41,227 | 1,402 MB   | projects_pkey, projects_organization_id_id_idx      | 2026-10-21 22:40:03+00
+ tasks              |  11,804,512 |    88,301 | 1,977 MB   | tasks_pkey, tasks_project_id_idx                    | 2026-10-21 19:02:51+00
+ jobs               |   3,889,108 |    18,442 | 2,106 MB   | jobs_pkey, jobs_run_at_idx, jobs_dedupe_key_key     | 2026-10-22 01:15:37+00
+ invites            |     311,906 |     2,018 | 118 MB     | invites_pkey, invites_token_hash_key, invites_organization_id_email_key | 2026-10-22 02:31:09+00
+ api_keys           |       2,291 |         4 | 1,032 kB   | api_keys_pkey, api_keys_hashed_key_key              | 2026-09-30 11:20:44+00
+ organizations      |       1,804 |        11 | 664 kB     | organizations_pkey                                  | 2026-10-02 08:41:17+00
+
+jobs by state:
+ done      3,881,966
+ failed        7,129
+ waiting          13
+
+Meridian Logistics (cf025c77-0c17-4b89-85a6-636728dd58b6): 182,406 projects, 179,233 active.

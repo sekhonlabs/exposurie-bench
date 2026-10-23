@@ -1,0 +1,468 @@
+module.network.data.aws_vpc.main: Reading...
+module.network.data.aws_subnets.private: Reading...
+module.network.data.aws_vpc.main: Read complete after 0s [id=vpc-08804783f50e4e7cc]
+module.network.data.aws_subnets.private: Read complete after 1s [id=eu-west-1]
+aws_ecr_repository.api: Refreshing state... [id=n32bnnkktu4s]
+aws_db_instance.main: Refreshing state... [id=xpnsh4yq6fm7]
+aws_security_group.alb: Refreshing state... [id=ct97w87y34zz]
+aws_security_group.api: Refreshing state... [id=42jnd47mwba2]
+aws_security_group.worker: Refreshing state... [id=n7qvwgjuwv2p]
+aws_lb.main: Refreshing state... [id=9xtvm6gurabq]
+aws_lb_target_group.api: Refreshing state... [id=fs9tjw62gegq]
+aws_lb_listener.https: Refreshing state... [id=gfzrqpmeeeg5]
+module.api.aws_ecs_task_definition.this: Refreshing state... [id=fz65u4towkx7]
+module.api.aws_ecs_service.this: Refreshing state... [id=4crv5gfp8o2u]
+module.api.aws_cloudwatch_log_group.this: Refreshing state... [id=/ecs/tidewell-api]
+module.worker.aws_ecs_task_definition.this: Refreshing state... [id=cupenhbvz6v7]
+module.worker.aws_ecs_service.this: Refreshing state... [id=9yjzr5h9n49y]
+module.worker.aws_cloudwatch_log_group.this: Refreshing state... [id=/ecs/tidewell-worker]
+module.worker.aws_iam_role.task: Refreshing state... [id=ef9bfv7jqnxt]
+module.worker.aws_iam_role.execution: Refreshing state... [id=y9jyf72qyhqo]
+aws_security_group_rule.api_from_alb: Refreshing state... [id=sgrule-934686175]
+aws_security_group_rule.worker_egress_https: Refreshing state... [id=sgrule-235261428]
+aws_security_group_rule.worker_egress_db: Refreshing state... [id=sgrule-535298937]
+aws_appautoscaling_target.api: Refreshing state... [id=3upt9ew4mugd]
+aws_appautoscaling_policy.api_cpu: Refreshing state... [id=ngaqkuec4ng2]
+aws_cloudwatch_log_metric_filter.worker_crashed: Refreshing state... [id=5zebgnity2vy]
+module.worker.aws_cloudwatch_metric_alarm.cpu_high: Refreshing state... [id=zxwk5vjmcevj]
+module.worker.aws_cloudwatch_metric_alarm.memory_high: Refreshing state... [id=gqmp2swy4sux]
+module.worker.aws_cloudwatch_metric_alarm.no_running_tasks: Refreshing state... [id=ii85ayv7dfxd]
+aws_cloudwatch_metric_alarm.worker_crashed: Refreshing state... [id=ryd8sqxu95zi]
+aws_route53_record.api: Refreshing state... [id=mooexopzei2u]
+aws_secretsmanager_secret.database_url: Refreshing state... [id=dm2c9gzvbqgh]
+aws_kms_key.secrets: Refreshing state... [id=ooipp3v3zak2]
+
+Note: Objects have changed outside of Terraform
+
+Terraform detected the following changes made outside of Terraform since the
+last "terraform apply" which may have affected this plan:
+
+  # module.api.aws_ecs_service.this has changed
+  ~ resource "aws_ecs_service" "this" {
+      ~ desired_count                      = 6 -> 8
+        id                                 = "arn:aws:ecs:eu-west-1:210987654321:service/tidewell-prod/tidewell-api"
+        name                               = "tidewell-api"
+        tags                               = {
+            "Service" = "tidewell-api"
+            "Team"    = "core-api"
+        }
+        # (22 unchanged attributes hidden)
+
+        # (7 unchanged blocks hidden)
+    }
+
+  # module.worker.aws_ecs_service.this has changed
+  ~ resource "aws_ecs_service" "this" {
+      ~ desired_count                      = 2 -> 2
+        id                                 = "arn:aws:ecs:eu-west-1:210987654321:service/tidewell-prod/tidewell-worker"
+        name                               = "tidewell-worker"
+        tags                               = {
+            "Service" = "tidewell-worker"
+            "Team"    = "core-api"
+        }
+        # (19 unchanged attributes hidden)
+
+        # (5 unchanged blocks hidden)
+    }
+
+  # aws_db_instance.main has changed
+  ~ resource "aws_db_instance" "main" {
+      ~ engine_version                        = "16.4" -> "16.8"
+        id                                    = "db-64ZOWRF64IK66JEUWREGMVOE6O"
+      ~ latest_restorable_time                = "2026-10-22T09:30:12Z" -> "2026-10-22T09:41:47Z"
+        # (61 unchanged attributes hidden)
+    }
+
+  # aws_security_group.api has changed
+  ~ resource "aws_security_group" "api" {
+        id                     = "sg-0da5a540648d483da"
+      ~ ingress                = [
+          + {
+              + cidr_blocks      = []
+              + description      = "from the load balancer"
+              + from_port        = 8080
+              + protocol         = "tcp"
+              + security_groups  = ["sg-0ea0ee30ffea18201"]
+              + self             = false
+              + to_port          = 8080
+            },
+        ]
+        name                   = "tidewell-api"
+        # (8 unchanged attributes hidden)
+    }
+
+
+Unless you have made equivalent changes to your configuration, or ignored the
+relevant attributes using ignore_changes, the following plan may include
+actions to undo or respond to these changes.
+
+─────────────────────────────────────────────────────────────────────────────
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  ~ update in-place
+  - destroy
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # aws_cloudwatch_log_metric_filter.worker_crashed must be replaced
+-/+ resource "aws_cloudwatch_log_metric_filter" "worker_crashed" {
+      ~ id             = "worker-crashed" -> (known after apply)
+      ~ log_group_name = "/ecs/tidewell-worker" -> "/ecs/tidewell-worker-arm64" # forces replacement
+        name           = "worker-crashed"
+        pattern        = "{ $.msg = \"worker crashed\" }"
+
+        # (1 unchanged block hidden)
+    }
+
+  # aws_security_group_rule.api_from_alb will be destroyed
+  # (because aws_security_group_rule.api_from_alb is not in configuration)
+  - resource "aws_security_group_rule" "api_from_alb" {
+      - description              = "from the load balancer" -> null
+      - from_port                = 8080 -> null
+      - id                       = "sgrule-538487437" -> null
+      - protocol                 = "tcp" -> null
+      - security_group_id        = "sg-0da5a540648d483da" -> null
+      - security_group_rule_id   = "sgr-0d28877a1b45bec5c" -> null
+      - self                     = false -> null
+      - source_security_group_id = "sg-0ea0ee30ffea18201" -> null
+      - to_port                  = 8080 -> null
+      - type                     = "ingress" -> null
+    }
+
+  # aws_security_group_rule.worker_egress_db will be updated in-place
+  ~ resource "aws_security_group_rule" "worker_egress_db" {
+        id                       = "sgrule-627485888"
+      ~ description              = "to postgres" -> "worker to postgres"
+        # (8 unchanged attributes hidden)
+    }
+
+  # module.worker.aws_cloudwatch_log_group.this must be replaced
+-/+ resource "aws_cloudwatch_log_group" "this" {
+      ~ arn               = "arn:aws:logs:eu-west-1:210987654321:log-group:/ecs/tidewell-worker" -> (known after apply)
+      ~ id                = "/ecs/tidewell-worker" -> (known after apply)
+      ~ name              = "/ecs/tidewell-worker" -> "/ecs/tidewell-worker-arm64" # forces replacement
+      + name_prefix       = (known after apply)
+        retention_in_days = 90
+        skip_destroy      = false
+      ~ tags              = {
+          ~ "Service" = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (1 unchanged element hidden)
+        }
+      ~ tags_all          = {
+          ~ "Service"     = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (4 unchanged elements hidden)
+        }
+        # (2 unchanged attributes hidden)
+    }
+
+  # module.worker.aws_cloudwatch_metric_alarm.cpu_high will be updated in-place
+  ~ resource "aws_cloudwatch_metric_alarm" "cpu_high" {
+      ~ dimensions                = {
+          ~ "ServiceName" = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (1 unchanged element hidden)
+        }
+        id                        = "tidewell-worker-cpu-high"
+        # (19 unchanged attributes hidden)
+    }
+
+  # module.worker.aws_cloudwatch_metric_alarm.memory_high will be updated in-place
+  ~ resource "aws_cloudwatch_metric_alarm" "memory_high" {
+      ~ dimensions                = {
+          ~ "ServiceName" = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (1 unchanged element hidden)
+        }
+        id                        = "tidewell-worker-memory-high"
+        # (17 unchanged attributes hidden)
+    }
+
+  # module.worker.aws_cloudwatch_metric_alarm.no_running_tasks will be updated in-place
+  ~ resource "aws_cloudwatch_metric_alarm" "no_running_tasks" {
+      ~ dimensions                = {
+          ~ "ServiceName" = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (1 unchanged element hidden)
+        }
+        id                        = "tidewell-worker-no-running-tasks"
+        # (15 unchanged attributes hidden)
+    }
+
+  # module.worker.aws_ecs_service.this must be replaced
+-/+ resource "aws_ecs_service" "this" {
+      - availability_zone_rebalancing      = "DISABLED" -> null
+      ~ desired_count                      = 2 -> 1
+      ~ enable_ecs_managed_tags            = false -> true
+      - health_check_grace_period_seconds  = 0 -> null
+      ~ iam_role                           = "/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS" -> (known after apply)
+      ~ id                                 = "arn:aws:ecs:eu-west-1:210987654321:service/tidewell-prod/tidewell-worker" -> (known after apply)
+      ~ name                               = "tidewell-worker" -> "tidewell-worker-arm64" # forces replacement
+      + platform_version                   = "LATEST"
+      - propagate_tags                     = "NONE" -> null
+      ~ tags                               = {
+          ~ "Service" = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (1 unchanged element hidden)
+        }
+      ~ tags_all                           = {
+          ~ "Service"     = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (4 unchanged elements hidden)
+        }
+      ~ task_definition                    = "arn:aws:ecs:eu-west-1:210987654321:task-definition/tidewell-worker:118" -> (known after apply)
+      - triggers                           = {} -> null
+        # (9 unchanged attributes hidden)
+
+      ~ deployment_circuit_breaker {
+          ~ enable   = false -> true
+          ~ rollback = false -> true
+        }
+
+      ~ network_configuration {
+          ~ security_groups  = [
+              - "sg-05a8e18bf5bdcdf69",
+            ] -> (known after apply)
+          ~ subnets          = [
+              - "subnet-0aa56b147dad8a3ab",
+              - "subnet-07fb2b88a744fe792",
+              - "subnet-05ff300a49b28c44b",
+            ] -> (known after apply)
+            # (1 unchanged attribute hidden)
+        }
+
+        # (2 unchanged blocks hidden)
+    }
+
+  # module.worker.aws_ecs_task_definition.this must be replaced
+-/+ resource "aws_ecs_task_definition" "this" {
+      ~ arn                      = "arn:aws:ecs:eu-west-1:210987654321:task-definition/tidewell-worker:118" -> (known after apply)
+      ~ arn_without_revision     = "arn:aws:ecs:eu-west-1:210987654321:task-definition/tidewell-worker" -> (known after apply)
+      ~ container_definitions    = jsonencode(
+          ~ [
+              ~ {
+                  ~ cpu                    = 256 -> 1024
+                  ~ environment            = [
+                      ~ {
+                            name  = "OTEL_SERVICE_NAME"
+                          ~ value = "tidewell-worker" -> "tidewell-worker-arm64"
+                        },
+                        # (7 unchanged elements hidden)
+                    ]
+                  ~ logConfiguration       = {
+                      ~ options   = {
+                          ~ awslogs-group         = "/ecs/tidewell-worker" -> "/ecs/tidewell-worker-arm64"
+                            # (2 unchanged attributes hidden)
+                        }
+                        # (1 unchanged attribute hidden)
+                    }
+                  ~ memory                 = 512 -> 2048
+                    name                   = "worker"
+                    # (10 unchanged attributes hidden)
+                },
+            ] # forces replacement
+        )
+      ~ cpu                      = "256" -> "1024" # forces replacement
+      ~ family                   = "tidewell-worker" -> "tidewell-worker-arm64" # forces replacement
+      ~ id                       = "tidewell-worker" -> (known after apply)
+      ~ memory                   = "512" -> "2048" # forces replacement
+      ~ revision                 = 118 -> (known after apply)
+      ~ tags_all                 = {
+          ~ "Service"     = "tidewell-worker" -> "tidewell-worker-arm64"
+            # (4 unchanged elements hidden)
+        }
+        # (8 unchanged attributes hidden)
+
+      + runtime_platform {
+          + cpu_architecture        = "ARM64"
+          + operating_system_family = "LINUX"
+        }
+    }
+
+  # module.worker_arm64_preview.aws_ecs_task_definition.this will be created
+  + resource "aws_ecs_task_definition" "this" {
+      + arn                      = (known after apply)
+      + arn_without_revision     = (known after apply)
+      + container_definitions    = jsonencode(
+            [
+              + {
+                  + command                = [
+                      + "node",
+                      + "dist/worker.js",
+                    ]
+                  + cpu                    = 1024
+                  + environment            = [
+                      + {
+                          + name  = "NODE_ENV"
+                          + value = "production"
+                        },
+                      + {
+                          + name  = "PORT"
+                          + value = "8080"
+                        },
+                      + {
+                          + name  = "LOG_LEVEL"
+                          + value = "info"
+                        },
+                      + {
+                          + name  = "AWS_REGION"
+                          + value = "eu-west-1"
+                        },
+                      + {
+                          + name  = "UNLEASH_URL"
+                          + value = "https://unleash.internal.tidewell.example/api"
+                        },
+                      + {
+                          + name  = "MAIL_FROM"
+                          + value = "Tidewell <no-reply@tidewell.example>"
+                        },
+                      + {
+                          + name  = "INVITE_BASE_URL"
+                          + value = "https://app.tidewell.example/invites"
+                        },
+                      + {
+                          + name  = "OTEL_SERVICE_NAME"
+                          + value = "tidewell-worker-arm64"
+                        },
+                    ]
+                  + essential              = true
+                  + image                  = "210987654321.dkr.ecr.eu-west-1.amazonaws.com/tidewell-api:2026-10-21.3"
+                  + logConfiguration       = {
+                      + logDriver = "awslogs"
+                      + options   = {
+                          + awslogs-group         = "/ecs/tidewell-worker-arm64"
+                          + awslogs-region        = "eu-west-1"
+                          + awslogs-stream-prefix = "worker"
+                        }
+                    }
+                  + memory                 = 2048
+                  + mountPoints            = []
+                  + name                   = "worker"
+                  + portMappings           = []
+                  + readonlyRootFilesystem = true
+                  + secrets                = [
+                      + {
+                          + name      = "DATABASE_URL"
+                          + valueFrom = "arn:aws:secretsmanager:eu-west-1:210987654321:secret:prod/tidewell-api/database-url-3hohbx"
+                        },
+                      + {
+                          + name      = "UNLEASH_API_TOKEN"
+                          + valueFrom = "arn:aws:secretsmanager:eu-west-1:210987654321:secret:prod/tidewell-api/unleash-api-token-5whvrp"
+                        },
+                      + {
+                          + name      = "ADMIN_TOKEN_HASHES"
+                          + valueFrom = "arn:aws:secretsmanager:eu-west-1:210987654321:secret:prod/tidewell-api/admin-token-hashes-wfduf4"
+                        },
+                    ]
+                  + stopTimeout            = 30
+                  + systemControls         = []
+                  + volumesFrom            = []
+                },
+            ]
+        )
+      + cpu                      = "1024"
+      + execution_role_arn       = "arn:aws:iam::210987654321:role/tidewell-worker-execution"
+      + family                   = "tidewell-worker-arm64-preview"
+      + id                       = (known after apply)
+      + memory                   = "2048"
+      + network_mode             = "awsvpc"
+      + requires_compatibilities = [
+          + "FARGATE",
+        ]
+      + revision                 = (known after apply)
+      + skip_destroy             = false
+      + tags                     = {
+          + "Service"   = "tidewell-worker"
+          + "Team"      = "core-api"
+          + "Preview" = "true"
+        }
+      + tags_all                 = {
+          + "Environment" = "production"
+          + "ManagedBy"   = "terraform"
+          + "Repo"        = "tidewell-infra"
+          + "Service"     = "tidewell-worker"
+          + "Team"        = "core-api"
+        }
+      + task_role_arn            = "arn:aws:iam::210987654321:role/tidewell-worker-task"
+      + track_latest             = false
+
+      + runtime_platform {
+          + cpu_architecture        = "ARM64"
+          + operating_system_family = "LINUX"
+        }
+    }
+
+  # module.worker.aws_iam_role_policy.task will be updated in-place
+  ~ resource "aws_iam_role_policy" "task" {
+        id     = "tidewell-worker-task:worker"
+        name   = "worker"
+      ~ policy = jsonencode(
+          ~ {
+              ~ Statement = [
+                    {
+                        Action   = [
+                            "ses:SendEmail",
+                            "ses:SendRawEmail",
+                        ]
+                        Effect   = "Allow"
+                        Resource = "arn:aws:ses:eu-west-1:210987654321:identity/tidewell.example"
+                    },
+                  ~ {
+                      ~ Action   = [
+                            "logs:CreateLogStream",
+                            "logs:PutLogEvents",
+                        ]
+                      ~ Resource = "arn:aws:logs:eu-west-1:210987654321:log-group:/ecs/tidewell-worker:*" -> "arn:aws:logs:eu-west-1:210987654321:log-group:/ecs/tidewell-worker-arm64:*"
+                        # (1 unchanged attribute hidden)
+                    },
+                ]
+                # (1 unchanged attribute hidden)
+            }
+        )
+        # (1 unchanged attribute hidden)
+    }
+
+  # aws_appautoscaling_target.worker will be created
+  + resource "aws_appautoscaling_target" "worker" {
+      + arn                = (known after apply)
+      + id                 = (known after apply)
+      + max_capacity       = 4
+      + min_capacity       = 1
+      + resource_id        = "service/tidewell-prod/tidewell-worker-arm64"
+      + role_arn           = (known after apply)
+      + scalable_dimension = "ecs:service:DesiredCount"
+      + service_namespace  = "ecs"
+      + tags_all           = (known after apply)
+    }
+
+  # aws_appautoscaling_policy.worker_cpu will be created
+  + resource "aws_appautoscaling_policy" "worker_cpu" {
+      + alarm_arns         = (known after apply)
+      + arn                = (known after apply)
+      + id                 = (known after apply)
+      + name               = "worker-cpu"
+      + policy_type        = "TargetTrackingScaling"
+      + resource_id        = "service/tidewell-prod/tidewell-worker-arm64"
+      + scalable_dimension = "ecs:service:DesiredCount"
+      + service_namespace  = "ecs"
+
+      + target_tracking_scaling_policy_configuration {
+          + disable_scale_in   = false
+          + scale_in_cooldown  = 300
+          + scale_out_cooldown = 60
+          + target_value       = 60
+
+          + predefined_metric_specification {
+              + predefined_metric_type = "ECSServiceAverageCPUUtilization"
+            }
+        }
+    }
+
+Plan: 6 to add, 6 to change, 5 to destroy.
+
+Changes to Outputs:
+  ~ worker_log_group    = "/ecs/tidewell-worker" -> "/ecs/tidewell-worker-arm64"
+  ~ worker_service_name = "tidewell-worker" -> "tidewell-worker-arm64"
+
+─────────────────────────────────────────────────────────────────────────────
+
+Saved the plan to: prod-worker-arm64.tfplan
+
+To perform exactly these actions, run the following command to apply:
+    terraform apply "prod-worker-arm64.tfplan"

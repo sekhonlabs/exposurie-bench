@@ -288,6 +288,6 @@
     },
 
     { "id": "long-1", "area": 9, "user": "developer", "context": "personal", "ask": "One long session in Satchel: importing from other read-later services.", "folder": "satchel", "starter": "starters/long-1", "steps": "long/long-1.json" },
-    { "id": "long-2", "area": 9, "user": "developer", "context": "work", "ask": "One long task at work. Built in part 8." }
+    { "id": "long-2", "area": 9, "user": "developer", "context": "work", "ask": "One long session in tidewell-api, on one Linear ticket: webhooks for project events.", "folder": "tidewell-api", "starter": "starters/long-2", "steps": "long/long-2.json" }
   ]
 }

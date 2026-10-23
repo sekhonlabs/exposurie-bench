@@ -1,0 +1,15 @@
+From: Ines Halvorsen <ines@ferrowell.example>
+To: you
+Date: Thu, 22 Oct 2026 18:52 +0100
+Subject: Re: Tidewell webhooks on your sandbox
+
+Hi,
+
+The new signatures verify, thanks. But since your deploy this afternoon some of your test deliveries fail our check as stale timestamps, and once one fails it never gets through: every retry fails the same way. Most go through fine, which makes me think something is off with the timestamps you send on retries.
+
+Our verifier is attached (verify.ts). It's the one middleware we use for every provider, so we'd rather not change it unless we have to. I've also attached our receiver's log from 14:45 UTC until just now. Our sandbox was down for maintenance for a few minutes at about half past three, in case that matters.
+
+Can you take a look?
+
+Ines
+Ferrowell

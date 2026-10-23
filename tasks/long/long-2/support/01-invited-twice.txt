@@ -1,0 +1,11 @@
+From: Oskar Lindqvist <it@harbourfinch.example>
+Date: Tue, 20 Oct 2026 11:48 +0100
+Subject: Everyone got two invitation emails
+
+Hi,
+
+We invited our whole staff this morning through the bulk invite, and about half of them got the invitation email twice, a minute or so apart. A few people have asked whether the first one is fake. Which link should they use? And will they get more?
+
+Thanks,
+Oskar
+IT, Harbour & Finch
