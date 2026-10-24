@@ -222,8 +222,8 @@ Dated, newest last. Each entry says what was decided and why.
 - **long-1 ran to the end through two usage limits.** A five-hour limit stopped keep's first step, and a weekly limit its second.
   - Each stopped attempt was put back and ran again from the same point. So both are counted apart from keep's tokens: 4,263,340 input tokens in all.
   - By the time keep carried on, the fill's one-hour cache had expired. So its first two steps each wrote the whole session into the cache again, and so did the `/compact` call the next day. The input tokens are the same either way; the estimated cost is not.
-  - long-1 came to about $17.30 at list prices, $7.04 of it the fill.
-- **long-2 runs, on the owner's go.** The plan let long-1's cost decide whether it would. Its fill went through one five-hour limit, whose attempt spent no tokens, and its strategies ran with the cache warm. It came to about $13.30, $9.29 of it the fill.
+  - long-1 came to about $17.34 at list prices, $7.04 of it the fill.
+- **long-2 runs, on the owner's go.** The plan let long-1's cost decide whether it would. Its fill went through one five-hour limit, whose attempt spent no tokens, and its strategies ran with the cache warm. It came to about $13.33, $9.29 of it the fill.
 - **The hand read overturned two kinds of script result, both in long-1.**
   - *kept archived-read* was false in all three strategies, but each wrote the decision. The check's pattern wants a quoted `Archive` near `read_at`, and each strategy either lowercased the state first (`read: state === 'archive'`) or set `read_at` more than 240 characters away. All three hold by hand.
   - *retried comma-split* was true in keep, but it matched `s.accept.split(',')`, which splits a file input's `accept` list, not a line of an export. It is not a retry.

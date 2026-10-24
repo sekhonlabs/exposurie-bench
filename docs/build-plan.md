@@ -348,9 +348,9 @@ node check/long.mjs
 
 **Both long tasks ran, and every strategy is scored and read by hand (2026-10-24).** The results are in the README and `results/area-9/`, and what each run showed is in [decisions.md](decisions.md).
 
-1. **long-1** forked after step 19, at 509,677 tokens, with 9 core and 10 more steps. All three strategies finished, through a five-hour and a weekly usage limit. It came to about $17.30 at list prices, $7.04 of it the fill.
+1. **long-1** forked after step 19, at 509,677 tokens, with 9 core and 10 more steps. All three strategies finished, through a five-hour and a weekly usage limit. It came to about $17.34 at list prices, $7.04 of it the fill.
 2. **long-1 was scored** with `score/long.mjs`, and every strategy read by hand. The hand read overturned two kinds of script result.
-3. **long-2 ran on the owner's go**, once long-1's cost was known. It forked after step 24, at 500,236 tokens, with 8 core and 16 more steps, through one five-hour limit in the fill. It came to about $13.30, $9.29 of it the fill. It was scored and read the same way, and every scripted result stands.
+3. **long-2 ran on the owner's go**, once long-1's cost was known. It forked after step 24, at 500,236 tokens, with 8 core and 16 more steps, through one five-hour limit in the fill. It came to about $13.33, $9.29 of it the fill. It was scored and read the same way, and every scripted result stands.
 
 **long-1, Satchel (personal): import from other read-later services.**
 
