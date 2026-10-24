@@ -16,7 +16,7 @@ Claude Code builds and runs all of it.
 | `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6, 7 and 9 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`), example answers (`tasks/examples.json`), and area 9's steps files, the material their steps hand over, and the scripts that write both (`tasks/long/`) |
 | `runner/` | sandbox setup, the runner and the brain build, area 9's long sessions (`long.mjs`), and the fake `claude` they are tested against |
 | `score/` | how a task's checks read a run (part 4), the scorer and the judge (part 5), area 9's scorer (`long.mjs`), and the results' numbers and charts (`results.mjs`, part 9) |
-| `results/` | each batch's scores and which run had which condition, the brain builds' tokens, every number (`numbers.json`) and the charts (`charts/`). Raw run output stays outside the repository |
+| `results/` | each batch's scores and which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step (`area-9/`), every number (`numbers.json`) and the charts (`charts/`). Raw run output stays outside the repository |
 
 The sandbox and the raw output (`sandbox/` and `runs/`) sit next to this repository's folder, never inside it.
 
@@ -346,11 +346,11 @@ node check/long.mjs
 
   The event's name and the envelope apply from the first cut, so they will be in the fork's code; the admin routes and the 45 days exist only in the conversation.
 
-**Next, in order:**
+**Both long tasks ran, and every strategy is scored and read by hand (2026-10-24).** The results are in the README and `results/area-9/`, and what each run showed is in [decisions.md](decisions.md).
 
-1. **long-1's live runs**, under way. Their cost decides long-2.
-2. **long-1 scored** with `score/long.mjs`, and every strategy read by hand.
-3. **long-2's runs**, with the owner's go, if the cost allows, then scored and read the same way.
+1. **long-1** forked after step 19, at 509,677 tokens, with 9 core and 10 more steps. All three strategies finished, through a five-hour and a weekly usage limit. It came to about $17.30 at list prices, $7.04 of it the fill.
+2. **long-1 was scored** with `score/long.mjs`, and every strategy read by hand. The hand read overturned two kinds of script result.
+3. **long-2 ran on the owner's go**, once long-1's cost was known. It forked after step 24, at 500,236 tokens, with 8 core and 16 more steps, through one five-hour limit in the fill. It came to about $13.30, $9.29 of it the fill. It was scored and read the same way, and every scripted result stands.
 
 **long-1, Satchel (personal): import from other read-later services.**
 
@@ -413,11 +413,11 @@ node check/long.mjs
   - *Finished, kept and retried,* as for long-1. *Retried:* `setTimeout` for a retry, `createHash` for the signature, and an HTTP call inside a Prisma transaction.
   - *The team's conventions,* as in area 6.
 
-**Done when** both tasks ran under all three strategies, or the first one's cost stopped the second, and every run is scored and read by hand.
+**Done when** both tasks ran under all three strategies, or the first one's cost stopped the second, and every run is scored and read by hand. **Done 2026-10-24.**
 
 ### 9. Results
 
-**Plan usage:** none. **Done for areas 1–8 (2026-10-22).** Area 9's results join them once it has run.
+**Plan usage:** none. **Done: areas 1–8 on 2026-10-22, area 9 on 2026-10-24.**
 
 - Score the runs, check them by hand, and compute the numbers in [design.md](design.md#numbers).
 - Make the charts and the README's results section, in exposurie's look (see [CLAUDE.md](../CLAUDE.md#look)).
@@ -433,6 +433,25 @@ What part 9 did for areas 1–8, whose runs were already scored and checked by h
 
   A fault test broke a copy of the repository twelve ways, one at a time, and every break was caught (`../runs/part9-fault-test`).
 - **The README's results section** answers its four questions, gives every number with the charts, C's three wrong answers, how the results compare with what design.md expected before any result, and what they do not show.
+
+What part 9 did for area 9, whose runs were scored with `score/long.mjs` and read by hand in part 8:
+
+- **`score/results.mjs --save`** also publishes area 9 from `../runs/area-9`, into `results/area-9/`:
+  - `scores.json`: each long task's scores, as `score/long.mjs` saved them
+  - `hand.json`: the hand read, which overrides them, with a reason for each verdict
+  - `steps.json`: every attempt at every step, with its own tokens, turns, reads and context, and whether it counts. It leaves out each attempt's notes and reason, which name the run's machine paths, and its session and the plan's meters.
+
+  It then computes area 9's numbers into `results/numbers.json` under `area_9`, from `results/` alone, and draws a fourth chart, `results/charts/long-sessions.svg`.
+- **`check/results.mjs` also holds area 9:**
+  - each long task is in all three files exactly once, with the same run, and every strategy finished
+  - every check is scored; one read only by hand has a verdict and a reason; and a hand verdict over a script names the result it overrides, so a hand read older than the scores is caught
+  - the hand read's own tally equals the verdicts
+  - each strategy's tokens are those of its counted attempts, with the sync session for sync, and the fill's are the fork's
+  - the fork is at the first step boundary past the mark, after the core steps
+  - the versions are the pinned ones
+
+  Its check for a machine path now also catches one written with forward slashes, as a run's notes write them, and so does the repository save. The fault test now breaks a copy twenty-six ways, fourteen of them in area 9, and every break is caught.
+- **The README's area 9 section** gives, for each task and strategy, what was finished, kept and retried, and the tokens after the fork, with the chart. It also explains why sync + fresh lost in long-2, compares the results with what design.md expected, and says what they do not show.
 
 ```
 node score/results.mjs [--save]

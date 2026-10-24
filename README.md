@@ -2,7 +2,7 @@
 
 Does an external brain make a coding agent better for the person using it? This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie). exposurie is a CLI that builds a curated Markdown wiki (the brain) from a person's own agent sessions and chat exports, and points every new session at it.
 
-**Status: areas 1 to 8 are run, scored and checked by hand, and their results are below.** Two made-up users, a developer and someone who hands everything to agents, have 53 generated sessions of history between them, and an exposurie brain was built from each. All 93 runs of areas 1 to 8 ran in one mixed order, then the stability check's 6. Area 9, the long sessions, comes next: its runner is built and tested against a fake `claude`, and both of its long sessions are written. How it was built, part by part, is in [docs/build-plan.md](docs/build-plan.md). It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code 2.1.302 on Sonnet 5.5.
+**Status: all nine areas are run, scored and checked by hand, and their results are below.** Two made-up users, a developer and someone who hands everything to agents, have 53 generated sessions of history between them, and an exposurie brain was built from each. All 93 runs of areas 1 to 8 ran in one mixed order, then the stability check's 6. Then area 9's two long sessions each ran once and were carried on three ways. How it was built, part by part, is in [docs/build-plan.md](docs/build-plan.md). It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code 2.1.302 on Sonnet 5.5.
 
 ## The question
 
@@ -63,7 +63,38 @@ One run per task and condition: 93 runs in one mixed order on 2026-10-21, then t
 
 **Against what [design.md](docs/design.md#what-we-expect-written-before-the-results) expected before any result:** C beat A by a wide margin (18 against 3), and used more raw tokens (34,494 against 13,095 a run). B was more accurate than C (21 against 18), as expected with a history this short. Changed decisions lost no detail: area 3 under C was right in 9 of 9.
 
-**What this does not show:** one run per cell, so a count per area is only indicative; one agent and one model; two made-up users; and histories small enough for B to fit in context, which a real history would not. See [design.md](docs/design.md#limits). Area 9, the long sessions, has not run yet.
+**What this does not show:** one run per cell, so a count per area is only indicative; one agent and one model; two made-up users; and histories small enough for B to fit in context, which a real history would not. See [design.md](docs/design.md#limits).
+
+## Results: area 9, the long sessions
+
+A common rule of thumb says to start a fresh session at half the context window, with the brain synced first. Area 9 tests it with two long tasks, both the developer's. Each is one session, filled live to the first step boundary past 500,000 tokens of Sonnet 5.5's 1,000,000. Each is then carried on three ways from that same point:
+
+- **keep going** in the same session
+- **`/compact`**, Claude Code's own summary
+- **sync + fresh:** end the session, sync it into the brain from another session five minutes later, and start a fresh one
+
+Every strategy then gets the same steps, which finish the work. See [design.md](docs/design.md#area-9-long-sessions).
+
+- **long-1** is the developer's own app, Satchel: imports from Pocket, Instapaper and Omnivore. It forked after step 19, at 509,677 tokens.
+- **long-2** is their work's API, tidewell-api: webhooks for project events, under one ticket, through an on-call week. It forked after step 24, at 500,236 tokens. The team's conventions for a pull request are never said in the session, so a strategy keeps them only by looking them up.
+
+![What each strategy kept after the fork, and its tokens](results/charts/long-sessions.svg)
+
+- **keep going and `/compact` lost almost nothing.** Across both tasks, keep going held all 17 checks of the work and all 9 checks of the decisions. `/compact` held 16 and 9: its one miss was long-2's deploy note, which never named the team's deploys channel.
+- **sync + fresh was exactly as good as the brain's search.** In long-1 it finished 7 of 7 and kept 5 of 5. In long-2 it finished 6 of 10 and kept 2 of 4:
+  - It lost both decisions said only in the conversation. It put replaying a dead letter on the customer's own key, where the rule was the staff-only admin routes. It also made up its own retention, 14 and 30 days, where the rule was 45.
+  - It missed four of the team's five conventions: the branch format, the four sections, the note for the migration's reviewer, and the deploy note.
+  - The brain held every one of those rules: the sync filed the session's rules into a page of their own, and other pages held the team's conventions. But the fresh session searched once per step, with whole phrases such as `dead letter replay deliveries cleanup`.
+  - exposurie 1.2.0's search matches a whole phrase as one substring, so each search found no page, and exposurie told the agent to say so rather than answer from memory. It is the same flaw as across-3's miss in areas 1 to 7, where a plural never found its singular.
+- **No strategy retried an approach that had already failed:** 0 of 6 each.
+- **Tokens after the fork**, every input token. keep going took 10,935,771 and 8,100,651, because every call re-reads the whole session. `/compact` took 1,808,849 and 1,717,031, and sync + fresh took 2,488,613 and 2,532,829. So keep going used 6.0 and 4.7 times `/compact`'s tokens, and 4.4 and 3.2 times those of sync + fresh. Those totals include the `/compact` call itself (511,672 and 502,231, one read of the session) and the sync session (976,651 and 1,105,841).
+- **In money the gap is smaller,** because a cache read costs a twentieth of an uncached input token. long-2 ran with its cache warm throughout, and Claude Code's own estimates at list prices put its strategies at $1.68, $0.95 and $1.41. long-1 ran through two usage-limit stops, which let the cache expire. So keep going's first two steps, and the `/compact` call, each wrote the whole session into it again, and keep going came to $6.06.
+
+The scores, the hand read with a reason for each verdict, and every step's record are in [results/area-9/](results/area-9/), and the numbers in [results/numbers.json](results/numbers.json) under `area_9`. After the forks, a usage limit stopped two attempts, both in long-1's keep going. Each ran again from the same point, so their 4,263,340 tokens are counted apart.
+
+**Against what [design.md](docs/design.md#what-we-expect-written-before-the-results) expected before any result:** `/compact` beat sync + fresh within a single task, as expected: one missed check against six. Long sessions were expected to be where curation loses detail. Here it was retrieval that lost it: the brain held every rule, and the fresh session lost the ones its search did not find.
+
+**What this does not show:** two tasks and one user, with one run of each strategy, so this is an illustration, not a rate. The sessions ended at about 580,000 tokens, too close to the mark to test whether quality falls past half the window. Area 9 cannot be scored blind, because a stream shows which strategy made it: every strategy was read by hand, and a verdict there overrides the scripts.
 
 ## What is here
 
@@ -83,7 +114,7 @@ One run per task and condition: 93 runs in one mixed order on 2026-10-21, then t
 | [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, the runner and scorer, the brain build, the long sessions and the results to the method |
 | [score/](score/) | how a task's checks read a run, the scorer, the judge for what the checks cannot settle, the long sessions' scorer, and the numbers and charts of the results |
 | [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, the long sessions of area 9, and the fake `claude` they are tested against |
-| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, every number in `numbers.json`, and the charts |
+| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step, every number in `numbers.json`, and the charts |
 
 ## License
 

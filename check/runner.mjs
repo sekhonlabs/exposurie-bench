@@ -348,6 +348,7 @@ const emailAnswer = join(dirOf(b.cells.find((c) => `${c.task}/${c.condition}` ==
 if (existsSync(emailAnswer)) refuses(readFileSync(emailAnswer, 'utf8'), "the sandbox login's address");
 else problems.push("the run that wrote the login's address never ran");
 refuses('raw output is in E:\\bench\\runs', 'a Windows path');
+refuses('ran cd E:/bench/runs/area-9/r001', 'a Windows path written with forward slashes');
 expect(!existsSync(join(repoCopy, 'results', 'x.md')), 'a refused text was written');
 const saved = saveToRepo('results/all/scores.json', '{"runs": []}\r\n', { root: repoCopy, identity: [identity] });
 expect(readFileSync(saved, 'utf8') === '{"runs": []}\n', 'the repository save did not write LF');

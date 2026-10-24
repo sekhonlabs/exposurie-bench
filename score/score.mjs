@@ -137,6 +137,9 @@ function handSheet(dir, scores, tasks) {
   return `${out.join('\n')}\n`;
 }
 
+/** A drive's path, with either slash: a long run's notes write one with forward slashes. */
+export const WINDOWS_PATH = /(?<![A-Za-z])[A-Za-z]:[\\/]/;
+
 /**
  * Write a text into the repository, after the same check the histories pass:
  * no trace of the sandbox login's email address or names, and no machine path.
@@ -145,7 +148,7 @@ function handSheet(dir, scores, tasks) {
 export function saveToRepo(rel, text, { root = REPO, identity = loginIdentity() } = {}) {
   const found = [];
   for (const id of identity) if (find(text, id) >= 0) found.push(`the sandbox login's own ${id.includes('@') ? 'email address' : 'name'}`);
-  if (/(?<![A-Za-z])[A-Za-z]:\\/.test(text)) found.push('a Windows path');
+  if (WINDOWS_PATH.test(text)) found.push('a Windows path');
   if (found.length) throw new Stop(`${rel} was not written: it holds ${found.join(' and ')}`);
   const to = join(root, rel);
   mkdirSync(dirname(to), { recursive: true });

@@ -216,3 +216,45 @@ Dated, newest last. Each entry says what was decided and why.
 - **The team's conventions are checked under finished, named `team-`.** A pull request that breaks them is not ready, and they are never said in the session: the branch, the title, the sections and the note for Ana are scripts; the deploy note is read by hand. `kept` stays for the four decisions said in the session.
 - **A network call inside an interactive transaction is found by its braces.** The check follows the callback of `$transaction(async …)` into any block it opens, up to three levels deep, and never past its closing brace, so the fix (claiming in a short transaction, then sending after it) does not count as a retry, while a `fetch` inside a loop inside the transaction does.
 - **The more steps are the developer's on-call week.** 25 of them, each answered from what the developer saved, about code the starter already has, or about the world around it: the partner's verifier, the flag server, Terraform, the bill. Where the material shows the new code, it shows what the developer specified (the signature header, the envelope, the retry schedule), never what an agent might have chosen. Where two files cover the same moment they agree: the failover in the API's log, the worker's, RDS's events, the metrics and the error tracker; the polling storm in the API's log, the metrics, the bill and the usage; Tuesday's invites in the worker's log, SES's events, the invites, the error tracker and the support inbox.
+
+## 2026-10-24
+
+- **long-1 ran to the end through two usage limits.** A five-hour limit stopped keep's first step, and a weekly limit its second.
+  - Each stopped attempt was put back and ran again from the same point. So both are counted apart from keep's tokens: 4,263,340 input tokens in all.
+  - By the time keep carried on, the fill's one-hour cache had expired. So its first two steps each wrote the whole session into the cache again, and so did the `/compact` call the next day. The input tokens are the same either way; the estimated cost is not.
+  - long-1 came to about $17.30 at list prices, $7.04 of it the fill.
+- **long-2 runs, on the owner's go.** The plan let long-1's cost decide whether it would. Its fill went through one five-hour limit, whose attempt spent no tokens, and its strategies ran with the cache warm. It came to about $13.30, $9.29 of it the fill.
+- **The hand read overturned two kinds of script result, both in long-1.**
+  - *kept archived-read* was false in all three strategies, but each wrote the decision. The check's pattern wants a quoted `Archive` near `read_at`, and each strategy either lowercased the state first (`read: state === 'archive'`) or set `read_at` more than 240 characters away. All three hold by hand.
+  - *retried comma-split* was true in keep, but it matched `s.accept.split(',')`, which splits a file input's `accept` list, not a line of an export. It is not a retry.
+  - The rest of long-1's script results stand. So does every one of long-2's: each was read against what it matched.
+- **sync + fresh lost long-2's rules in retrieval, not in the sync.** The brain the sync wrote held every rule the fresh session lost: a page for the webhooks with the staff-only dead letters and the 45 days, and other pages with the team's conventions.
+  - The fresh session searched once in each step, each time with a whole phrase, such as `dead letter replay deliveries cleanup`. exposurie 1.2.0's `read --search` matches the whole phrase as one case-insensitive substring. So each search found no page, and printed exposurie's instruction to say so rather than answer from memory. The agent went on without the rules.
+  - It is the flaw behind across-3's miss in areas 1–7, and here it decides the strategy. In long-1 the fresh session's reads found the brain's pages, and it lost nothing.
+  - keep and compact carried the rules in their own context. In long-2's last step they also looked the conventions up, with 11 and 10 reads.
+- **Area 9 is published from the runner's folder, into `results/area-9/`, by `score/results.mjs --save`:**
+  - `scores.json`: each long task's scores, as `score/long.mjs` saved them
+  - `hand.json`: the hand read, which overrides them. It holds a reason for every verdict, which decisions the fork's code already held, and the hand read's own tally.
+  - `steps.json`: every attempt at every step, with its own tokens, turns, tool calls, reads and context, its cost estimate, and whether it counts. An attempt counts when it is its step's last and it finished, or was kept by hand, as the runner decides it.
+    - Left out: each attempt's notes and reason, which name the run's machine paths, its session, and the plan's meters.
+    - A stopped attempt's reason is kept only in fixed words, such as "a usage limit stopped it".
+
+  Every saved transcript holds the sandbox login's identity, so none is published.
+- **How area 9's numbers are computed,** from `results/` alone:
+  - A check's verdict is the hand read's where it gave one, else the script's.
+  - A strategy's tokens are those after the fork: one counted attempt per step, with the `/compact` call and the sync session included. An attempt a usage limit stopped ran again from the same point, so it is counted apart, never in a strategy.
+  - The decisions said only in the conversation are those the hand read found missing from the fork's code, and how many were kept is given for them alone too.
+  - Retried counts each failed approach written again after the fork.
+  - Costs are Claude Code's own estimates at list prices, given beside the tokens. The cache's state, which the usage limits decided in long-1, moves the cost and not the tokens.
+- **The check for a machine path reads forward slashes too.** A long run's notes write a drive's path with forward slashes, which the check, written for backslashes, did not catch. The repository save and `check/results.mjs` now catch both, and `check/runner.mjs` tests the save with one. No file in `results/` held one.
+- **Area 9's published files are held to one another.** `check/results.mjs` checks:
+  - each long task's scores, hand read and steps, and every strategy finished
+  - a verdict for every check, and a reason for every hand verdict
+  - a hand verdict over a script names the result it overrides, so a hand read older than the scores is caught
+  - the hand read's tally against its verdicts
+  - each strategy's tokens against its counted attempts
+  - the fork at the first step boundary past the mark
+  - the pinned versions
+
+  The fault test broke a copy of the repository fourteen more ways, and every break was caught.
+- **In the area 9 chart, sync + fresh takes the orange.** Every strategy runs in condition C, but sync + fresh is the one that hands the work to the brain, so the orange marks it, and the other two are greys.

@@ -1,0 +1,209 @@
+{
+  "batch": "area-9",
+  "runs": [
+    {
+      "run": "r001",
+      "task": "long-1",
+      "read": "2026-10-24",
+      "note": "The hand read of every strategy, after score/long.mjs. A verdict here overrides the script's. Not blind: a stream shows its strategy (docs/design.md, area 9).",
+      "fork_code": {
+        "note": "Which of the four decisions the fork's code already held (fork/work)",
+        "imported-tag": true,
+        "archived-read": true,
+        "folder-tags": false,
+        "highlight-source": false
+      },
+      "verdicts": {
+        "keep": {
+          "finished": {
+            "as-jobs": {
+              "verdict": true,
+              "why": "The upload route saves the file and calls enqueue(db, service.kind, ...) for every service; import-instapaper.js and import-omnivore.js are job handlers sharing one library writer."
+            },
+            "commit": {
+              "verdict": true,
+              "why": "Subject 'Add imports from Pocket, Instapaper and Omnivore' (48 characters), imperative, no prefix; the body says why, wrapped at 72. It adds a Co-Authored-By trailer, its own system prompt's attribution, and says so."
+            }
+          },
+          "kept": {
+            "folder-states": {
+              "verdict": true,
+              "why": "STATES = /^(unread|archive)$/i keeps both out of the folder: tags (instapaper.js)."
+            },
+            "archived-read": {
+              "verdict": true,
+              "script": false,
+              "why": "read: /^archive$/i.test(name) for Instapaper and READ_BY_STATE = { archived: true } for Omnivore, mapped to read_at in library.js. The pattern wants a quoted 'Archive' within 240 characters of read_at, and the agent lowercased the state."
+            }
+          },
+          "retried": {
+            "comma-split": {
+              "verdict": false,
+              "script": true,
+              "why": "The match is s.accept.split(',') in src/import/services.js, which splits the file input's accept list (.csv,text/csv,.json,...), not a line of an export."
+            }
+          }
+        },
+        "compact": {
+          "finished": {
+            "as-jobs": {
+              "verdict": true,
+              "why": "The route calls enqueue(db, service.kind, ...); one job wrapper (import-file.js) runs every service's parser."
+            },
+            "commit": {
+              "verdict": true,
+              "why": "Subject 'Add imports from Pocket, Instapaper and Omnivore', imperative, no prefix; the body says why, wrapped at 72. It says it followed the commit-message rule from the brain."
+            }
+          },
+          "kept": {
+            "folder-states": {
+              "verdict": true,
+              "why": "NO_TAG = new Set(['archive', 'unread']) in instapaper.js."
+            },
+            "archived-read": {
+              "verdict": true,
+              "script": false,
+              "why": "read: key === 'archive' (Instapaper), read: item.state === 'Archived' (Omnivore), and read_at: row.read ? savedAt : null in library.js, more than 240 characters from any quoted 'Archived'."
+            }
+          },
+          "retried": {}
+        },
+        "sync": {
+          "finished": {
+            "as-jobs": {
+              "verdict": true,
+              "why": "The route calls enqueue(db, service.kind, ...); one handler, libraryImport, serves all three."
+            },
+            "commit": {
+              "verdict": true,
+              "why": "Subject 'Import libraries from Pocket, Instapaper and Omnivore' (52 characters), imperative, no prefix; the body says why, wrapped at 72, and cites the rules settled for all three on 23 October, from the brain the sync built."
+            }
+          },
+          "kept": {
+            "folder-states": {
+              "verdict": true,
+              "why": "state !== 'unread' && state !== 'archive' before folder:<name> (instapaper.js)."
+            },
+            "archived-read": {
+              "verdict": true,
+              "script": false,
+              "why": "read: state === 'archive' and read: item.state === 'Archived', with read_at: row.read ? ... in each importer, the state lowercased first."
+            }
+          },
+          "retried": {}
+        }
+      },
+      "final": {
+        "keep": {
+          "finished": "7/7",
+          "kept": "5/5",
+          "retried": "0/3"
+        },
+        "compact": {
+          "finished": "7/7",
+          "kept": "5/5",
+          "retried": "0/3"
+        },
+        "sync": {
+          "finished": "7/7",
+          "kept": "5/5",
+          "retried": "0/3"
+        }
+      }
+    },
+    {
+      "run": "r002",
+      "task": "long-2",
+      "read": "2026-10-24",
+      "note": "The hand read of every strategy, after score/long.mjs. A verdict here overrides the script's. Not blind: a stream shows its strategy (docs/design.md, area 9). Every scripted result was read against its evidence (runs/long-evidence.mjs) and stands.",
+      "fork_code": {
+        "note": "Which decisions the fork's code already held: the event names and the envelope apply from the first cut; the admin-only dead letters and the 45 days existed only in the conversation.",
+        "event-name": true,
+        "envelope": true,
+        "dead-letters-admin": false,
+        "retention": false
+      },
+      "verdicts": {
+        "keep": {
+          "finished": {
+            "tests": {
+              "verdict": true,
+              "why": "purgeOldDeliveries.test.ts, webhookReplay.test.ts and a rename block in projects.test.ts."
+            },
+            "team-deploy-note": {
+              "verdict": true,
+              "why": "'## Deploy note' opens 'For #eng-deploys'; the rollback promotes the previous image, and turning the flag off comes first."
+            }
+          },
+          "kept": {
+            "envelope": {
+              "verdict": true,
+              "why": "The rename goes through recordProjectEvent, whose payload is { id: eventId, type, created_at: createdAt, data: project }."
+            }
+          }
+        },
+        "compact": {
+          "finished": {
+            "tests": {
+              "verdict": true,
+              "why": "purgeWebhookDeliveries.test.ts, webhookAdmin.test.ts and a project.renamed block in projects.test.ts."
+            },
+            "team-deploy-note": {
+              "verdict": false,
+              "why": "It has a '## Deploy note' and the rollback promotes the previous image, but it never names #eng-deploys."
+            }
+          },
+          "kept": {
+            "envelope": {
+              "verdict": true,
+              "why": "The same recordProjectEvent payload, { id, type, created_at, data }."
+            }
+          }
+        },
+        "sync": {
+          "finished": {
+            "tests": {
+              "verdict": true,
+              "why": "webhooks.test.ts, purgeWebhookDeliveries.test.ts and a rename block in projects.test.ts."
+            },
+            "team-deploy-note": {
+              "verdict": false,
+              "why": "A '## Deploy note' that says the flag is off in production, but no #eng-deploys, and its rollback is dropping both tables rather than promoting the previous image."
+            }
+          },
+          "kept": {
+            "envelope": {
+              "verdict": true,
+              "why": "Its rename test asserts the payload's keys are exactly created_at, data, id and type."
+            }
+          },
+          "confirmed": {
+            "dead-letters-admin": "Lost: replay is POST /v2/organizations/:id/webhooks/deliveries/:deliveryId/replay on the customer's own key.",
+            "retention": "Lost: KEEP_DELIVERED_DAYS = 14 and KEEP_DEAD_LETTERS_DAYS = 30, invented.",
+            "team-branch": "Lost: eng-447-project-webhooks, lower case, 'The team handbook was not available'.",
+            "team-sections": "Lost: no Why / What changed / How I tested / Rollback.",
+            "team-reviewer": "Lost: no note for Ana."
+          }
+        }
+      },
+      "why_sync_lost": "The brain the sync wrote held every lost rule (wiki/concepts/Project Webhooks (ENG-447).md: dead letters staff-only under the admin routes, 45 days; the conventions and Ana elsewhere). The fresh session looked once per step, with whole phrases: 'ENG-447 webhooks project events', 'dead letter replay deliveries cleanup', 'pull request branch naming deploy handbook'. exposurie 1.2.0's read --search is one case-insensitive substring match of the whole phrase, so each returned 0 pages and the instruction 'Nothing in the brain matches. Say so plainly; do not answer from memory', and the agent went on without the rules. keep and compact had the rules in their own context, and made 10 and 11 reads in their last step.",
+      "final": {
+        "keep": {
+          "finished": "10/10",
+          "kept": "4/4",
+          "retried": "0/3"
+        },
+        "compact": {
+          "finished": "9/10",
+          "kept": "4/4",
+          "retried": "0/3"
+        },
+        "sync": {
+          "finished": "6/10",
+          "kept": "2/4",
+          "retried": "0/3"
+        }
+      }
+    }
+  ]
+}

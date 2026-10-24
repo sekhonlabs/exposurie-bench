@@ -1,0 +1,1597 @@
+{
+  "batch": "area-9",
+  "note": "Every attempt at every step of each long task, as the runner recorded it, with its own tokens. An attempt counts when it is its step's last and it finished, or was kept by hand. A strategy's tokens after the fork add up its counted attempts, and the sync strategy's its sync session too. Left out: each attempt's notes and reason, which name the run's machine paths, its session, and the plan's meters.",
+  "runs": [
+    {
+      "run": "r001",
+      "task": "long-1",
+      "user": "developer",
+      "fork_at": 500000,
+      "versions": {
+        "claude_code": "2.1.302",
+        "model": "claude-sonnet-5-5",
+        "exposurie": "1.2.0",
+        "node": "24.22.0",
+        "models_used": [
+          "claude-sonnet-5-5"
+        ]
+      },
+      "fork": {
+        "after": "19",
+        "core": 9,
+        "more": 10,
+        "context": 509677
+      },
+      "phases": {
+        "fill": [
+          {
+            "step": "01",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 72741,
+              "input": 10,
+              "cache_write": 22913,
+              "cache_read": 49818,
+              "output": 4757
+            },
+            "turns": 17,
+            "duration_ms": 34940,
+            "tool_calls": 16,
+            "denied": 1,
+            "looked": true,
+            "reads": 1,
+            "context_after": 22915,
+            "files_given": 0,
+            "cost_usd_estimate": 0.14422379999999999
+          },
+          {
+            "step": "02",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 307569,
+              "input": 18,
+              "cache_write": 16905,
+              "cache_read": 290646,
+              "output": 10287
+            },
+            "turns": 22,
+            "duration_ms": 72349,
+            "tool_calls": 21,
+            "denied": 4,
+            "looked": false,
+            "reads": 0,
+            "context_after": 39820,
+            "files_given": 0,
+            "cost_usd_estimate": 0.19959060000000003
+          },
+          {
+            "step": "03",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 454420,
+              "input": 18,
+              "cache_write": 17826,
+              "cache_read": 436576,
+              "output": 12002
+            },
+            "turns": 23,
+            "duration_ms": 82575,
+            "tool_calls": 22,
+            "denied": 2,
+            "looked": false,
+            "reads": 0,
+            "context_after": 57646,
+            "files_given": 0,
+            "cost_usd_estimate": 0.2350176000000001
+          },
+          {
+            "step": "04",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1121516,
+              "input": 32,
+              "cache_write": 21906,
+              "cache_read": 1099578,
+              "output": 15725
+            },
+            "turns": 31,
+            "duration_ms": 115400,
+            "tool_calls": 30,
+            "denied": 4,
+            "looked": false,
+            "reads": 0,
+            "context_after": 79552,
+            "files_given": 1,
+            "cost_usd_estimate": 0.3548957999999999
+          },
+          {
+            "step": "05",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 693783,
+              "input": 16,
+              "cache_write": 11954,
+              "cache_read": 681813,
+              "output": 8947
+            },
+            "turns": 14,
+            "duration_ms": 61017,
+            "tool_calls": 13,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 91506,
+            "files_given": 0,
+            "cost_usd_estimate": 0.20549929999999983
+          },
+          {
+            "step": "06",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 187705,
+              "input": 4,
+              "cache_write": 3598,
+              "cache_read": 184103,
+              "output": 3062
+            },
+            "turns": 5,
+            "duration_ms": 22770,
+            "tool_calls": 4,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 95104,
+            "files_given": 0,
+            "cost_usd_estimate": 0.06343030000000005
+          },
+          {
+            "step": "07",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 502323,
+              "input": 10,
+              "cache_write": 9622,
+              "cache_read": 492691,
+              "output": 7562
+            },
+            "turns": 8,
+            "duration_ms": 52159,
+            "tool_calls": 7,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 104726,
+            "files_given": 0,
+            "cost_usd_estimate": 0.16339709999999985
+          },
+          {
+            "step": "08",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 325089,
+              "input": 6,
+              "cache_write": 5316,
+              "cache_read": 319767,
+              "output": 2514
+            },
+            "turns": 3,
+            "duration_ms": 20112,
+            "tool_calls": 2,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 110042,
+            "files_given": 0,
+            "cost_usd_estimate": 0.07839269999999998
+          },
+          {
+            "step": "09",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1099131,
+              "input": 18,
+              "cache_write": 21138,
+              "cache_read": 1077975,
+              "output": 16621
+            },
+            "turns": 21,
+            "duration_ms": 109022,
+            "tool_calls": 20,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 131180,
+            "files_given": 0,
+            "cost_usd_estimate": 0.35859549999999984
+          },
+          {
+            "step": "10",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 2195274,
+              "input": 24,
+              "cache_write": 81702,
+              "cache_read": 2113548,
+              "output": 16872
+            },
+            "turns": 17,
+            "duration_ms": 138343,
+            "tool_calls": 16,
+            "denied": 3,
+            "looked": false,
+            "reads": 0,
+            "context_after": 212882,
+            "files_given": 5,
+            "cost_usd_estimate": 0.7069308000000001
+          },
+          {
+            "step": "11",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1109351,
+              "input": 10,
+              "cache_write": 12682,
+              "cache_read": 1096659,
+              "output": 8556
+            },
+            "turns": 10,
+            "duration_ms": 82895,
+            "tool_calls": 9,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 225564,
+            "files_given": 0,
+            "cost_usd_estimate": 0.24597390000000008
+          },
+          {
+            "step": "12",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1190244,
+              "input": 10,
+              "cache_write": 30062,
+              "cache_read": 1160172,
+              "output": 5827
+            },
+            "turns": 8,
+            "duration_ms": 54218,
+            "tool_calls": 7,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 255626,
+            "files_given": 5,
+            "cost_usd_estimate": 0.2945552
+          },
+          {
+            "step": "13",
+            "kind": "more",
+            "status": "thrown-out",
+            "counts": true,
+            "kept_by_hand": "A false flag of the audit, fixed in d92e734: the step went into tmp/fly inside its own folder and ran read-only grep and cut there, which Claude Code let run by itself, and the audit read the quoted grep pattern /health as a place. Step 13 re-audits clean.",
+            "tokens": {
+              "all_input": 2437147,
+              "input": 16,
+              "cache_write": 80438,
+              "cache_read": 2356693,
+              "output": 13198
+            },
+            "turns": 12,
+            "duration_ms": 113904,
+            "tool_calls": 11,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 336064,
+            "files_given": 4,
+            "cost_usd_estimate": 0.6894332999999992
+          },
+          {
+            "step": "14",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1403515,
+              "input": 8,
+              "cache_write": 20677,
+              "cache_read": 1382830,
+              "output": 14697
+            },
+            "turns": 9,
+            "duration_ms": 108062,
+            "tool_calls": 8,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 356741,
+            "files_given": 0,
+            "cost_usd_estimate": 0.3679769999999998
+          },
+          {
+            "step": "15",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1085537,
+              "input": 6,
+              "cache_write": 9179,
+              "cache_read": 1076352,
+              "output": 13838
+            },
+            "turns": 5,
+            "duration_ms": 110921,
+            "tool_calls": 4,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 365920,
+            "files_given": 3,
+            "cost_usd_estimate": 0.28274319999999964
+          },
+          {
+            "step": "16",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 2730053,
+              "input": 14,
+              "cache_write": 36321,
+              "cache_read": 2693718,
+              "output": 12268
+            },
+            "turns": 16,
+            "duration_ms": 105687,
+            "tool_calls": 15,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 402241,
+            "files_given": 5,
+            "cost_usd_estimate": 0.5373638000000005
+          },
+          {
+            "step": "17",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 3418192,
+              "input": 16,
+              "cache_write": 37533,
+              "cache_read": 3380643,
+              "output": 27429
+            },
+            "turns": 21,
+            "duration_ms": 189159,
+            "tool_calls": 20,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 439774,
+            "files_given": 0,
+            "cost_usd_estimate": 0.7625183000000009
+          },
+          {
+            "step": "18",
+            "kind": "more",
+            "status": "thrown-out",
+            "counts": true,
+            "kept_by_hand": "A false flag of the audit, fixed in cb22d14: the step read back Claude Code's own saved copy of its Grep of tmp/postmark/bounces.json, which was too large to hand over, from the session's tool-results folder. Step 18 re-audits clean.",
+            "tokens": {
+              "all_input": 3642020,
+              "input": 16,
+              "cache_write": 37889,
+              "cache_read": 3604115,
+              "output": 22584
+            },
+            "turns": 8,
+            "duration_ms": 176033,
+            "tool_calls": 7,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 477663,
+            "files_given": 2,
+            "cost_usd_estimate": 0.7378395000000006
+          },
+          {
+            "step": "19",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 3002039,
+              "input": 12,
+              "cache_write": 32014,
+              "cache_read": 2970013,
+              "output": 18870
+            },
+            "turns": 20,
+            "duration_ms": 136309,
+            "tool_calls": 19,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 509677,
+            "files_given": 0,
+            "cost_usd_estimate": 0.6137813000000003
+          }
+        ],
+        "keep": [
+          {
+            "step": "01",
+            "kind": "after",
+            "status": "not-run",
+            "counts": false,
+            "why_not": "a usage limit stopped it",
+            "tokens": {
+              "all_input": 2076071,
+              "input": 8,
+              "cache_write": 15385,
+              "cache_read": 2060678,
+              "output": 12690
+            },
+            "turns": 20,
+            "duration_ms": 99349,
+            "tool_calls": 19,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 525062,
+            "files_given": 0,
+            "cost_usd_estimate": 0.39452380000000087
+          },
+          {
+            "step": "01",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 4737895,
+              "input": 18,
+              "cache_write": 540635,
+              "cache_read": 4197242,
+              "output": 25491
+            },
+            "turns": 28,
+            "duration_ms": 191789,
+            "tool_calls": 27,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 540637,
+            "files_given": 0,
+            "cost_usd_estimate": 2.8372102000000003
+          },
+          {
+            "step": "02",
+            "kind": "after",
+            "status": "not-run",
+            "counts": false,
+            "why_not": "a usage limit stopped it",
+            "tokens": {
+              "all_input": 2187269,
+              "input": 8,
+              "cache_write": 10117,
+              "cache_read": 2177144,
+              "output": 9212
+            },
+            "turns": 17,
+            "duration_ms": 78529,
+            "tool_calls": 16,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 550754,
+            "files_given": 0,
+            "cost_usd_estimate": 0.3503184000000008
+          },
+          {
+            "step": "02",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 3323234,
+              "input": 12,
+              "cache_write": 565872,
+              "cache_read": 2757350,
+              "output": 21545
+            },
+            "turns": 19,
+            "duration_ms": 141909,
+            "tool_calls": 18,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 565874,
+            "files_given": 0,
+            "cost_usd_estimate": 2.754697000000002
+          },
+          {
+            "step": "03",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 2874642,
+              "input": 10,
+              "cache_write": 15298,
+              "cache_read": 2859334,
+              "output": 11873
+            },
+            "turns": 13,
+            "duration_ms": 83147,
+            "tool_calls": 12,
+            "denied": 0,
+            "looked": true,
+            "reads": 4,
+            "context_after": 581172,
+            "files_given": 0,
+            "cost_usd_estimate": 0.46587539999999983
+          }
+        ],
+        "compact": [
+          {
+            "step": "00",
+            "kind": "compact",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 511672,
+              "input": 2471,
+              "cache_write": 503636,
+              "cache_read": 5565,
+              "output": 10966
+            },
+            "turns": 0,
+            "duration_ms": 76862,
+            "tool_calls": 0,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": null,
+            "compactions": [
+              {
+                "trigger": "manual",
+                "pre_tokens": 510955,
+                "post_tokens": 10803
+              }
+            ],
+            "files_given": 0,
+            "cost_usd_estimate": 1.3742484999999993
+          },
+          {
+            "step": "01",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 490432,
+              "input": 22,
+              "cache_write": 56903,
+              "cache_read": 433507,
+              "output": 18578
+            },
+            "turns": 30,
+            "duration_ms": 112316,
+            "tool_calls": 29,
+            "denied": 2,
+            "looked": false,
+            "reads": 0,
+            "context_after": 61735,
+            "files_given": 0,
+            "cost_usd_estimate": 0.4567867000000021
+          },
+          {
+            "step": "02",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 488234,
+              "input": 14,
+              "cache_write": 15032,
+              "cache_read": 473188,
+              "output": 10936
+            },
+            "turns": 20,
+            "duration_ms": 67037,
+            "tool_calls": 19,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 76767,
+            "files_given": 0,
+            "cost_usd_estimate": 0.2168347999999991
+          },
+          {
+            "step": "03",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 318511,
+              "input": 8,
+              "cache_write": 4554,
+              "cache_read": 313949,
+              "output": 2486
+            },
+            "turns": 5,
+            "duration_ms": 25552,
+            "tool_calls": 4,
+            "denied": 0,
+            "looked": true,
+            "reads": 2,
+            "context_after": 81321,
+            "files_given": 0,
+            "cost_usd_estimate": 0.07448690000000013
+          }
+        ],
+        "sync": [
+          {
+            "step": "01",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 658553,
+              "input": 34,
+              "cache_write": 53343,
+              "cache_read": 605176,
+              "output": 19885
+            },
+            "turns": 40,
+            "duration_ms": 127679,
+            "tool_calls": 39,
+            "denied": 5,
+            "looked": true,
+            "reads": 5,
+            "context_after": 58909,
+            "files_given": 0,
+            "cost_usd_estimate": 0.47280760000000005
+          },
+          {
+            "step": "02",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 536890,
+              "input": 16,
+              "cache_write": 17335,
+              "cache_read": 519539,
+              "output": 13229
+            },
+            "turns": 19,
+            "duration_ms": 77559,
+            "tool_calls": 18,
+            "denied": 1,
+            "looked": true,
+            "reads": 1,
+            "context_after": 76244,
+            "files_given": 0,
+            "cost_usd_estimate": 0.25361590000000006
+          },
+          {
+            "step": "03",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 316519,
+              "input": 8,
+              "cache_write": 4618,
+              "cache_read": 311893,
+              "output": 2211
+            },
+            "turns": 6,
+            "duration_ms": 23583,
+            "tool_calls": 5,
+            "denied": 0,
+            "looked": true,
+            "reads": 2,
+            "context_after": 80862,
+            "files_given": 0,
+            "cost_usd_estimate": 0.07178729999999989
+          }
+        ]
+      },
+      "sync_sessions": [
+        {
+          "status": "done",
+          "counts": true,
+          "tokens": {
+            "all_input": 976651,
+            "input": 32,
+            "cache_write": 75844,
+            "cache_read": 900775,
+            "output": 18047
+          },
+          "turns": 45,
+          "duration_ms": 128199,
+          "tool_calls": 44,
+          "denied": 4,
+          "exposurie_commands": [
+            "exposurie sync",
+            "exposurie sync --done",
+            "exposurie sync --done"
+          ],
+          "brain_after": {
+            "filed": true,
+            "transcripts_read": 29,
+            "newly_read": 1,
+            "pages": 45
+          },
+          "cost_usd_estimate": 0.5739875
+        }
+      ]
+    },
+    {
+      "run": "r002",
+      "task": "long-2",
+      "user": "developer",
+      "fork_at": 500000,
+      "versions": {
+        "claude_code": "2.1.302",
+        "model": "claude-sonnet-5-5",
+        "exposurie": "1.2.0",
+        "node": "24.22.0",
+        "models_used": [
+          "claude-sonnet-5-5"
+        ]
+      },
+      "fork": {
+        "after": "24",
+        "core": 8,
+        "more": 16,
+        "context": 500236
+      },
+      "phases": {
+        "fill": [
+          {
+            "step": "01",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 80731,
+              "input": 10,
+              "cache_write": 22432,
+              "cache_read": 58289,
+              "output": 6535
+            },
+            "turns": 27,
+            "duration_ms": 49934,
+            "tool_calls": 26,
+            "denied": 0,
+            "looked": true,
+            "reads": 2,
+            "context_after": 27998,
+            "files_given": 0,
+            "cost_usd_estimate": 0.16092689999999998
+          },
+          {
+            "step": "02",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 402339,
+              "input": 16,
+              "cache_write": 29239,
+              "cache_read": 373084,
+              "output": 21307
+            },
+            "turns": 24,
+            "duration_ms": 132627,
+            "tool_calls": 23,
+            "denied": 3,
+            "looked": false,
+            "reads": 0,
+            "context_after": 57237,
+            "files_given": 0,
+            "cost_usd_estimate": 0.3673664
+          },
+          {
+            "step": "03",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 733906,
+              "input": 22,
+              "cache_write": 14486,
+              "cache_read": 719398,
+              "output": 10701
+            },
+            "turns": 14,
+            "duration_ms": 80976,
+            "tool_calls": 13,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 71723,
+            "files_given": 0,
+            "cost_usd_estimate": 0.23693779999999998
+          },
+          {
+            "step": "04",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 304458,
+              "input": 8,
+              "cache_write": 6603,
+              "cache_read": 297847,
+              "output": 4821
+            },
+            "turns": 10,
+            "duration_ms": 30261,
+            "tool_calls": 9,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 78326,
+            "files_given": 0,
+            "cost_usd_estimate": 0.10442270000000009
+          },
+          {
+            "step": "05",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 430746,
+              "input": 10,
+              "cache_write": 14109,
+              "cache_read": 416627,
+              "output": 12870
+            },
+            "turns": 9,
+            "duration_ms": 81001,
+            "tool_calls": 8,
+            "denied": 2,
+            "looked": false,
+            "reads": 0,
+            "context_after": 92435,
+            "files_given": 0,
+            "cost_usd_estimate": 0.22681869999999993
+          },
+          {
+            "step": "06",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 725789,
+              "input": 14,
+              "cache_write": 17814,
+              "cache_read": 707961,
+              "output": 14552
+            },
+            "turns": 19,
+            "duration_ms": 87174,
+            "tool_calls": 18,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 110249,
+            "files_given": 0,
+            "cost_usd_estimate": 0.28760010000000014
+          },
+          {
+            "step": "07",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 698006,
+              "input": 12,
+              "cache_write": 12892,
+              "cache_read": 685102,
+              "output": 10160
+            },
+            "turns": 12,
+            "duration_ms": 64595,
+            "tool_calls": 11,
+            "denied": 3,
+            "looked": false,
+            "reads": 0,
+            "context_after": 123141,
+            "files_given": 0,
+            "cost_usd_estimate": 0.22170219999999974
+          },
+          {
+            "step": "08",
+            "kind": "core",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 381894,
+              "input": 6,
+              "cache_write": 8600,
+              "cache_read": 373288,
+              "output": 7213
+            },
+            "turns": 4,
+            "duration_ms": 51495,
+            "tool_calls": 3,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 131741,
+            "files_given": 0,
+            "cost_usd_estimate": 0.1438708000000002
+          },
+          {
+            "step": "09",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 2562975,
+              "input": 30,
+              "cache_write": 59540,
+              "cache_read": 2503405,
+              "output": 21159
+            },
+            "turns": 35,
+            "duration_ms": 166818,
+            "tool_calls": 34,
+            "denied": 5,
+            "looked": false,
+            "reads": 0,
+            "context_after": 191281,
+            "files_given": 10,
+            "cost_usd_estimate": 0.7001504999999999
+          },
+          {
+            "step": "10",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 832249,
+              "input": 8,
+              "cache_write": 24185,
+              "cache_read": 808056,
+              "output": 17665
+            },
+            "turns": 14,
+            "duration_ms": 116888,
+            "tool_calls": 13,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 215466,
+            "files_given": 0,
+            "cost_usd_estimate": 0.35421159999999974
+          },
+          {
+            "step": "11",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 895956,
+              "input": 8,
+              "cache_write": 23323,
+              "cache_read": 872625,
+              "output": 9922
+            },
+            "turns": 6,
+            "duration_ms": 84305,
+            "tool_calls": 5,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 238789,
+            "files_given": 3,
+            "cost_usd_estimate": 0.2797905000000003
+          },
+          {
+            "step": "12",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 247376,
+              "input": 2,
+              "cache_write": 8587,
+              "cache_read": 238787,
+              "output": 1799
+            },
+            "turns": 1,
+            "duration_ms": 17656,
+            "tool_calls": 0,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 247376,
+            "files_given": 0,
+            "cost_usd_estimate": 0.07622069999999992
+          },
+          {
+            "step": "13",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 756283,
+              "input": 6,
+              "cache_write": 9637,
+              "cache_read": 746640,
+              "output": 10570
+            },
+            "turns": 7,
+            "duration_ms": 92550,
+            "tool_calls": 6,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 257013,
+            "files_given": 5,
+            "cost_usd_estimate": 0.21892400000000034
+          },
+          {
+            "step": "14",
+            "kind": "more",
+            "status": "not-run",
+            "counts": false,
+            "why_not": "a usage limit stopped it",
+            "tokens": {
+              "all_input": 0,
+              "input": 0,
+              "cache_write": 0,
+              "cache_read": 0,
+              "output": 0
+            },
+            "turns": 1,
+            "duration_ms": 865,
+            "tool_calls": 0,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": null,
+            "files_given": 0,
+            "cost_usd_estimate": 0
+          },
+          {
+            "step": "14",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1665909,
+              "input": 12,
+              "cache_write": 278936,
+              "cache_read": 1386961,
+              "output": 16330
+            },
+            "turns": 15,
+            "duration_ms": 110122,
+            "tool_calls": 14,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 283768,
+            "files_given": 0,
+            "cost_usd_estimate": 1.4177640999999994
+          },
+          {
+            "step": "15",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 865740,
+              "input": 6,
+              "cache_write": 11077,
+              "cache_read": 854657,
+              "output": 5279
+            },
+            "turns": 7,
+            "duration_ms": 42129,
+            "tool_calls": 6,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 294845,
+            "files_given": 5,
+            "cost_usd_estimate": 0.18257570000000012
+          },
+          {
+            "step": "16",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1216028,
+              "input": 8,
+              "cache_write": 14950,
+              "cache_read": 1201070,
+              "output": 11110
+            },
+            "turns": 5,
+            "duration_ms": 90799,
+            "tool_calls": 4,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 309795,
+            "files_given": 1,
+            "cost_usd_estimate": 0.2910230000000009
+          },
+          {
+            "step": "17",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 4337384,
+              "input": 26,
+              "cache_write": 34716,
+              "cache_read": 4302642,
+              "output": 18620
+            },
+            "turns": 21,
+            "duration_ms": 150837,
+            "tool_calls": 20,
+            "denied": 5,
+            "looked": false,
+            "reads": 0,
+            "context_after": 344511,
+            "files_given": 6,
+            "cost_usd_estimate": 0.7553802000000003
+          },
+          {
+            "step": "18",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1396838,
+              "input": 8,
+              "cache_write": 6698,
+              "cache_read": 1390132,
+              "output": 6618
+            },
+            "turns": 8,
+            "duration_ms": 57996,
+            "tool_calls": 7,
+            "denied": 0,
+            "looked": true,
+            "reads": 2,
+            "context_after": 351209,
+            "files_given": 6,
+            "cost_usd_estimate": 0.23200119999999913
+          },
+          {
+            "step": "19",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1076862,
+              "input": 6,
+              "cache_write": 11188,
+              "cache_read": 1065668,
+              "output": 5471
+            },
+            "turns": 4,
+            "duration_ms": 45248,
+            "tool_calls": 3,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 362397,
+            "files_given": 2,
+            "cost_usd_estimate": 0.20604079999999936
+          },
+          {
+            "step": "20",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 2280439,
+              "input": 12,
+              "cache_write": 30895,
+              "cache_read": 2249532,
+              "output": 11805
+            },
+            "turns": 6,
+            "duration_ms": 94974,
+            "tool_calls": 5,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 393292,
+            "files_given": 1,
+            "cost_usd_estimate": 0.46660720000000033
+          },
+          {
+            "step": "21",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1200713,
+              "input": 6,
+              "cache_write": 9686,
+              "cache_read": 1191021,
+              "output": 10769
+            },
+            "turns": 5,
+            "duration_ms": 94125,
+            "tool_calls": 4,
+            "denied": 0,
+            "looked": true,
+            "reads": 1,
+            "context_after": 402978,
+            "files_given": 2,
+            "cost_usd_estimate": 0.2655481000000002
+          },
+          {
+            "step": "22",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 2567377,
+              "input": 12,
+              "cache_write": 35987,
+              "cache_read": 2531378,
+              "output": 10538
+            },
+            "turns": 8,
+            "duration_ms": 85400,
+            "tool_calls": 7,
+            "denied": 2,
+            "looked": false,
+            "reads": 0,
+            "context_after": 438965,
+            "files_given": 6,
+            "cost_usd_estimate": 0.5024897999999993
+          },
+          {
+            "step": "23",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 4128743,
+              "input": 18,
+              "cache_write": 35747,
+              "cache_read": 4092978,
+              "output": 30863
+            },
+            "turns": 39,
+            "duration_ms": 208756,
+            "tool_calls": 38,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 474712,
+            "files_given": 0,
+            "cost_usd_estimate": 0.8609517999999996
+          },
+          {
+            "step": "24",
+            "kind": "more",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 4354937,
+              "input": 18,
+              "cache_write": 25524,
+              "cache_read": 4329395,
+              "output": 19501
+            },
+            "turns": 22,
+            "duration_ms": 153897,
+            "tool_calls": 21,
+            "denied": 4,
+            "looked": false,
+            "reads": 0,
+            "context_after": 500236,
+            "files_given": 2,
+            "cost_usd_estimate": 0.7300815000000007
+          }
+        ],
+        "keep": [
+          {
+            "step": "01",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 1531856,
+              "input": 6,
+              "cache_write": 14851,
+              "cache_read": 1516999,
+              "output": 10084
+            },
+            "turns": 8,
+            "duration_ms": 73903,
+            "tool_calls": 7,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 515087,
+            "files_given": 0,
+            "cost_usd_estimate": 0.31195590000000095
+          },
+          {
+            "step": "02",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 2647163,
+              "input": 10,
+              "cache_write": 26146,
+              "cache_read": 2621007,
+              "output": 23243
+            },
+            "turns": 17,
+            "duration_ms": 147920,
+            "tool_calls": 16,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 541233,
+            "files_given": 0,
+            "cost_usd_estimate": 0.5991346999999987
+          },
+          {
+            "step": "03",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 3921632,
+              "input": 14,
+              "cache_write": 34427,
+              "cache_read": 3887191,
+              "output": 24572
+            },
+            "turns": 16,
+            "duration_ms": 190901,
+            "tool_calls": 15,
+            "denied": 0,
+            "looked": true,
+            "reads": 11,
+            "context_after": 575660,
+            "files_given": 0,
+            "cost_usd_estimate": 0.7721751000000001
+          }
+        ],
+        "compact": [
+          {
+            "step": "00",
+            "kind": "compact",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 502231,
+              "input": 3497,
+              "cache_write": 6641,
+              "cache_read": 492093,
+              "output": 12357
+            },
+            "turns": 0,
+            "duration_ms": 79849,
+            "tool_calls": 0,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": null,
+            "compactions": [
+              {
+                "trigger": "manual",
+                "pre_tokens": 506554,
+                "post_tokens": 10180
+              }
+            ],
+            "files_given": 0,
+            "cost_usd_estimate": 0.1963758000000002
+          },
+          {
+            "step": "01",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 221320,
+              "input": 14,
+              "cache_write": 33046,
+              "cache_read": 188260,
+              "output": 6228
+            },
+            "turns": 13,
+            "duration_ms": 43365,
+            "tool_calls": 12,
+            "denied": 0,
+            "looked": false,
+            "reads": 0,
+            "context_after": 38612,
+            "files_given": 0,
+            "cost_usd_estimate": 0.21331799999999923
+          },
+          {
+            "step": "02",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 537514,
+              "input": 20,
+              "cache_write": 28439,
+              "cache_read": 509055,
+              "output": 17751
+            },
+            "turns": 22,
+            "duration_ms": 111858,
+            "tool_calls": 21,
+            "denied": 1,
+            "looked": false,
+            "reads": 0,
+            "context_after": 67051,
+            "files_given": 0,
+            "cost_usd_estimate": 0.3422114999999959
+          },
+          {
+            "step": "03",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 455966,
+              "input": 12,
+              "cache_write": 17643,
+              "cache_read": 438311,
+              "output": 8585
+            },
+            "turns": 8,
+            "duration_ms": 71668,
+            "tool_calls": 7,
+            "denied": 0,
+            "looked": true,
+            "reads": 10,
+            "context_after": 84694,
+            "files_given": 0,
+            "cost_usd_estimate": 0.2002770999999992
+          }
+        ],
+        "sync": [
+          {
+            "step": "01",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 230326,
+              "input": 18,
+              "cache_write": 31229,
+              "cache_read": 199079,
+              "output": 7362
+            },
+            "turns": 18,
+            "duration_ms": 49495,
+            "tool_calls": 17,
+            "denied": 4,
+            "looked": true,
+            "reads": 1,
+            "context_after": 36795,
+            "files_given": 0,
+            "cost_usd_estimate": 0.2184799
+          },
+          {
+            "step": "02",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 544325,
+              "input": 20,
+              "cache_write": 28625,
+              "cache_read": 515680,
+              "output": 12726
+            },
+            "turns": 21,
+            "duration_ms": 78641,
+            "tool_calls": 20,
+            "denied": 2,
+            "looked": true,
+            "reads": 1,
+            "context_after": 65420,
+            "files_given": 0,
+            "cost_usd_estimate": 0.2933679999999999
+          },
+          {
+            "step": "03",
+            "kind": "after",
+            "status": "done",
+            "counts": true,
+            "tokens": {
+              "all_input": 652337,
+              "input": 18,
+              "cache_write": 13158,
+              "cache_read": 639161,
+              "output": 5140
+            },
+            "turns": 10,
+            "duration_ms": 47877,
+            "tool_calls": 9,
+            "denied": 0,
+            "looked": true,
+            "reads": 1,
+            "context_after": 78578,
+            "files_given": 0,
+            "cost_usd_estimate": 0.1679841000000002
+          }
+        ]
+      },
+      "sync_sessions": [
+        {
+          "status": "done",
+          "counts": true,
+          "tokens": {
+            "all_input": 1105841,
+            "input": 32,
+            "cache_write": 95833,
+            "cache_read": 1009976,
+            "output": 24420
+          },
+          "turns": 47,
+          "duration_ms": 172467,
+          "tool_calls": 46,
+          "denied": 3,
+          "exposurie_commands": [
+            "exposurie sync",
+            "exposurie sync --done",
+            "exposurie sync --done"
+          ],
+          "brain_after": {
+            "filed": true,
+            "transcripts_read": 29,
+            "newly_read": 1,
+            "pages": 47
+          },
+          "cost_usd_estimate": 0.7285936000000002
+        }
+      ]
+    }
+  ]
+}

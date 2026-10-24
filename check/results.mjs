@@ -1,5 +1,7 @@
 // The results check (part 9): what the numbers are computed from is complete,
 // and results/ holds exactly what score/results.mjs writes from it, in the look.
+// For area 9 that means each long task's scores, its hand read and its record
+// of every step agree with one another and with the task's steps file.
 //
 //   node check/results.mjs
 //
@@ -9,8 +11,11 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { loginIdentity } from '../runner/sandbox.mjs';
-import { AREAS, BATCHES, CONDITIONS, USERS, outputs } from '../score/results.mjs';
+import { STRATEGIES } from '../runner/long.mjs';
+import { PINS, loginIdentity } from '../runner/sandbox.mjs';
+import { LONG_GROUPS } from '../score/checks.mjs';
+import { AREAS, BATCHES, CONDITIONS, LONG_BATCH, USERS, finalChecks, outputs } from '../score/results.mjs';
+import { WINDOWS_PATH } from '../score/score.mjs';
 import { find } from './text.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -57,6 +62,79 @@ const builds = existsSync(join(REPO, 'results', 'builds.json')) ? readJson('resu
 if (!builds) fail('results/builds.json', `is missing; ${SAVE}`);
 else for (const u of USERS) if (!(builds[u]?.tokens?.all_input > 0)) fail('results/builds.json', `has no tokens for the ${u}`);
 
+// ---- area 9: each long task once, every strategy finished, every check with a final verdict, every token accounted for
+const longTasks = readJson('tasks', 'index.json').tasks.filter((t) => t.area === 9);
+const longFiles = ['scores', 'hand', 'steps'].map((f) => `results/${LONG_BATCH}/${f}.json`);
+for (const f of longFiles.filter((x) => !existsSync(join(REPO, x)))) fail(f, `is missing; ${SAVE}`);
+let strategiesKeyed = 0;
+if (longFiles.every((f) => existsSync(join(REPO, f)))) {
+  const [scores, hands, records] = longFiles.map((f) => readJson(f).runs);
+  const kinds = ['all_input', 'input', 'cache_write', 'cache_read', 'output'];
+  const add = (xs, k) => xs.reduce((n, x) => n + x.tokens[k], 0);
+  for (const x of [...scores, ...hands, ...records]) if (!longTasks.some((t) => t.id === x.task)) fail(`${LONG_BATCH}/${x.task}`, 'is not a long task in tasks/index.json');
+  for (const t of longTasks) {
+    const where = `${LONG_BATCH}/${t.id}`;
+    const [s, h, r] = [scores, hands, records].map((xs) => xs.filter((x) => x.task === t.id));
+    if (s.length !== 1 || h.length !== 1 || r.length !== 1) {
+      fail(where, 'is not in scores.json, hand.json and steps.json exactly once each');
+      continue;
+    }
+    const [score, hand, rec] = [s[0], h[0], r[0]];
+    if (hand.run !== score.run || rec.run !== score.run) fail(where, 'has a different run in scores.json, hand.json and steps.json');
+    const steps = readJson('tasks', t.steps);
+
+    // The fork: past the mark at the first step boundary after the core steps, where the scores say it was.
+    const fill = rec.phases.fill.filter((a) => a.counts);
+    if (rec.fork_at !== steps.fork_at) fail(where, `was forked at a mark of ${rec.fork_at}, where its steps file says ${steps.fork_at}`);
+    if (fill.length !== rec.fork.core + rec.fork.more || rec.fork.core !== steps.core.length) fail(where, 'does not count one fill attempt for each step before the fork');
+    else if (fill.at(-1).step !== rec.fork.after || fill.at(-1).context_after !== rec.fork.context || rec.fork.context < rec.fork_at) {
+      fail(where, 'is not forked where its last fill step ended, past the mark');
+    } else if (fill.slice(rec.fork.core - 1, -1).some((a) => a.context_after >= rec.fork_at)) fail(where, 'passed the mark before the step it was forked after');
+    if (score.fork.after !== rec.fork.after || score.fork.context !== rec.fork.context) fail(where, 'is forked at one point in scores.json and another in steps.json');
+    for (const k of kinds) if (add(fill, k) !== score.fork.tokens[k]) fail(where, `its fill's ${k} tokens are not those of its counted steps`);
+    const v = rec.versions;
+    if (!v.claude_code?.startsWith(PINS.claudeCode) || v.model !== PINS.model || v.exposurie !== PINS.exposurie) fail(where, 'ran under versions other than the pinned ones');
+
+    for (const p of STRATEGIES) {
+      const at = `${where} ${p}`;
+      const sc = score.strategies[p];
+      if (!sc) {
+        fail(at, 'has no scores: the strategy did not finish');
+        continue;
+      }
+      strategiesKeyed += 1;
+      for (const g of LONG_GROUPS) {
+        const want = steps.checks[g].map((c) => c.id);
+        if (JSON.stringify(Object.keys(sc.checks[g]).sort()) !== JSON.stringify([...want].sort())) fail(at, `does not score each of its ${g} checks exactly once`);
+        for (const id of want) {
+          const script = sc.checks[g][id];
+          const read = hand.verdicts[p]?.[g]?.[id];
+          if (script === null && !read) fail(at, `${g} ${id} is read only by hand, and the hand read gives no verdict`);
+          if (!read) continue;
+          if (typeof read.verdict !== 'boolean') fail(at, `${g} ${id}: the hand verdict is neither true nor false`);
+          if (!read.why) fail(at, `${g} ${id}: the hand verdict gives no reason`);
+          if (script !== null && read.script !== script) fail(at, `${g} ${id}: the hand verdict overrides a script result it does not name, so the hand read is older than the scores`);
+        }
+      }
+      const final = finalChecks(sc.checks, hand.verdicts[p]);
+      for (const g of LONG_GROUPS) {
+        const vs = Object.values(final[g]);
+        const tally = `${vs.filter((c) => c.verdict === true).length}/${vs.length}`;
+        if (hand.final?.[p]?.[g] !== tally) fail(at, `${g}: the hand read's tally is ${hand.final?.[p]?.[g]}, and its verdicts make ${tally}`);
+      }
+      const counted = rec.phases[p].filter((a) => a.counts);
+      const want = steps.after.length + (p === 'compact' ? 1 : 0);
+      if (counted.length !== want) fail(at, `counts ${counted.length} attempts, where its steps make ${want}`);
+      if (p === 'compact' && !(counted[0]?.kind === 'compact' && counted[0].compactions?.length === 1 && counted[0].compactions[0].trigger === 'manual')) {
+        fail(at, 'does not start with one /compact asked for');
+      }
+      const sync = p === 'sync' ? rec.sync_sessions.filter((x) => x.counts) : [];
+      if (p === 'sync' && !(sync.length === 1 && sync[0].brain_after?.filed)) fail(at, 'has no sync session that filed the long session');
+      for (const k of kinds) if (add([...counted, ...sync], k) !== sc.tokens[k]) fail(at, `its ${k} tokens are not those of its counted steps${p === 'sync' ? ' and its sync session' : ''}`);
+    }
+  }
+}
+
 // ---- results/ holds exactly what score/results.mjs writes
 let written = {};
 if (!problems.length) {
@@ -102,7 +180,7 @@ for (const file of walk(join(REPO, 'results'))) {
   const text = readFileSync(file, 'utf8');
   const rel = relative(REPO, file).replace(/\\/g, '/');
   if (identity.some((id) => find(text, id) >= 0)) fail(rel, "holds the sandbox login's own address or name");
-  if (/(?<![A-Za-z])[A-Za-z]:\\/.test(text)) fail(rel, 'holds a Windows path');
+  if (WINDOWS_PATH.test(text)) fail(rel, 'holds a Windows path');
 }
 
 // ---- what there is
@@ -110,6 +188,7 @@ const n = written['results/numbers.json'] ? JSON.parse(written['results/numbers.
 console.log(
   `${BATCHES.filter((b) => cellsOf[b]).length} batches keyed, ${Object.values(cellsOf).flat().length} runs. ` +
     (n ? `Right answers, areas 1–7: ${CONDITIONS.map((c) => `${c} ${n.right_answers.pooled[c]}`).join(', ')} of ${n.right_answers.of}. ` : '') +
+    `Area 9: ${longTasks.length} long tasks, ${strategiesKeyed} strategies keyed. ` +
     `${Object.keys(written).filter((r) => r.endsWith('.svg')).length} charts.`,
 );
 if (problems.length) {

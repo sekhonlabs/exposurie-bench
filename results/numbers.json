@@ -1,5 +1,5 @@
 {
-  "note": "Written by score/results.mjs from results/ alone. Areas 1–8: area 9 has not run.",
+  "note": "Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9.",
   "tokens": "Every input token, cached or not (all_input), is the primary number. Output is counted beside it.",
   "conditions": {
     "A": "fresh session",
@@ -555,5 +555,569 @@
       "B": "right",
       "C": "right"
     }
-  ]
+  ],
+  "area_9": {
+    "note": "Two long tasks, each filled live in condition C to the first step boundary past 500,000 tokens, then carried on three ways from that fork. Not blind: every strategy was read by hand, and the hand read overrides the scripts.",
+    "strategies": {
+      "keep": "keep going",
+      "compact": "/compact",
+      "sync": "sync + fresh"
+    },
+    "tasks": [
+      {
+        "task": "long-1",
+        "run": "r001",
+        "ask": "One long session in Satchel: importing from other read-later services.",
+        "fork": {
+          "after_step": 19,
+          "core": 9,
+          "more": 10,
+          "context": 509677,
+          "tokens": {
+            "all_input": 26977649,
+            "output": 235616
+          },
+          "cost_usd_estimate": 7.04
+        },
+        "said_only_in_conversation": [
+          "folder-tags",
+          "highlight-source"
+        ],
+        "strategies": {
+          "keep": {
+            "checks": {
+              "finished": {
+                "instapaper": true,
+                "omnivore": true,
+                "as-jobs": true,
+                "page": true,
+                "readme": true,
+                "commit": true,
+                "commit-prefix": true
+              },
+              "kept": {
+                "imported-tag": true,
+                "folder-tags": true,
+                "folder-states": true,
+                "archived-read": true,
+                "highlight-source": true
+              },
+              "retried": {
+                "replace": false,
+                "comma-split": false,
+                "route-import": false
+              }
+            },
+            "finished": {
+              "held": 7,
+              "of": 7,
+              "missed": []
+            },
+            "kept": {
+              "held": 5,
+              "of": 5,
+              "missed": []
+            },
+            "kept_said_only": {
+              "held": 2,
+              "of": 2
+            },
+            "retried": {
+              "tried": 0,
+              "of": 3,
+              "which": []
+            },
+            "by_hand": {
+              "checks": 5,
+              "overturned": 2
+            },
+            "tokens": {
+              "all_input": 10935771,
+              "input": 40,
+              "cache_write": 1121805,
+              "cache_read": 9813926,
+              "output": 58909
+            },
+            "context_end": 581172,
+            "looked": {
+              "steps": 1,
+              "of": 3,
+              "reads": 4
+            },
+            "cost_usd_estimate": 6.06,
+            "apart": {
+              "attempts": 2,
+              "all_input": 4263340,
+              "output": 21902,
+              "cost_usd_estimate": 0.74
+            }
+          },
+          "compact": {
+            "checks": {
+              "finished": {
+                "instapaper": true,
+                "omnivore": true,
+                "as-jobs": true,
+                "page": true,
+                "readme": true,
+                "commit": true,
+                "commit-prefix": true
+              },
+              "kept": {
+                "imported-tag": true,
+                "folder-tags": true,
+                "folder-states": true,
+                "archived-read": true,
+                "highlight-source": true
+              },
+              "retried": {
+                "replace": false,
+                "comma-split": false,
+                "route-import": false
+              }
+            },
+            "finished": {
+              "held": 7,
+              "of": 7,
+              "missed": []
+            },
+            "kept": {
+              "held": 5,
+              "of": 5,
+              "missed": []
+            },
+            "kept_said_only": {
+              "held": 2,
+              "of": 2
+            },
+            "retried": {
+              "tried": 0,
+              "of": 3,
+              "which": []
+            },
+            "by_hand": {
+              "checks": 4,
+              "overturned": 1
+            },
+            "tokens": {
+              "all_input": 1808849,
+              "input": 2515,
+              "cache_write": 580125,
+              "cache_read": 1226209,
+              "output": 42966
+            },
+            "compact_call": 511672,
+            "context_end": 81321,
+            "looked": {
+              "steps": 1,
+              "of": 3,
+              "reads": 2
+            },
+            "cost_usd_estimate": 2.12,
+            "apart": {
+              "attempts": 0,
+              "all_input": 0,
+              "output": 0,
+              "cost_usd_estimate": 0
+            }
+          },
+          "sync": {
+            "checks": {
+              "finished": {
+                "instapaper": true,
+                "omnivore": true,
+                "as-jobs": true,
+                "page": true,
+                "readme": true,
+                "commit": true,
+                "commit-prefix": true
+              },
+              "kept": {
+                "imported-tag": true,
+                "folder-tags": true,
+                "folder-states": true,
+                "archived-read": true,
+                "highlight-source": true
+              },
+              "retried": {
+                "replace": false,
+                "comma-split": false,
+                "route-import": false
+              }
+            },
+            "finished": {
+              "held": 7,
+              "of": 7,
+              "missed": []
+            },
+            "kept": {
+              "held": 5,
+              "of": 5,
+              "missed": []
+            },
+            "kept_said_only": {
+              "held": 2,
+              "of": 2
+            },
+            "retried": {
+              "tried": 0,
+              "of": 3,
+              "which": []
+            },
+            "by_hand": {
+              "checks": 4,
+              "overturned": 1
+            },
+            "tokens": {
+              "all_input": 2488613,
+              "input": 90,
+              "cache_write": 151140,
+              "cache_read": 2337383,
+              "output": 53372
+            },
+            "sync_session": 976651,
+            "context_end": 80862,
+            "looked": {
+              "steps": 3,
+              "of": 3,
+              "reads": 8
+            },
+            "cost_usd_estimate": 1.37,
+            "apart": {
+              "attempts": 0,
+              "all_input": 0,
+              "output": 0,
+              "cost_usd_estimate": 0
+            }
+          }
+        },
+        "keep_to": {
+          "compact": 6,
+          "sync": 4.4
+        }
+      },
+      {
+        "task": "long-2",
+        "run": "r002",
+        "ask": "One long session in tidewell-api, on one Linear ticket: webhooks for project events.",
+        "fork": {
+          "after_step": 24,
+          "core": 8,
+          "more": 16,
+          "context": 500236,
+          "tokens": {
+            "all_input": 34143678,
+            "output": 296178
+          },
+          "cost_usd_estimate": 9.29
+        },
+        "said_only_in_conversation": [
+          "dead-letters-admin",
+          "retention"
+        ],
+        "strategies": {
+          "keep": {
+            "checks": {
+              "finished": {
+                "renamed": true,
+                "replay": true,
+                "cleanup": true,
+                "tests": true,
+                "pr": true,
+                "team-branch": true,
+                "team-title": true,
+                "team-sections": true,
+                "team-reviewer": true,
+                "team-deploy-note": true
+              },
+              "kept": {
+                "event-name": true,
+                "envelope": true,
+                "dead-letters-admin": true,
+                "retention": true
+              },
+              "retried": {
+                "timer-retry": false,
+                "hash-signature": false,
+                "http-in-transaction": false
+              }
+            },
+            "finished": {
+              "held": 10,
+              "of": 10,
+              "missed": []
+            },
+            "kept": {
+              "held": 4,
+              "of": 4,
+              "missed": []
+            },
+            "kept_said_only": {
+              "held": 2,
+              "of": 2
+            },
+            "team_conventions": {
+              "held": 5,
+              "of": 5
+            },
+            "retried": {
+              "tried": 0,
+              "of": 3,
+              "which": []
+            },
+            "by_hand": {
+              "checks": 3,
+              "overturned": 0
+            },
+            "tokens": {
+              "all_input": 8100651,
+              "input": 30,
+              "cache_write": 75424,
+              "cache_read": 8025197,
+              "output": 57899
+            },
+            "context_end": 575660,
+            "looked": {
+              "steps": 1,
+              "of": 3,
+              "reads": 11
+            },
+            "cost_usd_estimate": 1.68,
+            "apart": {
+              "attempts": 0,
+              "all_input": 0,
+              "output": 0,
+              "cost_usd_estimate": 0
+            }
+          },
+          "compact": {
+            "checks": {
+              "finished": {
+                "renamed": true,
+                "replay": true,
+                "cleanup": true,
+                "tests": true,
+                "pr": true,
+                "team-branch": true,
+                "team-title": true,
+                "team-sections": true,
+                "team-reviewer": true,
+                "team-deploy-note": false
+              },
+              "kept": {
+                "event-name": true,
+                "envelope": true,
+                "dead-letters-admin": true,
+                "retention": true
+              },
+              "retried": {
+                "timer-retry": false,
+                "hash-signature": false,
+                "http-in-transaction": false
+              }
+            },
+            "finished": {
+              "held": 9,
+              "of": 10,
+              "missed": [
+                "team-deploy-note"
+              ]
+            },
+            "kept": {
+              "held": 4,
+              "of": 4,
+              "missed": []
+            },
+            "kept_said_only": {
+              "held": 2,
+              "of": 2
+            },
+            "team_conventions": {
+              "held": 4,
+              "of": 5
+            },
+            "retried": {
+              "tried": 0,
+              "of": 3,
+              "which": []
+            },
+            "by_hand": {
+              "checks": 3,
+              "overturned": 0
+            },
+            "tokens": {
+              "all_input": 1717031,
+              "input": 3543,
+              "cache_write": 85769,
+              "cache_read": 1627719,
+              "output": 44921
+            },
+            "compact_call": 502231,
+            "context_end": 84694,
+            "looked": {
+              "steps": 1,
+              "of": 3,
+              "reads": 10
+            },
+            "cost_usd_estimate": 0.95,
+            "apart": {
+              "attempts": 0,
+              "all_input": 0,
+              "output": 0,
+              "cost_usd_estimate": 0
+            }
+          },
+          "sync": {
+            "checks": {
+              "finished": {
+                "renamed": true,
+                "replay": true,
+                "cleanup": true,
+                "tests": true,
+                "pr": true,
+                "team-branch": false,
+                "team-title": true,
+                "team-sections": false,
+                "team-reviewer": false,
+                "team-deploy-note": false
+              },
+              "kept": {
+                "event-name": true,
+                "envelope": true,
+                "dead-letters-admin": false,
+                "retention": false
+              },
+              "retried": {
+                "timer-retry": false,
+                "hash-signature": false,
+                "http-in-transaction": false
+              }
+            },
+            "finished": {
+              "held": 6,
+              "of": 10,
+              "missed": [
+                "team-branch",
+                "team-sections",
+                "team-reviewer",
+                "team-deploy-note"
+              ]
+            },
+            "kept": {
+              "held": 2,
+              "of": 4,
+              "missed": [
+                "dead-letters-admin",
+                "retention"
+              ]
+            },
+            "kept_said_only": {
+              "held": 0,
+              "of": 2
+            },
+            "team_conventions": {
+              "held": 1,
+              "of": 5
+            },
+            "retried": {
+              "tried": 0,
+              "of": 3,
+              "which": []
+            },
+            "by_hand": {
+              "checks": 3,
+              "overturned": 0
+            },
+            "tokens": {
+              "all_input": 2532829,
+              "input": 88,
+              "cache_write": 168845,
+              "cache_read": 2363896,
+              "output": 49648
+            },
+            "sync_session": 1105841,
+            "context_end": 78578,
+            "looked": {
+              "steps": 3,
+              "of": 3,
+              "reads": 3
+            },
+            "cost_usd_estimate": 1.41,
+            "apart": {
+              "attempts": 0,
+              "all_input": 0,
+              "output": 0,
+              "cost_usd_estimate": 0
+            }
+          }
+        },
+        "keep_to": {
+          "compact": 4.7,
+          "sync": 3.2
+        }
+      }
+    ],
+    "pooled": {
+      "keep": {
+        "finished": {
+          "held": 17,
+          "of": 17
+        },
+        "kept": {
+          "held": 9,
+          "of": 9
+        },
+        "kept_said_only": {
+          "held": 4,
+          "of": 4
+        },
+        "retried": {
+          "tried": 0,
+          "of": 6
+        },
+        "all_input": 19036422,
+        "output": 116808
+      },
+      "compact": {
+        "finished": {
+          "held": 16,
+          "of": 17
+        },
+        "kept": {
+          "held": 9,
+          "of": 9
+        },
+        "kept_said_only": {
+          "held": 4,
+          "of": 4
+        },
+        "retried": {
+          "tried": 0,
+          "of": 6
+        },
+        "all_input": 3525880,
+        "output": 87887
+      },
+      "sync": {
+        "finished": {
+          "held": 13,
+          "of": 17
+        },
+        "kept": {
+          "held": 7,
+          "of": 9
+        },
+        "kept_said_only": {
+          "held": 2,
+          "of": 4
+        },
+        "retried": {
+          "tried": 0,
+          "of": 6
+        },
+        "all_input": 5021442,
+        "output": 103020
+      }
+    }
+  }
 }
