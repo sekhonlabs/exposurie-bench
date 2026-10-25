@@ -12,6 +12,8 @@
 // had which condition is published beside them, as results/<batch>/conditions.json,
 // only once every verdict was final. Area 9 cannot be scored blind: its scores
 // stay as score/long.mjs saved them, beside the hand read that overrides them.
+// Part 10's C again with exposurie's rebuilt read is published the same way,
+// and its numbers sit beside 1.2.0's under rebuilt_read; 1.2.0's stay as they are.
 // check/results.mjs holds results/ to what this writes.
 //
 // Run it with the sandbox's own Node.
@@ -19,7 +21,7 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { STRATEGIES } from '../runner/long.mjs';
+import { REBUILT_BATCH, STRATEGIES } from '../runner/long.mjs';
 import { Stop } from '../runner/run.mjs';
 import { LONG_GROUPS } from './checks.mjs';
 import { saveToRepo } from './score.mjs';
@@ -49,6 +51,13 @@ const TOKEN_KINDS = ['all_input', 'input', 'cache_write', 'cache_read', 'output'
 /** Area 9's batch: each long task filled once in condition C, then carried on three ways from its fork. */
 export const LONG_BATCH = 'area-9';
 const STRATEGY_NAMES = { keep: 'keep going', compact: '/compact', sync: 'sync + fresh' };
+/**
+ * Part 10: C again with exposurie's rebuilt read, on the same brains. The full
+ * run's C cells once, then area 3 under C twice more, and area 9's sync + fresh
+ * again in REBUILT_BATCH. A, B and D have no exposurie, so their runs stand.
+ */
+export const REBUILT_BATCHES = ['full-2', 'stability-3', 'stability-4'];
+const REBUILT_STABILITY = ['stability-3', 'stability-4'];
 
 const sum = (xs) => xs.reduce((a, b) => a + b, 0);
 const mean = (xs) => sum(xs) / xs.length;
@@ -73,6 +82,14 @@ function publishInputs(runs) {
     const conditions = Object.fromEntries(cells.map((c) => [c.run, c.condition]).sort(([a], [b]) => a.localeCompare(b)));
     console.log(`Saved ${saveToRepo(`results/${batch}/conditions.json`, json({ batch, conditions }))}`);
   }
+  // A rebuilt batch's conditions also name the exposurie its runs recorded, which must be one.
+  for (const batch of REBUILT_BATCHES) {
+    const cells = readJson(join(runs, batch, 'batch.json')).cells;
+    const labels = [...new Set(cells.map((c) => readJson(join(runs, batch, c.run, 'run.json')).versions?.exposurie))];
+    if (labels.length !== 1 || !labels[0]) throw new Stop(`${batch}'s runs recorded ${labels.length} exposurie versions`);
+    const conditions = Object.fromEntries(cells.map((c) => [c.run, c.condition]).sort(([a], [b]) => a.localeCompare(b)));
+    console.log(`Saved ${saveToRepo(`results/${batch}/conditions.json`, json({ batch, exposurie: labels[0], conditions }))}`);
+  }
   const builds = {};
   for (const user of USERS) {
     const b = readJson(join(runs, `build-${user}`, 'build.json'));
@@ -87,7 +104,8 @@ function publishInputs(runs) {
   }
   const note = 'Each brain build, as its own record gives it: every session of the build, every model, every token counted.';
   console.log(`Saved ${saveToRepo('results/builds.json', json({ note, builds }))}`);
-  publishLong(runs);
+  publishLong(runs, LONG_BATCH);
+  publishLong(runs, REBUILT_BATCH);
 }
 
 const tokenKinds = (t) => Object.fromEntries(TOKEN_KINDS.map((k) => [k, t?.[k] ?? 0]));
@@ -130,9 +148,13 @@ function publicAttempt(r, counts) {
   };
 }
 
-/** A long task's record (long.json) without what is not public: every attempt at every step, and each sync session. */
+/**
+ * A long task's record (long.json) without what is not public: every attempt at
+ * every step, and each sync session. A run of some strategies again, from
+ * another run's fork, keeps those phases alone and names the run it came from.
+ */
 function publicRecord(L) {
-  const phases = ['fill', ...STRATEGIES];
+  const phases = L.only ?? ['fill', ...STRATEGIES];
   const all = [...phases.flatMap((p) => L[p].steps), ...L.sync.sync].filter((r) => r.versions);
   const pinned = [...new Set(all.map(({ versions: { models_used, ...v } }) => JSON.stringify(v)))];
   if (pinned.length !== 1) throw new Stop(`${L.run}'s steps ran under ${pinned.length} sets of versions`);
@@ -141,6 +163,7 @@ function publicRecord(L) {
     run: L.run,
     task: L.task,
     user: L.user,
+    ...(L.from ? { from: L.from } : {}),
     fork_at: L.fork_at,
     versions: { ...JSON.parse(pinned[0]), models_used: [...new Set(all.flatMap((r) => r.versions.models_used ?? []))].sort() },
     fork: { after: L.fill.forked.after, core: L.fill.forked.core, more: L.fill.forked.more, context: L.fill.forked.context },
@@ -165,23 +188,25 @@ function publicRecord(L) {
 }
 
 /**
- * Area 9's runs, published from the runner's folder once every one is read by
- * hand: each long task's scores as score/long.mjs saved them, the hand read
- * that overrides them, and the public part of its record.
+ * A batch of area 9's runs, published from the runner's folder once every one
+ * is read by hand: each long task's scores as score/long.mjs saved them, the
+ * hand read that overrides them, and the public part of its record.
  */
-function publishLong(runs) {
-  const cells = readJson(join(runs, LONG_BATCH, 'batch.json')).cells;
-  const dir = (c) => join(runs, LONG_BATCH, c.run);
+function publishLong(runs, batch) {
+  const cells = readJson(join(runs, batch, 'batch.json')).cells;
+  const dir = (c) => join(runs, batch, c.run);
   const scores = cells.map((c) => readJson(join(dir(c), 'scores.json')));
   const hands = cells.map((c) => ({ run: c.run, ...readJson(join(dir(c), 'hand.json')) }));
   const steps = cells.map((c) => publicRecord(readJson(join(dir(c), 'long.json'))));
   const note = 'Every attempt at every step of each long task, as the runner recorded it, with its own tokens. ' +
     'An attempt counts when it is its step\'s last and it finished, or was kept by hand. A strategy\'s tokens ' +
     'after the fork add up its counted attempts, and the sync strategy\'s its sync session too. Left out: each ' +
-    'attempt\'s notes and reason, which name the run\'s machine paths, its session, and the plan\'s meters.';
-  console.log(`Saved ${saveToRepo(`results/${LONG_BATCH}/scores.json`, json({ batch: LONG_BATCH, runs: scores }))}`);
-  console.log(`Saved ${saveToRepo(`results/${LONG_BATCH}/hand.json`, json({ batch: LONG_BATCH, runs: hands }))}`);
-  console.log(`Saved ${saveToRepo(`results/${LONG_BATCH}/steps.json`, json({ batch: LONG_BATCH, note, runs: steps }))}`);
+    'attempt\'s notes and reason, which name the run\'s machine paths, its session, and the plan\'s meters.' +
+    (batch === LONG_BATCH ? '' : ' Here only sync + fresh ran, again, from the fork of the run each names under from, ' +
+      'against the brain that run\'s sync wrote. Its sync session is that run\'s, carried over.');
+  console.log(`Saved ${saveToRepo(`results/${batch}/scores.json`, json({ batch, runs: scores }))}`);
+  console.log(`Saved ${saveToRepo(`results/${batch}/hand.json`, json({ batch, runs: hands }))}`);
+  console.log(`Saved ${saveToRepo(`results/${batch}/steps.json`, json({ batch, note, runs: steps }))}`);
 }
 
 /** A batch's scored runs, each with its condition. */
@@ -193,14 +218,11 @@ function runsOf(root, batch) {
 // ---------------------------------------------------------------- numbers
 
 /**
- * Every number in design.md's table, for areas 1–8. Tokens are every input
- * token, cached or not (`all_input`), as design.md counts them; output is
- * counted beside them, and the cached/uncached split is in `token_totals`.
+ * design.md's numbers for areas 1–8 over one set of runs: `full` holds one run
+ * of each cell, with its condition, and `stab` holds area 3 under C once from
+ * the full run and once from each stability batch, which `batches` names.
  */
-export function computeNumbers(root = REPO) {
-  const tasks = readJson(join(root, 'tasks', 'index.json')).tasks.filter((t) => AREAS[t.area]);
-  const full = runsOf(root, 'full');
-  const { builds } = readJson(join(root, 'results', 'builds.json'));
+function areaNumbers({ tasks, full, stab, builds, batches }) {
   const pick = (c, areas, user = null) => full.filter((r) => r.condition === c && areas.includes(r.area) && (!user || r.user === user));
   const right = (rs) => rs.filter((r) => r.verdict === 'right').length;
   const tokens = (rs, k = 'all_input') => rs.map((r) => r.tokens[k]);
@@ -228,7 +250,6 @@ export function computeNumbers(root = REPO) {
 
   const c7 = pick('C', MEMORY);
   const other = (c) => pick(c, [OTHER]);
-  const stab = [pick('C', [3]), ...STABILITY.map((b) => runsOf(root, b))];
   const area3 = tasks.filter((t) => t.area === 3).map((t) => {
     const rs = stab.map((batch) => batch.find((r) => r.task === t.id));
     return { task: t.id, verdicts: rs.map((r) => r.verdict), all_input: rs.map((r) => r.tokens.all_input) };
@@ -240,14 +261,6 @@ export function computeNumbers(root = REPO) {
   };
 
   return {
-    note: 'Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9.',
-    tokens: 'Every input token, cached or not (all_input), is the primary number. Output is counted beside it.',
-    conditions: NAMES,
-    runs: {
-      full: full.length,
-      stability: sum(STABILITY.map((b) => runsOf(root, b).length)),
-      scored_by: Object.fromEntries(['checks', 'judge', 'hand'].map((k) => [k, full.filter((r) => r.by === k).length])),
-    },
     right_answers: {
       of: pick('A', MEMORY).length,
       pooled,
@@ -277,12 +290,49 @@ export function computeNumbers(root = REPO) {
     token_totals: totals,
     overhead: { area: OTHER, ...overhead, c_minus_a: overhead.per_run_median.C - overhead.per_run_median.A, b_minus_a: overhead.per_run_median.B - overhead.per_run_median.A },
     break_even: breakEven,
-    stability: { area: 3, condition: 'C', batches: ['full', ...STABILITY], runs: area3.length * stab.length, right: right(stab.flat()), changed: area3.filter((t) => new Set(t.verdicts).size > 1).length, by_task: area3 },
+    stability: { area: 3, condition: 'C', batches, runs: area3.length * stab.length, right: right(stab.flat()), changed: area3.filter((t) => new Set(t.verdicts).size > 1).length, by_task: area3 },
     by_task: tasks.map((t) => ({
       task: t.id, area: t.area, user: t.user,
       ...Object.fromEntries(CONDITIONS.flatMap((c) => full.filter((r) => r.task === t.id && r.condition === c).map((r) => [c, r.verdict]))),
     })),
+  };
+}
+
+const scoredBy = (rs) => Object.fromEntries(['checks', 'judge', 'hand'].map((k) => [k, rs.filter((r) => r.by === k).length]));
+const area3Of = (rs) => rs.filter((r) => r.condition === 'C' && r.area === 3);
+
+/**
+ * Every number in design.md's table, for areas 1–8, then area 9, then part 10's
+ * C again with exposurie's rebuilt read beside 1.2.0's. Tokens are every input
+ * token, cached or not (`all_input`), as design.md counts them; output is
+ * counted beside them, and the cached/uncached split is in `token_totals`.
+ */
+export function computeNumbers(root = REPO) {
+  const tasks = readJson(join(root, 'tasks', 'index.json')).tasks.filter((t) => AREAS[t.area]);
+  const { builds } = readJson(join(root, 'results', 'builds.json'));
+  const full = runsOf(root, 'full');
+  const stability = STABILITY.map((b) => runsOf(root, b));
+  const [againBatch] = REBUILT_BATCHES;
+  const again = runsOf(root, againBatch);
+  const againStability = REBUILT_STABILITY.map((b) => runsOf(root, b));
+  return {
+    note: 'Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9; ' +
+      'then C again with exposurie\'s rebuilt read, under rebuilt_read.',
+    tokens: 'Every input token, cached or not (all_input), is the primary number. Output is counted beside it.',
+    conditions: NAMES,
+    runs: { full: full.length, stability: sum(stability.map((rs) => rs.length)), scored_by: scoredBy(full) },
+    ...areaNumbers({ tasks, full, stab: [area3Of(full), ...stability], builds, batches: ['full', ...STABILITY] }),
     area_9: longNumbers(root),
+    rebuilt_read: {
+      note: 'Part 10: condition C again, with exposurie\'s read rebuilt, on the same brains as 1.2.0\'s C. A, B and D have no ' +
+        'exposurie, so their runs stand, and every number here sets C\'s new runs beside them. Area 9 is sync + fresh again.',
+      exposurie: readJson(join(root, 'results', againBatch, 'conditions.json')).exposurie,
+      runs: { [againBatch]: again.length, stability: sum(againStability.map((rs) => rs.length)), scored_by: scoredBy(again) },
+      ...areaNumbers({
+        tasks, full: [...full.filter((r) => r.condition !== 'C'), ...again], stab: [area3Of(again), ...againStability], builds, batches: REBUILT_BATCHES,
+      }),
+      area_9: longNumbers(root, REBUILT_BATCH),
+    },
   };
 }
 
@@ -301,9 +351,11 @@ export function finalChecks(checks, hand = {}) {
  * /compact call and the sync session included. Attempts that did not count,
  * such as one a usage limit stopped, ran again from the same point, so they
  * are counted apart. Costs are Claude Code's own estimates, beside the tokens.
+ * A batch that ran sync + fresh again from another batch's forks (part 10) has
+ * that strategy alone, and names the run each task came from.
  */
-export function longNumbers(root = REPO) {
-  const dir = join(root, 'results', LONG_BATCH);
+export function longNumbers(root = REPO, batch = LONG_BATCH) {
+  const dir = join(root, 'results', batch);
   const [scores, hands, records] = ['scores', 'hand', 'steps'].map((f) => readJson(join(dir, `${f}.json`)).runs);
   const asks = new Map(readJson(join(root, 'tasks', 'index.json')).tasks.map((t) => [t.id, t.ask]));
   const cost = (xs) => round(sum(xs.map((x) => x.cost_usd_estimate ?? 0)), 2);
@@ -312,7 +364,8 @@ export function longNumbers(root = REPO) {
     const rec = records.find((r) => r.run === s.run);
     // The decisions the fork's code did not hold yet, by the hand read: they were said only in the conversation.
     const saidOnly = Object.keys(hand.fork_code).filter((k) => hand.fork_code[k] === false);
-    const strategies = Object.fromEntries(STRATEGIES.map((p) => {
+    const ran = STRATEGIES.filter((p) => s.strategies[p]);
+    const strategies = Object.fromEntries(ran.map((p) => {
       const final = finalChecks(s.strategies[p].checks, hand.verdicts[p]);
       const ids = (g, v) => Object.keys(final[g]).filter((id) => final[g][id].verdict === v);
       const held = (g) => ({ held: ids(g, true).length, of: Object.keys(final[g]).length });
@@ -344,17 +397,20 @@ export function longNumbers(root = REPO) {
       task: s.task,
       run: s.run,
       ask: asks.get(s.task),
-      fork: {
-        after_step: Number(s.fork.after), core: s.fork.core, more: s.fork.more, context: s.fork.context,
-        tokens: { all_input: s.fork.tokens.all_input, output: s.fork.tokens.output },
-        cost_usd_estimate: cost(rec.phases.fill.filter((a) => a.counts)),
-      },
+      ...(rec.from ? { from: rec.from } : {
+        fork: {
+          after_step: Number(s.fork.after), core: s.fork.core, more: s.fork.more, context: s.fork.context,
+          tokens: { all_input: s.fork.tokens.all_input, output: s.fork.tokens.output },
+          cost_usd_estimate: cost(rec.phases.fill.filter((a) => a.counts)),
+        },
+      }),
       said_only_in_conversation: saidOnly,
       strategies,
-      keep_to: { compact: round(t('keep') / t('compact'), 1), sync: round(t('keep') / t('sync'), 1) },
+      ...(ran.length === STRATEGIES.length ? { keep_to: { compact: round(t('keep') / t('compact'), 1), sync: round(t('keep') / t('sync'), 1) } } : {}),
     };
   });
-  const pooled = Object.fromEntries(STRATEGIES.map((p) => {
+  const ran = STRATEGIES.filter((p) => tasks.every((x) => x.strategies[p]));
+  const pooled = Object.fromEntries(ran.map((p) => {
     const xs = tasks.map((x) => x.strategies[p]);
     const add = (k, n = 'held') => ({ [n]: sum(xs.map((x) => x[k][n])), of: sum(xs.map((x) => x[k].of)) });
     return [p, {
@@ -363,9 +419,12 @@ export function longNumbers(root = REPO) {
     }];
   }));
   return {
-    note: 'Two long tasks, each filled live in condition C to the first step boundary past 500,000 tokens, then carried on three ways from that fork. ' +
-      'Not blind: every strategy was read by hand, and the hand read overrides the scripts.',
-    strategies: STRATEGY_NAMES,
+    note: batch === LONG_BATCH
+      ? 'Two long tasks, each filled live in condition C to the first step boundary past 500,000 tokens, then carried on three ways from that fork. ' +
+        'Not blind: every strategy was read by hand, and the hand read overrides the scripts.'
+      : 'sync + fresh again in each long task, with exposurie\'s rebuilt read: the same fork, the same sync session and the very brain it wrote, ' +
+        'and a new fresh session. Not blind: it was read by hand, and the hand read overrides the scripts.',
+    strategies: Object.fromEntries(ran.map((p) => [p, STRATEGY_NAMES[p]])),
     tasks,
     pooled,
   };
@@ -406,54 +465,67 @@ function svg(width, height, label, body) {
   ].join('\n');
 }
 
-/** Right answers by area: one dot per task, filled when its answer was right. */
+/**
+ * Right answers by area: one dot per task, filled when its answer was right.
+ * C has two columns: 1.2.0's runs, and part 10's runs again with the rebuilt
+ * read (`R`), which share exposurie's orange and its tint.
+ */
 function rightAnswersChart(N) {
-  const W = 880;
-  const H = 580;
-  const col = { A: 400, B: 525, C: 650, D: 775 };
-  const rowY = (i) => 164 + i * 34;
+  const W = 920;
+  const H = 630;
+  const cols = ['A', 'B', 'C', 'R', 'D'];
+  const col = { A: 380, B: 495, C: 610, R: 725, D: 840 };
+  const label = N.rebuilt_read.exposurie;
+  const head = { R: 'C', ...Object.fromEntries(CONDITIONS.map((c) => [c, c])) };
+  const sub = { ...NAMES, C: 'exposurie 1.2.0', R: label };
+  const verdictsOf = (c, tasks) => (c === 'R'
+    ? tasks.map((t) => N.rebuilt_read.by_task.find((x) => x.task === t.task).C)
+    : tasks.map((t) => t[c]));
+  const totals = { ...N.right_answers.pooled, R: N.rebuilt_read.right_answers.pooled.C };
+  const rowY = (i) => 184 + i * 34;
   const out = [
     text(40, 46, 'Right answers, by area', { font: FONTS.title, size: 24, colour: LOOK.ink }),
     text(40, 72, 'One run per task and condition. Each dot is one task, filled when its answer was right.', { colour: LOOK.grey[1] }),
+    text(40, 92, `C ran twice on the same brains: with 1.2.0 from npm, and again with ${label}, its rebuilt read.`, { colour: LOOK.grey[1] }),
   ];
   const y8 = rowY(MEMORY.length) + 64;
-  out.push(rect(col.C - 56, 92, 112, y8 + 24 - 92, LOOK.tint));
-  for (const c of CONDITIONS) {
-    out.push(text(col[c], 118, c, { font: FONTS.title, size: 20, colour: LOOK.ink, anchor: 'middle' }));
-    out.push(text(col[c], 138, NAMES[c], { size: 14, colour: LOOK.grey[1], anchor: 'middle' }));
+  out.push(rect(col.C - 60, 112, col.R - col.C + 120, y8 + 24 - 112, LOOK.tint));
+  for (const c of cols) {
+    out.push(text(col[c], 138, head[c], { font: FONTS.title, size: 20, colour: LOOK.ink, anchor: 'middle' }));
+    out.push(text(col[c], 158, sub[c], { size: 14, colour: LOOK.grey[1], anchor: 'middle' }));
   }
   const dots = (c, cy, verdicts) => verdicts.forEach((v, j) => {
     const cx = col[c] + (j - (verdicts.length - 1) / 2) * 20;
     out.push(v === 'right'
-      ? `<circle cx="${cx}" cy="${cy}" r="7" fill="${c === 'C' ? LOOK.orange : LOOK.grey[1]}"/>`
+      ? `<circle cx="${cx}" cy="${cy}" r="7" fill="${c === 'C' || c === 'R' ? LOOK.orange : LOOK.grey[1]}"/>`
       : `<circle cx="${cx}" cy="${cy}" r="6.25" fill="${LOOK.white}" stroke="${LOOK.rule[1]}" stroke-width="1.5"/>`);
   });
   const row = (area, y, conditions) => {
     out.push(text(40, y + 5, area, { size: 15, colour: LOOK.grey[2] }));
     out.push(text(64, y + 5, AREAS[area], { size: 16 }));
     const tasks = N.by_task.filter((t) => t.area === area);
-    for (const c of conditions) dots(c, y, tasks.map((t) => t[c]));
+    for (const c of conditions) dots(c, y, verdictsOf(c, tasks));
   };
-  MEMORY.forEach((a, i) => row(a, rowY(i), CONDITIONS));
+  MEMORY.forEach((a, i) => row(a, rowY(i), cols));
   const ruleY = rowY(MEMORY.length) - 14;
-  out.push(rule(40, 840, ruleY));
+  out.push(rule(40, W - 40, ruleY));
   out.push(text(40, ruleY + 38, `Areas 1–7, of ${N.right_answers.of}`, { size: 16, colour: LOOK.ink, bold: true }));
-  for (const c of CONDITIONS) out.push(text(col[c], ruleY + 39, N.right_answers.pooled[c], { size: 22, colour: LOOK.ink, anchor: 'middle', bold: true }));
-  row(OTHER, y8, ['A', 'B', 'C']);
+  for (const c of cols) out.push(text(col[c], ruleY + 39, totals[c], { size: 22, colour: LOOK.ink, anchor: 'middle', bold: true }));
+  row(OTHER, y8, ['A', 'B', 'C', 'R']);
   out.push(text(col.D, y8 + 5, 'not run', { size: 14, colour: LOOK.grey[2], anchor: 'middle' }));
-  const p = N.potential_reached.pooled;
-  const r = N.right_answers.pooled;
-  out.push(text(40, H - 46, `Potential reached, (C − A) ÷ (D − A): (${r.C} − ${r.A}) ÷ (${r.D} − ${r.A}) = ${p.value.toFixed(2)}.`, { size: 16, colour: LOOK.ink }));
+  const potential = (r, p) => `(${r.C} − ${r.A}) ÷ (${r.D} − ${r.A}) = ${p.value.toFixed(2)}`;
+  out.push(text(40, H - 72, `Potential reached, (C − A) ÷ (D − A): ${potential(N.right_answers.pooled, N.potential_reached.pooled)} with exposurie 1.2.0,`, { size: 16, colour: LOOK.ink }));
+  out.push(text(40, H - 48, `and ${potential(N.rebuilt_read.right_answers.pooled, N.rebuilt_read.potential_reached.pooled)} with ${label}.`, { size: 16, colour: LOOK.ink }));
   out.push(text(40, H - 20, 'Area 8 needs no past, so it has no D and stays out of the totals.', { size: 14, colour: LOOK.grey[1] }));
   return svg(W, H, 'Right answers, by area and condition', out);
 }
 
-/** Horizontal bars on one scale, labelled with their conditions and values. */
+/** Horizontal bars on one scale, labelled with their conditions (or a name of their own) and values. */
 function bars(out, { top, scale, rows, x0 = 200, len = 470 }) {
-  rows.forEach(({ c, value, extra }, i) => {
+  rows.forEach(({ c, name = NAMES[c], value, extra }, i) => {
     const y = top + i * 34;
     out.push(text(40, y + 16, c, { size: 15, colour: LOOK.ink, bold: true }));
-    out.push(text(60, y + 16, NAMES[c], { size: 15 }));
+    out.push(text(60, y + 16, name, { size: 15 }));
     const w = Math.max(2, (value / scale) * len);
     out.push(rect(x0, y, w, 22, barColour(c)));
     out.push(text(x0 + w + 8, y + 16, `${fmt(value)}${extra ? `  ·  ${extra}` : ''}`, { size: 15, colour: c === 'C' ? LOOK.ink : LOOK.body, bold: c === 'C' }));
@@ -461,54 +533,65 @@ function bars(out, { top, scale, rows, x0 = 200, len = 470 }) {
   return top + rows.length * 34;
 }
 
-/** Tokens per run and per right answer in areas 1–7, and per run in area 8, on one scale. */
+/** Tokens per run and per right answer in areas 1–7, and per run in area 8, on one scale, with C again under the rebuilt read beside 1.2.0's. */
 function tokensChart(N) {
   const W = 880;
+  const R = N.rebuilt_read;
+  const outputs = [...Object.values(N.tokens_per_run.output_median), R.tokens_per_run.output_median.C];
   const out = [
     text(40, 46, 'Tokens', { font: FONTS.title, size: 24, colour: LOOK.ink }),
     text(40, 72, 'Every input token, cached or not, with all three panels on one scale.', { colour: LOOK.grey[1] }),
-    text(40, 92, `Output is counted apart: a median of ${fmt(Math.min(...Object.values(N.tokens_per_run.output_median)))} to ${fmt(Math.max(...Object.values(N.tokens_per_run.output_median)))} tokens a run, alike in every condition.`, { colour: LOOK.grey[1] }),
+    text(40, 92, `Output is counted apart: a median of ${fmt(Math.min(...outputs))} to ${fmt(Math.max(...outputs))} tokens a run, alike in every condition.`, { colour: LOOK.grey[1] }),
+    text(40, 112, `C ran twice on the same brains: with 1.2.0 from npm, and again with ${R.exposurie}, its rebuilt read.`, { colour: LOOK.grey[1] }),
   ];
   const scale = Math.max(...Object.values(N.tokens_per_right_answer), ...Object.values(N.tokens_per_run.median), ...Object.values(N.overhead.per_run_median));
   const panel = (top, title, rows) => {
     out.push(text(40, top, title, { size: 16, colour: LOOK.ink, bold: true }));
     return bars(out, { top: top + 16, scale, rows });
   };
-  let y = panel(136, 'Per run: the median of areas 1–7', CONDITIONS.map((c) => ({ c, value: N.tokens_per_run.median[c] })));
-  y = panel(y + 42, 'Per right answer: all of a condition\'s tokens in areas 1–7 ÷ its right answers', CONDITIONS.map((c) => ({ c, value: N.tokens_per_right_answer[c], extra: `${N.right_answers.pooled[c]} right` })));
-  y = panel(y + 42, 'Per run on work that needs no past: the median of area 8', ['A', 'B', 'C'].map((c) => ({ c, value: N.overhead.per_run_median[c] })));
-  const t = N.overhead.by_task.map((x) => x.C - x.A);
+  /** Each condition's row, and under C's the same row for C again with the rebuilt read. */
+  const rows = (cs, f) => cs.flatMap((c) => (c === 'C' ? [{ c, name: 'exposurie 1.2.0', ...f(N, c) }, { c, name: R.exposurie, ...f(R, c) }] : [{ c, ...f(N, c) }]));
+  let y = panel(156, 'Per run: the median of areas 1–7', rows(CONDITIONS, (n, c) => ({ value: n.tokens_per_run.median[c] })));
+  y = panel(y + 42, 'Per right answer: all of a condition\'s tokens in areas 1–7 ÷ its right answers', rows(CONDITIONS, (n, c) => ({ value: n.tokens_per_right_answer[c], extra: `${n.right_answers.pooled[c]} right` })));
+  y = panel(y + 42, 'Per run on work that needs no past: the median of area 8', rows(['A', 'B', 'C'], (n, c) => ({ value: n.overhead.per_run_median[c] })));
+  const t = [N, R].flatMap((n) => n.overhead.by_task.map((x) => x.C - x.A));
   out.push(text(40, y + 30, ['In area 8, C never ran ', { code: 'exposurie read' }, `, and what exposurie installs added ${fmt(Math.min(...t))} to ${fmt(Math.max(...t))} tokens a run.`], { size: 14, colour: LOOK.grey[1] }));
   return svg(W, y + 56, 'Tokens per run and per right answer, by condition', out);
 }
 
-/** Sessions until each user's brain pays for itself against B, by kind of session. */
+/** Sessions until each user's brain pays for itself against B, by kind of session: C with 1.2.0, then C again with the rebuilt read. */
 function breakEvenChart(N) {
   const W = 880;
+  const R = N.rebuilt_read;
   const out = [
     text(40, 46, 'Sessions until a brain pays for itself', { font: FONTS.title, size: 24, colour: LOOK.ink }),
     text(40, 72, 'The tokens that built the brain, divided by the tokens a C session saves against B.', { colour: LOOK.grey[1] }),
+    text(40, 92, `Each pair of bars is C with exposurie 1.2.0, then C again with ${R.exposurie}, its rebuilt read.`, { colour: LOOK.grey[1] }),
   ];
   const kinds = [
     ['questions', 'A question, areas 1–5'],
     ['work', 'A work task, areas 6–7'],
     ['areas_1_to_7', 'Areas 1–7, as run here'],
   ];
-  const scale = Math.max(...USERS.flatMap((u) => Object.values(N.break_even[u].sessions)));
+  const scale = Math.max(...USERS.flatMap((u) => [N, R].flatMap((n) => Object.values(n.break_even[u].sessions))));
   const x0 = 300;
-  const len = 400;
-  let y = 116;
+  const len = 300;
+  let y = 136;
   for (const u of USERS) {
     const b = N.break_even[u];
+    const r = R.break_even[u];
     out.push(text(40, y, `The ${u}: ${fmt(b.build_tokens)} tokens to build`, { size: 16, colour: LOOK.ink, bold: true }));
     y += 16;
     for (const [k, label] of kinds) {
       out.push(text(40, y + 15, label, { size: 15 }));
-      out.push(text(40, y + 33, `C saves ${fmt(b.saving_per_session[k])} tokens a session`, { size: 13, colour: LOOK.grey[1] }));
-      const w = (b.sessions[k] / scale) * len;
-      out.push(rect(x0, y + 1, w, 22, LOOK.orange));
-      out.push(text(x0 + w + 8, y + 17, `${b.sessions[k].toFixed(1)} sessions`, { size: 15, colour: LOOK.ink, bold: true }));
-      y += 48;
+      out.push(text(40, y + 33, `C saves ${fmt(b.saving_per_session[k])} tokens a session,`, { size: 13, colour: LOOK.grey[1] }));
+      out.push(text(40, y + 50, `and ${fmt(r.saving_per_session[k])} with ${R.exposurie}`, { size: 13, colour: LOOK.grey[1] }));
+      [[b, '1.2.0'], [r, R.exposurie]].forEach(([v, name], j) => {
+        const w = (v.sessions[k] / scale) * len;
+        out.push(rect(x0, y + 1 + j * 28, w, 22, LOOK.orange));
+        out.push(text(x0 + w + 8, y + 17 + j * 28, `${v.sessions[k].toFixed(1)} sessions, ${name}`, { size: 15, colour: LOOK.ink, bold: j === 0 }));
+      });
+      y += 76;
     }
     y += 30;
   }
@@ -529,10 +612,14 @@ const strategyLabel = (p) => (p === 'compact' ? [{ code: '/compact' }] : STRATEG
 function longSessionsChart(N) {
   const W = 880;
   const A = N.area_9;
+  /** A task's sync + fresh again with the rebuilt read (part 10), if it ran, under the exposurie its runs recorded. */
+  const again = (t) => N.rebuilt_read.area_9.tasks.find((x) => x.task === t.task)?.strategies.sync;
+  const label = N.rebuilt_read.exposurie;
   const out = [
     text(40, 46, 'Long sessions: three ways on from 500,000 tokens', { font: FONTS.title, size: 24, colour: LOOK.ink }),
     text(40, 72, 'Two long tasks, each one session filled to 500,000 tokens, then carried on three ways from there.', { colour: LOOK.grey[1] }),
     text(40, 92, 'Each dot is one check after the fork, filled when it held; the hand read overrides the script.', { colour: LOOK.grey[1] }),
+    text(40, 112, `${label}: the fresh session of sync + fresh again, with exposurie's rebuilt read.`, { colour: LOOK.grey[1] }),
   ];
   // Where each group's dots start, where its count stands, and its heading.
   const col = { finished: 240, kept: 540, retried: 730 };
@@ -540,22 +627,26 @@ function longSessionsChart(N) {
   const heads = [['finished', 'Finished', 'the work\'s checks'], ['kept', 'Kept', 'the decisions'], ['retried', 'Retried', 'a failed approach']];
   for (const [g, head, sub] of heads) {
     const x = g === 'retried' ? col[g] : col[g] - 7;
-    out.push(text(x, 132, head, { size: 15, colour: LOOK.ink, bold: true }));
-    out.push(text(x, 150, sub, { size: 13, colour: LOOK.grey[1] }));
+    out.push(text(x, 152, head, { size: 15, colour: LOOK.ink, bold: true }));
+    out.push(text(x, 170, sub, { size: 13, colour: LOOK.grey[1] }));
   }
   const dot = (cx, cy, held, p) => out.push(held
     ? `<circle cx="${cx}" cy="${cy}" r="7" fill="${p === 'sync' ? LOOK.orange : LOOK.grey[1]}"/>`
     : `<circle cx="${cx}" cy="${cy}" r="6.25" fill="${LOOK.white}" stroke="${LOOK.rule[1]}" stroke-width="1.5"/>`);
-  let y = 190;
+  /** Each strategy's row, then sync + fresh's again under it, indented: [strategy, label, numbers, x]. */
+  const rowsOf = (t) => [
+    ...STRATEGIES.map((p) => [p, strategyLabel(p), t.strategies[p], 0]),
+    ...(again(t) ? [['sync', label, again(t), 20]] : []),
+  ];
+  let y = 210;
   for (const t of A.tasks) {
     out.push(text(40, y, t.task, { size: 16, colour: LOOK.ink, bold: true }));
     out.push(text(104, y, t.ask, { size: 15 }));
     out.push(text(40, y + 22, `Forked after step ${t.fork.after_step}, at ${fmt(t.fork.context)} tokens: ${t.fork.core} core steps and ${t.fork.more} more.`, { size: 14, colour: LOOK.grey[1] }));
     y += 56;
-    for (const p of STRATEGIES) {
-      const v = t.strategies[p];
-      if (p === 'sync') out.push(rect(30, y - 16, 820, 32, LOOK.tint));
-      out.push(text(40, y + 5, strategyLabel(p), { size: 15, colour: p === 'sync' ? LOOK.ink : LOOK.body }));
+    for (const [p, label, v, indent] of rowsOf(t)) {
+      if (p === 'sync' && !indent) out.push(rect(30, y - 16, 820, again(t) ? 66 : 32, LOOK.tint));
+      out.push(text(40 + indent, y + 5, label, { size: 15, colour: p === 'sync' ? LOOK.ink : LOOK.body }));
       for (const g of ['finished', 'kept']) {
         Object.values(v.checks[g]).forEach((held, j) => dot(col[g] + j * 20, y, held === true, p));
         out.push(text(count[g], y + 5, `${v[g].held} of ${v[g].of}`, { size: 14, colour: LOOK.ink }));
@@ -568,15 +659,14 @@ function longSessionsChart(N) {
 
   out.push(text(40, y, 'Input tokens after the fork, cached or not, on one scale', { size: 16, colour: LOOK.ink, bold: true }));
   y += 16;
-  const scale = Math.max(...A.tasks.flatMap((t) => STRATEGIES.map((p) => t.strategies[p].tokens.all_input)));
+  const scale = Math.max(...A.tasks.flatMap((t) => rowsOf(t).map(([, , v]) => v.tokens.all_input)));
   const x0 = 200;
   const len = 470;
   for (const t of A.tasks) {
     out.push(text(40, y + 22, t.task, { size: 15, colour: LOOK.ink, bold: true }));
     y += 34;
-    for (const p of STRATEGIES) {
-      const v = t.strategies[p];
-      out.push(text(60, y + 16, strategyLabel(p), { size: 15 }));
+    for (const [p, label, v, indent] of rowsOf(t)) {
+      out.push(text(60 + indent, y + 16, label, { size: 15 }));
       const w = Math.max(2, (v.tokens.all_input / scale) * len);
       out.push(rect(x0, y, w, 22, p === 'sync' ? LOOK.orange : LOOK.grey[2]));
       const extra = p === 'compact' ? [', the ', { code: '/compact' }, ` call's ${fmt(v.compact_call)} included`]
@@ -591,6 +681,15 @@ function longSessionsChart(N) {
     out.push(text(40, y, `In ${lost.task}, the brain held every rule the fresh session lost, but the session searched for whole phrases,`, { size: 14, colour: LOOK.grey[1] }));
     out.push(text(40, y + 20, 'which exposurie 1.2.0\'s search matches as one substring. It found no page, and went on without them.', { size: 14, colour: LOOK.grey[1] }));
     y += 20;
+    const found = again(lost);
+    if (found) {
+      const said = found.kept_said_only;
+      const team = found.team_conventions;
+      out.push(text(40, y + 30, `Run again with ${label}, the rebuilt read, a new fresh session's searches found the brain's pages.`, { size: 14, colour: LOOK.grey[1] }));
+      out.push(text(40, y + 50, `It kept ${said.held} of the ${said.of} decisions said only in the conversation` +
+        (team ? `, and ${team.held} of the team's ${team.of} conventions.` : '.'), { size: 14, colour: LOOK.grey[1] }));
+      y += 50;
+    }
   }
   return svg(W, y + 30, 'Long sessions: what each strategy kept after the fork, and its tokens', out);
 }
@@ -621,14 +720,32 @@ function printNumbers(N) {
     console.log(`Break-even, the ${u}: ${s.questions} sessions of questions, ${s.work} of work tasks, ${s.areas_1_to_7} of areas 1–7 as run here.`);
   }
   console.log(`Stability: area 3 under C right in ${N.stability.right} of ${N.stability.runs}; tasks whose verdict changed: ${N.stability.changed}.`);
+  const strategy = (name, v) => console.log(`  ${name.padEnd(13)} finished ${v.finished.held} of ${v.finished.of}, kept ${v.kept.held} of ${v.kept.of} ` +
+    `(said only in the conversation ${v.kept_said_only.held} of ${v.kept_said_only.of}), retried ${v.retried.tried} of ${v.retried.of}; ` +
+    `${fmt(v.tokens.all_input)} input tokens after the fork, about $${v.cost_usd_estimate.toFixed(2)}`);
   for (const t of N.area_9.tasks) {
     console.log(`Area 9, ${t.task}, forked after step ${t.fork.after_step} at ${fmt(t.fork.context)}:`);
-    for (const p of STRATEGIES) {
-      const v = t.strategies[p];
-      console.log(`  ${STRATEGY_NAMES[p].padEnd(13)} finished ${v.finished.held} of ${v.finished.of}, kept ${v.kept.held} of ${v.kept.of} ` +
-        `(said only in the conversation ${v.kept_said_only.held} of ${v.kept_said_only.of}), retried ${v.retried.tried} of ${v.retried.of}; ` +
-        `${fmt(v.tokens.all_input)} input tokens after the fork, about $${v.cost_usd_estimate.toFixed(2)}`);
-    }
+    for (const p of STRATEGIES) strategy(STRATEGY_NAMES[p], t.strategies[p]);
+  }
+
+  const R = N.rebuilt_read;
+  const C = (o) => fmt(o.C);
+  console.log(`\nC again, with exposurie ${R.exposurie}, beside the same A, B and D:`);
+  console.log(`Right answers, areas 1–7, of ${R.right_answers.of}: C ${R.right_answers.pooled.C}. Potential reached ${R.potential_reached.pooled.value} (${R.potential_reached.pooled.closed} of ${R.potential_reached.pooled.of}).`);
+  console.log(`Tokens per run, median of areas 1–7: C ${C(R.tokens_per_run.median)}; of a question ${C(R.tokens_per_run.median_questions)}, of a work task ${C(R.tokens_per_run.median_work)}.`);
+  console.log(`Tokens per right answer: C ${C(R.tokens_per_right_answer)}.`);
+  console.log(`Area 8, median per run: C ${C(R.overhead.per_run_median)}; C − A ${fmt(R.overhead.c_minus_a)}.`);
+  console.log(`Made-up answers, area 4: C ${R.made_up_answers.C}.`);
+  const l2 = R.looked_vs_found;
+  console.log(`Looked vs found: C looked in ${l2.looked} of ${l2.runs}, right in ${l2.right_when_looked} of those; right in ${l2.right_when_not} of the ${l2.runs - l2.looked} that did not.`);
+  for (const u of USERS) {
+    const s = R.break_even[u].sessions;
+    console.log(`Break-even, the ${u}: ${s.questions} sessions of questions, ${s.work} of work tasks, ${s.areas_1_to_7} of areas 1–7 as run here.`);
+  }
+  console.log(`Stability: area 3 under C right in ${R.stability.right} of ${R.stability.runs}; tasks whose verdict changed: ${R.stability.changed}.`);
+  for (const t of R.area_9.tasks) {
+    console.log(`Area 9, ${t.task}, again from ${t.from}'s fork:`);
+    strategy(STRATEGY_NAMES.sync, t.strategies.sync);
   }
 }
 

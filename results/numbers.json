@@ -1,5 +1,5 @@
 {
-  "note": "Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9.",
+  "note": "Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9; then C again with exposurie's rebuilt read, under rebuilt_read.",
   "tokens": "Every input token, cached or not (all_input), is the primary number. Output is counted beside it.",
   "conditions": {
     "A": "fresh session",
@@ -1117,6 +1117,749 @@
         },
         "all_input": 5021442,
         "output": 103020
+      }
+    }
+  },
+  "rebuilt_read": {
+    "note": "Part 10: condition C again, with exposurie's read rebuilt, on the same brains as 1.2.0's C. A, B and D have no exposurie, so their runs stand, and every number here sets C's new runs beside them. Area 9 is sync + fresh again.",
+    "exposurie": "1.2.0+b6855ee",
+    "runs": {
+      "full-2": 24,
+      "stability": 6,
+      "scored_by": {
+        "checks": 13,
+        "judge": 0,
+        "hand": 11
+      }
+    },
+    "right_answers": {
+      "of": 21,
+      "pooled": {
+        "A": 3,
+        "B": 21,
+        "C": 20,
+        "D": 21
+      },
+      "by_user": {
+        "developer": {
+          "of": 11,
+          "A": 1,
+          "B": 11,
+          "C": 10,
+          "D": 11
+        },
+        "delegator": {
+          "of": 10,
+          "A": 2,
+          "B": 10,
+          "C": 10,
+          "D": 10
+        }
+      },
+      "by_area": [
+        {
+          "area": 1,
+          "name": "Recall",
+          "of": 3,
+          "A": 0,
+          "B": 3,
+          "C": 3,
+          "D": 3
+        },
+        {
+          "area": 2,
+          "name": "Across projects",
+          "of": 3,
+          "A": 0,
+          "B": 3,
+          "C": 3,
+          "D": 3
+        },
+        {
+          "area": 3,
+          "name": "Changed decisions",
+          "of": 3,
+          "A": 0,
+          "B": 3,
+          "C": 3,
+          "D": 3
+        },
+        {
+          "area": 4,
+          "name": "Never discussed",
+          "of": 3,
+          "A": 3,
+          "B": 3,
+          "C": 3,
+          "D": 3
+        },
+        {
+          "area": 5,
+          "name": "Your way",
+          "of": 3,
+          "A": 0,
+          "B": 3,
+          "C": 3,
+          "D": 3
+        },
+        {
+          "area": 6,
+          "name": "Real work",
+          "of": 3,
+          "A": 0,
+          "B": 3,
+          "C": 2,
+          "D": 3
+        },
+        {
+          "area": 7,
+          "name": "Chat to agent",
+          "of": 3,
+          "A": 0,
+          "B": 3,
+          "C": 3,
+          "D": 3
+        },
+        {
+          "area": 8,
+          "name": "No past needed",
+          "of": 3,
+          "A": 3,
+          "B": 3,
+          "C": 3
+        }
+      ]
+    },
+    "potential_reached": {
+      "pooled": {
+        "value": 0.944,
+        "closed": 17,
+        "of": 18
+      },
+      "developer": {
+        "value": 0.9,
+        "closed": 9,
+        "of": 10
+      },
+      "delegator": {
+        "value": 1,
+        "closed": 8,
+        "of": 8
+      }
+    },
+    "made_up_answers": {
+      "area": 4,
+      "of": 3,
+      "A": 0,
+      "B": 0,
+      "C": 0,
+      "D": 0
+    },
+    "looked_vs_found": {
+      "runs": 21,
+      "looked": 20,
+      "right_when_looked": 20,
+      "right_when_not": 0,
+      "reads_median": 1.5,
+      "misses": [
+        {
+          "task": "real-work-2",
+          "run": "r011",
+          "looked": false
+        }
+      ]
+    },
+    "tokens_per_run": {
+      "median": {
+        "A": 13095,
+        "B": 125497,
+        "C": 19551,
+        "D": 6622
+      },
+      "median_questions": {
+        "A": 13047,
+        "B": 125495,
+        "C": 16665,
+        "D": 6607
+      },
+      "median_work": {
+        "A": 25505,
+        "B": 736844,
+        "C": 81091.5,
+        "D": 38593.5
+      },
+      "output_median": {
+        "A": 514,
+        "B": 658,
+        "C": 539,
+        "D": 439
+      }
+    },
+    "tokens_per_right_answer": {
+      "A": 126197,
+      "B": 277950,
+      "C": 35526,
+      "D": 17675
+    },
+    "token_totals": {
+      "A": {
+        "runs": 21,
+        "all_input": 378592,
+        "input": 106,
+        "cache_write": 39100,
+        "cache_read": 339386,
+        "output": 13522
+      },
+      "B": {
+        "runs": 21,
+        "all_input": 5836944,
+        "input": 98,
+        "cache_write": 2401599,
+        "cache_read": 3435247,
+        "output": 36336
+      },
+      "C": {
+        "runs": 21,
+        "all_input": 710514,
+        "input": 138,
+        "cache_write": 128787,
+        "cache_read": 581589,
+        "output": 36028
+      },
+      "D": {
+        "runs": 21,
+        "all_input": 371169,
+        "input": 92,
+        "cache_write": 53823,
+        "cache_read": 317254,
+        "output": 21152
+      }
+    },
+    "overhead": {
+      "area": 8,
+      "per_run_median": {
+        "A": 6423,
+        "B": 125509,
+        "C": 6722
+      },
+      "by_task": [
+        {
+          "task": "no-past-1",
+          "A": 6398,
+          "B": 125509,
+          "C": 6696
+        },
+        {
+          "task": "no-past-2",
+          "A": 6423,
+          "B": 125534,
+          "C": 6722
+        },
+        {
+          "task": "no-past-3",
+          "A": 6431,
+          "B": 108880,
+          "C": 6730
+        }
+      ],
+      "c_looked": 0,
+      "c_minus_a": 299,
+      "b_minus_a": 119086
+    },
+    "break_even": {
+      "developer": {
+        "build_tokens": 4008581,
+        "saving_per_session": {
+          "areas_1_to_7": 225794,
+          "questions": 107833,
+          "work": 756617
+        },
+        "sessions": {
+          "areas_1_to_7": 17.8,
+          "questions": 37.2,
+          "work": 5.3
+        }
+      },
+      "delegator": {
+        "build_tokens": 2996876,
+        "saving_per_session": {
+          "areas_1_to_7": 264270,
+          "questions": 86450,
+          "work": 530999
+        },
+        "sessions": {
+          "areas_1_to_7": 11.3,
+          "questions": 34.7,
+          "work": 5.6
+        }
+      }
+    },
+    "stability": {
+      "area": 3,
+      "condition": "C",
+      "batches": [
+        "full-2",
+        "stability-3",
+        "stability-4"
+      ],
+      "runs": 9,
+      "right": 9,
+      "changed": 0,
+      "by_task": [
+        {
+          "task": "changed-1",
+          "verdicts": [
+            "right",
+            "right",
+            "right"
+          ],
+          "all_input": [
+            15640,
+            15642,
+            15642
+          ]
+        },
+        {
+          "task": "changed-2",
+          "verdicts": [
+            "right",
+            "right",
+            "right"
+          ],
+          "all_input": [
+            16161,
+            16163,
+            16163
+          ]
+        },
+        {
+          "task": "changed-3",
+          "verdicts": [
+            "right",
+            "right",
+            "right"
+          ],
+          "all_input": [
+            23001,
+            23107,
+            23115
+          ]
+        }
+      ]
+    },
+    "by_task": [
+      {
+        "task": "recall-1",
+        "area": 1,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "recall-2",
+        "area": 1,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "recall-3",
+        "area": 1,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "across-1",
+        "area": 2,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "across-2",
+        "area": 2,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "across-3",
+        "area": 2,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "changed-1",
+        "area": 3,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "changed-2",
+        "area": 3,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "changed-3",
+        "area": 3,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "never-1",
+        "area": 4,
+        "user": "developer",
+        "A": "right",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "never-2",
+        "area": 4,
+        "user": "delegator",
+        "A": "right",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "never-3",
+        "area": 4,
+        "user": "delegator",
+        "A": "right",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "your-way-1",
+        "area": 5,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "your-way-2",
+        "area": 5,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "your-way-3",
+        "area": 5,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "real-work-1",
+        "area": 6,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "real-work-2",
+        "area": 6,
+        "user": "developer",
+        "A": "wrong",
+        "B": "right",
+        "C": "wrong",
+        "D": "right"
+      },
+      {
+        "task": "real-work-3",
+        "area": 6,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "chat-1",
+        "area": 7,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "chat-2",
+        "area": 7,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "chat-3",
+        "area": 7,
+        "user": "delegator",
+        "A": "wrong",
+        "B": "right",
+        "C": "right",
+        "D": "right"
+      },
+      {
+        "task": "no-past-1",
+        "area": 8,
+        "user": "developer",
+        "A": "right",
+        "B": "right",
+        "C": "right"
+      },
+      {
+        "task": "no-past-2",
+        "area": 8,
+        "user": "developer",
+        "A": "right",
+        "B": "right",
+        "C": "right"
+      },
+      {
+        "task": "no-past-3",
+        "area": 8,
+        "user": "delegator",
+        "A": "right",
+        "B": "right",
+        "C": "right"
+      }
+    ],
+    "area_9": {
+      "note": "sync + fresh again in each long task, with exposurie's rebuilt read: the same fork, the same sync session and the very brain it wrote, and a new fresh session. Not blind: it was read by hand, and the hand read overrides the scripts.",
+      "strategies": {
+        "sync": "sync + fresh"
+      },
+      "tasks": [
+        {
+          "task": "long-1",
+          "run": "r001",
+          "ask": "One long session in Satchel: importing from other read-later services.",
+          "from": "area-9/r001",
+          "said_only_in_conversation": [
+            "folder-tags",
+            "highlight-source"
+          ],
+          "strategies": {
+            "sync": {
+              "checks": {
+                "finished": {
+                  "instapaper": true,
+                  "omnivore": true,
+                  "as-jobs": true,
+                  "page": true,
+                  "readme": true,
+                  "commit": true,
+                  "commit-prefix": true
+                },
+                "kept": {
+                  "imported-tag": true,
+                  "folder-tags": true,
+                  "folder-states": true,
+                  "archived-read": true,
+                  "highlight-source": true
+                },
+                "retried": {
+                  "replace": false,
+                  "comma-split": false,
+                  "route-import": false
+                }
+              },
+              "finished": {
+                "held": 7,
+                "of": 7,
+                "missed": []
+              },
+              "kept": {
+                "held": 5,
+                "of": 5,
+                "missed": []
+              },
+              "kept_said_only": {
+                "held": 2,
+                "of": 2
+              },
+              "retried": {
+                "tried": 0,
+                "of": 3,
+                "which": []
+              },
+              "by_hand": {
+                "checks": 4,
+                "overturned": 1
+              },
+              "tokens": {
+                "all_input": 2822510,
+                "input": 98,
+                "cache_write": 158852,
+                "cache_read": 2663560,
+                "output": 59168
+              },
+              "sync_session": 976651,
+              "context_end": 88574,
+              "looked": {
+                "steps": 3,
+                "of": 3,
+                "reads": 6
+              },
+              "cost_usd_estimate": 1.49,
+              "apart": {
+                "attempts": 0,
+                "all_input": 0,
+                "output": 0,
+                "cost_usd_estimate": 0
+              }
+            }
+          }
+        },
+        {
+          "task": "long-2",
+          "run": "r002",
+          "ask": "One long session in tidewell-api, on one Linear ticket: webhooks for project events.",
+          "from": "area-9/r002",
+          "said_only_in_conversation": [
+            "dead-letters-admin",
+            "retention"
+          ],
+          "strategies": {
+            "sync": {
+              "checks": {
+                "finished": {
+                  "renamed": true,
+                  "replay": true,
+                  "cleanup": true,
+                  "tests": true,
+                  "pr": true,
+                  "team-branch": true,
+                  "team-title": true,
+                  "team-sections": true,
+                  "team-reviewer": true,
+                  "team-deploy-note": false
+                },
+                "kept": {
+                  "event-name": true,
+                  "envelope": true,
+                  "dead-letters-admin": true,
+                  "retention": true
+                },
+                "retried": {
+                  "timer-retry": false,
+                  "hash-signature": false,
+                  "http-in-transaction": false
+                }
+              },
+              "finished": {
+                "held": 9,
+                "of": 10,
+                "missed": [
+                  "team-deploy-note"
+                ]
+              },
+              "kept": {
+                "held": 4,
+                "of": 4,
+                "missed": []
+              },
+              "kept_said_only": {
+                "held": 2,
+                "of": 2
+              },
+              "team_conventions": {
+                "held": 4,
+                "of": 5
+              },
+              "retried": {
+                "tried": 0,
+                "of": 3,
+                "which": []
+              },
+              "by_hand": {
+                "checks": 3,
+                "overturned": 0
+              },
+              "tokens": {
+                "all_input": 2167372,
+                "input": 82,
+                "cache_write": 161033,
+                "cache_read": 2006257,
+                "output": 46374
+              },
+              "sync_session": 1105841,
+              "context_end": 70766,
+              "looked": {
+                "steps": 3,
+                "of": 3,
+                "reads": 13
+              },
+              "cost_usd_estimate": 1.31,
+              "apart": {
+                "attempts": 0,
+                "all_input": 0,
+                "output": 0,
+                "cost_usd_estimate": 0
+              }
+            }
+          }
+        }
+      ],
+      "pooled": {
+        "sync": {
+          "finished": {
+            "held": 16,
+            "of": 17
+          },
+          "kept": {
+            "held": 9,
+            "of": 9
+          },
+          "kept_said_only": {
+            "held": 4,
+            "of": 4
+          },
+          "retried": {
+            "tried": 0,
+            "of": 6
+          },
+          "all_input": 4989882,
+          "output": 105542
+        }
       }
     }
   }

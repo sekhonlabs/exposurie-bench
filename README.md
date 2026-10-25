@@ -2,7 +2,7 @@
 
 Does an external brain make a coding agent better for the person using it? This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie). exposurie is a CLI that builds a curated Markdown wiki (the brain) from a person's own agent sessions and chat exports, and points every new session at it.
 
-**Status: all nine areas are run, scored and checked by hand, and their results are below.** Two made-up users, a developer and someone who hands everything to agents, have 53 generated sessions of history between them, and an exposurie brain was built from each. All 93 runs of areas 1 to 8 ran in one mixed order, then the stability check's 6. Then area 9's two long sessions each ran once and were carried on three ways. How it was built, part by part, is in [docs/build-plan.md](docs/build-plan.md). It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code 2.1.302 on Sonnet 5.5.
+**Status: all nine areas are run, scored and checked by hand, and their results are below.** Two made-up users, a developer and someone who hands everything to agents, have 53 generated sessions of history between them, and an exposurie brain was built from each. All 93 runs of areas 1 to 8 ran in one mixed order, then the stability check's 6. Then area 9's two long sessions each ran once and were carried on three ways. How it was built, part by part, is in [docs/build-plan.md](docs/build-plan.md). It tests the published `@sekhon/exposurie` 1.2.0 with Claude Code 2.1.302 on Sonnet 5.5. Then C ran again with exposurie's read rebuilt, `1.2.0+b6855ee`, which is on GitHub and not yet on npm. Its results are [beside 1.2.0's](#c-again-with-exposuries-rebuilt-read), and 1.2.0's stay as they were.
 
 ## The question
 
@@ -35,7 +35,7 @@ The four questions, answered:
 3. **Almost nothing extra on work that needs no past:** 298 tokens a run more than a fresh session.
 4. **"Not recorded" instead of inventing:** no made-up answers, in any condition.
 
-One run per task and condition: 93 runs in one mixed order on 2026-10-21, then the stability check's 6. Every verdict is final: of the full run's 93, 54 were settled by a task's checks and 39 by hand, every answer the judge decided among them. Tokens are every input token, cached or not; output is few and alike in every condition, a median of 439 to 658 tokens a run. Every number here is computed from [results/](results/) alone by [score/results.mjs](score/results.mjs), and they are all in [results/numbers.json](results/numbers.json). Which run had which condition is published beside each batch's scores, now that every verdict is final.
+One run per task and condition: 93 runs in one mixed order on 2026-10-21, then the stability check's 6. Every verdict is final: of the full run's 93, 54 were settled by a task's checks and 39 by hand, every answer the judge decided among them. Tokens are every input token, cached or not; output is few and alike in every condition, a median of 439 to 658 tokens a run. Every number here is computed from [results/](results/) alone by [score/results.mjs](score/results.mjs), and they are all in [results/numbers.json](results/numbers.json). Which run had which condition is published beside each batch's scores, now that every verdict is final. The charts also show C again with the rebuilt read, `1.2.0+b6855ee`; this section's numbers are 1.2.0's, and the rebuilt read's are [further down](#c-again-with-exposuries-rebuilt-read).
 
 ![Right answers by area and condition](results/charts/right-answers.svg)
 
@@ -78,6 +78,8 @@ Every strategy then gets the same steps, which finish the work. See [design.md](
 - **long-1** is the developer's own app, Satchel: imports from Pocket, Instapaper and Omnivore. It forked after step 19, at 509,677 tokens.
 - **long-2** is their work's API, tidewell-api: webhooks for project events, under one ticket, through an on-call week. It forked after step 24, at 500,236 tokens. The team's conventions for a pull request are never said in the session, so a strategy keeps them only by looking them up.
 
+The chart's `1.2.0+b6855ee` rows are sync + fresh's fresh session again with the rebuilt read, [further down](#c-again-with-exposuries-rebuilt-read); what follows here is 1.2.0's.
+
 ![What each strategy kept after the fork, and its tokens](results/charts/long-sessions.svg)
 
 - **keep going and `/compact` lost almost nothing.** Across both tasks, keep going held all 17 checks of the work and all 9 checks of the decisions. `/compact` held 16 and 9: its one miss was long-2's deploy note, which never named the team's deploys channel.
@@ -95,6 +97,42 @@ The scores, the hand read with a reason for each verdict, and every step's recor
 **Against what [design.md](docs/design.md#what-we-expect-written-before-the-results) expected before any result:** `/compact` beat sync + fresh within a single task, as expected: one missed check against six. Long sessions were expected to be where curation loses detail. Here it was retrieval that lost it: the brain held every rule, and the fresh session lost the ones its search did not find.
 
 **What this does not show:** two tasks and one user, with one run of each strategy, so this is an illustration, not a rate. The sessions ended at about 580,000 tokens, too close to the mark to test whether quality falls past half the window. Area 9 cannot be scored blind, because a stream shows which strategy made it: every strategy was read by hand, and a verdict there overrides the scripts.
+
+## C again, with exposurie's rebuilt read
+
+These results traced two of C's three misses in areas 1 to 7, and everything sync + fresh lost in long-2, to one flaw in exposurie 1.2.0's search: it matched the whole phrase as one substring. exposurie's `read` was rebuilt for it at commit [`b6855ee`](https://github.com/sekhonlabs/exposurie/commit/b6855ee30d876bb3f109088ccabb85450a0b2234). A search now takes its words in any order and any form, ranks the pages, and prints the best ones as written. The commit is on GitHub and not yet on npm. Its package still says 1.2.0, so every run records it as **`1.2.0+b6855ee`**: 1.2.0 plus the commit.
+
+Condition C ran again with it on 2026-10-25, on the same brains, with the same Claude Code, model, tools, audit and scoring. What exposurie installs, its pointer, skill and command, is the same text in both versions, so this C differs from 1.2.0's by the `exposurie` command alone. See [docs/decisions.md](docs/decisions.md).
+
+- `full-2`: the 24 C runs of areas 1 to 8, once each, in a mixed order of their own.
+- `stability-3` and `stability-4`: area 3 under C, twice more.
+- `area-9-2`: sync + fresh's fresh session again in each long task, from the same fork and against the very brain its sync wrote. The sync session is not run again: the sync is the same code, and a second one would write another brain. Its record and tokens carry over.
+
+A, B and D have no exposurie, so their runs stand, and every number below sets C's new runs beside them. Every judged answer was read by hand, though not blind, since every run here is C; the hand read overturned none of the 17. The numbers are in [results/numbers.json](results/numbers.json) under `rebuilt_read`, and the charts above show both.
+
+| | 1.2.0 | 1.2.0+b6855ee |
+|---|---|---|
+| Right answers, areas 1 to 7, of 21 | 18 | **20** |
+| Potential reached | 0.83 | **0.94** |
+| Tokens per run, median of areas 1 to 7 | 34,494 | **19,551** |
+| …of a question | 30,089 | 16,665 |
+| …of a work task | 69,939 | 81,092 |
+| Tokens per right answer | 49,263 | **35,526** |
+| Area 8, tokens a run more than A | 298 | 299 |
+| Looked, and right when it looked | 20 of 21, right in 18 | 20 of 21, right in 20 |
+| Area 3 under C, three runs of each task | 9 of 9 | 9 of 9 |
+| Break-even in sessions of questions, the developer and the delegator | 44.4 and 37.6 | 37.2 and 34.7 |
+| Break-even in sessions of work tasks | 5.2 and 5.6 | 5.3 and 5.6 |
+| long-1, sync + fresh: finished, kept | 7 of 7, 5 of 5 | 7 of 7, 5 of 5 |
+| long-2, sync + fresh: finished, kept | 6 of 10, 2 of 4 | **9 of 10, 4 of 4** |
+
+- **Both search misses are right now.** recall-1 gave the recorded reason for SQLite (one file on one machine, with Litestream for backups), and across-3 named both projects on a Google Sheet. Potential reached is 9 of 10 for the developer and 8 of 8 for the delegator.
+- **The one miss left is real-work-2** (`r011` in [results/full-2/](results/full-2/)). Like 1.2.0's run, it never ran `exposurie read`, so its pull request again missed the team's branch format and its four sections. Nothing in the rebuilt read changes whether an agent looks.
+- **Questions got cheaper and work tasks dearer.** A search now prints the best pages whole, so a run that looked made a median of 1.5 reads, against 5. A question's median run fell from 30,089 tokens to 16,665. A work task reads further, and its median rose from 69,939 to 81,092. Over areas 1 to 7, C's input fell from 886,737 tokens to 710,514. Area 8 is unchanged, within 2 tokens a run, because C never ran `exposurie read` there.
+- **long-2's sync + fresh is now level with `/compact`:** 9 of 10 finished and 4 of 4 kept. Its fresh session searched for `ENG-447 webhooks project events`, found 34 pages, and read the one its sync had written about the session. It kept both decisions said only in the conversation: replays on the staff-only admin routes, and 45 days for every delivery. It also kept four of the team's five conventions, where 1.2.0's run kept one. It missed the deploy note's channel, as `/compact` did. The page that holds it matched only two of the eight words in the search for it, and was not among the 14 of 39 pages the search showed.
+- **Tokens after the fork, sync session included:** long-2's sync + fresh took 2,167,372 against 2,532,829, and long-1's 2,822,510 against 2,488,613, since its fresh session read more of the brain. `/compact` took 1,717,031 and 1,808,849. In Claude Code's estimates at list prices, long-2's came to $1.31 against $1.41, and long-1's to $1.49 against $1.37.
+
+**What this does not show:** the rebuilt read was made after these results, and part 10 measures it on the same tasks. So it shows that the misses it was made for are fixed, not how its search does on questions that did not shape it. One run per cell again, and the hand read could not be blind.
 
 ## What is here
 
@@ -114,7 +152,7 @@ The scores, the hand read with a reason for each verdict, and every step's recor
 | [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, the runner and scorer, the brain build, the long sessions and the results to the method |
 | [score/](score/) | how a task's checks read a run, the scorer, the judge for what the checks cannot settle, the long sessions' scorer, and the numbers and charts of the results |
 | [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, the long sessions of area 9, and the fake `claude` they are tested against |
-| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step, every number in `numbers.json`, and the charts |
+| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step, part 10's C again with the rebuilt read (`full-2`, `stability-3`, `stability-4` and `area-9-2`), every number in `numbers.json`, and the charts |
 
 ## License
 

@@ -1,146 +1,189 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="918" viewBox="0 0 880 918" role="img" aria-label="Long sessions: what each strategy kept after the fork, and its tokens">
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="1124" viewBox="0 0 880 1124" role="img" aria-label="Long sessions: what each strategy kept after the fork, and its tokens">
 <title>Long sessions: what each strategy kept after the fork, and its tokens</title>
-<rect x="0" y="0" width="880" height="918" fill="#FFFFFF"/>
+<rect x="0" y="0" width="880" height="1124" fill="#FFFFFF"/>
 <text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">Long sessions: three ways on from 500,000 tokens</text>
 <text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Two long tasks, each one session filled to 500,000 tokens, then carried on three ways from there.</text>
 <text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Each dot is one check after the fork, filled when it held; the hand read overrides the script.</text>
-<text x="233" y="132" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">Finished</text>
-<text x="233" y="150" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the work's checks</text>
-<text x="533" y="132" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">Kept</text>
-<text x="533" y="150" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the decisions</text>
-<text x="730" y="132" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">Retried</text>
-<text x="730" y="150" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">a failed approach</text>
-<text x="40" y="190" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">long-1</text>
-<text x="104" y="190" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">One long session in Satchel: importing from other read-later services.</text>
-<text x="40" y="212" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Forked after step 19, at 509,677 tokens: 9 core steps and 10 more.</text>
-<text x="40" y="251" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
-<circle cx="240" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="260" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="280" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="300" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="320" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="340" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="360" cy="246" r="7" fill="#6B6B6B"/>
-<text x="436" y="251" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">7 of 7</text>
-<circle cx="540" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="560" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="580" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="600" cy="246" r="7" fill="#6B6B6B"/>
-<circle cx="620" cy="246" r="7" fill="#6B6B6B"/>
-<text x="636" y="251" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">5 of 5</text>
-<text x="730" y="251" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
-<text x="40" y="285" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
-<circle cx="240" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="260" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="280" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="300" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="320" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="340" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="360" cy="280" r="7" fill="#6B6B6B"/>
-<text x="436" y="285" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">7 of 7</text>
-<circle cx="540" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="560" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="580" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="600" cy="280" r="7" fill="#6B6B6B"/>
-<circle cx="620" cy="280" r="7" fill="#6B6B6B"/>
-<text x="636" y="285" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">5 of 5</text>
-<text x="730" y="285" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
-<rect x="30" y="298" width="820" height="32" fill="#FCF0E9"/>
-<text x="40" y="319" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">sync + fresh</text>
-<circle cx="240" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="260" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="280" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="300" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="320" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="340" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="360" cy="314" r="7" fill="#E37D4E"/>
-<text x="436" y="319" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">7 of 7</text>
-<circle cx="540" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="560" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="580" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="600" cy="314" r="7" fill="#E37D4E"/>
-<circle cx="620" cy="314" r="7" fill="#E37D4E"/>
-<text x="636" y="319" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">5 of 5</text>
-<text x="730" y="319" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
-<text x="40" y="374" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">long-2</text>
-<text x="104" y="374" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">One long session in tidewell-api, on one Linear ticket: webhooks for project events.</text>
-<text x="40" y="396" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Forked after step 24, at 500,236 tokens: 8 core steps and 16 more.</text>
-<text x="40" y="435" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
-<circle cx="240" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="260" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="280" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="300" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="320" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="340" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="360" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="380" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="400" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="420" cy="430" r="7" fill="#6B6B6B"/>
-<text x="436" y="435" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">10 of 10</text>
-<circle cx="540" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="560" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="580" cy="430" r="7" fill="#6B6B6B"/>
-<circle cx="600" cy="430" r="7" fill="#6B6B6B"/>
-<text x="636" y="435" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">4 of 4</text>
-<text x="730" y="435" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
-<text x="40" y="469" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
-<circle cx="240" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="260" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="280" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="300" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="320" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="340" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="360" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="380" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="400" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="420" cy="464" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<text x="436" y="469" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">9 of 10</text>
-<circle cx="540" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="560" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="580" cy="464" r="7" fill="#6B6B6B"/>
-<circle cx="600" cy="464" r="7" fill="#6B6B6B"/>
-<text x="636" y="469" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">4 of 4</text>
-<text x="730" y="469" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
-<rect x="30" y="482" width="820" height="32" fill="#FCF0E9"/>
-<text x="40" y="503" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">sync + fresh</text>
-<circle cx="240" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="260" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="280" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="300" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="320" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="340" cy="498" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="360" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="380" cy="498" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="400" cy="498" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="420" cy="498" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<text x="436" y="503" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">6 of 10</text>
-<circle cx="540" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="560" cy="498" r="7" fill="#E37D4E"/>
-<circle cx="580" cy="498" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="600" cy="498" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<text x="636" y="503" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">2 of 4</text>
-<text x="730" y="503" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
-<text x="40" y="558" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Input tokens after the fork, cached or not, on one scale</text>
-<text x="40" y="596" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">long-1</text>
-<text x="60" y="624" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
-<rect x="200" y="608" width="470" height="22" fill="#8C8C8C"/>
-<text x="678" y="624" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">10,935,771</text>
-<text x="60" y="658" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
-<rect x="200" y="642" width="77.7" height="22" fill="#8C8C8C"/>
-<text x="285.7" y="658" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1,808,849, the <tspan font-family="Consolas, Menlo, monospace">/compact</tspan> call's 511,672 included</text>
-<text x="60" y="692" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">sync + fresh</text>
-<rect x="200" y="676" width="107" height="22" fill="#E37D4E"/>
-<text x="315" y="692" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">2,488,613, the sync session's 976,651 included</text>
-<text x="40" y="732" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">long-2</text>
-<text x="60" y="760" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
-<rect x="200" y="744" width="348.2" height="22" fill="#8C8C8C"/>
-<text x="556.2" y="760" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">8,100,651</text>
-<text x="60" y="794" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
-<rect x="200" y="778" width="73.8" height="22" fill="#8C8C8C"/>
-<text x="281.8" y="794" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1,717,031, the <tspan font-family="Consolas, Menlo, monospace">/compact</tspan> call's 502,231 included</text>
-<text x="60" y="828" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">sync + fresh</text>
-<rect x="200" y="812" width="108.9" height="22" fill="#E37D4E"/>
-<text x="316.9" y="828" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">2,532,829, the sync session's 1,105,841 included</text>
-<text x="40" y="868" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">In long-2, the brain held every rule the fresh session lost, but the session searched for whole phrases,</text>
-<text x="40" y="888" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">which exposurie 1.2.0's search matches as one substring. It found no page, and went on without them.</text>
+<text x="40" y="112" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">1.2.0+b6855ee: the fresh session of sync + fresh again, with exposurie's rebuilt read.</text>
+<text x="233" y="152" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">Finished</text>
+<text x="233" y="170" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the work's checks</text>
+<text x="533" y="152" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">Kept</text>
+<text x="533" y="170" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the decisions</text>
+<text x="730" y="152" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">Retried</text>
+<text x="730" y="170" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">a failed approach</text>
+<text x="40" y="210" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">long-1</text>
+<text x="104" y="210" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">One long session in Satchel: importing from other read-later services.</text>
+<text x="40" y="232" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Forked after step 19, at 509,677 tokens: 9 core steps and 10 more.</text>
+<text x="40" y="271" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
+<circle cx="240" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="260" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="280" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="300" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="320" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="340" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="360" cy="266" r="7" fill="#6B6B6B"/>
+<text x="436" y="271" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">7 of 7</text>
+<circle cx="540" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="560" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="580" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="600" cy="266" r="7" fill="#6B6B6B"/>
+<circle cx="620" cy="266" r="7" fill="#6B6B6B"/>
+<text x="636" y="271" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">5 of 5</text>
+<text x="730" y="271" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<text x="40" y="305" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
+<circle cx="240" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="260" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="280" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="300" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="320" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="340" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="360" cy="300" r="7" fill="#6B6B6B"/>
+<text x="436" y="305" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">7 of 7</text>
+<circle cx="540" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="560" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="580" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="600" cy="300" r="7" fill="#6B6B6B"/>
+<circle cx="620" cy="300" r="7" fill="#6B6B6B"/>
+<text x="636" y="305" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">5 of 5</text>
+<text x="730" y="305" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<rect x="30" y="318" width="820" height="66" fill="#FCF0E9"/>
+<text x="40" y="339" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">sync + fresh</text>
+<circle cx="240" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="260" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="280" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="300" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="320" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="340" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="360" cy="334" r="7" fill="#E37D4E"/>
+<text x="436" y="339" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">7 of 7</text>
+<circle cx="540" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="560" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="580" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="600" cy="334" r="7" fill="#E37D4E"/>
+<circle cx="620" cy="334" r="7" fill="#E37D4E"/>
+<text x="636" y="339" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">5 of 5</text>
+<text x="730" y="339" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<text x="60" y="373" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.2.0+b6855ee</text>
+<circle cx="240" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="260" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="280" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="300" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="320" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="340" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="360" cy="368" r="7" fill="#E37D4E"/>
+<text x="436" y="373" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">7 of 7</text>
+<circle cx="540" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="560" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="580" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="600" cy="368" r="7" fill="#E37D4E"/>
+<circle cx="620" cy="368" r="7" fill="#E37D4E"/>
+<text x="636" y="373" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">5 of 5</text>
+<text x="730" y="373" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<text x="40" y="428" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">long-2</text>
+<text x="104" y="428" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">One long session in tidewell-api, on one Linear ticket: webhooks for project events.</text>
+<text x="40" y="450" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Forked after step 24, at 500,236 tokens: 8 core steps and 16 more.</text>
+<text x="40" y="489" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
+<circle cx="240" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="260" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="280" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="300" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="320" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="340" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="360" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="380" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="400" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="420" cy="484" r="7" fill="#6B6B6B"/>
+<text x="436" y="489" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">10 of 10</text>
+<circle cx="540" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="560" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="580" cy="484" r="7" fill="#6B6B6B"/>
+<circle cx="600" cy="484" r="7" fill="#6B6B6B"/>
+<text x="636" y="489" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">4 of 4</text>
+<text x="730" y="489" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<text x="40" y="523" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
+<circle cx="240" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="260" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="280" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="300" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="320" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="340" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="360" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="380" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="400" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="420" cy="518" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="436" y="523" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">9 of 10</text>
+<circle cx="540" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="560" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="580" cy="518" r="7" fill="#6B6B6B"/>
+<circle cx="600" cy="518" r="7" fill="#6B6B6B"/>
+<text x="636" y="523" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">4 of 4</text>
+<text x="730" y="523" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<rect x="30" y="536" width="820" height="66" fill="#FCF0E9"/>
+<text x="40" y="557" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">sync + fresh</text>
+<circle cx="240" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="260" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="280" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="300" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="320" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="340" cy="552" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="360" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="380" cy="552" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="400" cy="552" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="420" cy="552" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="436" y="557" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">6 of 10</text>
+<circle cx="540" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="560" cy="552" r="7" fill="#E37D4E"/>
+<circle cx="580" cy="552" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="600" cy="552" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="636" y="557" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">2 of 4</text>
+<text x="730" y="557" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<text x="60" y="591" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.2.0+b6855ee</text>
+<circle cx="240" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="260" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="280" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="300" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="320" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="340" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="360" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="380" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="400" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="420" cy="586" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="436" y="591" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">9 of 10</text>
+<circle cx="540" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="560" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="580" cy="586" r="7" fill="#E37D4E"/>
+<circle cx="600" cy="586" r="7" fill="#E37D4E"/>
+<text x="636" y="591" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">4 of 4</text>
+<text x="730" y="591" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">0 of 3</text>
+<text x="40" y="646" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Input tokens after the fork, cached or not, on one scale</text>
+<text x="40" y="684" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">long-1</text>
+<text x="60" y="712" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
+<rect x="200" y="696" width="470" height="22" fill="#8C8C8C"/>
+<text x="678" y="712" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">10,935,771</text>
+<text x="60" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
+<rect x="200" y="730" width="77.7" height="22" fill="#8C8C8C"/>
+<text x="285.7" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1,808,849, the <tspan font-family="Consolas, Menlo, monospace">/compact</tspan> call's 511,672 included</text>
+<text x="60" y="780" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">sync + fresh</text>
+<rect x="200" y="764" width="107" height="22" fill="#E37D4E"/>
+<text x="315" y="780" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">2,488,613, the sync session's 976,651 included</text>
+<text x="80" y="814" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1.2.0+b6855ee</text>
+<rect x="200" y="798" width="121.3" height="22" fill="#E37D4E"/>
+<text x="329.3" y="814" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">2,822,510, the sync session's 976,651 included</text>
+<text x="40" y="854" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">long-2</text>
+<text x="60" y="882" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">keep going</text>
+<rect x="200" y="866" width="348.2" height="22" fill="#8C8C8C"/>
+<text x="556.2" y="882" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">8,100,651</text>
+<text x="60" y="916" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan></text>
+<rect x="200" y="900" width="73.8" height="22" fill="#8C8C8C"/>
+<text x="281.8" y="916" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1,717,031, the <tspan font-family="Consolas, Menlo, monospace">/compact</tspan> call's 502,231 included</text>
+<text x="60" y="950" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">sync + fresh</text>
+<rect x="200" y="934" width="108.9" height="22" fill="#E37D4E"/>
+<text x="316.9" y="950" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">2,532,829, the sync session's 1,105,841 included</text>
+<text x="80" y="984" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1.2.0+b6855ee</text>
+<rect x="200" y="968" width="93.1" height="22" fill="#E37D4E"/>
+<text x="301.1" y="984" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">2,167,372, the sync session's 1,105,841 included</text>
+<text x="40" y="1024" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">In long-2, the brain held every rule the fresh session lost, but the session searched for whole phrases,</text>
+<text x="40" y="1044" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">which exposurie 1.2.0's search matches as one substring. It found no page, and went on without them.</text>
+<text x="40" y="1074" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Run again with 1.2.0+b6855ee, the rebuilt read, a new fresh session's searches found the brain's pages.</text>
+<text x="40" y="1094" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">It kept 2 of the 2 decisions said only in the conversation, and 4 of the team's 5 conventions.</text>
 </svg>

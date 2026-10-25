@@ -1,133 +1,162 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="580" viewBox="0 0 880 580" role="img" aria-label="Right answers, by area and condition">
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="630" viewBox="0 0 920 630" role="img" aria-label="Right answers, by area and condition">
 <title>Right answers, by area and condition</title>
-<rect x="0" y="0" width="880" height="580" fill="#FFFFFF"/>
+<rect x="0" y="0" width="920" height="630" fill="#FFFFFF"/>
 <text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">Right answers, by area</text>
 <text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">One run per task and condition. Each dot is one task, filled when its answer was right.</text>
-<rect x="594" y="92" width="112" height="398" fill="#FCF0E9"/>
-<text x="400" y="118" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">A</text>
-<text x="400" y="138" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">fresh session</text>
-<text x="525" y="118" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">B</text>
-<text x="525" y="138" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">whole history</text>
-<text x="650" y="118" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">C</text>
-<text x="650" y="138" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">exposurie</text>
-<text x="775" y="118" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">D</text>
-<text x="775" y="138" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">perfect memory</text>
-<text x="40" y="169" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">1</text>
-<text x="64" y="169" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Recall</text>
-<circle cx="380" cy="164" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="400" cy="164" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="420" cy="164" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="505" cy="164" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="164" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="164" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="164" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="650" cy="164" r="7" fill="#E37D4E"/>
-<circle cx="670" cy="164" r="7" fill="#E37D4E"/>
-<circle cx="755" cy="164" r="7" fill="#6B6B6B"/>
-<circle cx="775" cy="164" r="7" fill="#6B6B6B"/>
-<circle cx="795" cy="164" r="7" fill="#6B6B6B"/>
-<text x="40" y="203" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">2</text>
-<text x="64" y="203" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Across projects</text>
-<circle cx="380" cy="198" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="400" cy="198" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="420" cy="198" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="505" cy="198" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="198" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="198" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="198" r="7" fill="#E37D4E"/>
-<circle cx="650" cy="198" r="7" fill="#E37D4E"/>
-<circle cx="670" cy="198" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="755" cy="198" r="7" fill="#6B6B6B"/>
-<circle cx="775" cy="198" r="7" fill="#6B6B6B"/>
-<circle cx="795" cy="198" r="7" fill="#6B6B6B"/>
-<text x="40" y="237" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">3</text>
-<text x="64" y="237" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Changed decisions</text>
-<circle cx="380" cy="232" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="400" cy="232" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="420" cy="232" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="505" cy="232" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="232" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="232" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="232" r="7" fill="#E37D4E"/>
-<circle cx="650" cy="232" r="7" fill="#E37D4E"/>
-<circle cx="670" cy="232" r="7" fill="#E37D4E"/>
-<circle cx="755" cy="232" r="7" fill="#6B6B6B"/>
-<circle cx="775" cy="232" r="7" fill="#6B6B6B"/>
-<circle cx="795" cy="232" r="7" fill="#6B6B6B"/>
-<text x="40" y="271" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">4</text>
-<text x="64" y="271" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Never discussed</text>
-<circle cx="380" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="400" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="420" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="505" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="266" r="7" fill="#E37D4E"/>
-<circle cx="650" cy="266" r="7" fill="#E37D4E"/>
-<circle cx="670" cy="266" r="7" fill="#E37D4E"/>
-<circle cx="755" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="775" cy="266" r="7" fill="#6B6B6B"/>
-<circle cx="795" cy="266" r="7" fill="#6B6B6B"/>
-<text x="40" y="305" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">5</text>
-<text x="64" y="305" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Your way</text>
-<circle cx="380" cy="300" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="400" cy="300" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="420" cy="300" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="505" cy="300" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="300" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="300" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="300" r="7" fill="#E37D4E"/>
-<circle cx="650" cy="300" r="7" fill="#E37D4E"/>
-<circle cx="670" cy="300" r="7" fill="#E37D4E"/>
-<circle cx="755" cy="300" r="7" fill="#6B6B6B"/>
-<circle cx="775" cy="300" r="7" fill="#6B6B6B"/>
-<circle cx="795" cy="300" r="7" fill="#6B6B6B"/>
-<text x="40" y="339" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">6</text>
-<text x="64" y="339" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Real work</text>
-<circle cx="380" cy="334" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="400" cy="334" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="420" cy="334" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="505" cy="334" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="334" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="334" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="334" r="7" fill="#E37D4E"/>
-<circle cx="650" cy="334" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="670" cy="334" r="7" fill="#E37D4E"/>
-<circle cx="755" cy="334" r="7" fill="#6B6B6B"/>
-<circle cx="775" cy="334" r="7" fill="#6B6B6B"/>
-<circle cx="795" cy="334" r="7" fill="#6B6B6B"/>
-<text x="40" y="373" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">7</text>
-<text x="64" y="373" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Chat to agent</text>
-<circle cx="380" cy="368" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="400" cy="368" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="420" cy="368" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="505" cy="368" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="368" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="368" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="368" r="7" fill="#E37D4E"/>
-<circle cx="650" cy="368" r="7" fill="#E37D4E"/>
-<circle cx="670" cy="368" r="7" fill="#E37D4E"/>
-<circle cx="755" cy="368" r="7" fill="#6B6B6B"/>
-<circle cx="775" cy="368" r="7" fill="#6B6B6B"/>
-<circle cx="795" cy="368" r="7" fill="#6B6B6B"/>
-<line x1="40" y1="388" x2="840" y2="388" stroke="#E3E3E3" stroke-width="1"/>
-<text x="40" y="426" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Areas 1–7, of 21</text>
-<text x="400" y="427" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">3</text>
-<text x="525" y="427" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">21</text>
-<text x="650" y="427" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">18</text>
-<text x="775" y="427" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">21</text>
-<text x="40" y="471" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">8</text>
-<text x="64" y="471" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">No past needed</text>
-<circle cx="380" cy="466" r="7" fill="#6B6B6B"/>
-<circle cx="400" cy="466" r="7" fill="#6B6B6B"/>
-<circle cx="420" cy="466" r="7" fill="#6B6B6B"/>
-<circle cx="505" cy="466" r="7" fill="#6B6B6B"/>
-<circle cx="525" cy="466" r="7" fill="#6B6B6B"/>
-<circle cx="545" cy="466" r="7" fill="#6B6B6B"/>
-<circle cx="630" cy="466" r="7" fill="#E37D4E"/>
-<circle cx="650" cy="466" r="7" fill="#E37D4E"/>
-<circle cx="670" cy="466" r="7" fill="#E37D4E"/>
-<text x="775" y="471" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#8C8C8C" text-anchor="middle">not run</text>
-<text x="40" y="534" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">Potential reached, (C − A) ÷ (D − A): (18 − 3) ÷ (21 − 3) = 0.83.</text>
-<text x="40" y="560" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Area 8 needs no past, so it has no D and stays out of the totals.</text>
+<text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">C ran twice on the same brains: with 1.2.0 from npm, and again with 1.2.0+b6855ee, its rebuilt read.</text>
+<rect x="550" y="112" width="235" height="398" fill="#FCF0E9"/>
+<text x="380" y="138" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">A</text>
+<text x="380" y="158" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">fresh session</text>
+<text x="495" y="138" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">B</text>
+<text x="495" y="158" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">whole history</text>
+<text x="610" y="138" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">C</text>
+<text x="610" y="158" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">exposurie 1.2.0</text>
+<text x="725" y="138" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">C</text>
+<text x="725" y="158" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">1.2.0+b6855ee</text>
+<text x="840" y="138" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">D</text>
+<text x="840" y="158" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">perfect memory</text>
+<text x="40" y="189" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">1</text>
+<text x="64" y="189" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Recall</text>
+<circle cx="360" cy="184" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="380" cy="184" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="400" cy="184" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="475" cy="184" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="184" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="184" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="184" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="610" cy="184" r="7" fill="#E37D4E"/>
+<circle cx="630" cy="184" r="7" fill="#E37D4E"/>
+<circle cx="705" cy="184" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="184" r="7" fill="#E37D4E"/>
+<circle cx="745" cy="184" r="7" fill="#E37D4E"/>
+<circle cx="820" cy="184" r="7" fill="#6B6B6B"/>
+<circle cx="840" cy="184" r="7" fill="#6B6B6B"/>
+<circle cx="860" cy="184" r="7" fill="#6B6B6B"/>
+<text x="40" y="223" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">2</text>
+<text x="64" y="223" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Across projects</text>
+<circle cx="360" cy="218" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="380" cy="218" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="400" cy="218" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="475" cy="218" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="218" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="218" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="218" r="7" fill="#E37D4E"/>
+<circle cx="610" cy="218" r="7" fill="#E37D4E"/>
+<circle cx="630" cy="218" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="705" cy="218" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="218" r="7" fill="#E37D4E"/>
+<circle cx="745" cy="218" r="7" fill="#E37D4E"/>
+<circle cx="820" cy="218" r="7" fill="#6B6B6B"/>
+<circle cx="840" cy="218" r="7" fill="#6B6B6B"/>
+<circle cx="860" cy="218" r="7" fill="#6B6B6B"/>
+<text x="40" y="257" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">3</text>
+<text x="64" y="257" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Changed decisions</text>
+<circle cx="360" cy="252" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="380" cy="252" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="400" cy="252" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="475" cy="252" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="252" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="252" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="252" r="7" fill="#E37D4E"/>
+<circle cx="610" cy="252" r="7" fill="#E37D4E"/>
+<circle cx="630" cy="252" r="7" fill="#E37D4E"/>
+<circle cx="705" cy="252" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="252" r="7" fill="#E37D4E"/>
+<circle cx="745" cy="252" r="7" fill="#E37D4E"/>
+<circle cx="820" cy="252" r="7" fill="#6B6B6B"/>
+<circle cx="840" cy="252" r="7" fill="#6B6B6B"/>
+<circle cx="860" cy="252" r="7" fill="#6B6B6B"/>
+<text x="40" y="291" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">4</text>
+<text x="64" y="291" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Never discussed</text>
+<circle cx="360" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="380" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="400" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="475" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="286" r="7" fill="#E37D4E"/>
+<circle cx="610" cy="286" r="7" fill="#E37D4E"/>
+<circle cx="630" cy="286" r="7" fill="#E37D4E"/>
+<circle cx="705" cy="286" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="286" r="7" fill="#E37D4E"/>
+<circle cx="745" cy="286" r="7" fill="#E37D4E"/>
+<circle cx="820" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="840" cy="286" r="7" fill="#6B6B6B"/>
+<circle cx="860" cy="286" r="7" fill="#6B6B6B"/>
+<text x="40" y="325" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">5</text>
+<text x="64" y="325" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Your way</text>
+<circle cx="360" cy="320" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="380" cy="320" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="400" cy="320" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="475" cy="320" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="320" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="320" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="320" r="7" fill="#E37D4E"/>
+<circle cx="610" cy="320" r="7" fill="#E37D4E"/>
+<circle cx="630" cy="320" r="7" fill="#E37D4E"/>
+<circle cx="705" cy="320" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="320" r="7" fill="#E37D4E"/>
+<circle cx="745" cy="320" r="7" fill="#E37D4E"/>
+<circle cx="820" cy="320" r="7" fill="#6B6B6B"/>
+<circle cx="840" cy="320" r="7" fill="#6B6B6B"/>
+<circle cx="860" cy="320" r="7" fill="#6B6B6B"/>
+<text x="40" y="359" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">6</text>
+<text x="64" y="359" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Real work</text>
+<circle cx="360" cy="354" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="380" cy="354" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="400" cy="354" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="475" cy="354" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="354" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="354" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="354" r="7" fill="#E37D4E"/>
+<circle cx="610" cy="354" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="630" cy="354" r="7" fill="#E37D4E"/>
+<circle cx="705" cy="354" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="354" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="745" cy="354" r="7" fill="#E37D4E"/>
+<circle cx="820" cy="354" r="7" fill="#6B6B6B"/>
+<circle cx="840" cy="354" r="7" fill="#6B6B6B"/>
+<circle cx="860" cy="354" r="7" fill="#6B6B6B"/>
+<text x="40" y="393" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">7</text>
+<text x="64" y="393" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Chat to agent</text>
+<circle cx="360" cy="388" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="380" cy="388" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="400" cy="388" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="475" cy="388" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="388" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="388" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="388" r="7" fill="#E37D4E"/>
+<circle cx="610" cy="388" r="7" fill="#E37D4E"/>
+<circle cx="630" cy="388" r="7" fill="#E37D4E"/>
+<circle cx="705" cy="388" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="388" r="7" fill="#E37D4E"/>
+<circle cx="745" cy="388" r="7" fill="#E37D4E"/>
+<circle cx="820" cy="388" r="7" fill="#6B6B6B"/>
+<circle cx="840" cy="388" r="7" fill="#6B6B6B"/>
+<circle cx="860" cy="388" r="7" fill="#6B6B6B"/>
+<line x1="40" y1="408" x2="880" y2="408" stroke="#E3E3E3" stroke-width="1"/>
+<text x="40" y="446" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Areas 1–7, of 21</text>
+<text x="380" y="447" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">3</text>
+<text x="495" y="447" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">21</text>
+<text x="610" y="447" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">18</text>
+<text x="725" y="447" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">20</text>
+<text x="840" y="447" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">21</text>
+<text x="40" y="491" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">8</text>
+<text x="64" y="491" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">No past needed</text>
+<circle cx="360" cy="486" r="7" fill="#6B6B6B"/>
+<circle cx="380" cy="486" r="7" fill="#6B6B6B"/>
+<circle cx="400" cy="486" r="7" fill="#6B6B6B"/>
+<circle cx="475" cy="486" r="7" fill="#6B6B6B"/>
+<circle cx="495" cy="486" r="7" fill="#6B6B6B"/>
+<circle cx="515" cy="486" r="7" fill="#6B6B6B"/>
+<circle cx="590" cy="486" r="7" fill="#E37D4E"/>
+<circle cx="610" cy="486" r="7" fill="#E37D4E"/>
+<circle cx="630" cy="486" r="7" fill="#E37D4E"/>
+<circle cx="705" cy="486" r="7" fill="#E37D4E"/>
+<circle cx="725" cy="486" r="7" fill="#E37D4E"/>
+<circle cx="745" cy="486" r="7" fill="#E37D4E"/>
+<text x="840" y="491" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#8C8C8C" text-anchor="middle">not run</text>
+<text x="40" y="558" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">Potential reached, (C − A) ÷ (D − A): (18 − 3) ÷ (21 − 3) = 0.83 with exposurie 1.2.0,</text>
+<text x="40" y="582" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">and (20 − 3) ÷ (21 − 3) = 0.94 with 1.2.0+b6855ee.</text>
+<text x="40" y="610" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Area 8 needs no past, so it has no D and stays out of the totals.</text>
 </svg>

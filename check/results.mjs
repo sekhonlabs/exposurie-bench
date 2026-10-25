@@ -1,7 +1,9 @@
 // The results check (part 9): what the numbers are computed from is complete,
 // and results/ holds exactly what score/results.mjs writes from it, in the look.
 // For area 9 that means each long task's scores, its hand read and its record
-// of every step agree with one another and with the task's steps file.
+// of every step agree with one another and with the task's steps file. Part
+// 10's C again with the rebuilt read is held the same way, and to the rebuilt
+// exposurie; its sync + fresh again must come from area 9's own forks.
 //
 //   node check/results.mjs
 //
@@ -11,10 +13,10 @@
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { STRATEGIES } from '../runner/long.mjs';
+import { REBUILT_BATCH, STRATEGIES } from '../runner/long.mjs';
 import { PINS, loginIdentity } from '../runner/sandbox.mjs';
 import { LONG_GROUPS } from '../score/checks.mjs';
-import { AREAS, BATCHES, CONDITIONS, LONG_BATCH, USERS, finalChecks, outputs } from '../score/results.mjs';
+import { AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, USERS, finalChecks, outputs } from '../score/results.mjs';
 import { WINDOWS_PATH } from '../score/score.mjs';
 import { find } from './text.mjs';
 
@@ -28,14 +30,18 @@ const SAVE = 'run node score/results.mjs --save';
 // ---- every scored run has its condition and a final verdict
 const tasks = readJson('tasks', 'index.json').tasks.filter((t) => AREAS[t.area]);
 const cellsOf = {};
-for (const batch of BATCHES) {
+const ALL_BATCHES = [...BATCHES, ...REBUILT_BATCHES];
+for (const batch of ALL_BATCHES) {
   const scores = readJson('results', batch, 'scores.json').runs;
   const key = join('results', batch, 'conditions.json');
   if (!existsSync(join(REPO, key))) {
     fail(key, `is missing; ${SAVE}`);
     continue;
   }
-  const { conditions } = readJson(key);
+  const { conditions, exposurie } = readJson(key);
+  // Part 10's batches name the rebuilt exposurie their runs recorded; 1.2.0's name none.
+  const label = REBUILT_BATCHES.includes(batch) ? PINS.exposurieRebuilt.label : undefined;
+  if (exposurie !== label) fail(key, label ? `names exposurie ${exposurie}, not the rebuilt ${label}` : `names an exposurie, ${exposurie}, as only part 10's batches do`);
   for (const s of scores) {
     if (!CONDITIONS.includes(conditions[s.run])) fail(`${batch}/${s.run}`, 'has no condition in conditions.json');
     if (s.status !== 'done') fail(`${batch}/${s.run}`, `is ${s.status}, not done`);
@@ -51,8 +57,12 @@ const want = {
   'stability-1': tasks.filter((t) => t.area === 3).map((t) => `${t.id} C`),
   'stability-2': tasks.filter((t) => t.area === 3).map((t) => `${t.id} C`),
   pilot: CONDITIONS.map((c) => `recall-1 ${c}`),
+  // Part 10: every cell of areas 1–8 under C once, then area 3 under C twice more.
+  'full-2': tasks.map((t) => `${t.id} C`),
+  'stability-3': tasks.filter((t) => t.area === 3).map((t) => `${t.id} C`),
+  'stability-4': tasks.filter((t) => t.area === 3).map((t) => `${t.id} C`),
 };
-for (const batch of BATCHES) {
+for (const batch of ALL_BATCHES) {
   if (!cellsOf[batch]) continue;
   if (JSON.stringify(cellsOf[batch]) !== JSON.stringify(want[batch].sort())) fail(`results/${batch}`, `does not hold each of its ${want[batch].length} cells exactly once`);
 }
@@ -62,18 +72,24 @@ const builds = existsSync(join(REPO, 'results', 'builds.json')) ? readJson('resu
 if (!builds) fail('results/builds.json', `is missing; ${SAVE}`);
 else for (const u of USERS) if (!(builds[u]?.tokens?.all_input > 0)) fail('results/builds.json', `has no tokens for the ${u}`);
 
-// ---- area 9: each long task once, every strategy finished, every check with a final verdict, every token accounted for
+// ---- area 9: each long task once, every strategy finished, every check with a final verdict, every token accounted for.
+// Part 10's REBUILT_BATCH ran sync + fresh alone again, from area 9's forks: its fork and its sync session must be area 9's own.
 const longTasks = readJson('tasks', 'index.json').tasks.filter((t) => t.area === 9);
-const longFiles = ['scores', 'hand', 'steps'].map((f) => `results/${LONG_BATCH}/${f}.json`);
-for (const f of longFiles.filter((x) => !existsSync(join(REPO, x)))) fail(f, `is missing; ${SAVE}`);
-let strategiesKeyed = 0;
-if (longFiles.every((f) => existsSync(join(REPO, f)))) {
+const kinds = ['all_input', 'input', 'cache_write', 'cache_read', 'output'];
+const add = (xs, k) => xs.reduce((n, x) => n + x.tokens[k], 0);
+const longOf = {};
+const strategiesKeyed = {};
+for (const batch of [LONG_BATCH, REBUILT_BATCH]) {
+  const again = batch === REBUILT_BATCH;
+  const longFiles = ['scores', 'hand', 'steps'].map((f) => `results/${batch}/${f}.json`);
+  for (const f of longFiles.filter((x) => !existsSync(join(REPO, x)))) fail(f, `is missing; ${SAVE}`);
+  strategiesKeyed[batch] = 0;
+  if (!longFiles.every((f) => existsSync(join(REPO, f)))) continue;
   const [scores, hands, records] = longFiles.map((f) => readJson(f).runs);
-  const kinds = ['all_input', 'input', 'cache_write', 'cache_read', 'output'];
-  const add = (xs, k) => xs.reduce((n, x) => n + x.tokens[k], 0);
-  for (const x of [...scores, ...hands, ...records]) if (!longTasks.some((t) => t.id === x.task)) fail(`${LONG_BATCH}/${x.task}`, 'is not a long task in tasks/index.json');
+  longOf[batch] = { scores, records };
+  for (const x of [...scores, ...hands, ...records]) if (!longTasks.some((t) => t.id === x.task)) fail(`${batch}/${x.task}`, 'is not a long task in tasks/index.json');
   for (const t of longTasks) {
-    const where = `${LONG_BATCH}/${t.id}`;
+    const where = `${batch}/${t.id}`;
     const [s, h, r] = [scores, hands, records].map((xs) => xs.filter((x) => x.task === t.id));
     if (s.length !== 1 || h.length !== 1 || r.length !== 1) {
       fail(where, 'is not in scores.json, hand.json and steps.json exactly once each');
@@ -82,27 +98,45 @@ if (longFiles.every((f) => existsSync(join(REPO, f)))) {
     const [score, hand, rec] = [s[0], h[0], r[0]];
     if (hand.run !== score.run || rec.run !== score.run) fail(where, 'has a different run in scores.json, hand.json and steps.json');
     const steps = readJson('tasks', t.steps);
+    // A run again is held to sync + fresh alone; any other strategy in it is a problem below, not a strategy to check.
+    const ran = again ? ['sync'].filter((p) => score.strategies[p]) : STRATEGIES;
 
-    // The fork: past the mark at the first step boundary after the core steps, where the scores say it was.
-    const fill = rec.phases.fill.filter((a) => a.counts);
-    if (rec.fork_at !== steps.fork_at) fail(where, `was forked at a mark of ${rec.fork_at}, where its steps file says ${steps.fork_at}`);
-    if (fill.length !== rec.fork.core + rec.fork.more || rec.fork.core !== steps.core.length) fail(where, 'does not count one fill attempt for each step before the fork');
-    else if (fill.at(-1).step !== rec.fork.after || fill.at(-1).context_after !== rec.fork.context || rec.fork.context < rec.fork_at) {
-      fail(where, 'is not forked where its last fill step ended, past the mark');
-    } else if (fill.slice(rec.fork.core - 1, -1).some((a) => a.context_after >= rec.fork_at)) fail(where, 'passed the mark before the step it was forked after');
-    if (score.fork.after !== rec.fork.after || score.fork.context !== rec.fork.context) fail(where, 'is forked at one point in scores.json and another in steps.json');
-    for (const k of kinds) if (add(fill, k) !== score.fork.tokens[k]) fail(where, `its fill's ${k} tokens are not those of its counted steps`);
+    if (!again) {
+      // The fork: past the mark at the first step boundary after the core steps, where the scores say it was.
+      const fill = rec.phases.fill.filter((a) => a.counts);
+      if (rec.fork_at !== steps.fork_at) fail(where, `was forked at a mark of ${rec.fork_at}, where its steps file says ${steps.fork_at}`);
+      if (fill.length !== rec.fork.core + rec.fork.more || rec.fork.core !== steps.core.length) fail(where, 'does not count one fill attempt for each step before the fork');
+      else if (fill.at(-1).step !== rec.fork.after || fill.at(-1).context_after !== rec.fork.context || rec.fork.context < rec.fork_at) {
+        fail(where, 'is not forked where its last fill step ended, past the mark');
+      } else if (fill.slice(rec.fork.core - 1, -1).some((a) => a.context_after >= rec.fork_at)) fail(where, 'passed the mark before the step it was forked after');
+      if (score.fork.after !== rec.fork.after || score.fork.context !== rec.fork.context) fail(where, 'is forked at one point in scores.json and another in steps.json');
+      for (const k of kinds) if (add(fill, k) !== score.fork.tokens[k]) fail(where, `its fill's ${k} tokens are not those of its counted steps`);
+    } else {
+      // Only the fresh session of sync + fresh ran again: from area 9's own fork, after area 9's own sync session.
+      if (JSON.stringify(Object.keys(score.strategies)) !== '["sync"]' || JSON.stringify(Object.keys(rec.phases)) !== '["sync"]') fail(where, 'ran something other than sync + fresh again');
+      const first = longOf[LONG_BATCH]?.scores.find((x) => x.task === t.id);
+      const firstRec = longOf[LONG_BATCH]?.records.find((x) => x.task === t.id);
+      if (!first || !firstRec || score.from !== `${LONG_BATCH}/${first.run}` || rec.from !== score.from) fail(where, `does not name ${LONG_BATCH}'s run of ${t.id} as the run it came from`);
+      else {
+        if (JSON.stringify(score.fork) !== JSON.stringify(first.fork) || JSON.stringify(rec.fork) !== JSON.stringify(firstRec.fork) || rec.fork_at !== firstRec.fork_at) {
+          fail(where, `is not forked where ${LONG_BATCH}'s run of ${t.id} was`);
+        }
+        const syncOf = (x) => JSON.stringify(x.sync_sessions.filter((y) => y.counts).map((y) => y.tokens));
+        if (syncOf(rec) !== syncOf(firstRec)) fail(where, `does not carry over ${LONG_BATCH}'s sync session`);
+      }
+    }
     const v = rec.versions;
-    if (!v.claude_code?.startsWith(PINS.claudeCode) || v.model !== PINS.model || v.exposurie !== PINS.exposurie) fail(where, 'ran under versions other than the pinned ones');
+    const pinned = again ? PINS.exposurieRebuilt.label : PINS.exposurie;
+    if (!v.claude_code?.startsWith(PINS.claudeCode) || v.model !== PINS.model || v.exposurie !== pinned) fail(where, 'ran under versions other than the pinned ones');
 
-    for (const p of STRATEGIES) {
+    for (const p of ran) {
       const at = `${where} ${p}`;
       const sc = score.strategies[p];
       if (!sc) {
         fail(at, 'has no scores: the strategy did not finish');
         continue;
       }
-      strategiesKeyed += 1;
+      strategiesKeyed[batch] += 1;
       for (const g of LONG_GROUPS) {
         const want = steps.checks[g].map((c) => c.id);
         if (JSON.stringify(Object.keys(sc.checks[g]).sort()) !== JSON.stringify([...want].sort())) fail(at, `does not score each of its ${g} checks exactly once`);
@@ -186,9 +220,10 @@ for (const file of walk(join(REPO, 'results'))) {
 // ---- what there is
 const n = written['results/numbers.json'] ? JSON.parse(written['results/numbers.json']) : null;
 console.log(
-  `${BATCHES.filter((b) => cellsOf[b]).length} batches keyed, ${Object.values(cellsOf).flat().length} runs. ` +
-    (n ? `Right answers, areas 1–7: ${CONDITIONS.map((c) => `${c} ${n.right_answers.pooled[c]}`).join(', ')} of ${n.right_answers.of}. ` : '') +
-    `Area 9: ${longTasks.length} long tasks, ${strategiesKeyed} strategies keyed. ` +
+  `${ALL_BATCHES.filter((b) => cellsOf[b]).length} batches keyed, ${Object.values(cellsOf).flat().length} runs. ` +
+    (n ? `Right answers, areas 1–7: ${CONDITIONS.map((c) => `${c} ${n.right_answers.pooled[c]}`).join(', ')} of ${n.right_answers.of}, ` +
+      `and C ${n.rebuilt_read.right_answers.pooled.C} with exposurie ${n.rebuilt_read.exposurie}. ` : '') +
+    `Area 9: ${longTasks.length} long tasks, ${strategiesKeyed[LONG_BATCH]} strategies keyed, and ${strategiesKeyed[REBUILT_BATCH]} again. ` +
     `${Object.keys(written).filter((r) => r.endsWith('.svg')).length} charts.`,
 );
 if (problems.length) {

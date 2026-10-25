@@ -1,0 +1,9 @@
+{
+  "batch": "stability-4",
+  "exposurie": "1.2.0+b6855ee",
+  "conditions": {
+    "r001": "C",
+    "r002": "C",
+    "r003": "C"
+  }
+}

@@ -460,7 +460,7 @@ node check/results.mjs
 
 ### 10. The rebuilt read
 
-**Plan usage:** yes: 30 C runs and two fresh sessions of area 9. **Built and checked against the fake 2026-10-25; the live runs need the owner's go, given that day.**
+**Plan usage:** yes: 30 C runs and two fresh sessions of area 9. **Done 2026-10-25.** It was built and checked against the fake, then run live the same day on the owner's go. All 30 C runs, both fresh sessions and their scoring took 18 minutes, with no usage-limit stop, for about $2.66 at list prices. Then it was read by hand and published beside 1.2.0's. The results are in the README, under *C again, with exposurie's rebuilt read*.
 
 exposurie's `read` was rebuilt after the results (commit `b6855ee`), because its search had matched a whole phrase as one substring. This part runs C again with it, on the same brains, and sets the results beside 1.2.0's. Why each choice was made is in [decisions.md](decisions.md).
 
@@ -473,7 +473,7 @@ exposurie's `read` was rebuilt after the results (commit `b6855ee`), because its
 - **Done when:**
   - `check/runner.mjs`, `check/long.mjs` and `check/build.mjs` hold, with the rebuilt batch and the fresh session again run through the fake. A fault test breaks the runner's part 10 code, and every break is caught.
   - every run of the three batches and both fresh sessions is done, scored, and read by hand
-  - `score/results.mjs --save` publishes them beside 1.2.0's, `check/results.mjs` holds them, and the README and charts show both
+  - `score/results.mjs --save` publishes them beside 1.2.0's, `check/results.mjs` holds them, and the README and charts show both. A fault test breaks what part 10 publishes, and every break is caught.
 
 ```
 node runner/sandbox.mjs setup-rebuilt

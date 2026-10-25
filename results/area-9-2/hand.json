@@ -1,0 +1,99 @@
+{
+  "batch": "area-9-2",
+  "runs": [
+    {
+      "run": "r001",
+      "task": "long-1",
+      "read": "2026-10-25",
+      "note": "The hand read of sync + fresh's fresh session again, with exposurie's rebuilt read (part 10), after score/long.mjs long-1 --rebuilt. A verdict here overrides the script's. Not blind: a stream shows its strategy (docs/design.md, area 9). Every scripted result was read against its evidence (runs/long-evidence.mjs) and stands, but for archived-read.",
+      "fork_code": {
+        "note": "Which of the four decisions the fork's code already held (fork/work). The fork is area-9/r001's, so this is its hand read's.",
+        "imported-tag": true,
+        "archived-read": true,
+        "folder-tags": false,
+        "highlight-source": false
+      },
+      "verdicts": {
+        "sync": {
+          "finished": {
+            "as-jobs": {
+              "verdict": true,
+              "why": "The upload route, unchanged since the fork, calls enqueue(db, service.kind, ...) (src/import/routes.js); services.js gives Instapaper and Omnivore job kinds of their own, and both handlers wrap the same libraryImport as Pocket's."
+            },
+            "commit": {
+              "verdict": true,
+              "why": "Subject 'Import libraries from Pocket, Instapaper and Omnivore' (52 characters), imperative, no prefix; the body says why, wrapped at 72, and restates the four rules and the three failed approaches. It adds a Co-Authored-By trailer, its own system prompt's attribution, and says so."
+            }
+          },
+          "kept": {
+            "folder-states": {
+              "verdict": true,
+              "why": "folder:<name> only when the lowercased folder is neither 'unread' nor 'archive' (instapaper.js)."
+            },
+            "archived-read": {
+              "verdict": true,
+              "script": false,
+              "why": "read: state === 'archive' (Instapaper, the state lowercased first) and read: item.state === 'Archived' (Omnivore), with read_at: row.read ? ... in library.js, more than 240 characters from any quoted 'Archived'."
+            }
+          },
+          "retried": {}
+        }
+      },
+      "final": {
+        "sync": {
+          "finished": "7/7",
+          "kept": "5/5",
+          "retried": "0/3"
+        }
+      }
+    },
+    {
+      "run": "r002",
+      "task": "long-2",
+      "read": "2026-10-25",
+      "note": "The hand read of sync + fresh's fresh session again, with exposurie's rebuilt read (part 10), after score/long.mjs long-2 --rebuilt. A verdict here overrides the script's. Not blind: a stream shows its strategy (docs/design.md, area 9). Every scripted result was read against its evidence (runs/long-evidence.mjs) and stands.",
+      "fork_code": {
+        "note": "Which decisions the fork's code already held: the event names and the envelope apply from the first cut; the admin-only dead letters and the 45 days existed only in the conversation. The fork is area-9/r002's, so this is its hand read's.",
+        "event-name": true,
+        "envelope": true,
+        "dead-letters-admin": false,
+        "retention": false
+      },
+      "verdicts": {
+        "sync": {
+          "finished": {
+            "tests": {
+              "verdict": true,
+              "why": "A rename block in projects.test.ts, webhookReplay.test.ts and purgeWebhookDeliveries.test.ts."
+            },
+            "team-deploy-note": {
+              "verdict": false,
+              "why": "A '## Deploy note' that ships with the flag off and switches it on from Monday, but no #eng-deploys, and its rollback is the flag, a revert and two DROP TABLEs, not promoting the previous image; promote.yml appears only as the Friday guard."
+            }
+          },
+          "kept": {
+            "envelope": {
+              "verdict": true,
+              "why": "Every event's payload is { id: eventId, type, created_at: createdAt, data: project }, with project the ApiProject the API returns (src/webhooks/events.ts)."
+            }
+          },
+          "confirmed": {
+            "dead-letters-admin": "Kept: replay is POST /v2/admin/webhook-deliveries/:id/replay behind requireAdmin, and no route outside the admin ones replays anything.",
+            "retention": "Kept: KEEP_DELIVERIES_DAYS = 45, and the nightly job deletes every delivery created before it, delivered or dead.",
+            "team-branch": "Kept: ENG-447-project-webhooks.",
+            "team-sections": "Kept: Why, What changed, How I tested (left TO BE FILLED IN, as the brain's conventions page says to when nothing could run), Rollback.",
+            "team-reviewer": "Kept: the description opens with a line for Ana, and a note for the migration reviewer follows."
+          }
+        }
+      },
+      "why_sync_kept": "The same brain as 1.2.0's fresh session, the one its sync wrote. The fresh session searched in steps 1 and 3 and read pages by name in step 2, the names coming from step 1's results. 'ENG-447 webhooks project events' matched 34 pages, and it read the contract and design facts of Project Webhooks (ENG-447). 'pull request branch name title description deploy note' printed Tidewell Pull Request Conventions first and whole, with the branch, title, sections and Ana. The rule it still missed, a deploy note for #eng-deploys with the rollback as promoting the previous image, is on Production Rollback by Image Promotion. That page matches only 'deploy' and 'note' of the query, and was not among the 14 of 39 pages the search showed; nothing searched for the deploy note alone.",
+      "final": {
+        "sync": {
+          "finished": "9/10",
+          "kept": "4/4",
+          "retried": "0/3"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "batch": "area-9-2",
+  "runs": [
+    {
+      "task": "long-1",
+      "run": "r001",
+      "from": "area-9/r001",
+      "exposurie": "rebuilt",
+      "scored": "2026-10-25T05:16:30.831Z",
+      "fork": {
+        "at": "2026-10-23T11:47:01.689Z",
+        "after": "19",
+        "context": 509677,
+        "core": 9,
+        "more": 10,
+        "tokens": {
+          "input": 264,
+          "cache_write": 509675,
+          "cache_read": 26467710,
+          "output": 235616,
+          "all_input": 26977649,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 264,
+              "cache_write": 509675,
+              "cache_read": 26467710,
+              "output": 235616
+            }
+          }
+        }
+      },
+      "strategies": {
+        "sync": {
+          "checks": {
+            "finished": {
+              "instapaper": true,
+              "omnivore": true,
+              "as-jobs": null,
+              "page": true,
+              "readme": true,
+              "commit": null,
+              "commit-prefix": true
+            },
+            "kept": {
+              "imported-tag": true,
+              "folder-tags": true,
+              "folder-states": null,
+              "archived-read": false,
+              "highlight-source": true
+            },
+            "retried": {
+              "replace": false,
+              "comma-split": false,
+              "route-import": false
+            }
+          },
+          "counts": {
+            "finished": {
+              "held": 5,
+              "of": 5
+            },
+            "kept": {
+              "held": 3,
+              "of": 4
+            },
+            "retried": {
+              "held": 0,
+              "of": 3
+            }
+          },
+          "tokens": {
+            "input": 98,
+            "cache_write": 158852,
+            "cache_read": 2663560,
+            "output": 59168,
+            "all_input": 2822510,
+            "by_model": {
+              "claude-sonnet-5-5": {
+                "input": 98,
+                "cache_write": 158852,
+                "cache_read": 2663560,
+                "output": 59168
+              }
+            }
+          },
+          "context_end": 88574
+        }
+      },
+      "by_hand": [
+        "finished as-jobs: both importers run as jobs, through the same upload and worker path as Pocket",
+        "finished commit: the last reply gives a commit message in their style: an imperative subject under 60 characters, and a body that says why",
+        "kept folder-states: Unread and Archive are not made into folder tags"
+      ]
+    },
+    {
+      "task": "long-2",
+      "run": "r002",
+      "from": "area-9/r002",
+      "exposurie": "rebuilt",
+      "scored": "2026-10-25T05:16:30.948Z",
+      "fork": {
+        "at": "2026-10-24T10:10:57.357Z",
+        "after": "24",
+        "context": 500236,
+        "core": 8,
+        "more": 16,
+        "tokens": {
+          "input": 284,
+          "cache_write": 746851,
+          "cache_read": 33396543,
+          "output": 296178,
+          "all_input": 34143678,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 284,
+              "cache_write": 746851,
+              "cache_read": 33396543,
+              "output": 296178
+            }
+          }
+        }
+      },
+      "strategies": {
+        "sync": {
+          "checks": {
+            "finished": {
+              "renamed": true,
+              "replay": true,
+              "cleanup": true,
+              "tests": null,
+              "pr": true,
+              "team-branch": true,
+              "team-title": true,
+              "team-sections": true,
+              "team-reviewer": true,
+              "team-deploy-note": null
+            },
+            "kept": {
+              "event-name": true,
+              "envelope": null,
+              "dead-letters-admin": true,
+              "retention": true
+            },
+            "retried": {
+              "timer-retry": false,
+              "hash-signature": false,
+              "http-in-transaction": false
+            }
+          },
+          "counts": {
+            "finished": {
+              "held": 8,
+              "of": 8
+            },
+            "kept": {
+              "held": 3,
+              "of": 3
+            },
+            "retried": {
+              "held": 0,
+              "of": 3
+            }
+          },
+          "tokens": {
+            "input": 82,
+            "cache_write": 161033,
+            "cache_read": 2006257,
+            "output": 46374,
+            "all_input": 2167372,
+            "by_model": {
+              "claude-sonnet-5-5": {
+                "input": 82,
+                "cache_write": 161033,
+                "cache_read": 2006257,
+                "output": 46374
+              }
+            }
+          },
+          "context_end": 70766
+        }
+      },
+      "by_hand": [
+        "finished tests: the rename, the replay and the cleanup have tests",
+        "finished team-deploy-note: the deploy note is for #eng-deploys, says the flag stays off, and gives the rollback as the promote workflow with the previous image",
+        "kept envelope: it goes out in the same envelope, { id, type, created_at, data }, with data the project as the API returns it"
+      ]
+    }
+  ]
+}

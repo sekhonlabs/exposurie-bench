@@ -1,0 +1,950 @@
+{
+  "batch": "full-2",
+  "runs": [
+    {
+      "run": "r001",
+      "task": "your-way-1",
+      "area": 5,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          false
+        ],
+        "forbidden": [
+          false
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply advises against Drizzle, citing the user's own rule \"no ORMs in my own code\" with raw SQL, and it explicitly separates the Prisma-at-work practice from home projects.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1535,
+          "cache_read": 0,
+          "output": 76,
+          "all_input": 1537,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1535,
+              "cache_read": 0,
+              "output": 76
+            }
+          }
+        },
+        "at": "2026-10-25T05:15:36.591Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 19551,
+        "input": 4,
+        "cache_write": 8021,
+        "cache_read": 11526,
+        "output": 796
+      },
+      "turns": 3,
+      "duration_ms": 9420,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 2
+    },
+    {
+      "run": "r002",
+      "task": "recall-3",
+      "area": 1,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 14157,
+        "input": 4,
+        "cache_write": 1909,
+        "cache_read": 12244,
+        "output": 219
+      },
+      "turns": 2,
+      "duration_ms": 4759,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r003",
+      "task": "across-2",
+      "area": 2,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "forbidden": [
+          true,
+          true,
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply gives pagesift as MPL-2.0 and dotkit as Apache-2.0, calls only those two open source, and marks Satchel as closed. It also does not call Fieldnotes or Tidewell open source, saying only that it didn't check their licensing.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1373,
+          "cache_read": 0,
+          "output": 100,
+          "all_input": 1375,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1373,
+              "cache_read": 0,
+              "output": 100
+            }
+          }
+        },
+        "at": "2026-10-25T05:15:40.086Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 16665,
+        "input": 4,
+        "cache_write": 4414,
+        "cache_read": 12247,
+        "output": 577
+      },
+      "turns": 2,
+      "duration_ms": 7063,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r004",
+      "task": "never-2",
+      "area": 4,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says no font choice was found on record, names no font as the user's pick, and only offers to look in the site's CSS.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1174,
+          "cache_read": 0,
+          "output": 51,
+          "all_input": 1176,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1174,
+              "cache_read": 0,
+              "output": 51
+            }
+          }
+        },
+        "at": "2026-10-25T05:15:43.535Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 31435,
+        "input": 8,
+        "cache_write": 3519,
+        "cache_read": 27908,
+        "output": 534
+      },
+      "turns": 4,
+      "duration_ms": 9459,
+      "tool_calls": 3,
+      "looked": true,
+      "reads": 4
+    },
+    {
+      "run": "r005",
+      "task": "changed-3",
+      "area": 3,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply states the site is hosted on Netlify and does not give GitHub Pages as the current host; it only mentions the old Pages copy as a leftover.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1069,
+          "cache_read": 0,
+          "output": 63,
+          "all_input": 1071,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1069,
+              "cache_read": 0,
+              "output": 63
+            }
+          }
+        },
+        "at": "2026-10-25T05:15:46.801Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 23001,
+        "input": 6,
+        "cache_write": 3313,
+        "cache_read": 19682,
+        "output": 338
+      },
+      "turns": 3,
+      "duration_ms": 8334,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r006",
+      "task": "real-work-1",
+      "area": 6,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 92064,
+        "input": 14,
+        "cache_write": 12832,
+        "cache_read": 79218,
+        "output": 5517
+      },
+      "turns": 13,
+      "duration_ms": 37394,
+      "tool_calls": 12,
+      "looked": true,
+      "reads": 4
+    },
+    {
+      "run": "r007",
+      "task": "your-way-3",
+      "area": 5,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          false
+        ],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "It advises against logins and cites the settled reason (shared link plus club code, since \"members will not make accounts for a book club\"), and its suggested name/email check is entered alongside the club code rather than being an account system.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1373,
+          "cache_read": 0,
+          "output": 78,
+          "all_input": 1375,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1373,
+              "cache_read": 0,
+              "output": 78
+            }
+          }
+        },
+        "at": "2026-10-25T05:15:50.331Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 16214,
+        "input": 4,
+        "cache_write": 3969,
+        "cache_read": 12241,
+        "output": 539
+      },
+      "turns": 2,
+      "duration_ms": 8000,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r008",
+      "task": "never-1",
+      "area": 4,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says no record of any translation decision was found, presents nothing as a decision of the user's, and the related items are explicitly described as not being localization decisions.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1323,
+          "cache_read": 0,
+          "output": 62,
+          "all_input": 1325,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1323,
+              "cache_read": 0,
+              "output": 62
+            }
+          }
+        },
+        "at": "2026-10-25T05:15:53.652Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 26924,
+        "input": 6,
+        "cache_write": 6488,
+        "cache_read": 20430,
+        "output": 518
+      },
+      "turns": 3,
+      "duration_ms": 8568,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r009",
+      "task": "no-past-2",
+      "area": 8,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 6722,
+        "input": 2,
+        "cache_write": 1156,
+        "cache_read": 5564,
+        "output": 643
+      },
+      "turns": 1,
+      "duration_ms": 5513,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r010",
+      "task": "recall-2",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 16602,
+        "input": 4,
+        "cache_write": 4352,
+        "cache_read": 12246,
+        "output": 304
+      },
+      "turns": 2,
+      "duration_ms": 5437,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r011",
+      "task": "real-work-2",
+      "area": 6,
+      "user": "developer",
+      "status": "done",
+      "verdict": "wrong",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          false,
+          true,
+          false
+        ],
+        "forbidden": [
+          false,
+          false
+        ]
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 73609,
+        "input": 14,
+        "cache_write": 7205,
+        "cache_read": 66390,
+        "output": 2388
+      },
+      "turns": 14,
+      "duration_ms": 19299,
+      "tool_calls": 13,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r012",
+      "task": "recall-1",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 16768,
+        "input": 4,
+        "cache_write": 4518,
+        "cache_read": 12246,
+        "output": 490
+      },
+      "turns": 2,
+      "duration_ms": 6516,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r013",
+      "task": "chat-3",
+      "area": 7,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 88574,
+        "input": 14,
+        "cache_write": 11986,
+        "cache_read": 76574,
+        "output": 4809
+      },
+      "turns": 15,
+      "duration_ms": 34973,
+      "tool_calls": 14,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r014",
+      "task": "no-past-3",
+      "area": 8,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 6730,
+        "input": 2,
+        "cache_write": 1164,
+        "cache_read": 5564,
+        "output": 250
+      },
+      "turns": 1,
+      "duration_ms": 2951,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r015",
+      "task": "changed-2",
+      "area": 3,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says tickets now live in Linear (key ENG) and presents Jira only as the former system, which matches the rubric.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1114,
+          "cache_read": 0,
+          "output": 53,
+          "all_input": 1116,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1114,
+              "cache_read": 0,
+              "output": 53
+            }
+          }
+        },
+        "at": "2026-10-25T05:15:56.986Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 16161,
+        "input": 4,
+        "cache_write": 3915,
+        "cache_read": 12242,
+        "output": 289
+      },
+      "turns": 2,
+      "duration_ms": 5051,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r016",
+      "task": "changed-1",
+      "area": 3,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true,
+          false
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply states the user's own projects now use node:test (Node's built-in runner), notes the move off Vitest, and doesn't present Vitest or Jest as current.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1285,
+          "cache_read": 0,
+          "output": 66,
+          "all_input": 1287,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1285,
+              "cache_read": 0,
+              "output": 66
+            }
+          }
+        },
+        "at": "2026-10-25T05:16:00.356Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 15640,
+        "input": 4,
+        "cache_write": 3391,
+        "cache_read": 12245,
+        "output": 430
+      },
+      "turns": 2,
+      "duration_ms": 5911,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r017",
+      "task": "across-3",
+      "area": 2,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": [
+          true,
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply names exactly Second Chapter (book club page) and the Spending Summary (Money sheet), and explicitly excludes Small Hours and Quiet.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1281,
+          "cache_read": 0,
+          "output": 66,
+          "all_input": 1283,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1281,
+              "cache_read": 0,
+              "output": 66
+            }
+          }
+        },
+        "at": "2026-10-25T05:16:03.986Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 24794,
+        "input": 6,
+        "cache_write": 3758,
+        "cache_read": 21030,
+        "output": 569
+      },
+      "turns": 3,
+      "duration_ms": 7788,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 2
+    },
+    {
+      "run": "r018",
+      "task": "chat-1",
+      "area": 7,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true
+        ],
+        "forbidden": [
+          false
+        ]
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 104534,
+        "input": 12,
+        "cache_write": 22472,
+        "cache_read": 82050,
+        "output": 12827
+      },
+      "turns": 15,
+      "duration_ms": 76348,
+      "tool_calls": 14,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r019",
+      "task": "no-past-1",
+      "area": 8,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 6696,
+        "input": 2,
+        "cache_write": 1130,
+        "cache_read": 5564,
+        "output": 446
+      },
+      "turns": 1,
+      "duration_ms": 3720,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r020",
+      "task": "never-3",
+      "area": 4,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says the brain records no decision about backing up the book club data, presents nothing as decided, and offers the periodic-copy suggestion clearly as new advice.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1340,
+          "cache_read": 0,
+          "output": 65,
+          "all_input": 1342,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1340,
+              "cache_read": 0,
+              "output": 65
+            }
+          }
+        },
+        "at": "2026-10-25T05:16:07.400Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 24680,
+        "input": 6,
+        "cache_write": 4355,
+        "cache_read": 20319,
+        "output": 618
+      },
+      "turns": 3,
+      "duration_ms": 8921,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r021",
+      "task": "chat-2",
+      "area": 7,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 15688,
+        "input": 4,
+        "cache_write": 3438,
+        "cache_read": 12246,
+        "output": 464
+      },
+      "turns": 2,
+      "duration_ms": 6492,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r022",
+      "task": "real-work-3",
+      "area": 6,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 42774,
+        "input": 8,
+        "cache_write": 8762,
+        "cache_read": 34004,
+        "output": 2674
+      },
+      "turns": 5,
+      "duration_ms": 19299,
+      "tool_calls": 4,
+      "looked": true,
+      "reads": 4
+    },
+    {
+      "run": "r023",
+      "task": "across-1",
+      "area": 2,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": [
+          false,
+          false
+        ]
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 15293,
+        "input": 4,
+        "cache_write": 3045,
+        "cache_read": 12244,
+        "output": 296
+      },
+      "turns": 2,
+      "duration_ms": 5642,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r024",
+      "task": "your-way-2",
+      "area": 5,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          false
+        ],
+        "forbidden": [
+          false
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply advises against raw SQL and cites the team rule (Prisma for every query, raw SQL only inside migrations), and it does not recommend raw SQL for the report or apply the personal preference.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1626,
+          "cache_read": 0,
+          "output": 77,
+          "all_input": 1628,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1626,
+              "cache_read": 0,
+              "output": 77
+            }
+          }
+        },
+        "at": "2026-10-25T05:16:10.649Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 15386,
+        "input": 4,
+        "cache_write": 3125,
+        "cache_read": 12257,
+        "output": 832
+      },
+      "turns": 2,
+      "duration_ms": 10491,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    }
+  ]
+}

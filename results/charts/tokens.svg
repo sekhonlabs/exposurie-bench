@@ -1,55 +1,68 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="698" viewBox="0 0 880 698" role="img" aria-label="Tokens per run and per right answer, by condition">
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="820" viewBox="0 0 880 820" role="img" aria-label="Tokens per run and per right answer, by condition">
 <title>Tokens per run and per right answer, by condition</title>
-<rect x="0" y="0" width="880" height="698" fill="#FFFFFF"/>
+<rect x="0" y="0" width="880" height="820" fill="#FFFFFF"/>
 <text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">Tokens</text>
 <text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Every input token, cached or not, with all three panels on one scale.</text>
 <text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Output is counted apart: a median of 439 to 658 tokens a run, alike in every condition.</text>
-<text x="40" y="136" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Per run: the median of areas 1–7</text>
-<text x="40" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">A</text>
-<text x="60" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">fresh session</text>
-<rect x="200" y="152" width="22.1" height="22" fill="#8C8C8C"/>
-<text x="230.1" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">13,095</text>
-<text x="40" y="202" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">B</text>
-<text x="60" y="202" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">whole history</text>
-<rect x="200" y="186" width="212.2" height="22" fill="#8C8C8C"/>
-<text x="420.2" y="202" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">125,497</text>
-<text x="40" y="236" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
-<text x="60" y="236" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">exposurie</text>
-<rect x="200" y="220" width="58.3" height="22" fill="#E37D4E"/>
-<text x="266.3" y="236" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">34,494</text>
-<text x="40" y="270" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">D</text>
-<text x="60" y="270" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">perfect memory</text>
-<rect x="200" y="254" width="11.2" height="22" fill="#8C8C8C"/>
-<text x="219.2" y="270" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">6,622</text>
-<text x="40" y="330" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Per right answer: all of a condition's tokens in areas 1–7 ÷ its right answers</text>
-<text x="40" y="362" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">A</text>
-<text x="60" y="362" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">fresh session</text>
-<rect x="200" y="346" width="213.4" height="22" fill="#8C8C8C"/>
-<text x="421.4" y="362" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">126,197  ·  3 right</text>
-<text x="40" y="396" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">B</text>
-<text x="60" y="396" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">whole history</text>
-<rect x="200" y="380" width="470" height="22" fill="#8C8C8C"/>
-<text x="678" y="396" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">277,950  ·  21 right</text>
-<text x="40" y="430" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
-<text x="60" y="430" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">exposurie</text>
-<rect x="200" y="414" width="83.3" height="22" fill="#E37D4E"/>
-<text x="291.3" y="430" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">49,263  ·  18 right</text>
-<text x="40" y="464" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">D</text>
-<text x="60" y="464" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">perfect memory</text>
-<rect x="200" y="448" width="29.9" height="22" fill="#8C8C8C"/>
-<text x="237.9" y="464" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">17,675  ·  21 right</text>
-<text x="40" y="524" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Per run on work that needs no past: the median of area 8</text>
-<text x="40" y="556" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">A</text>
-<text x="60" y="556" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">fresh session</text>
-<rect x="200" y="540" width="10.9" height="22" fill="#8C8C8C"/>
-<text x="218.9" y="556" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">6,423</text>
-<text x="40" y="590" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">B</text>
-<text x="60" y="590" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">whole history</text>
-<rect x="200" y="574" width="212.2" height="22" fill="#8C8C8C"/>
-<text x="420.2" y="590" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">125,509</text>
-<text x="40" y="624" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
-<text x="60" y="624" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">exposurie</text>
-<rect x="200" y="608" width="11.4" height="22" fill="#E37D4E"/>
-<text x="219.4" y="624" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">6,721</text>
-<text x="40" y="672" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">In area 8, C never ran <tspan font-family="Consolas, Menlo, monospace">exposurie read</tspan>, and what exposurie installs added 297 to 298 tokens a run.</text>
+<text x="40" y="112" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">C ran twice on the same brains: with 1.2.0 from npm, and again with 1.2.0+b6855ee, its rebuilt read.</text>
+<text x="40" y="156" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Per run: the median of areas 1–7</text>
+<text x="40" y="188" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">A</text>
+<text x="60" y="188" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">fresh session</text>
+<rect x="200" y="172" width="22.1" height="22" fill="#8C8C8C"/>
+<text x="230.1" y="188" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">13,095</text>
+<text x="40" y="222" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">B</text>
+<text x="60" y="222" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">whole history</text>
+<rect x="200" y="206" width="212.2" height="22" fill="#8C8C8C"/>
+<text x="420.2" y="222" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">125,497</text>
+<text x="40" y="256" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
+<text x="60" y="256" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">exposurie 1.2.0</text>
+<rect x="200" y="240" width="58.3" height="22" fill="#E37D4E"/>
+<text x="266.3" y="256" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">34,494</text>
+<text x="40" y="290" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
+<text x="60" y="290" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1.2.0+b6855ee</text>
+<rect x="200" y="274" width="33.1" height="22" fill="#E37D4E"/>
+<text x="241.1" y="290" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">19,551</text>
+<text x="40" y="324" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">D</text>
+<text x="60" y="324" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">perfect memory</text>
+<rect x="200" y="308" width="11.2" height="22" fill="#8C8C8C"/>
+<text x="219.2" y="324" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">6,622</text>
+<text x="40" y="384" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Per right answer: all of a condition's tokens in areas 1–7 ÷ its right answers</text>
+<text x="40" y="416" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">A</text>
+<text x="60" y="416" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">fresh session</text>
+<rect x="200" y="400" width="213.4" height="22" fill="#8C8C8C"/>
+<text x="421.4" y="416" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">126,197  ·  3 right</text>
+<text x="40" y="450" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">B</text>
+<text x="60" y="450" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">whole history</text>
+<rect x="200" y="434" width="470" height="22" fill="#8C8C8C"/>
+<text x="678" y="450" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">277,950  ·  21 right</text>
+<text x="40" y="484" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
+<text x="60" y="484" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">exposurie 1.2.0</text>
+<rect x="200" y="468" width="83.3" height="22" fill="#E37D4E"/>
+<text x="291.3" y="484" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">49,263  ·  18 right</text>
+<text x="40" y="518" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
+<text x="60" y="518" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1.2.0+b6855ee</text>
+<rect x="200" y="502" width="60.1" height="22" fill="#E37D4E"/>
+<text x="268.1" y="518" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">35,526  ·  20 right</text>
+<text x="40" y="552" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">D</text>
+<text x="60" y="552" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">perfect memory</text>
+<rect x="200" y="536" width="29.9" height="22" fill="#8C8C8C"/>
+<text x="237.9" y="552" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">17,675  ·  21 right</text>
+<text x="40" y="612" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Per run on work that needs no past: the median of area 8</text>
+<text x="40" y="644" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">A</text>
+<text x="60" y="644" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">fresh session</text>
+<rect x="200" y="628" width="10.9" height="22" fill="#8C8C8C"/>
+<text x="218.9" y="644" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">6,423</text>
+<text x="40" y="678" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">B</text>
+<text x="60" y="678" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">whole history</text>
+<rect x="200" y="662" width="212.2" height="22" fill="#8C8C8C"/>
+<text x="420.2" y="678" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">125,509</text>
+<text x="40" y="712" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
+<text x="60" y="712" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">exposurie 1.2.0</text>
+<rect x="200" y="696" width="11.4" height="22" fill="#E37D4E"/>
+<text x="219.4" y="712" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">6,721</text>
+<text x="40" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">C</text>
+<text x="60" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">1.2.0+b6855ee</text>
+<rect x="200" y="730" width="11.4" height="22" fill="#E37D4E"/>
+<text x="219.4" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">6,722</text>
+<text x="40" y="794" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">In area 8, C never ran <tspan font-family="Consolas, Menlo, monospace">exposurie read</tspan>, and what exposurie installs added 297 to 299 tokens a run.</text>
 </svg>
