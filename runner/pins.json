@@ -13,5 +13,12 @@
   },
   "claudeCode": "2.1.302",
   "exposurie": "1.2.0",
+  "exposurieRebuilt": {
+    "commit": "b6855ee30d876bb3f109088ccabb85450a0b2234",
+    "label": "1.2.0+b6855ee",
+    "file": "exposurie-b6855ee30d87.tar.gz",
+    "url": "https://codeload.github.com/sekhonlabs/exposurie/tar.gz/b6855ee30d876bb3f109088ccabb85450a0b2234",
+    "sha256": "9334461bd165e3b185f3732eed7bbbc32f6d7dd44d3101034e2f06686b45f11f"
+  },
   "model": "claude-sonnet-5-5"
 }

@@ -36,7 +36,7 @@ For area 4, D gets the facts closest to the question, which is what perfect retr
 
 Condition C is set up like this:
 
-- exposurie 1.2.0 is installed in the sandbox.
+- exposurie 1.2.0 is installed in the sandbox. Part 10 runs C again with exposurie's `read` rebuilt (commit `b6855ee`), on the same brains, beside 1.2.0's results: see [decisions.md](decisions.md).
 - The brain is built from the same history by `exposurie sync`, with the agent writing the pages, as a real user's agent would.
 - The pointer sits in the sandbox's `~/.claude/CLAUDE.md`.
 - The task runs from an empty folder.

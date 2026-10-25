@@ -457,3 +457,28 @@ What part 9 did for area 9, whose runs were scored with `score/long.mjs` and rea
 node score/results.mjs [--save]
 node check/results.mjs
 ```
+
+### 10. The rebuilt read
+
+**Plan usage:** yes: 30 C runs and two fresh sessions of area 9. **Built and checked against the fake 2026-10-25; the live runs need the owner's go, given that day.**
+
+exposurie's `read` was rebuilt after the results (commit `b6855ee`), because its search had matched a whole phrase as one substring. This part runs C again with it, on the same brains, and sets the results beside 1.2.0's. Why each choice was made is in [decisions.md](decisions.md).
+
+- **The sandbox:** `sandbox.mjs setup-rebuilt` installs the rebuilt exposurie from GitHub's archive of the commit, pinned by its hash, into `sandbox/npm-rebuilt/`, beside 1.2.0.
+- **The runs:**
+  - `run.mjs plan full-2 --conditions C --exposurie rebuilt`, then `go full-2`: the 24 C runs of areas 1–8.
+  - `plan stability-3` and `plan stability-4`, each with `--tasks changed-1,changed-2,changed-3 --conditions C --exposurie rebuilt`: area 3 under C twice more.
+  - `long.mjs rebuilt long-1` and `long.mjs rebuilt long-2`: sync + fresh's fresh session again, into `../runs/area-9-2/`, from the same fork and the brain its sync wrote. The sync session's record is carried over.
+- **Scoring:** `score/score.mjs` on each batch, with the judge and a hand read of every judged answer; `score/long.mjs <task> --rebuilt`, then a hand read of every check, into `hand.json` beside the scores.
+- **Done when:**
+  - `check/runner.mjs`, `check/long.mjs` and `check/build.mjs` hold, with the rebuilt batch and the fresh session again run through the fake. A fault test breaks the runner's part 10 code, and every break is caught.
+  - every run of the three batches and both fresh sessions is done, scored, and read by hand
+  - `score/results.mjs --save` publishes them beside 1.2.0's, `check/results.mjs` holds them, and the README and charts show both
+
+```
+node runner/sandbox.mjs setup-rebuilt
+node runner/run.mjs plan full-2 --conditions C --exposurie rebuilt
+node runner/run.mjs go full-2
+node runner/long.mjs rebuilt <task>
+node score/long.mjs <task> --rebuilt
+```

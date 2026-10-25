@@ -30,7 +30,7 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { EXPOSURIE, HOME, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
+import { EXPOSURIE, HOME, PINS, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
 import { C_PATHS, Stop, allTasks, go, keepBrain, neutralProblems, plan, readRun } from '../runner/run.mjs';
 import { saveToRepo, scoreBatch } from '../score/score.mjs';
 
@@ -285,6 +285,36 @@ for (const [task, why] of [['recall-3', /synced 8 days ago/], ['recall-1', /2 co
   expect(r?.status === 'not-run' && why.test(r.reason), `C with a stale brain (${task}): ${r?.status} (${r?.reason})`);
 }
 for (const u of USERS) writeFileSync(stateOf(u), states[u]);
+
+// ---------------------------------------------------------------- part 10: C with the rebuilt read
+
+// A rebuilt batch is C's alone, its C finds the rebuilt exposurie first, and each run records it by its label.
+for (const conditions of [['A', 'C'], ['D']]) {
+  try {
+    plan(ctx, `rebuilt-${conditions.join('')}`, { conditions, exposurie: 'rebuilt' });
+    problems.push(`a rebuilt batch could be planned under ${conditions.join(', ')}`);
+  } catch (e) {
+    expect(e instanceof Stop, `planning a rebuilt batch under ${conditions.join(', ')}: ${e.message}`);
+  }
+}
+const rebuilt = plan(ctx, 'rebuilt', { tasks: ['recall-1', 'across-3', 'real-work-2', 'no-past-1'], conditions: ['C'], exposurie: 'rebuilt' });
+expect(rebuilt.exposurie === 'rebuilt' && rebuilt.cells.length === 4, `the rebuilt batch: ${rebuilt.cells.length} runs, exposurie ${rebuilt.exposurie}`);
+scenario.exposurie_dir = 'npm-rebuilt';
+writeScenario();
+try {
+  await go(ctx, 'rebuilt');
+} catch (e) {
+  problems.push(`go, with the rebuilt read: ${e.message}`);
+}
+for (const cell of rebuilt.cells) {
+  const dir = join(ctx.runs, 'rebuilt', cell.run);
+  const r = readRun(dir);
+  expect(r?.status === 'done' && r.versions?.exposurie === PINS.exposurieRebuilt.label, `rebuilt ${cell.run} ${cell.task}: ${r?.status}, exposurie ${r?.versions?.exposurie} (${r?.reason ?? ''})`);
+  const answer = existsSync(join(dir, 'answer.md')) ? readFileSync(join(dir, 'answer.md'), 'utf8') : '';
+  expect(!answer.includes('FAKE-PROBLEM'), `rebuilt ${cell.run} ${cell.task}: ${answer.slice(0, 300)}`);
+}
+delete scenario.exposurie_dir;
+writeScenario();
 
 // ---------------------------------------------------------------- scoring, blind
 

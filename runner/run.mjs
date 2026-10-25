@@ -1,7 +1,7 @@
 // The runner (parts 5 and 6): every benchmark run and brain build, one at a
 // time, in the sandbox.
 //
-//   node runner/run.mjs plan <batch> [--users u,u] [--tasks id,id] [--conditions A,B,C,D] [--seed text]
+//   node runner/run.mjs plan <batch> [--users u,u] [--tasks id,id] [--conditions A,B,C,D] [--seed text] [--exposurie rebuilt]
 //   node runner/run.mjs go <batch> [--again r001,r002]
 //   node runner/run.mjs status <batch>
 //   node runner/run.mjs build <user> [--accept "<why>"]
@@ -49,7 +49,7 @@ import {
 import { dirname, join, parse, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  CLAUDE, EXPOSURIE, HOME, PINS, RUNS, SANDBOX, TOOLS, lockSandbox, ownNodeOnly, sandboxEnv, strays,
+  CLAUDE, EXPOSURIE, EXPOSURIE_REBUILT, HOME, PINS, RUNS, SANDBOX, TOOLS, lockSandbox, ownNodeOnly, sandboxEnv, strays,
 } from './sandbox.mjs';
 import { convertUser } from '../gen/convert.mjs';
 
@@ -101,7 +101,14 @@ export function sandboxContext() {
   };
 }
 
-export const envFor = (ctx, condition) => ({ ...sandboxEnv({ home: ctx.home, exposurie: condition === 'C' }), ...ctx.env });
+/**
+ * A run's environment. C gets the `exposurie` command on its PATH: 1.2.0, or
+ * with `ctx.exposurie` set to 'rebuilt' (part 10), the rebuilt one first.
+ */
+export const envFor = (ctx, condition) => ({
+  ...sandboxEnv({ home: ctx.home, exposurie: condition === 'C' && (ctx.exposurie === 'rebuilt' ? 'rebuilt' : true) }),
+  ...ctx.env,
+});
 
 /** A reason the runner stops. Thrown, so check/runner.mjs can see it; the command line prints it. */
 export class Stop extends Error {}
@@ -182,12 +189,15 @@ export function readRun(dir) {
 /**
  * Fix a batch. Every task asked for runs once under each condition asked for,
  * and the order comes from sorting on a hash of the seed and the cell: mixed,
- * and the same every time for the same seed.
+ * and the same every time for the same seed. `exposurie: 'rebuilt'` (part 10)
+ * runs C with the rebuilt read; only C has exposurie, so such a batch is C's alone.
  */
-export function plan(ctx, batch, { users = USERS, tasks: only = null, conditions = CONDITIONS, seed = batch } = {}) {
+export function plan(ctx, batch, { users = USERS, tasks: only = null, conditions = CONDITIONS, seed = batch, exposurie = null } = {}) {
   if (!/^[a-z0-9][a-z0-9-]*$/i.test(batch ?? '')) fail('a batch name is letters, digits and dashes');
   if (existsSync(batchFile(ctx, batch))) fail(`${batch} is already planned; run it with go, or pick another name`);
   for (const c of conditions) if (!CONDITIONS.includes(c)) fail(`no condition ${c}`);
+  if (exposurie !== null && exposurie !== 'rebuilt') fail(`no exposurie ${exposurie}; the one other than 1.2.0 is rebuilt`);
+  if (exposurie && conditions.some((c) => c !== 'C')) fail('only C has exposurie, so a rebuilt batch runs C alone');
   for (const u of users) if (!USERS.includes(u)) fail(`no user ${u}`);
   const known = allTasks().filter((t) => t.area !== BUILT_LATER);
   for (const id of only ?? []) if (!known.some((t) => t.id === id)) fail(`no task ${id} to run`);
@@ -203,7 +213,7 @@ export function plan(ctx, batch, { users = USERS, tasks: only = null, conditions
     c.run = `r${String(i + 1).padStart(3, '0')}`;
   });
   mkdirSync(join(ctx.runs, batch), { recursive: true });
-  const b = { batch, planned: new Date().toISOString(), seed, cells };
+  const b = { batch, planned: new Date().toISOString(), seed, ...(exposurie ? { exposurie } : {}), cells };
   saveBatch(ctx, b);
   return b;
 }
@@ -824,7 +834,11 @@ async function runCell(ctx, b, cell, versions) {
   return { status, reason: thrown ? problems.join('; ') : o.reason, stop, apiError: !!o.apiError };
 }
 
-/** The versions every run records. exposurie prints its state line first, so the version is found by its shape. */
+/**
+ * The versions every run records. exposurie prints its state line first, so the
+ * version is found by its shape. The rebuilt exposurie's package still says
+ * 1.2.0, so it is recorded by its label, which names its commit.
+ */
 export function versionsOf(ctx) {
   const env = sandboxEnv({ home: ctx.home });
   const out = (cmd, args) => {
@@ -833,17 +847,26 @@ export function versionsOf(ctx) {
     return /\b\d+\.\d+\.\d+\b/.exec(text)?.[0] ?? text.split('\n')[0];
   };
   const [cmd, ...pre] = ctx.claude;
-  return { claude_code: out(cmd, [...pre, '--version']), exposurie: out(process.execPath, [EXPOSURIE, '--version']), node: process.version.slice(1) };
+  let exposurie = out(process.execPath, [EXPOSURIE, '--version']);
+  if (ctx.exposurie === 'rebuilt') {
+    const { label } = PINS.exposurieRebuilt;
+    if (!existsSync(EXPOSURIE_REBUILT)) fail("the rebuilt exposurie is not in the sandbox; run node runner/sandbox.mjs setup-rebuilt");
+    const v = out(process.execPath, [EXPOSURIE_REBUILT, '--version']);
+    if (v !== label.split('+')[0]) fail(`the rebuilt exposurie says it is ${v}, where its label is ${label}`);
+    exposurie = label;
+  }
+  return { claude_code: out(cmd, [...pre, '--version']), exposurie, node: process.version.slice(1) };
 }
 
-/** Run everything in a batch that has not run yet, in its order. */
-export async function go(ctx, batch, { again = [] } = {}) {
-  const release = lockSandbox(ctx.lock);
+/** Run everything in a batch that has not run yet, in its order, with the exposurie the batch names. */
+export async function go(given, batch, { again = [] } = {}) {
+  const release = lockSandbox(given.lock);
   try {
-    recover(ctx);
-    const before = neutralProblems(ctx);
+    recover(given);
+    const before = neutralProblems(given);
     if (before.length) fail(`the sandbox home is not as runs leave it, so nothing runs until it is:\n  ${before.join('\n  ')}`);
-    const b = readBatch(ctx, batch);
+    const b = readBatch(given, batch);
+    const ctx = { ...given, exposurie: b.exposurie ?? null };
     for (const r of again) if (!b.cells.some((c) => c.run === r)) fail(`${batch} has no run ${r}`);
     const above = aboveProblems(join(ctx.runs, batch));
     if (above.length) fail(`nothing runs while instructions sit above the runs:\n  ${above.join('\n  ')}`);
@@ -1315,8 +1338,9 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
     if (cmd === 'plan') {
       const b = plan(ctx, name, {
         users: flag('--users') ?? USERS, tasks: flag('--tasks'), conditions: flag('--conditions') ?? CONDITIONS, seed: flag('--seed')?.[0] ?? name,
+        exposurie: flag('--exposurie')?.[0] ?? null,
       });
-      console.log(`${b.batch}: ${b.cells.length} runs planned, in ${join(ctx.runs, b.batch)}`);
+      console.log(`${b.batch}: ${b.cells.length} runs planned${b.exposurie ? `, with the ${b.exposurie} exposurie` : ''}, in ${join(ctx.runs, b.batch)}`);
     } else if (cmd === 'go') {
       process.exitCode = (await go(ctx, name, { again: flag('--again') ?? [] })) ? 0 : 1;
       status(ctx, name);
@@ -1331,7 +1355,7 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
     } else if (cmd === 'probe') {
       process.exitCode = (await probe(ctx)).status === 'done' ? 0 : 1;
     } else {
-      fail('usage: node runner/run.mjs plan <batch> [--users] [--tasks] [--conditions] [--seed] | go <batch> [--again] | status <batch> | build <user> [--accept "<why>"] | keep-brain <user> | probe');
+      fail('usage: node runner/run.mjs plan <batch> [--users] [--tasks] [--conditions] [--seed] [--exposurie rebuilt] | go <batch> [--again] | status <batch> | build <user> [--accept "<why>"] | keep-brain <user> | probe');
     }
   } catch (e) {
     if (!(e instanceof Stop)) throw e;

@@ -2,6 +2,7 @@
 // commands that set it up and check it. Windows, for now.
 //
 //   node runner/sandbox.mjs setup          install the pinned Git, Claude Code and exposurie
+//   node runner/sandbox.mjs setup-rebuilt  install exposurie with its read rebuilt (part 10), beside 1.2.0
 //   node runner/sandbox.mjs login          log in once, by hand, with a Claude plan
 //   node runner/sandbox.mjs check          one tiny run, then check its start-up line
 //   node runner/sandbox.mjs recheck <dir>  check a saved run again, without running anything
@@ -36,6 +37,13 @@ const DOWNLOADS = join(SANDBOX, 'downloads');
 const NPM_CLI = join(NODE, 'node_modules', 'npm', 'bin', 'npm-cli.js');
 export const CLAUDE = join(PREFIX, 'node_modules', '@anthropic-ai', 'claude-code', 'bin', 'claude.exe');
 export const EXPOSURIE = join(PREFIX, 'node_modules', '@sekhon', 'exposurie', 'bin', 'exposurie.js');
+/**
+ * Part 10: exposurie at the commit that rebuilt `read`, installed from GitHub's
+ * archive of that commit into a prefix of its own, so 1.2.0 stays as it ran.
+ * Its package still says 1.2.0, so runs record it by its label.
+ */
+const PREFIX_REBUILT = join(SANDBOX, 'npm-rebuilt');
+export const EXPOSURIE_REBUILT = join(PREFIX_REBUILT, 'node_modules', '@sekhon', 'exposurie', 'bin', 'exposurie.js');
 
 /** The tools every condition gets. Each run's start-up line is checked against this. */
 export const TOOLS = ['Bash', 'Edit', 'Glob', 'Grep', 'Read', 'Write'];
@@ -57,7 +65,9 @@ const FROM_WINDOWS = [
  * The environment of every sandbox process. `home` is the sandbox's home folder
  * unless a test gives it its own. With `exposurie: false` the PATH leaves out
  * the sandbox's npm folder, which holds the `exposurie` command: conditions A,
- * B and D run without it, since it is part of what exposurie installs.
+ * B and D run without it, since it is part of what exposurie installs. With
+ * `exposurie: 'rebuilt'` the rebuilt one's folder comes first, so its
+ * `exposurie` is the one found, and the PATH is otherwise C's own.
  */
 export function sandboxEnv({ home = HOME, exposurie = true } = {}) {
   const env = {};
@@ -75,7 +85,7 @@ export function sandboxEnv({ home = HOME, exposurie = true } = {}) {
     TEMP: TMP,
     TMP,
     PATH: [
-      ...(exposurie ? [PREFIX] : []), NODE, join(GIT, 'cmd'),
+      ...(exposurie === 'rebuilt' ? [PREFIX_REBUILT] : []), ...(exposurie ? [PREFIX] : []), NODE, join(GIT, 'cmd'),
       join(win, 'System32'), win, join(win, 'System32', 'Wbem'), join(win, 'System32', 'WindowsPowerShell', 'v1.0'),
     ].join(';'),
     // Windows hands a child process its parent's USERNAME, USERDOMAIN and
@@ -171,7 +181,28 @@ export function versions() {
     git: out(run(join(GIT, 'cmd', 'git.exe'), ['--version'])),
     claude: out(run(CLAUDE, ['--version'])),
     exposurie: out(run(process.execPath, [EXPOSURIE, '--version'])),
+    ...(existsSync(EXPOSURIE_REBUILT) ? { exposurie_rebuilt: out(run(process.execPath, [EXPOSURIE_REBUILT, '--version'])) } : {}),
   };
+}
+
+/**
+ * Part 10: exposurie with its read rebuilt, from GitHub's archive of the pinned
+ * commit, checked against its hash, by the sandbox's own npm into a prefix of
+ * its own. 1.2.0 and Claude Code stay where setup put them.
+ */
+async function setupRebuilt() {
+  ownNodeOnly();
+  if (process.version !== `v${PINS.node.version}`) fail(`Node is ${process.version}, pinned ${PINS.node.version}`);
+  const pin = PINS.exposurieRebuilt;
+  const file = await fetchPinned(pin);
+  mkdirSync(PREFIX_REBUILT, { recursive: true });
+  const npm = run(process.execPath, [NPM_CLI, 'install', '--global', '--prefix', PREFIX_REBUILT, file], { stdio: 'inherit' });
+  if (npm.status !== 0) fail('npm install failed');
+  const v = versions();
+  console.log(JSON.stringify(v, null, 2));
+  if (!v.exposurie.includes(PINS.exposurie)) fail(`exposurie is ${v.exposurie}, pinned ${PINS.exposurie}`);
+  if (!v.exposurie_rebuilt?.includes(pin.label.split('+')[0])) fail(`the rebuilt exposurie is ${v.exposurie_rebuilt}, labelled ${pin.label}`);
+  if (!existsSync(join(dirname(dirname(EXPOSURIE_REBUILT)), 'src', 'search.js'))) fail('the rebuilt exposurie has no src/search.js, so its read is not the rebuilt one');
 }
 
 async function setup() {
@@ -353,7 +384,7 @@ function printEnv() {
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   const [cmd, ...rest] = process.argv.slice(2);
   const commands = {
-    setup, login, check, env: printEnv, claude: () => claude(rest),
+    setup, 'setup-rebuilt': setupRebuilt, login, check, env: printEnv, claude: () => claude(rest),
     recheck: () => report(resolve(rest[0] ?? fail('usage: node runner/sandbox.mjs recheck <run folder>'))),
   };
   if (!commands[cmd]) fail(`usage: node runner/sandbox.mjs ${Object.keys(commands).join(' | ')}`);

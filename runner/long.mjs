@@ -3,8 +3,11 @@
 // carried on three ways from that same point.
 //
 //   node runner/long.mjs <task> [--accept "<why>"]   fill, fork, then each strategy; spends plan usage
-//   node runner/long.mjs status <task>
+//   node runner/long.mjs status <task> [--rebuilt]
 //   node runner/long.mjs probe                       the same on a tiny task, to see what only real runs show
+//   node runner/long.mjs rebuilt <task> [--accept "<why>"]
+//                                                    part 10: sync + fresh's fresh session again, from the
+//                                                    same fork and the brain its sync wrote, with the rebuilt read
 //
 // The developer works the way they always do: one step at a time, in one
 // session, in their own repository. The steps are written down in the task's
@@ -57,6 +60,11 @@ import {
 export const LONG_AREA = 9;
 export const STRATEGIES = ['keep', 'compact', 'sync'];
 const BATCH = 'area-9';
+/**
+ * Part 10: sync + fresh again, with the rebuilt read, in a folder of its own.
+ * The agent sees its folder's path, so the name says nothing of what changed.
+ */
+export const REBUILT_BATCH = 'area-9-2';
 const COMPACT_ASK = '/compact';
 /** exposurie 1.2.0 leaves a transcript written in the last five minutes for the next sync (src/extract/live.js). */
 export const IN_FLIGHT_MS = 5 * 60 * 1000;
@@ -345,19 +353,25 @@ function carriedFrom(L, phase, n) {
   return null;
 }
 
-/** The run folders of area 9: one per long task, numbered in the order of tasks/index.json. */
-function runDir(ctx, task) {
-  const file = join(ctx.runs, BATCH, 'batch.json');
+/**
+ * The run folders of area 9: one per long task, numbered in the order of
+ * tasks/index.json. The rebuilt read's (part 10) take the same numbers.
+ */
+function runDir(ctx, task, batch = BATCH) {
+  const file = join(ctx.runs, batch, 'batch.json');
   let b;
   if (existsSync(file)) b = readJson(file);
   else {
-    b = { batch: BATCH, planned: now(), cells: longTasks().map((t, i) => ({ run: `r${String(i + 1).padStart(3, '0')}`, task: t.id })) };
+    b = {
+      batch, planned: now(), ...(batch === REBUILT_BATCH ? { exposurie: 'rebuilt', from: BATCH } : {}),
+      cells: longTasks().map((t, i) => ({ run: `r${String(i + 1).padStart(3, '0')}`, task: t.id })),
+    };
     mkdirSync(dirname(file), { recursive: true });
     writeFileSync(file, JSON.stringify(b, null, 2) + '\n');
   }
   const cell = b.cells.find((c) => c.task === task.id);
   if (!cell) fail(`${file} has no run for ${task.id}`);
-  return join(ctx.runs, BATCH, cell.run);
+  return join(ctx.runs, batch, cell.run);
 }
 
 // ---------------------------------------------------------------- one step
@@ -699,8 +713,8 @@ export async function long(ctx, id, { accept = null, task: given = null, dir: gi
       if (after('fill', n, r, `fill/${r.rec.step}`) === false) return false;
     }
 
-    // The strategies, one after another, from the same point.
-    for (const phase of STRATEGIES) {
+    // The strategies, one after another, from the same point; a rebuilt record (part 10) names its one.
+    for (const phase of L.only ?? STRATEGIES) {
       if (L[phase].finished) continue;
       if (!existsSync(join(dir, phase, 'work'))) restore(join(dir, 'fork', 'work'), join(dir, phase, 'work'));
       if (phase === 'sync' && !counts(L.sync.sync.at(-1))) {
@@ -730,10 +744,55 @@ export async function long(ctx, id, { accept = null, task: given = null, dir: gi
   }
 }
 
+// ---------------------------------------------------------------- part 10: the rebuilt read
+
+/**
+ * sync + fresh again, with exposurie's rebuilt read. The fresh session takes
+ * the same steps from the same fork (fork/work), against the very brain the
+ * sync wrote (sync/kit), so the one thing that differs is `exposurie read`.
+ * The sync session is not run again: exposurie's sync is the same code in both,
+ * and a second one would write another brain. Its record is carried over,
+ * marked with where it came from, and its tokens count in the strategy's, as
+ * they do in sync + fresh.
+ */
+export async function longRebuilt(given, id, { accept = null, task: givenTask = null, from: givenFrom = null, dir: givenDir = null } = {}) {
+  const ctx = { ...given, exposurie: 'rebuilt' };
+  const task = givenTask ?? longTask(id);
+  const from = givenFrom ?? runDir(ctx, task);
+  const dir = givenDir ?? runDir(ctx, task, REBUILT_BATCH);
+  if (!existsSync(recordFile(dir))) {
+    const src = existsSync(recordFile(from)) ? readJson(recordFile(from)) : null;
+    if (!src?.sync?.finished) fail(`${task.id}'s sync + fresh has not finished in ${from}, so there is no brain of its sync to read`);
+    const sync = src.sync.sync.at(-1);
+    if (!counts(sync)) fail(`${task.id}'s sync session in ${from} does not count`);
+    const fromName = relative(ctx.runs, from).split(sep).join('/');
+    restore(join(from, 'fork', 'work'), join(dir, 'fork', 'work'));
+    restore(join(from, 'sync', 'kit'), join(dir, 'sync', 'kit'));
+    saveRecord(dir, {
+      run: basename(dir),
+      task: task.id,
+      user: task.user,
+      started: now(),
+      fork_at: src.fork_at,
+      from: fromName,
+      exposurie: 'rebuilt',
+      only: ['sync'],
+      sessions: { sync: randomUUID() },
+      fill: { steps: [], forked: src.fill.forked },
+      keep: { steps: [], finished: null },
+      compact: { steps: [], finished: null },
+      sync: { sync: [{ ...sync, carried_from: fromName }], steps: [], finished: null },
+      stopped: null,
+      accepted: [],
+    });
+  }
+  return long(ctx, id, { accept, task, dir });
+}
+
 /** Where a long task stands. */
-export function longStatus(ctx, id) {
+export function longStatus(ctx, id, { rebuilt = false } = {}) {
   const task = longTask(id);
-  const dir = runDir(ctx, task);
+  const dir = runDir(ctx, task, rebuilt ? REBUILT_BATCH : BATCH);
   if (!existsSync(recordFile(dir))) {
     console.log(`${id}: not started (${dir}).`);
     return null;
@@ -741,9 +800,10 @@ export function longStatus(ctx, id) {
   const L = readJson(recordFile(dir));
   const fill = stepsFor(task, 'fill');
   const done = fill.map((_, i) => lastTry(L.fill, i)).filter(counts);
-  console.log(`${id} (${L.run}): fill ${done.length} of ${fill.length} steps, context ${done.at(-1)?.context_after ?? 0}` +
+  console.log(L.from ? `${id} (${L.run}): sync + fresh again with the ${L.exposurie} exposurie, from ${L.from}'s fork after ${L.fill.forked.after}.`
+    : `${id} (${L.run}): fill ${done.length} of ${fill.length} steps, context ${done.at(-1)?.context_after ?? 0}` +
     `${L.fill.forked ? `, forked after ${L.fill.forked.after} at ${L.fill.forked.context}` : ''}.`);
-  for (const phase of STRATEGIES) {
+  for (const phase of L.only ?? STRATEGIES) {
     const steps = stepsFor(task, phase);
     const n = steps.filter((_, i) => counts(lastTry(L[phase], i))).length;
     console.log(`  ${phase.padEnd(8)} ${L[phase].finished ? `done, ${L[phase].tokens.all_input} in, ${L[phase].tokens.output} out` : `${n} of ${steps.length} steps`}`);
@@ -815,15 +875,14 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   const [cmd, ...rest] = process.argv.slice(2);
   const ctx = sandboxContext();
   try {
-    if (cmd === 'status') longStatus(ctx, rest[0]);
+    const i = rest.indexOf('--accept');
+    if (i >= 0 && !rest[i + 1]) fail('--accept needs the reason, in quotes');
+    const accept = i >= 0 ? rest[i + 1] : null;
+    if (cmd === 'status') longStatus(ctx, rest[0], { rebuilt: rest.includes('--rebuilt') });
     else if (cmd === 'probe') process.exitCode = (await probeLong(ctx)).finished ? 0 : 1;
-    else if (cmd && !cmd.startsWith('-')) {
-      const i = rest.indexOf('--accept');
-      if (i >= 0 && !rest[i + 1]) fail('--accept needs the reason, in quotes');
-      process.exitCode = (await long(ctx, cmd, { accept: i >= 0 ? rest[i + 1] : null })) ? 0 : 1;
-    } else {
-      fail('usage: node runner/long.mjs <task> [--accept "<why>"] | status <task> | probe');
-    }
+    else if (cmd === 'rebuilt' && rest[0] && !rest[0].startsWith('-')) process.exitCode = (await longRebuilt(ctx, rest[0], { accept })) ? 0 : 1;
+    else if (cmd && !cmd.startsWith('-') && cmd !== 'rebuilt') process.exitCode = (await long(ctx, cmd, { accept })) ? 0 : 1;
+    else fail('usage: node runner/long.mjs <task> [--accept "<why>"] | status <task> [--rebuilt] | probe | rebuilt <task> [--accept "<why>"]');
   } catch (e) {
     if (!(e instanceof Stop)) throw e;
     console.error(`long: ${e.message}`);

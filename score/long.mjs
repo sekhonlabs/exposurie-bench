@@ -4,6 +4,8 @@
 // and the checks marked hand are listed for that.
 //
 //   node score/long.mjs <task>      scores ../runs/area-9/<run>/, writes scores.json beside long.json
+//   node score/long.mjs <task> --rebuilt
+//                                   part 10: scores ../runs/area-9-rebuilt/<run>/, sync + fresh with the rebuilt read
 //
 // Run it with the sandbox's own Node.
 
@@ -29,8 +31,10 @@ export function strategyRun(dir, phase) {
 /** Every finished strategy's checks, with the record's tokens beside them. */
 export function scoreLong(dir, task) {
   const L = readJson(join(dir, 'long.json'));
-  const out = { task: task.id, run: L.run, scored: new Date().toISOString(), fork: L.fill.forked, strategies: {} };
-  for (const phase of ['keep', 'compact', 'sync']) {
+  const out = {
+    task: task.id, run: L.run, ...(L.from ? { from: L.from, exposurie: L.exposurie } : {}), scored: new Date().toISOString(), fork: L.fill.forked, strategies: {},
+  };
+  for (const phase of L.only ?? ['keep', 'compact', 'sync']) {
     if (!L[phase].finished) continue;
     const checks = longScores(task.checks, strategyRun(dir, phase));
     out.strategies[phase] = {
@@ -48,18 +52,19 @@ export function scoreLong(dir, task) {
 }
 
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
-  const { longTask } = await import('../runner/long.mjs');
+  const { REBUILT_BATCH, longTask } = await import('../runner/long.mjs');
   const { ownNodeOnly, RUNS } = await import('../runner/sandbox.mjs');
   ownNodeOnly();
   const id = process.argv[2];
   const task = longTask(id);
-  const batch = join(RUNS, 'area-9', 'batch.json');
+  const name = process.argv.includes('--rebuilt') ? REBUILT_BATCH : 'area-9';
+  const batch = join(RUNS, name, 'batch.json');
   const cell = existsSync(batch) ? readJson(batch).cells.find((c) => c.task === id) : null;
-  if (!cell || !existsSync(join(RUNS, 'area-9', cell.run, 'long.json'))) {
-    console.error(`score/long: ${id} has not run`);
+  if (!cell || !existsSync(join(RUNS, name, cell.run, 'long.json'))) {
+    console.error(`score/long: ${id} has not run in ${name}`);
     process.exit(1);
   }
-  const dir = join(RUNS, 'area-9', cell.run);
+  const dir = join(RUNS, name, cell.run);
   const s = scoreLong(dir, task);
   writeFileSync(join(dir, 'scores.json'), `${JSON.stringify(s, null, 2)}\n`);
   for (const [phase, r] of Object.entries(s.strategies)) {

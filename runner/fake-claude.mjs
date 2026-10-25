@@ -230,7 +230,9 @@ if (!args.includes('--no-session-persistence')) {
   if (!existsSync(join(CONFIG, 'CLAUDE.md')) || !readFileSync(join(CONFIG, 'CLAUDE.md'), 'utf8').includes('<!-- exposurie:start -->')) problems.push('no exposurie pointer in the home');
   for (const rel of ['.claude/skills/exposurie/SKILL.md', '.claude/commands/exposurie-sync.md', 'brain']) if (!existsSync(join(HOME, rel))) problems.push(`no ${rel} in the home`);
   const bash = (command) => spawnSync(process.env.CLAUDE_CODE_GIT_BASH_PATH, ['-c', command], { encoding: 'utf8', windowsHide: true });
-  if (bash('command -v exposurie').status !== 0) problems.push('exposurie is not on the PATH');
+  const where = bash('command -v exposurie');
+  if (where.status !== 0) problems.push('exposurie is not on the PATH');
+  else if (basename(dirname(where.stdout.trim())) !== (scenario.exposurie_dir ?? 'npm')) problems.push(`the exposurie found is ${where.stdout.trim()}, not ${scenario.exposurie_dir ?? 'npm'}'s`);
 
   // Where Claude Code keeps a folder's sessions, as the fake spells it.
   const store = join(CONFIG, 'projects', cwd.replace(/[^A-Za-z0-9]/g, '-'));
@@ -275,14 +277,16 @@ if (!args.includes('--no-session-persistence')) {
   if (kind) writeFileSync(flag, '');
 
   if (phase === 'sync') {
-    // The fresh session's brain must have filed the long session, which ran in this same folder.
+    // The fresh session's brain must have filed the long session, which ran in this same folder,
+    // or, for part 10's fresh session again, in the folder of the run it came from (`filed_store`).
     let st = {};
     try {
       st = JSON.parse(readFileSync(join(HOME, 'brain', '.exposurie', 'state.json'), 'utf8'));
     } catch {
       // No state: the check below says so.
     }
-    if (!Object.keys(st.files ?? {}).some((p) => p.replace(/\\/g, '/').includes(`/projects/${basename(store)}/`))) problems.push("the fresh session's brain never filed the long session");
+    const filedIn = long.filed_store ?? basename(store);
+    if (!Object.keys(st.files ?? {}).some((p) => p.replace(/\\/g, '/').includes(`/projects/${filedIn}/`))) problems.push("the fresh session's brain never filed the long session");
   }
 
   const contextOf = () => 6400 + lines.slice(Math.max(0, lines.findLastIndex((l) => l.subtype === 'compact_boundary'))).reduce((t, l) => t + (l.fakeTokens ?? 0), 0);
@@ -481,8 +485,11 @@ if (condition === 'C') {
 
 // What the agent's shell finds: Git Bash, with the PATH the run was given.
 const bash = (command) => spawnSync(process.env.CLAUDE_CODE_GIT_BASH_PATH, ['-c', command], { encoding: 'utf8', windowsHide: true });
-const found = bash('command -v exposurie').status === 0;
+const where = bash('command -v exposurie');
+const found = where.status === 0;
 if (found !== (condition === 'C')) problems.push(`exposurie is ${found ? '' : 'not '}on the PATH in ${condition}`);
+// Which one: 1.2.0's folder, or the one the scenario names (part 10's rebuilt read).
+if (found && basename(dirname(where.stdout.trim())) !== (scenario.exposurie_dir ?? 'npm')) problems.push(`the exposurie found is ${where.stdout.trim()}, not ${scenario.exposurie_dir ?? 'npm'}'s`);
 
 // ---------------------------------------------------------------- what it says
 

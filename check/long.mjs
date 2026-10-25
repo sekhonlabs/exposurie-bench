@@ -14,7 +14,9 @@
 //                     failed approach and takes it back; sync, which files the
 //                     long session into a copy of the brain for a fresh session;
 //                     and every step's tokens its own, though a resumed
-//                     session's result counts the session from its start
+//                     session's result counts the session from its start;
+//                     then (part 10) the fresh session again with the rebuilt
+//                     read, from the same fork and the very brain the sync wrote
 //   each long task    every task with a steps file, filled and forked: its
 //                     starter and the files its steps hand over reach the
 //                     fork, and score/long.mjs scores each strategy's examples
@@ -32,9 +34,9 @@ import { spawnSync } from 'node:child_process';
 import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { EXPOSURIE, HOME, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
-import { DECLINED, Stop, keepBrain, neutralProblems } from '../runner/run.mjs';
-import { STRATEGIES, long, longTask, longTasks, stepsFor, writesIn } from '../runner/long.mjs';
+import { EXPOSURIE, HOME, PINS, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
+import { DECLINED, Stop, hashPath, keepBrain, neutralProblems } from '../runner/run.mjs';
+import { STRATEGIES, long, longRebuilt, longTask, longTasks, stepsFor, writesIn } from '../runner/long.mjs';
 import { scoreLong } from '../score/long.mjs';
 
 ownNodeOnly();
@@ -223,6 +225,26 @@ const noLeftovers = (ctx, where) => {
   expect((await go()) === true, 'a finished long task did not say so when run again');
   expect(record(run).fill.steps.length === L.fill.steps.length, 'a finished long task ran again');
   expect(/is for a long task that stopped/.test((await stops(() => go({ accept: 'nothing to accept' }))) ?? ''), '--accept was taken by a long task with no problem');
+
+  // Part 10: the fresh session again, with the rebuilt read, from the same fork and the brain this sync wrote.
+  const again = join(dirname(run), 'r001-again');
+  const kit = hashPath(join(run, 'sync', 'kit'));
+  scenario({ exposurie_dir: 'npm-rebuilt', long: { backdate: true, write: { sync: 'right' }, filed_store: join(run, TASK.folder).replace(/[^A-Za-z0-9]/g, '-') } });
+  expect((await longRebuilt(ctx, TASK.id, { task: TASK, from: run, dir: again })) === true, 'the fresh session with the rebuilt read did not run through');
+  const R = record(again);
+  const carried = L.sync.sync.at(-1);
+  expect(R.exposurie === 'rebuilt' && R.only?.join() === 'sync' && R.from === 'r001', `the rebuilt record: ${JSON.stringify({ exposurie: R.exposurie, only: R.only, from: R.from })}`);
+  expect(R.sync.sync.length === 1 && R.sync.sync[0].carried_from === 'r001' && R.sync.sync[0].tokens.all_input === carried.tokens.all_input, 'the rebuilt record does not carry the sync session over');
+  expect(hashPath(join(again, 'sync', 'kit')) === kit && hashPath(join(run, 'sync', 'kit')) === kit, 'the brain the sync wrote is not the one the rebuilt fresh session read, unchanged');
+  expect(R.sync.steps.length === TASK.after.length && R.sync.steps.every((r) => r.status === 'done' && r.versions.exposurie === PINS.exposurieRebuilt.label), `the rebuilt steps: ${JSON.stringify(R.sync.steps.map((r) => [r.status, r.versions.exposurie]))}`);
+  expect(!!R.sync.finished && R.sync.tokens.all_input === carried.tokens.all_input + counted(R.sync).reduce((t, r) => t + r.tokens.all_input, 0), "the rebuilt strategy's tokens are not its sync session's and its own steps'");
+  expect(!R.keep.finished && !R.compact.finished && !existsSync(join(again, 'keep')) && !existsSync(join(again, 'compact')), 'the rebuilt run ran another strategy');
+  expect(lastTry(R.sync, 0).session.session === R.sessions.sync && !lastTry(R.sync, 0).session.resume, 'the rebuilt fresh session was not fresh');
+  for (const s of streamsUnder(again)) expect(!s.includes('FAKE-PROBLEM'), `a rebuilt step: ${s.match(/FAKE-PROBLEM[^"]*/)?.[0]}`);
+  noLeftovers(ctx, 'after the rebuilt fresh session');
+  expect((await longRebuilt(ctx, TASK.id, { task: TASK, from: run, dir: again })) === true && record(again).sync.steps.length === R.sync.steps.length, 'a finished rebuilt fresh session ran again');
+  const fresh = join(dirname(run), 'r009-never');
+  expect(/has not finished/.test((await stops(() => longRebuilt(ctx, TASK.id, { task: TASK, from: fresh, dir: join(dirname(run), 'r009-again') }))) ?? ''), 'a rebuilt fresh session started without a finished sync + fresh to come from');
 }
 
 // ---------------------------------------------------------------- trouble
@@ -280,6 +302,19 @@ for (const t of longTasks().filter((x) => x.steps)) {
   expect(all('compact', 'retried', true), `${t.id}: compact wrote the retries and scored ${JSON.stringify(scores.compact?.checks.retried)}`);
   expect(all('sync', 'finished', true) && Object.values(scores.sync?.checks.kept ?? {}).includes(false), `${t.id}: sync forgot and scored ${JSON.stringify(scores.sync?.checks)}`);
   noLeftovers(ctx, `after ${t.id}`);
+
+  // Part 10: the fresh session again with the rebuilt read, which this time writes the right examples,
+  // and score/long.mjs scoring its one strategy with the task's own checks.
+  const again = join(dirname(run), 'r001-again');
+  scenario({ exposurie_dir: 'npm-rebuilt', long: { backdate: true, grow: 15_500, write: { sync: 'right' }, filed_store: join(run, task.folder).replace(/[^A-Za-z0-9]/g, '-') } });
+  expect((await longRebuilt(ctx, task.id, { task, from: run, dir: again })) === true, `${t.id}: the fresh session with the rebuilt read did not run through`);
+  for (const s of streamsUnder(again)) expect(!s.includes('FAKE-PROBLEM'), `${t.id} again: ${s.match(/FAKE-PROBLEM[^"]*/)?.[0]}`);
+  const rs = scoreLong(again, task);
+  const allAgain = (g, want) => Object.values(rs.strategies.sync?.checks[g] ?? {}).filter((v) => v !== null).every((v) => v === want);
+  expect(Object.keys(rs.strategies).join() === 'sync' && rs.from === 'r001' && rs.exposurie === 'rebuilt', `${t.id}: score/long on the rebuilt run scored ${Object.keys(rs.strategies)} from ${rs.from}`);
+  expect(allAgain('finished', true) && allAgain('kept', true) && allAgain('retried', false), `${t.id}: the rebuilt fresh session wrote the right examples and scored ${JSON.stringify(rs.strategies.sync?.checks)}`);
+  expect(JSON.stringify(Object.keys(rs.strategies.sync.checks.kept)) === JSON.stringify(Object.keys(scores.sync.checks.kept)), `${t.id}: the rebuilt run's checks are not sync + fresh's`);
+  noLeftovers(ctx, `after ${t.id} again`);
 }
 
 // ---------------------------------------------------------------- what counts as a write
