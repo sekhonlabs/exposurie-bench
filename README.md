@@ -22,8 +22,6 @@ Same tasks, same model, same tools. Does a fresh session with an exposurie brain
 | C | exposurie | fresh session + pointer + brain |
 | D | Perfect memory | only the facts the task needs, pasted in |
 
-**Potential reached = (C − A) ÷ (D − A).** This is the share of the gap between a forgetful agent and a perfect-memory one that exposurie closes.
-
 The questions are spread across nine areas, from recall to long sessions, with three tasks in each of the first eight and two in the last. That comes to about 105 runs. See [docs/design.md](docs/design.md).
 
 ## Results: areas 1 to 8
@@ -40,7 +38,6 @@ One run per task and condition: 93 runs in one mixed order on 2026-10-21, then t
 ![Right answers by area and condition](results/charts/right-answers.svg)
 
 - **Right answers, areas 1 to 7, of 21:** A 3, B 21, **C 18**, D 21. All three of A's are in area 4, where the right answer is that nothing was recorded.
-- **Potential reached:** (18 − 3) ÷ (21 − 3) = **0.83**. exposurie closed 15 of the 18 answers between a fresh session and perfect memory: 8 of 10 for the developer, 7 of 8 for the delegator.
 - **Made-up answers** (area 4): none, in any condition.
 - **Looked vs found:** C ran `exposurie read` in 20 of its 21 runs, and was right in 18 of those 20. The one run that did not look was wrong.
 - **Stability:** area 3 under C was right in all 9 runs, the full run's and two more of each task, and the same task's tokens stayed within 5%.
@@ -51,9 +48,10 @@ One run per task and condition: 93 runs in one mixed order on 2026-10-21, then t
 - **Tokens per right answer:** A 126,197, B 277,950, **C 49,263**, D 17,675.
 - **On work that needs no past** (area 8): C never ran `exposurie read`, and used 298 tokens a run more than A (6,721 against 6,423): the context that exposurie installs. B used 125,509, because it carries the whole history every time.
 
-![Sessions until a brain pays for itself](results/charts/break-even.svg)
+**Dropped on 2026-10-28** (see [decisions.md](docs/decisions.md#2026-10-28)):
 
-- **Break-even:** building the developer's brain took 4,008,581 tokens and the delegator's 2,996,876, 94% of them cache reads. Against B, a C session saved about 80,000 to 90,000 tokens on a question and 530,000 to 770,000 on a work task. So a brain pays for itself after about 38 to 44 sessions of questions, or 5 to 6 of work tasks. With this benchmark's own mix of the two, that is 19 sessions for the developer and 12 for the delegator.
+- *Potential reached*, (C − A) ÷ (D − A). It only restated the right-answer count, since B and D got every answer right.
+- *Break-even*, the sessions until a brain's build tokens are saved back against B. Its answer swung tenfold with the unit (for the developer's questions, 44 sessions in input tokens and 4 in list-price dollars), and a brain is built on a plan its owner already pays for. Each build's tokens stay in [results/builds.json](results/builds.json).
 
 **C's three wrong answers**, each named by its run in [results/full/](results/full/):
 
@@ -113,7 +111,6 @@ A, B and D have no exposurie, so their runs stand, and every number below sets C
 | | 1.2.0 | 1.2.0+b6855ee |
 |---|---|---|
 | Right answers, areas 1 to 7, of 21 | 18 | **20** |
-| Potential reached | 0.83 | **0.94** |
 | Tokens per run, median of areas 1 to 7 | 34,494 | **19,551** |
 | …of a question | 30,089 | 16,665 |
 | …of a work task | 69,939 | 81,092 |
@@ -121,12 +118,10 @@ A, B and D have no exposurie, so their runs stand, and every number below sets C
 | Area 8, tokens a run more than A | 298 | 299 |
 | Looked, and right when it looked | 20 of 21, right in 18 | 20 of 21, right in 20 |
 | Area 3 under C, three runs of each task | 9 of 9 | 9 of 9 |
-| Break-even in sessions of questions, the developer and the delegator | 44.4 and 37.6 | 37.2 and 34.7 |
-| Break-even in sessions of work tasks | 5.2 and 5.6 | 5.3 and 5.6 |
 | long-1, sync + fresh: finished, kept | 7 of 7, 5 of 5 | 7 of 7, 5 of 5 |
 | long-2, sync + fresh: finished, kept | 6 of 10, 2 of 4 | **9 of 10, 4 of 4** |
 
-- **Both search misses are right now.** recall-1 gave the recorded reason for SQLite (one file on one machine, with Litestream for backups), and across-3 named both projects on a Google Sheet. Potential reached is 9 of 10 for the developer and 8 of 8 for the delegator.
+- **Both search misses are right now.** recall-1 gave the recorded reason for SQLite (one file on one machine, with Litestream for backups), and across-3 named both projects on a Google Sheet.
 - **The one miss left is real-work-2** (`r011` in [results/full-2/](results/full-2/)). Like 1.2.0's run, it never ran `exposurie read`, so its pull request again missed the team's branch format and its four sections. Nothing in the rebuilt read changes whether an agent looks.
 - **Questions got cheaper and work tasks dearer.** A search now prints the best pages whole, so a run that looked made a median of 1.5 reads, against 5. A question's median run fell from 30,089 tokens to 16,665. A work task reads further, and its median rose from 69,939 to 81,092. Over areas 1 to 7, C's input fell from 886,737 tokens to 710,514. Area 8 is unchanged, within 2 tokens a run, because C never ran `exposurie read` there.
 - **long-2's sync + fresh is now level with `/compact`:** 9 of 10 finished and 4 of 4 kept. Its fresh session searched for `ENG-447 webhooks project events`, found 34 pages, and read the one its sync had written about the session. It kept both decisions said only in the conversation: replays on the staff-only admin routes, and 45 days for every delivery. It also kept four of the team's five conventions, where 1.2.0's run kept one. It missed the deploy note's channel, as `/compact` did. The page that holds it matched only two of the eight words in the search for it, and was not among the 14 of 39 pages the search showed.

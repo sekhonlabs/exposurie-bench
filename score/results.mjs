@@ -60,7 +60,6 @@ export const REBUILT_BATCHES = ['full-2', 'stability-3', 'stability-4'];
 const REBUILT_STABILITY = ['stability-3', 'stability-4'];
 
 const sum = (xs) => xs.reduce((a, b) => a + b, 0);
-const mean = (xs) => sum(xs) / xs.length;
 /** The middle value, or the mean of the middle two. */
 function median(xs) {
   const s = [...xs].sort((a, b) => a - b);
@@ -222,7 +221,7 @@ function runsOf(root, batch) {
  * of each cell, with its condition, and `stab` holds area 3 under C once from
  * the full run and once from each stability batch, which `batches` names.
  */
-function areaNumbers({ tasks, full, stab, builds, batches }) {
+function areaNumbers({ tasks, full, stab, batches }) {
   const pick = (c, areas, user = null) => full.filter((r) => r.condition === c && areas.includes(r.area) && (!user || r.user === user));
   const right = (rs) => rs.filter((r) => r.verdict === 'right').length;
   const tokens = (rs, k = 'all_input') => rs.map((r) => r.tokens[k]);
@@ -230,23 +229,10 @@ function areaNumbers({ tasks, full, stab, builds, batches }) {
 
   const pooled = each((c) => right(pick(c, MEMORY)));
   const byUser = Object.fromEntries(USERS.map((u) => [u, { of: pick('A', MEMORY, u).length, ...each((c) => right(pick(c, MEMORY, u))) }]));
-  const potential = (r) => ({ value: round((r.C - r.A) / (r.D - r.A), 3), closed: r.C - r.A, of: r.D - r.A });
   const totals = each((c) => {
     const rs = pick(c, MEMORY);
     return { runs: rs.length, ...Object.fromEntries(TOKEN_KINDS.map((k) => [k, sum(tokens(rs, k))])) };
   });
-
-  // A break-even adds savings up, so a session's saving is the mean of B's tokens less the mean of C's.
-  const kinds = { areas_1_to_7: MEMORY, questions: QUESTIONS, work: WORK };
-  const breakEven = Object.fromEntries(USERS.map((u) => {
-    const build = builds[u].tokens.all_input;
-    const saving = Object.fromEntries(Object.entries(kinds).map(([k, areas]) => [k, mean(tokens(pick('B', areas, u))) - mean(tokens(pick('C', areas, u)))]));
-    return [u, {
-      build_tokens: build,
-      saving_per_session: Object.fromEntries(Object.entries(saving).map(([k, s]) => [k, round(s)])),
-      sessions: Object.fromEntries(Object.entries(saving).map(([k, s]) => [k, round(build / s, 1)])),
-    }];
-  }));
 
   const c7 = pick('C', MEMORY);
   const other = (c) => pick(c, [OTHER]);
@@ -270,7 +256,6 @@ function areaNumbers({ tasks, full, stab, builds, batches }) {
         ...Object.fromEntries(CONDITIONS.filter((c) => pick(c, [a]).length).map((c) => [c, right(pick(c, [a]))])),
       })),
     },
-    potential_reached: { pooled: potential(pooled), ...Object.fromEntries(USERS.map((u) => [u, potential(byUser[u])])) },
     made_up_answers: { area: 4, of: pick('A', [4]).length, ...each((c) => pick(c, [4]).filter((r) => r.verdict === 'wrong').length) },
     looked_vs_found: {
       runs: c7.length,
@@ -289,7 +274,6 @@ function areaNumbers({ tasks, full, stab, builds, batches }) {
     tokens_per_right_answer: each((c) => (pooled[c] ? round(totals[c].all_input / pooled[c]) : null)),
     token_totals: totals,
     overhead: { area: OTHER, ...overhead, c_minus_a: overhead.per_run_median.C - overhead.per_run_median.A, b_minus_a: overhead.per_run_median.B - overhead.per_run_median.A },
-    break_even: breakEven,
     stability: { area: 3, condition: 'C', batches, runs: area3.length * stab.length, right: right(stab.flat()), changed: area3.filter((t) => new Set(t.verdicts).size > 1).length, by_task: area3 },
     by_task: tasks.map((t) => ({
       task: t.id, area: t.area, user: t.user,
@@ -309,7 +293,6 @@ const area3Of = (rs) => rs.filter((r) => r.condition === 'C' && r.area === 3);
  */
 export function computeNumbers(root = REPO) {
   const tasks = readJson(join(root, 'tasks', 'index.json')).tasks.filter((t) => AREAS[t.area]);
-  const { builds } = readJson(join(root, 'results', 'builds.json'));
   const full = runsOf(root, 'full');
   const stability = STABILITY.map((b) => runsOf(root, b));
   const [againBatch] = REBUILT_BATCHES;
@@ -321,7 +304,7 @@ export function computeNumbers(root = REPO) {
     tokens: 'Every input token, cached or not (all_input), is the primary number. Output is counted beside it.',
     conditions: NAMES,
     runs: { full: full.length, stability: sum(stability.map((rs) => rs.length)), scored_by: scoredBy(full) },
-    ...areaNumbers({ tasks, full, stab: [area3Of(full), ...stability], builds, batches: ['full', ...STABILITY] }),
+    ...areaNumbers({ tasks, full, stab: [area3Of(full), ...stability], batches: ['full', ...STABILITY] }),
     area_9: longNumbers(root),
     rebuilt_read: {
       note: 'Part 10: condition C again, with exposurie\'s read rebuilt, on the same brains as 1.2.0\'s C. A, B and D have no ' +
@@ -329,7 +312,7 @@ export function computeNumbers(root = REPO) {
       exposurie: readJson(join(root, 'results', againBatch, 'conditions.json')).exposurie,
       runs: { [againBatch]: again.length, stability: sum(againStability.map((rs) => rs.length)), scored_by: scoredBy(again) },
       ...areaNumbers({
-        tasks, full: [...full.filter((r) => r.condition !== 'C'), ...again], stab: [area3Of(again), ...againStability], builds, batches: REBUILT_BATCHES,
+        tasks, full: [...full.filter((r) => r.condition !== 'C'), ...again], stab: [area3Of(again), ...againStability], batches: REBUILT_BATCHES,
       }),
       area_9: longNumbers(root, REBUILT_BATCH),
     },
@@ -472,7 +455,7 @@ function svg(width, height, label, body) {
  */
 function rightAnswersChart(N) {
   const W = 920;
-  const H = 630;
+  const H = 578;
   const cols = ['A', 'B', 'C', 'R', 'D'];
   const col = { A: 380, B: 495, C: 610, R: 725, D: 840 };
   const label = N.rebuilt_read.exposurie;
@@ -513,9 +496,6 @@ function rightAnswersChart(N) {
   for (const c of cols) out.push(text(col[c], ruleY + 39, totals[c], { size: 22, colour: LOOK.ink, anchor: 'middle', bold: true }));
   row(OTHER, y8, ['A', 'B', 'C', 'R']);
   out.push(text(col.D, y8 + 5, 'not run', { size: 14, colour: LOOK.grey[2], anchor: 'middle' }));
-  const potential = (r, p) => `(${r.C} − ${r.A}) ÷ (${r.D} − ${r.A}) = ${p.value.toFixed(2)}`;
-  out.push(text(40, H - 72, `Potential reached, (C − A) ÷ (D − A): ${potential(N.right_answers.pooled, N.potential_reached.pooled)} with exposurie 1.2.0,`, { size: 16, colour: LOOK.ink }));
-  out.push(text(40, H - 48, `and ${potential(N.rebuilt_read.right_answers.pooled, N.rebuilt_read.potential_reached.pooled)} with ${label}.`, { size: 16, colour: LOOK.ink }));
   out.push(text(40, H - 20, 'Area 8 needs no past, so it has no D and stays out of the totals.', { size: 14, colour: LOOK.grey[1] }));
   return svg(W, H, 'Right answers, by area and condition', out);
 }
@@ -557,47 +537,6 @@ function tokensChart(N) {
   const t = [N, R].flatMap((n) => n.overhead.by_task.map((x) => x.C - x.A));
   out.push(text(40, y + 30, ['In area 8, C never ran ', { code: 'exposurie read' }, `, and what exposurie installs added ${fmt(Math.min(...t))} to ${fmt(Math.max(...t))} tokens a run.`], { size: 14, colour: LOOK.grey[1] }));
   return svg(W, y + 56, 'Tokens per run and per right answer, by condition', out);
-}
-
-/** Sessions until each user's brain pays for itself against B, by kind of session: C with 1.2.0, then C again with the rebuilt read. */
-function breakEvenChart(N) {
-  const W = 880;
-  const R = N.rebuilt_read;
-  const out = [
-    text(40, 46, 'Sessions until a brain pays for itself', { font: FONTS.title, size: 24, colour: LOOK.ink }),
-    text(40, 72, 'The tokens that built the brain, divided by the tokens a C session saves against B.', { colour: LOOK.grey[1] }),
-    text(40, 92, `Each pair of bars is C with exposurie 1.2.0, then C again with ${R.exposurie}, its rebuilt read.`, { colour: LOOK.grey[1] }),
-  ];
-  const kinds = [
-    ['questions', 'A question, areas 1–5'],
-    ['work', 'A work task, areas 6–7'],
-    ['areas_1_to_7', 'Areas 1–7, as run here'],
-  ];
-  const scale = Math.max(...USERS.flatMap((u) => [N, R].flatMap((n) => Object.values(n.break_even[u].sessions))));
-  const x0 = 300;
-  const len = 300;
-  let y = 136;
-  for (const u of USERS) {
-    const b = N.break_even[u];
-    const r = R.break_even[u];
-    out.push(text(40, y, `The ${u}: ${fmt(b.build_tokens)} tokens to build`, { size: 16, colour: LOOK.ink, bold: true }));
-    y += 16;
-    for (const [k, label] of kinds) {
-      out.push(text(40, y + 15, label, { size: 15 }));
-      out.push(text(40, y + 33, `C saves ${fmt(b.saving_per_session[k])} tokens a session,`, { size: 13, colour: LOOK.grey[1] }));
-      out.push(text(40, y + 50, `and ${fmt(r.saving_per_session[k])} with ${R.exposurie}`, { size: 13, colour: LOOK.grey[1] }));
-      [[b, '1.2.0'], [r, R.exposurie]].forEach(([v, name], j) => {
-        const w = (v.sessions[k] / scale) * len;
-        out.push(rect(x0, y + 1 + j * 28, w, 22, LOOK.orange));
-        out.push(text(x0 + w + 8, y + 17 + j * 28, `${v.sessions[k].toFixed(1)} sessions, ${name}`, { size: 15, colour: LOOK.ink, bold: j === 0 }));
-      });
-      y += 76;
-    }
-    y += 30;
-  }
-  out.push(text(40, y, 'B holds only what was said; a real long session also carries tool output, so B costs less here than', { size: 14, colour: LOOK.grey[1] }));
-  out.push(text(40, y + 20, 'the habit it stands for. Keeping a brain synced as its history grows costs tokens too, not counted here.', { size: 14, colour: LOOK.grey[1] }));
-  return svg(W, y + 46, 'Sessions until a brain pays for itself, by user and kind of session', out);
 }
 
 /** A strategy's name, with /compact set as the command it is. */
@@ -700,7 +639,6 @@ export function outputs(N = computeNumbers()) {
     'results/numbers.json': json(N),
     'results/charts/right-answers.svg': rightAnswersChart(N),
     'results/charts/tokens.svg': tokensChart(N),
-    'results/charts/break-even.svg': breakEvenChart(N),
     'results/charts/long-sessions.svg': longSessionsChart(N),
   };
 }
@@ -709,16 +647,12 @@ function printNumbers(N) {
   const list = (o) => Object.entries(o).map(([c, v]) => `${c} ${typeof v === 'number' ? fmt(v) : v}`).join(', ');
   const r = N.right_answers;
   const l = N.looked_vs_found;
-  console.log(`Right answers, areas 1–7, of ${r.of}: ${list(r.pooled)}. Potential reached ${N.potential_reached.pooled.value} (${N.potential_reached.pooled.closed} of ${N.potential_reached.pooled.of}).`);
+  console.log(`Right answers, areas 1–7, of ${r.of}: ${list(r.pooled)}.`);
   console.log(`Tokens per run, median of areas 1–7: ${list(N.tokens_per_run.median)}.`);
   console.log(`Tokens per right answer: ${list(N.tokens_per_right_answer)}.`);
   console.log(`Area 8, median per run: ${list(N.overhead.per_run_median)}; C − A ${fmt(N.overhead.c_minus_a)}.`);
   console.log(`Made-up answers, area 4: ${list(Object.fromEntries(CONDITIONS.map((c) => [c, N.made_up_answers[c]])))}.`);
   console.log(`Looked vs found: C looked in ${l.looked} of ${l.runs}, right in ${l.right_when_looked} of those; right in ${l.right_when_not} of the ${l.runs - l.looked} that did not.`);
-  for (const u of USERS) {
-    const s = N.break_even[u].sessions;
-    console.log(`Break-even, the ${u}: ${s.questions} sessions of questions, ${s.work} of work tasks, ${s.areas_1_to_7} of areas 1–7 as run here.`);
-  }
   console.log(`Stability: area 3 under C right in ${N.stability.right} of ${N.stability.runs}; tasks whose verdict changed: ${N.stability.changed}.`);
   const strategy = (name, v) => console.log(`  ${name.padEnd(13)} finished ${v.finished.held} of ${v.finished.of}, kept ${v.kept.held} of ${v.kept.of} ` +
     `(said only in the conversation ${v.kept_said_only.held} of ${v.kept_said_only.of}), retried ${v.retried.tried} of ${v.retried.of}; ` +
@@ -731,17 +665,13 @@ function printNumbers(N) {
   const R = N.rebuilt_read;
   const C = (o) => fmt(o.C);
   console.log(`\nC again, with exposurie ${R.exposurie}, beside the same A, B and D:`);
-  console.log(`Right answers, areas 1–7, of ${R.right_answers.of}: C ${R.right_answers.pooled.C}. Potential reached ${R.potential_reached.pooled.value} (${R.potential_reached.pooled.closed} of ${R.potential_reached.pooled.of}).`);
+  console.log(`Right answers, areas 1–7, of ${R.right_answers.of}: C ${R.right_answers.pooled.C}.`);
   console.log(`Tokens per run, median of areas 1–7: C ${C(R.tokens_per_run.median)}; of a question ${C(R.tokens_per_run.median_questions)}, of a work task ${C(R.tokens_per_run.median_work)}.`);
   console.log(`Tokens per right answer: C ${C(R.tokens_per_right_answer)}.`);
   console.log(`Area 8, median per run: C ${C(R.overhead.per_run_median)}; C − A ${fmt(R.overhead.c_minus_a)}.`);
   console.log(`Made-up answers, area 4: C ${R.made_up_answers.C}.`);
   const l2 = R.looked_vs_found;
   console.log(`Looked vs found: C looked in ${l2.looked} of ${l2.runs}, right in ${l2.right_when_looked} of those; right in ${l2.right_when_not} of the ${l2.runs - l2.looked} that did not.`);
-  for (const u of USERS) {
-    const s = R.break_even[u].sessions;
-    console.log(`Break-even, the ${u}: ${s.questions} sessions of questions, ${s.work} of work tasks, ${s.areas_1_to_7} of areas 1–7 as run here.`);
-  }
   console.log(`Stability: area 3 under C right in ${R.stability.right} of ${R.stability.runs}; tasks whose verdict changed: ${R.stability.changed}.`);
   for (const t of R.area_9.tasks) {
     console.log(`Area 9, ${t.task}, again from ${t.from}'s fork:`);

@@ -114,23 +114,6 @@
       }
     ]
   },
-  "potential_reached": {
-    "pooled": {
-      "value": 0.833,
-      "closed": 15,
-      "of": 18
-    },
-    "developer": {
-      "value": 0.8,
-      "closed": 8,
-      "of": 10
-    },
-    "delegator": {
-      "value": 0.875,
-      "closed": 7,
-      "of": 8
-    }
-  },
   "made_up_answers": {
     "area": 4,
     "of": 3,
@@ -259,34 +242,6 @@
     "c_looked": 0,
     "c_minus_a": 298,
     "b_minus_a": 119086
-  },
-  "break_even": {
-    "developer": {
-      "build_tokens": 4008581,
-      "saving_per_session": {
-        "areas_1_to_7": 213438,
-        "questions": 90335,
-        "work": 767401
-      },
-      "sessions": {
-        "areas_1_to_7": 18.8,
-        "questions": 44.4,
-        "work": 5.2
-      }
-    },
-    "delegator": {
-      "build_tokens": 2996876,
-      "saving_per_session": {
-        "areas_1_to_7": 260239,
-        "questions": 79729,
-        "work": 531004
-      },
-      "sessions": {
-        "areas_1_to_7": 11.5,
-        "questions": 37.6,
-        "work": 5.6
-      }
-    }
   },
   "stability": {
     "area": 3,
@@ -1230,23 +1185,6 @@
         }
       ]
     },
-    "potential_reached": {
-      "pooled": {
-        "value": 0.944,
-        "closed": 17,
-        "of": 18
-      },
-      "developer": {
-        "value": 0.9,
-        "closed": 9,
-        "of": 10
-      },
-      "delegator": {
-        "value": 1,
-        "closed": 8,
-        "of": 8
-      }
-    },
     "made_up_answers": {
       "area": 4,
       "of": 3,
@@ -1365,34 +1303,6 @@
       "c_looked": 0,
       "c_minus_a": 299,
       "b_minus_a": 119086
-    },
-    "break_even": {
-      "developer": {
-        "build_tokens": 4008581,
-        "saving_per_session": {
-          "areas_1_to_7": 225794,
-          "questions": 107833,
-          "work": 756617
-        },
-        "sessions": {
-          "areas_1_to_7": 17.8,
-          "questions": 37.2,
-          "work": 5.3
-        }
-      },
-      "delegator": {
-        "build_tokens": 2996876,
-        "saving_per_session": {
-          "areas_1_to_7": 264270,
-          "questions": 86450,
-          "work": 530999
-        },
-        "sessions": {
-          "areas_1_to_7": 11.3,
-          "questions": 34.7,
-          "work": 5.6
-        }
-      }
     },
     "stability": {
       "area": 3,

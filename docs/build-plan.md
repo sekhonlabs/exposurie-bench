@@ -424,7 +424,7 @@ node check/long.mjs
 
 What part 9 did for areas 1–8, whose runs were already scored and checked by hand in part 7:
 
-- **`score/results.mjs --save`** first publishes what the numbers need from `../runs`: each batch's conditions, as `results/<batch>/conditions.json`, and each brain build's tokens, as `results/builds.json`. Then it computes every number of design.md from `results/` alone into `results/numbers.json`, and draws three charts into `results/charts/`: right answers by area, tokens, and break-even. Without `--save` it prints the numbers. How each number is computed is in [decisions.md](decisions.md).
+- **`score/results.mjs --save`** first publishes what the numbers need from `../runs`: each batch's conditions, as `results/<batch>/conditions.json`, and each brain build's tokens, as `results/builds.json`. Then it computes every number of design.md from `results/` alone into `results/numbers.json`, and draws three charts into `results/charts/`: right answers by area, tokens, and break-even, which was dropped on 2026-10-28. Without `--save` it prints the numbers. How each number is computed is in [decisions.md](decisions.md).
 - **`check/results.mjs` passes:**
   - each batch holds each of its planned cells exactly once, and every run has its condition and a final verdict
   - `results/` holds exactly what the script writes, and nothing else in `results/charts/`

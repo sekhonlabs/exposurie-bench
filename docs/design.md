@@ -43,8 +43,6 @@ Condition C is set up like this:
 
 **B is deliberately cheaper than reality.** A real long session also carries tool output. If C still uses fewer tokens than B here, the saving is real.
 
-**Potential reached = (C − A) ÷ (D − A)**, pooled over the memory areas (1–7). It is the share of the gap between a forgetful agent and a perfect-memory one that exposurie closes.
-
 ## The users
 
 There are two made-up people:
@@ -149,9 +147,9 @@ Each run uses `claude -p --output-format stream-json`, which reports:
 | tokens per right answer | total tokens ÷ right answers, because a cheap wrong answer is not cheap |
 | overhead | area 8, C − A |
 | made-up answers | area 4, per condition |
-| break-even | brain-build tokens ÷ (B − C tokens per session): the number of sessions until the brain pays for itself |
 | looked vs found | did the agent run `exposurie read` at all (compulsion), and was it right when it did (capability) |
-| potential reached | (C − A) ÷ (D − A) |
+
+Potential reached and break-even were in this table until 2026-10-28, when they were dropped; [decisions.md](decisions.md#2026-10-28) says why.
 
 **Stability check:** one area is rerun twice more under C, to show how often answers change between identical runs.
 

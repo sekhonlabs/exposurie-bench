@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="920" height="630" viewBox="0 0 920 630" role="img" aria-label="Right answers, by area and condition">
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="578" viewBox="0 0 920 578" role="img" aria-label="Right answers, by area and condition">
 <title>Right answers, by area and condition</title>
-<rect x="0" y="0" width="920" height="630" fill="#FFFFFF"/>
+<rect x="0" y="0" width="920" height="578" fill="#FFFFFF"/>
 <text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">Right answers, by area</text>
 <text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">One run per task and condition. Each dot is one task, filled when its answer was right.</text>
 <text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">C ran twice on the same brains: with 1.2.0 from npm, and again with 1.2.0+b6855ee, its rebuilt read.</text>
@@ -156,7 +156,5 @@
 <circle cx="725" cy="486" r="7" fill="#E37D4E"/>
 <circle cx="745" cy="486" r="7" fill="#E37D4E"/>
 <text x="840" y="491" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#8C8C8C" text-anchor="middle">not run</text>
-<text x="40" y="558" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">Potential reached, (C − A) ÷ (D − A): (18 − 3) ÷ (21 − 3) = 0.83 with exposurie 1.2.0,</text>
-<text x="40" y="582" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">and (20 − 3) ÷ (21 − 3) = 0.94 with 1.2.0+b6855ee.</text>
-<text x="40" y="610" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Area 8 needs no past, so it has no D and stays out of the totals.</text>
+<text x="40" y="558" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Area 8 needs no past, so it has no D and stays out of the totals.</text>
 </svg>
