@@ -482,3 +482,60 @@ node runner/run.mjs go full-2
 node runner/long.mjs rebuilt <task>
 node score/long.mjs <task> --rebuilt
 ```
+
+### 11–13. Beyond retrieval (proposed 2026-11-05, not decided)
+
+On 2026-10-28 the owner found that the benchmark mostly tests `read`: retrieval and its input tokens. These three parts test what exposurie does beyond it. They stay within the owner's two bounds: no other paid agent, and exposurie the only thing under test. Each reports counts or pass and fail, and how far the plan meter moved, with tokens in a side column and no ratios. **None is decided.** The next session puts them to the owner before anything is built. Claude's proposed order is 11 and 12 first, since they need almost no plan usage, then 13.
+
+#### 11. What the sync wrote
+
+**Plan usage:** the judge's calls only. No agent session runs.
+
+Areas 1–9 test whether an agent finds a fact. This part tests whether the sync wrote it down right. Each kept brain is read against its user's fact sheet.
+
+- **Per planted fact:** captured, captured wrong, an old decision still shown as current, or missing. A fact's checks settle what they can, with the whole-word rule of `check/text.mjs`, and the judge reads the rest against a rubric. A hand read overrides both.
+- **Per brain:** anything it states that the history never said. Also the never-discussed items, which must stay out.
+- **Inputs, all kept:**
+  - the brain each build wrote on 2026-10-21, in `../sandbox/brains/<user>/`
+  - `users/<user>/facts.json`: 90 and 66 facts, each with the session it is first said in, decisions that were later replaced among them
+  - the sessions
+- **To settle with the owner:** whether "never said" is read page by page by the judge, or sampled.
+- **Done when:** both brains are scored and read by hand. `results/brains/` holds the scores, the README gives a line for each brain, `check/results.mjs` holds them, and a fault test catches every break.
+
+#### 12. It's yours
+
+**Plan usage:** none. No model is called.
+
+The owner's point: a brain belongs to the person, and stays with them when they change agent or lab. Each line of this checklist is a script, run against exposurie 1.3.0 from npm in the sandbox:
+
+1. **The brain is plain Markdown.** Every page opens as UTF-8 text, and its links are wikilinks to pages in the same folder.
+2. **It outlives the tool.** After `exposurie uninstall`, every page's bytes are unchanged and `~/.exposurie/config.json` is gone. 1.2.0 runs this line too, since it leaves that file behind, so the check is seen to fail once.
+3. **No network.** exposurie's commands work with networking blocked, and its code loads no network module. How to block it is settled when the part is built.
+4. **No account.** Nothing in setup, sync, read or uninstall asks for a login, a key or a sign-up.
+5. **A pointer for every agent it supports.** In a sandbox home that holds Claude Code's, Codex's, Cursor's and OpenCode's folders, setup writes the pointer into each one's instructions file.
+6. **History from every lab.** Made-up sessions in Codex's, Cursor's, claude.ai's and ChatGPT's formats are all read into one sync's batch, with their formats taken from exposurie's own readers. Only the staging step runs, so no model is called.
+
+- **The sandbox:** exposurie 1.3.0 installs from npm's tarball, pinned in `runner/pins.json` by the registry's sha512, beside 1.2.0 and the rebuilt read.
+- **Done when:** every line passes or fails with its evidence in `results/its-yours/`. The README lists them, and a fault test breaks each line's check and sees it caught.
+
+#### 13. Many agents, one job
+
+**Plan usage:** yes, the most of the three. **It needs the owner's go, and the pointer change below first.**
+
+The owner's point: someone running five agents in parallel on one job, with the brain as their shared memory.
+- One job is split across five agents, each in its own copy of one repository, none seeing the others' sessions.
+- Their work is merged and tested, then synced.
+- Then a second round of five needs what round 1 decided only in conversation, often by another agent.
+- The agents run one at a time, since none of them sees another anyway.
+
+- **Conditions:** no memory, exposurie, and a perfect hand-written `AGENTS.md`, which is what D stands for.
+- **Scored on:** the merged work passing its tests, the five agreeing, the work done the user's way, and the plan meter.
+- **What it depends on:** the agent opening the brain during work. real-work-2 never ran `exposurie read` with either read, because exposurie's pointer is worded for questions about the user, not for work in their projects. As things stand, this part would measure the pointer.
+  - So a conditional line in the pointer comes first. That is an exposurie change.
+  - It is measured again on real-work-2, and on area 8, since the pointer is paid for on every message.
+- **What it would also show:** sync has no lock, never files the session it runs in, and files decisions rather than where a task stands.
+- It reverses the decision of 2026-10-18 to run no second agent.
+
+**Not proposed:**
+- a switch of labs, which needs another paid agent
+- "the next session", which area 9 and part 13's second round already cover
