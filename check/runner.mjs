@@ -17,6 +17,10 @@
 //   a read outside its folder that was denied, and     kept, with a note
 //   a shell command Claude Code allows by itself
 //
+// Then C runs again with the rebuilt read (part 10), and with exposurie 1.3.1
+// on brains a fortnight old, each run brought up to 1.3.1 and its brain made
+// 3 days old first, while the kept brains stay as they were.
+//
 // The scorer then scores every run with the run order moved out of its reach,
 // the judge decides what the checks cannot (meeting one usage limit on the
 // way), a hand verdict overrules the judge, and the repository save refuses a
@@ -30,8 +34,8 @@ import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { EXPOSURIE, HOME, PINS, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
-import { C_PATHS, Stop, allTasks, go, keepBrain, neutralProblems, plan, readRun } from '../runner/run.mjs';
+import { EXPOSURIE, HOME, PINS, POINTER_FOR_WORK, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
+import { C_PATHS, Stop, allTasks, go, hashPath, keepBrain, neutralProblems, plan, readRun } from '../runner/run.mjs';
 import { saveToRepo, scoreBatch } from '../score/score.mjs';
 
 ownNodeOnly();
@@ -315,6 +319,64 @@ for (const cell of rebuilt.cells) {
 }
 delete scenario.exposurie_dir;
 writeScenario();
+
+// ---------------------------------------------------------------- 1.3.1: C with the pointer for work
+
+// A 1.3.1 batch is C's alone, and its brains are a fortnight old, as the kept
+// ones are. No run is refused for that: each gets 1.3.1's own update and a copy
+// of the brain made 3 days old, its agent meets both, and the kept brain stays
+// as it was. A brain with conversations not filed is still refused.
+for (const conditions of [['A', 'C'], ['B']]) {
+  try {
+    plan(ctx, `v131-${conditions.join('')}`, { conditions, exposurie: '1.3.1' });
+    problems.push(`a 1.3.1 batch could be planned under ${conditions.join(', ')}`);
+  } catch (e) {
+    expect(e instanceof Stop, `planning a 1.3.1 batch under ${conditions.join(', ')}: ${e.message}`);
+  }
+}
+const fortnight = new Date(Date.now() - 15 * 86_400_000).toISOString();
+writeFileSync(stateOf('developer'), JSON.stringify({ lastSyncUtc: fortnight, unfiled: 2 }) + '\n');
+const unfiled131 = plan(ctx, 'v131-unfiled', { tasks: ['recall-1'], conditions: ['C'], exposurie: '1.3.1' });
+try {
+  await go(ctx, 'v131-unfiled');
+} catch (e) {
+  problems.push(`go, with 1.3.1 and conversations not filed: ${e.message}`);
+}
+const unfiledRun = readRun(join(ctx.runs, 'v131-unfiled', unfiled131.cells[0].run));
+expect(unfiledRun?.status === 'not-run' && /2 conversations not filed yet/.test(unfiledRun.reason), `1.3.1 with conversations not filed: ${unfiledRun?.status} (${unfiledRun?.reason})`);
+for (const u of USERS) writeFileSync(stateOf(u), JSON.stringify({ lastSyncUtc: fortnight, unfiled: 0 }) + '\n');
+const keptBefore = Object.fromEntries(USERS.map((u) => [u, hashPath(join(ctx.brains, u))]));
+plan(ctx, 'v131', { tasks: ['recall-1', 'real-work-2', 'no-past-1', 'real-work-3'], conditions: ['C'], exposurie: '1.3.1' });
+scenario.exposurie_dir = 'npm-131';
+// 3 days, as part 10's runs saw: the owner's call of 2026-11-05, written here rather than taken from the runner.
+scenario.c_expect = { pointer: POINTER_FOR_WORK, state: 'last sync 3d ago', version: PINS.exposurie131.version };
+writeScenario();
+try {
+  await go(ctx, 'v131');
+} catch (e) {
+  problems.push(`go, with 1.3.1: ${e.message}`);
+}
+const v131 = readJson(join(ctx.runs, 'v131', 'batch.json'));
+expect(v131.exposurie === '1.3.1' && v131.cells.length === 4, `the 1.3.1 batch: ${v131.cells.length} runs, exposurie ${v131.exposurie}`);
+for (const cell of v131.cells) {
+  const dir = join(ctx.runs, 'v131', cell.run);
+  const r = readRun(dir);
+  expect(r?.status === 'done' && r.versions?.exposurie === PINS.exposurie131.version, `1.3.1 ${cell.run} ${cell.task}: ${r?.status}, exposurie ${r?.versions?.exposurie} (${r?.reason ?? ''})`);
+  const answer = existsSync(join(dir, 'answer.md')) ? readFileSync(join(dir, 'answer.md'), 'utf8') : '';
+  expect(!answer.includes('FAKE-PROBLEM'), `1.3.1 ${cell.run} ${cell.task}: ${answer.slice(0, 300)}`);
+  const p = cell.prepared ?? {};
+  const days = (Date.parse(r?.started ?? '') - Date.parse(p.last_sync ?? '')) / 86_400_000;
+  expect(
+    p.kept_last_sync === fortnight && p.updated?.includes('.claude/CLAUDE.md') && !p.updated?.includes('brain') && Math.abs(days - 3) < 0.01,
+    `1.3.1 ${cell.run} ${cell.task}, as prepared: ${JSON.stringify(p)}`,
+  );
+}
+for (const u of USERS) expect(hashPath(join(ctx.brains, u)) === keptBefore[u], `the ${u}'s kept brain changed during the 1.3.1 batch`);
+expect(!neutralProblems(ctx).length, `after the 1.3.1 batch: ${neutralProblems(ctx).join('; ')}`);
+delete scenario.exposurie_dir;
+delete scenario.c_expect;
+writeScenario();
+for (const u of USERS) writeFileSync(stateOf(u), states[u]);
 
 // ---------------------------------------------------------------- scoring, blind
 

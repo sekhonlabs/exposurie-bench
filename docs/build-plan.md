@@ -488,12 +488,33 @@ node score/long.mjs <task> --rebuilt
 On 2026-10-28 the owner found that the benchmark mostly tests `read`: retrieval and its input tokens. These three parts test what exposurie does beyond it. They stay within the owner's two bounds: no other paid agent, and exposurie the only thing under test. Each reports counts or pass and fail, and how far the plan meter moved, with tokens in a side column and no ratios.
 
 **Decided 2026-11-05, by the owner:** 13, with three agents rather than five, and 12. 11 is not built. The order:
-1. exposurie's pointer gains a condition for work, released as exposurie 1.3.1 (see 13, *What it depends on*)
+1. exposurie's pointer gains a condition for work, released as exposurie 1.3.1 (see 13, *What it depends on*), and measured first on areas 1–8 (see *1.3.1, measured*)
 2. 13, run on 1.3.1
 3. 12
 4. the README rewritten as one finished account of the benchmark
 
 Why is in [decisions.md](decisions.md).
+
+#### 1.3.1, measured
+
+**Plan usage:** yes: the 24 C runs of areas 1–8, about a dollar at list prices. **Built 2026-11-05; the live runs have the owner's go.**
+
+exposurie 1.3.1's pointer also fires before work in the user's projects, because real-work-2 never opened the brain. Every C run carries the pointer, so C runs again on all of areas 1–8, on the same kept brains, and the results are set beside 1.2.0's and the rebuilt read's. Why each choice was made is in [decisions.md](decisions.md).
+
+- **The sandbox:** `sandbox.mjs setup-131` installs npm's tarball, pinned by the registry's sha512, into `sandbox/npm-131/`.
+- **Before each run:** 1.3.1's own update step brings the pointer, skill and command in the run's home up to 1.3.1. The run's copy of the brain is made 3 days old, so exposurie's state line reads as part 10's runs saw it. The kept brains are never touched.
+- **The runs:** `run.mjs plan full-3 --conditions C --exposurie 1.3.1`, then `go full-3`.
+- **Scoring:** `score/score.mjs` on the batch, with the judge and a hand read of every judged answer.
+- **Done when:**
+  - `check/runner.mjs` holds with a 1.3.1 batch run through the fake on brains a fortnight old, and a fault test breaks the runner's 1.3.1 code and sees every break caught
+  - all 24 runs are done, scored and read by hand
+  - `score/results.mjs --save` publishes them beside 1.2.0's and the rebuilt read's, and `check/results.mjs` holds them
+
+```
+node runner/sandbox.mjs setup-131
+node runner/run.mjs plan full-3 --conditions C --exposurie 1.3.1
+node runner/run.mjs go full-3
+```
 
 #### 11. What the sync wrote (not built)
 
@@ -542,7 +563,7 @@ The owner's point: someone running several agents in parallel on one job, with t
 - **Scored on:** the merged work passing its tests, the five agreeing, the work done the user's way, and the plan meter.
 - **What it depends on:** the agent opening the brain during work. real-work-2 never ran `exposurie read` with either read, because exposurie's pointer is worded for questions about the user, not for work in their projects. As things stand, this part would measure the pointer.
   - So a conditional line in the pointer comes first. That is an exposurie change, released as 1.3.1, which this part runs.
-  - It is measured again on real-work-2, and on area 8, since the pointer is paid for on every message. How those C runs meet the brains' 7-day arrow (last synced 2026-10-21) is settled when that is built.
+  - It is measured first on all of areas 1–8, the owner's call of 2026-11-05, since every C run carries the pointer and it is paid for on every message. Each run's copy of the brain is made 3 days old, so the brains' 7-day arrow doesn't reach it. See *1.3.1, measured*.
 - **What it would also show:** sync has no lock, never files the session it runs in, and files decisions rather than where a task stands.
 - It reverses the decision of 2026-10-18 to run no second agent.
 

@@ -3,6 +3,7 @@
 //
 //   node runner/sandbox.mjs setup          install the pinned Git, Claude Code and exposurie
 //   node runner/sandbox.mjs setup-rebuilt  install exposurie with its read rebuilt (part 10), beside 1.2.0
+//   node runner/sandbox.mjs setup-131      install exposurie 1.3.1 from npm's tarball, beside them
 //   node runner/sandbox.mjs login          log in once, by hand, with a Claude plan
 //   node runner/sandbox.mjs check          one tiny run, then check its start-up line
 //   node runner/sandbox.mjs recheck <dir>  check a saved run again, without running anything
@@ -44,6 +45,13 @@ export const EXPOSURIE = join(PREFIX, 'node_modules', '@sekhon', 'exposurie', 'b
  */
 const PREFIX_REBUILT = join(SANDBOX, 'npm-rebuilt');
 export const EXPOSURIE_REBUILT = join(PREFIX_REBUILT, 'node_modules', '@sekhon', 'exposurie', 'bin', 'exposurie.js');
+/**
+ * exposurie 1.3.1, whose pointer also fires before work in the user's
+ * projects, installed from npm's tarball into a prefix of its own. Parts 12
+ * and 13 run on it, and areas 1–8 measure it first.
+ */
+const PREFIX_131 = join(SANDBOX, 'npm-131');
+export const EXPOSURIE_131 = join(PREFIX_131, 'node_modules', '@sekhon', 'exposurie', 'bin', 'exposurie.js');
 
 /** The tools every condition gets. Each run's start-up line is checked against this. */
 export const TOOLS = ['Bash', 'Edit', 'Glob', 'Grep', 'Read', 'Write'];
@@ -66,7 +74,7 @@ const FROM_WINDOWS = [
  * unless a test gives it its own. With `exposurie: false` the PATH leaves out
  * the sandbox's npm folder, which holds the `exposurie` command: conditions A,
  * B and D run without it, since it is part of what exposurie installs. With
- * `exposurie: 'rebuilt'` the rebuilt one's folder comes first, so its
+ * `exposurie: 'rebuilt'` or `'1.3.1'` that one's folder comes first, so its
  * `exposurie` is the one found, and the PATH is otherwise C's own.
  */
 export function sandboxEnv({ home = HOME, exposurie = true } = {}) {
@@ -85,6 +93,7 @@ export function sandboxEnv({ home = HOME, exposurie = true } = {}) {
     TEMP: TMP,
     TMP,
     PATH: [
+      ...(exposurie === '1.3.1' ? [PREFIX_131] : []),
       ...(exposurie === 'rebuilt' ? [PREFIX_REBUILT] : []), ...(exposurie ? [PREFIX] : []), NODE, join(GIT, 'cmd'),
       join(win, 'System32'), win, join(win, 'System32', 'Wbem'), join(win, 'System32', 'WindowsPowerShell', 'v1.0'),
     ].join(';'),
@@ -138,7 +147,10 @@ function run(cmd, args, opts = {}) {
 }
 
 const sha256 = (file) => createHash('sha256').update(readFileSync(file)).digest('hex');
+/** npm's own form of a hash, as the registry gives it for a tarball. */
+const integrity = (file) => `sha512-${createHash('sha512').update(readFileSync(file)).digest('base64')}`;
 
+/** A pinned download, checked against its sha256, or against the registry's sha512 for one from npm. */
 async function fetchPinned(pin) {
   const file = join(DOWNLOADS, pin.file);
   if (!existsSync(file)) {
@@ -146,7 +158,8 @@ async function fetchPinned(pin) {
     if (!res.ok) fail(`download failed (${res.status}): ${pin.url}`);
     writeFileSync(file, Buffer.from(await res.arrayBuffer()));
   }
-  if (sha256(file) !== pin.sha256) fail(`checksum mismatch: ${file}`);
+  const ok = pin.sha256 ? sha256(file) === pin.sha256 : pin.integrity ? integrity(file) === pin.integrity : false;
+  if (!ok) fail(`checksum mismatch: ${file}`);
   return file;
 }
 
@@ -182,7 +195,32 @@ export function versions() {
     claude: out(run(CLAUDE, ['--version'])),
     exposurie: out(run(process.execPath, [EXPOSURIE, '--version'])),
     ...(existsSync(EXPOSURIE_REBUILT) ? { exposurie_rebuilt: out(run(process.execPath, [EXPOSURIE_REBUILT, '--version'])) } : {}),
+    ...(existsSync(EXPOSURIE_131) ? { exposurie_131: out(run(process.execPath, [EXPOSURIE_131, '--version'])) } : {}),
   };
+}
+
+/** The line exposurie 1.3.1 added to its pointer, as its source spells it. */
+export const POINTER_FOR_WORK = 'Before answering any such question, before starting work in one of';
+
+/**
+ * exposurie 1.3.1 from npm's tarball, checked against the registry's sha512, by
+ * the sandbox's own npm into a prefix of its own. 1.2.0, the rebuilt read and
+ * Claude Code stay where they are.
+ */
+async function setup131() {
+  ownNodeOnly();
+  if (process.version !== `v${PINS.node.version}`) fail(`Node is ${process.version}, pinned ${PINS.node.version}`);
+  const pin = PINS.exposurie131;
+  const file = await fetchPinned(pin);
+  mkdirSync(PREFIX_131, { recursive: true });
+  const npm = run(process.execPath, [NPM_CLI, 'install', '--global', '--prefix', PREFIX_131, file], { stdio: 'inherit' });
+  if (npm.status !== 0) fail('npm install failed');
+  const v = versions();
+  console.log(JSON.stringify(v, null, 2));
+  if (!v.exposurie.includes(PINS.exposurie)) fail(`exposurie is ${v.exposurie}, pinned ${PINS.exposurie}`);
+  if (!v.exposurie_131?.includes(pin.version)) fail(`exposurie 1.3.1 says it is ${v.exposurie_131}`);
+  const reach = readFileSync(join(dirname(dirname(EXPOSURIE_131)), 'src', 'reach.js'), 'utf8');
+  if (!reach.includes(POINTER_FOR_WORK)) fail("exposurie 1.3.1's pointer has no line for work");
 }
 
 /**
@@ -384,7 +422,7 @@ function printEnv() {
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   const [cmd, ...rest] = process.argv.slice(2);
   const commands = {
-    setup, 'setup-rebuilt': setupRebuilt, login, check, env: printEnv, claude: () => claude(rest),
+    setup, 'setup-rebuilt': setupRebuilt, 'setup-131': setup131, login, check, env: printEnv, claude: () => claude(rest),
     recheck: () => report(resolve(rest[0] ?? fail('usage: node runner/sandbox.mjs recheck <run folder>'))),
   };
   if (!commands[cmd]) fail(`usage: node runner/sandbox.mjs ${Object.keys(commands).join(' | ')}`);

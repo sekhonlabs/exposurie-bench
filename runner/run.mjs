@@ -1,7 +1,7 @@
 // The runner (parts 5 and 6): every benchmark run and brain build, one at a
 // time, in the sandbox.
 //
-//   node runner/run.mjs plan <batch> [--users u,u] [--tasks id,id] [--conditions A,B,C,D] [--seed text] [--exposurie rebuilt]
+//   node runner/run.mjs plan <batch> [--users u,u] [--tasks id,id] [--conditions A,B,C,D] [--seed text] [--exposurie rebuilt|1.3.1]
 //   node runner/run.mjs go <batch> [--again r001,r002]
 //   node runner/run.mjs status <batch>
 //   node runner/run.mjs build <user> [--accept "<why>"]
@@ -49,7 +49,8 @@ import {
 import { dirname, join, parse, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  CLAUDE, EXPOSURIE, EXPOSURIE_REBUILT, HOME, PINS, RUNS, SANDBOX, TOOLS, lockSandbox, ownNodeOnly, sandboxEnv, strays,
+  CLAUDE, EXPOSURIE, EXPOSURIE_131, EXPOSURIE_REBUILT, HOME, PINS, POINTER_FOR_WORK, RUNS, SANDBOX, TOOLS, lockSandbox, ownNodeOnly,
+  sandboxEnv, strays,
 } from './sandbox.mjs';
 import { convertUser } from '../gen/convert.mjs';
 
@@ -101,12 +102,15 @@ export function sandboxContext() {
   };
 }
 
+/** The exposuries a batch may name besides 1.2.0: the rebuilt read (part 10), and 1.3.1 from npm. */
+export const OTHER_EXPOSURIES = ['rebuilt', '1.3.1'];
+
 /**
  * A run's environment. C gets the `exposurie` command on its PATH: 1.2.0, or
- * with `ctx.exposurie` set to 'rebuilt' (part 10), the rebuilt one first.
+ * the one `ctx.exposurie` names first.
  */
 export const envFor = (ctx, condition) => ({
-  ...sandboxEnv({ home: ctx.home, exposurie: condition === 'C' && (ctx.exposurie === 'rebuilt' ? 'rebuilt' : true) }),
+  ...sandboxEnv({ home: ctx.home, exposurie: condition === 'C' && (ctx.exposurie || true) }),
   ...ctx.env,
 });
 
@@ -190,14 +194,15 @@ export function readRun(dir) {
  * Fix a batch. Every task asked for runs once under each condition asked for,
  * and the order comes from sorting on a hash of the seed and the cell: mixed,
  * and the same every time for the same seed. `exposurie: 'rebuilt'` (part 10)
- * runs C with the rebuilt read; only C has exposurie, so such a batch is C's alone.
+ * runs C with the rebuilt read, and `'1.3.1'` with exposurie 1.3.1; only C has
+ * exposurie, so such a batch is C's alone.
  */
 export function plan(ctx, batch, { users = USERS, tasks: only = null, conditions = CONDITIONS, seed = batch, exposurie = null } = {}) {
   if (!/^[a-z0-9][a-z0-9-]*$/i.test(batch ?? '')) fail('a batch name is letters, digits and dashes');
   if (existsSync(batchFile(ctx, batch))) fail(`${batch} is already planned; run it with go, or pick another name`);
   for (const c of conditions) if (!CONDITIONS.includes(c)) fail(`no condition ${c}`);
-  if (exposurie !== null && exposurie !== 'rebuilt') fail(`no exposurie ${exposurie}; the one other than 1.2.0 is rebuilt`);
-  if (exposurie && conditions.some((c) => c !== 'C')) fail('only C has exposurie, so a rebuilt batch runs C alone');
+  if (exposurie !== null && !OTHER_EXPOSURIES.includes(exposurie)) fail(`no exposurie ${exposurie}; the ones other than 1.2.0 are ${OTHER_EXPOSURIES.join(' and ')}`);
+  if (exposurie && conditions.some((c) => c !== 'C')) fail(`only C has exposurie, so a ${exposurie} batch runs C alone`);
   for (const u of users) if (!USERS.includes(u)) fail(`no user ${u}`);
   const known = allTasks().filter((t) => t.area !== BUILT_LATER);
   for (const id of only ?? []) if (!known.some((t) => t.id === id)) fail(`no task ${id} to run`);
@@ -245,7 +250,9 @@ const DAY = 86_400_000;
 /**
  * Why a condition cannot run now, if it cannot. C needs its user's brain, built
  * and synced to the end within the last 7 days: from 7 days, or with anything
- * left unfiled, exposurie's own status line asks the agent to sync.
+ * left unfiled, exposurie's own status line asks the agent to sync. A 1.3.1
+ * batch is the exception to the 7 days, since each of its runs gets a copy of
+ * the brain made 3 days old (see prepare131).
  */
 export function setupProblems(ctx, condition, task) {
   const missing = conditionFiles(ctx, condition, task).filter((f) => !existsSync(f.from));
@@ -264,7 +271,7 @@ export function setupProblems(ctx, condition, task) {
   const last = Date.parse(state.lastSyncUtc ?? '');
   if (!last) return [`the ${task.user}'s brain was never synced`];
   const days = Math.floor((Date.now() - last) / DAY);
-  if (days >= 7) return [`the ${task.user}'s brain was last synced ${days} days ago; exposurie asks for a sync from 7`];
+  if (days >= 7 && ctx.exposurie !== '1.3.1') return [`the ${task.user}'s brain was last synced ${days} days ago; exposurie asks for a sync from 7`];
   if ((state.unfiled ?? 0) > 0) return [`the ${task.user}'s brain has ${state.unfiled} conversations not filed yet`];
   return [];
 }
@@ -321,6 +328,68 @@ export function aboveProblems(dir) {
 /** A runner stopped part-way may have left a condition in the home. */
 export function recover(ctx) {
   if (unplace(ctx)) console.log('A run that stopped part-way had left its condition in the sandbox home. It has been taken out.');
+}
+
+/** How old a 1.3.1 run's copy of the brain is made: part 10's runs saw `last sync 3d ago`. */
+export const AGE_131_DAYS = 3;
+
+/**
+ * Before a 1.3.1 C run starts, once its condition is in the home. The kept
+ * brains were set up by exposurie 1.2.0 and last synced on 2026-10-21, and two
+ * things follow, each settled the same way for every run:
+ *
+ *   - The pointer, skill and command in the home are 1.2.0's, and Claude Code
+ *     reads the pointer once, as the session starts. So 1.3.1 first brings its
+ *     own files up to date, by its own update step (its src/refresh.js), which
+ *     any command takes when it finds the machine set up by an older release.
+ *     The step writes the pointer, the skill, the command and the version in
+ *     exposurie's config, never the brain, and says so. It is what a person who
+ *     updates from 1.2.0 has after their first command.
+ *   - From 7 days, exposurie's state line asks the agent to sync, and part 10's
+ *     runs saw `last sync 3d ago`. So the run's copy of the brain has its last
+ *     sync moved to 3 days before the run, the owner's call of 2026-11-05. That
+ *     one value in its state file is all that changes, and the kept brain is
+ *     never touched.
+ *
+ * Then exposurie is asked once more, and its state line must read as part 10's
+ * runs saw it, with no arrow and no word of an update. What was done is
+ * returned, for batch.json.
+ */
+export function prepare131(ctx) {
+  const env = envFor(ctx, 'C');
+  const ask = () => {
+    const r = spawnSync(process.execPath, [EXPOSURIE_131, '--version'], { env, cwd: ctx.home, encoding: 'utf8', windowsHide: true });
+    return { status: r.status, out: `${r.stdout ?? ''}${r.stderr ?? ''}` };
+  };
+  const before = Object.fromEntries(C_PATHS.map((rel) => [rel, hashPath(join(ctx.home, rel))]));
+  const strayBefore = strays(ctx.home).join('\n');
+  const up = ask();
+  if (up.status !== 0 || !up.out.includes(`UPDATED TO ${PINS.exposurie131.version}`)) {
+    fail(`exposurie 1.3.1 did not bring the run's home up to date:\n${up.out.slice(0, 600)}`);
+  }
+  const updated = C_PATHS.filter((rel) => hashPath(join(ctx.home, rel)) !== before[rel]);
+  if (updated.includes('brain')) fail("exposurie 1.3.1's update changed the brain");
+  if (strays(ctx.home).join('\n') !== strayBefore) fail("exposurie 1.3.1's update left something new in the home");
+  if (!readFileSync(join(ctx.home, '.claude', 'CLAUDE.md'), 'utf8').includes(POINTER_FOR_WORK)) {
+    fail("after exposurie 1.3.1's update, the pointer has no line for work");
+  }
+  const config = readJson(join(ctx.home, '.exposurie', 'config.json'));
+  if (config.version !== PINS.exposurie131.version) fail(`after the update, exposurie's config says ${config.version}`);
+
+  const stateFile = join(ctx.home, 'brain', '.exposurie', 'state.json');
+  const text = readFileSync(stateFile, 'utf8');
+  const at = /("lastSyncUtc"\s*:\s*)"([^"]*)"/g;
+  const found = [...text.matchAll(at)];
+  if (found.length !== 1) fail(`the brain's state file gives lastSyncUtc ${found.length} times`);
+  const lastSync = new Date(Date.now() - AGE_131_DAYS * DAY).toISOString();
+  writeFileSync(stateFile, text.replace(at, `$1"${lastSync}"`));
+
+  const again = ask();
+  const stateLine = again.out.split('\n')[0].trim();
+  if (again.status !== 0 || !stateLine.includes(`last sync ${AGE_131_DAYS}d ago`) || /-> RUN:|UPDATED TO/.test(again.out)) {
+    fail(`exposurie 1.3.1 does not see the brain as part 10's runs saw it:\n${again.out.slice(0, 600)}`);
+  }
+  return { updated, kept_last_sync: found[0][2], last_sync: lastSync, state_line: stateLine };
 }
 
 /**
@@ -766,7 +835,17 @@ async function runCell(ctx, b, cell, versions) {
   const setup = setupProblems(ctx, cell.condition, task);
   if (setup.length) return save({ status: 'not-run', reason: setup.join('; ') });
 
-  const placed = place(ctx, cell.run, cell.condition, task);
+  let placed = place(ctx, cell.run, cell.condition, task);
+  if (cell.condition === 'C' && ctx.exposurie === '1.3.1') {
+    try {
+      cell.prepared = prepare131(ctx);
+    } catch (e) {
+      unplace(ctx);
+      throw e;
+    }
+    // The run must leave its condition as prepared, not as it was copied in.
+    placed = placed.map(({ rel }) => ({ rel, sha256: hashPath(join(ctx.home, rel)) }));
+  }
   cell.input = placed.map(({ rel, sha256: h }) => ({ file: rel, sha256: h }));
   saveBatch(ctx, b);
   const strayBefore = strays(ctx.home).map((s) => s.replace(/\\/g, '/'));
@@ -837,7 +916,8 @@ async function runCell(ctx, b, cell, versions) {
 /**
  * The versions every run records. exposurie prints its state line first, so the
  * version is found by its shape. The rebuilt exposurie's package still says
- * 1.2.0, so it is recorded by its label, which names its commit.
+ * 1.2.0, so it is recorded by its label, which names its commit. 1.3.1 is
+ * recorded as itself.
  */
 export function versionsOf(ctx) {
   const env = sandboxEnv({ home: ctx.home });
@@ -854,6 +934,13 @@ export function versionsOf(ctx) {
     const v = out(process.execPath, [EXPOSURIE_REBUILT, '--version']);
     if (v !== label.split('+')[0]) fail(`the rebuilt exposurie says it is ${v}, where its label is ${label}`);
     exposurie = label;
+  }
+  if (ctx.exposurie === '1.3.1') {
+    const want = PINS.exposurie131.version;
+    if (!existsSync(EXPOSURIE_131)) fail('exposurie 1.3.1 is not in the sandbox; run node runner/sandbox.mjs setup-131');
+    const v = out(process.execPath, [EXPOSURIE_131, '--version']);
+    if (v !== want) fail(`the sandbox's exposurie 1.3.1 says it is ${v}`);
+    exposurie = want;
   }
   return { claude_code: out(cmd, [...pre, '--version']), exposurie, node: process.version.slice(1) };
 }
@@ -1355,7 +1442,7 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
     } else if (cmd === 'probe') {
       process.exitCode = (await probe(ctx)).status === 'done' ? 0 : 1;
     } else {
-      fail('usage: node runner/run.mjs plan <batch> [--users] [--tasks] [--conditions] [--seed] [--exposurie rebuilt] | go <batch> [--again] | status <batch> | build <user> [--accept "<why>"] | keep-brain <user> | probe');
+      fail('usage: node runner/run.mjs plan <batch> [--users] [--tasks] [--conditions] [--seed] [--exposurie rebuilt|1.3.1] | go <batch> [--again] | status <batch> | build <user> [--accept "<why>"] | keep-brain <user> | probe');
     }
   } catch (e) {
     if (!(e instanceof Stop)) throw e;

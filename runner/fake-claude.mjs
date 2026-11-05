@@ -530,6 +530,18 @@ if (condition === 'C') {
   if (task && (!r.stdout.includes(task.user) || r.stdout.includes(other))) {
     problems.push(`exposurie read did not find the ${task.user}'s brain alone: ${r.stdout.slice(0, 300)}`);
   }
+  // A 1.3.1 run (the scenario says what it must meet): 1.3.1's pointer from the
+  // start, its config's version, and the state line part 10's runs saw, with
+  // no arrow to sync and no word of an update.
+  const want = scenario.c_expect;
+  if (want) {
+    if (!md.includes(want.pointer)) problems.push(`the pointer the session starts with has no "${want.pointer}"`);
+    const line = r.stdout.split('\n')[0].trim();
+    if (!line.includes(want.state)) problems.push(`exposurie's state line is "${line}", not "${want.state}"`);
+    if (/-> RUN:|UPDATED TO/.test(r.stdout)) problems.push(`exposurie read printed an arrow or an update: ${r.stdout.slice(0, 300)}`);
+    const v = JSON.parse(readFileSync(join(HOME, '.exposurie', 'config.json'), 'utf8')).version;
+    if (v !== want.version) problems.push(`exposurie's config says ${v}, not ${want.version}`);
+  }
 }
 for (const f of files) {
   const to = join(cwd, f.path);
