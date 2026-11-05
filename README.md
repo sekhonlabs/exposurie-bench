@@ -129,6 +129,37 @@ A, B and D have no exposurie, so their runs stand, and every number below sets C
 
 **What this does not show:** the rebuilt read was made after these results, and part 10 measures it on the same tasks. So it shows that the misses it was made for are fixed, not how its search does on questions that did not shape it. One run per cell again, and the hand read could not be blind.
 
+## C again, with exposurie 1.3.1's pointer
+
+The one miss the rebuilt read left was real-work-2, whose agent never opened the brain under either version. exposurie's pointer fired on questions about the user, and a plain ticket is not one. **1.3.1**, on npm since 2026-11-05 from commit [`64eb3f8`](https://github.com/sekhonlabs/exposurie/commit/64eb3f8c3a1d7686f14915c0f5f542ccd38e0a56), adds a condition for work: run `exposurie read --search "<topic or project>"` *before starting work in one of their projects*, as well as before answering a question about the user. Its search and read are the rebuilt ones.
+
+Condition C ran again with it on 2026-11-05, on the same brains, with the same Claude Code, model, tools, audit and scoring: `full-3`, the 24 C runs of areas 1 to 8, once each. Every C run carries the pointer, so every C answer could change. Before each run, two things were set up the same way, and [docs/decisions.md](docs/decisions.md#2026-11-05) gives the reasons:
+
+- **The run's home was brought up to 1.3.1 by exposurie's own update step.** The brains were set up by 1.2.0, and the first 1.3.1 command on such a machine rewrites the pointer, skill and command exposurie wrote outside the brain. The brain itself is not touched. This is what a person who updates from 1.2.0 has after their first command.
+- **The run's copy of the brain was made 3 days old,** so exposurie's state line read as part 10's runs saw it: `last sync 3d ago`, with no line asking the agent to sync. The brains were last synced on 2026-10-21. Every page is the same.
+
+A, B and D stand. Every judged answer was read by hand, and none of the 11 was overturned. The numbers are in [results/numbers.json](results/numbers.json) under `pointer_for_work`. The charts above show 1.2.0 and the rebuilt read; 1.3.1 is in this table.
+
+| | 1.2.0 | 1.2.0+b6855ee | 1.3.1 |
+|---|---|---|---|
+| Right answers, areas 1 to 7, of 21 | 18 | 20 | **21** |
+| Tokens per run, median of areas 1 to 7 | 34,494 | 19,551 | 24,175 |
+| …of a question | 30,089 | 16,665 | 16,796 |
+| …of a work task | 69,939 | 81,092 | 76,063 |
+| Tokens per right answer | 49,263 | 35,526 | 35,546 |
+| Looked, and right when it looked | 20 of 21, right in 18 | 20 of 21, right in 20 | **21 of 21, right in 21** |
+| Area 8, runs that opened the brain | 0 of 3 | 0 of 3 | 0 of 3 |
+| Area 8, tokens a run more than A | 298 | 299 | 267, about 313 like for like |
+| Area 3 under C | 9 of 9 | 9 of 9 | 3 of 3, one run each |
+
+- **real-work-2 is right now** (`r015` in [results/full-3/](results/full-3/)). Its agent ran `exposurie read` before starting, twice, and its PR.md gives the branch as `ENG-431-export-empty-org`, a title that opens with the ticket key, and the team's four sections: why, what changed, how it was tested, and how to roll it back.
+- **The new line fires on the user's work and not on other work.** Every C run in areas 1 to 7 opened the brain. None of area 8's three did: they are work that needs no past, in an empty folder.
+- **The cost per right answer is level, with one more right answer:** 35,546 tokens against 35,526. A question's median run is level too, and a work task's fell. Over areas 1 to 7, C's input came to 746,456 tokens against 710,514, most of it real-work-2 now reading the brain and doing the work the team's way. The median over areas 1 to 7 rose to 24,175 because two questions, across-2 and your-way-2, read a second page and so moved past the middle of the 21 runs. Both were right before and are right now.
+- **Area 8's 267, explained.** The pointer is about 15 tokens longer, so it costs about 15 tokens more on every call: the batch's first two runs started 15 tokens above the same tasks' runs of 2026-10-21. During the second run, the sandbox's Claude Code rewrote its own state file, and among other things it refreshed its record of the account's model options. Every later run started 46 tokens smaller, though its start-up line was otherwise the same as part 10's. A's area 8 runs are from 2026-10-21, before that, so the pointer's cost like for like is about 313 tokens a run (298 plus 15), not 267. Every later run was about 46 tokens a call lighter for the same reason, which is too little to move any other row.
+- **The measurement cost $1.00** in Claude Code's estimates at list prices: $0.93 for the runs and $0.07 for the judge.
+
+**What this does not show:** 1.3.1's line was written after real-work-2's miss, and this measures it on the same tasks, so it shows the miss it was made for is fixed. Part 13's tasks did not shape it, and test it more fairly. One run per cell again, and the hand read could not be blind.
+
 ## What is here
 
 | File | What it holds |
@@ -147,7 +178,7 @@ A, B and D have no exposurie, so their runs stand, and every number below sets C
 | [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, the runner and scorer, the brain build, the long sessions and the results to the method |
 | [score/](score/) | how a task's checks read a run, the scorer, the judge for what the checks cannot settle, the long sessions' scorer, and the numbers and charts of the results |
 | [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, the long sessions of area 9, and the fake `claude` they are tested against |
-| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step, part 10's C again with the rebuilt read (`full-2`, `stability-3`, `stability-4` and `area-9-2`), every number in `numbers.json`, and the charts |
+| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step, part 10's C again with the rebuilt read (`full-2`, `stability-3`, `stability-4` and `area-9-2`), C again with 1.3.1 (`full-3`), every number in `numbers.json`, and the charts |
 
 ## License
 

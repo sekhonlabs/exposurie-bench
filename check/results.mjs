@@ -3,7 +3,8 @@
 // For area 9 that means each long task's scores, its hand read and its record
 // of every step agree with one another and with the task's steps file. Part
 // 10's C again with the rebuilt read is held the same way, and to the rebuilt
-// exposurie; its sync + fresh again must come from area 9's own forks.
+// exposurie; its sync + fresh again must come from area 9's own forks. C again
+// with exposurie 1.3.1 is held the same way, and to 1.3.1.
 //
 //   node check/results.mjs
 //
@@ -16,7 +17,9 @@ import { fileURLToPath } from 'node:url';
 import { REBUILT_BATCH, STRATEGIES } from '../runner/long.mjs';
 import { PINS, loginIdentity } from '../runner/sandbox.mjs';
 import { LONG_GROUPS } from '../score/checks.mjs';
-import { AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, USERS, finalChecks, outputs } from '../score/results.mjs';
+import {
+  AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, USERS, V131_BATCHES, finalChecks, outputs,
+} from '../score/results.mjs';
 import { WINDOWS_PATH } from '../score/score.mjs';
 import { find } from './text.mjs';
 
@@ -30,7 +33,7 @@ const SAVE = 'run node score/results.mjs --save';
 // ---- every scored run has its condition and a final verdict
 const tasks = readJson('tasks', 'index.json').tasks.filter((t) => AREAS[t.area]);
 const cellsOf = {};
-const ALL_BATCHES = [...BATCHES, ...REBUILT_BATCHES];
+const ALL_BATCHES = [...BATCHES, ...REBUILT_BATCHES, ...V131_BATCHES];
 for (const batch of ALL_BATCHES) {
   const scores = readJson('results', batch, 'scores.json').runs;
   const key = join('results', batch, 'conditions.json');
@@ -39,9 +42,9 @@ for (const batch of ALL_BATCHES) {
     continue;
   }
   const { conditions, exposurie } = readJson(key);
-  // Part 10's batches name the rebuilt exposurie their runs recorded; 1.2.0's name none.
-  const label = REBUILT_BATCHES.includes(batch) ? PINS.exposurieRebuilt.label : undefined;
-  if (exposurie !== label) fail(key, label ? `names exposurie ${exposurie}, not the rebuilt ${label}` : `names an exposurie, ${exposurie}, as only part 10's batches do`);
+  // Part 10's batches name the rebuilt exposurie their runs recorded, and 1.3.1's name 1.3.1; 1.2.0's name none.
+  const label = REBUILT_BATCHES.includes(batch) ? PINS.exposurieRebuilt.label : V131_BATCHES.includes(batch) ? PINS.exposurie131.version : undefined;
+  if (exposurie !== label) fail(key, label ? `names exposurie ${exposurie}, not ${label}` : `names an exposurie, ${exposurie}, as only the batches of C again do`);
   for (const s of scores) {
     if (!CONDITIONS.includes(conditions[s.run])) fail(`${batch}/${s.run}`, 'has no condition in conditions.json');
     if (s.status !== 'done') fail(`${batch}/${s.run}`, `is ${s.status}, not done`);
@@ -61,6 +64,8 @@ const want = {
   'full-2': tasks.map((t) => `${t.id} C`),
   'stability-3': tasks.filter((t) => t.area === 3).map((t) => `${t.id} C`),
   'stability-4': tasks.filter((t) => t.area === 3).map((t) => `${t.id} C`),
+  // 1.3.1: every cell of areas 1–8 under C once.
+  'full-3': tasks.map((t) => `${t.id} C`),
 };
 for (const batch of ALL_BATCHES) {
   if (!cellsOf[batch]) continue;
@@ -222,7 +227,8 @@ const n = written['results/numbers.json'] ? JSON.parse(written['results/numbers.
 console.log(
   `${ALL_BATCHES.filter((b) => cellsOf[b]).length} batches keyed, ${Object.values(cellsOf).flat().length} runs. ` +
     (n ? `Right answers, areas 1–7: ${CONDITIONS.map((c) => `${c} ${n.right_answers.pooled[c]}`).join(', ')} of ${n.right_answers.of}, ` +
-      `and C ${n.rebuilt_read.right_answers.pooled.C} with exposurie ${n.rebuilt_read.exposurie}. ` : '') +
+      `C ${n.rebuilt_read.right_answers.pooled.C} with exposurie ${n.rebuilt_read.exposurie}, ` +
+      `and C ${n.pointer_for_work.right_answers.pooled.C} with exposurie ${n.pointer_for_work.exposurie}. ` : '') +
     `Area 9: ${longTasks.length} long tasks, ${strategiesKeyed[LONG_BATCH]} strategies keyed, and ${strategiesKeyed[REBUILT_BATCH]} again. ` +
     `${Object.keys(written).filter((r) => r.endsWith('.svg')).length} charts.`,
 );

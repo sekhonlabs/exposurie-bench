@@ -497,7 +497,7 @@ Why is in [decisions.md](decisions.md).
 
 #### 1.3.1, measured
 
-**Plan usage:** yes: the 24 C runs of areas 1–8, about a dollar at list prices. **Built 2026-11-05; the live runs have the owner's go.**
+**Plan usage:** yes: the 24 C runs of areas 1–8. **Done 2026-11-05.** It was built and checked against the fake, then run live the same day on the owner's go. All 24 runs ran in one go, with no usage-limit stop, for $1.00 at list prices with the judge. Then they were read by hand and published beside 1.2.0's and the rebuilt read's, and a fault test broke what they publish and saw every break caught. The results are in the README, under *C again, with exposurie 1.3.1's pointer*: 21 of 21 in areas 1–7.
 
 exposurie 1.3.1's pointer also fires before work in the user's projects, because real-work-2 never opened the brain. Every C run carries the pointer, so C runs again on all of areas 1–8, on the same kept brains, and the results are set beside 1.2.0's and the rebuilt read's. Why each choice was made is in [decisions.md](decisions.md).
 

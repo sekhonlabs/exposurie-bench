@@ -1,0 +1,950 @@
+{
+  "batch": "full-3",
+  "runs": [
+    {
+      "run": "r001",
+      "task": "recall-1",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 16796,
+        "input": 4,
+        "cache_write": 5266,
+        "cache_read": 11526,
+        "output": 448
+      },
+      "turns": 2,
+      "duration_ms": 12033,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r002",
+      "task": "your-way-1",
+      "area": 5,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          false
+        ],
+        "forbidden": [
+          false
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply advises against Drizzle and grounds it in the user's own rule for Satchel (raw SQL, no ORM), while noting Prisma is only a work choice and not applying it here.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1339,
+          "cache_read": 0,
+          "output": 74,
+          "all_input": 1341,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1339,
+              "cache_read": 0,
+              "output": 74
+            }
+          }
+        },
+        "at": "2026-11-05T14:53:52.186Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 16018,
+        "input": 4,
+        "cache_write": 3740,
+        "cache_read": 12274,
+        "output": 554
+      },
+      "turns": 3,
+      "duration_ms": 7487,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r003",
+      "task": "real-work-3",
+      "area": 6,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 64029,
+        "input": 12,
+        "cache_write": 8597,
+        "cache_read": 55420,
+        "output": 2052
+      },
+      "turns": 9,
+      "duration_ms": 32237,
+      "tool_calls": 8,
+      "looked": true,
+      "reads": 5
+    },
+    {
+      "run": "r004",
+      "task": "no-past-1",
+      "area": 8,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 6664,
+        "input": 2,
+        "cache_write": 1121,
+        "cache_read": 5541,
+        "output": 338
+      },
+      "turns": 1,
+      "duration_ms": 3813,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r005",
+      "task": "chat-2",
+      "area": 7,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 15535,
+        "input": 4,
+        "cache_write": 3340,
+        "cache_read": 12191,
+        "output": 384
+      },
+      "turns": 2,
+      "duration_ms": 13717,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r006",
+      "task": "changed-3",
+      "area": 3,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply states the site is hosted on Netlify, and it mentions GitHub Pages only as a stale leftover copy, not as the current host.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1043,
+          "cache_read": 0,
+          "output": 59,
+          "all_input": 1045,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1043,
+              "cache_read": 0,
+              "output": 59
+            }
+          }
+        },
+        "at": "2026-11-05T14:53:55.506Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 22938,
+        "input": 6,
+        "cache_write": 3329,
+        "cache_read": 19603,
+        "output": 408
+      },
+      "turns": 3,
+      "duration_ms": 9462,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r007",
+      "task": "never-2",
+      "area": 4,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says no font choice is recorded, names no font or font type as the user's pick, and only speculates about where the font might be set (style.css) while offering to check.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1164,
+          "cache_read": 0,
+          "output": 63,
+          "all_input": 1166,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1164,
+              "cache_read": 0,
+              "output": 63
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:01.036Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 31464,
+        "input": 8,
+        "cache_write": 3718,
+        "cache_read": 27738,
+        "output": 547
+      },
+      "turns": 4,
+      "duration_ms": 16803,
+      "tool_calls": 3,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r008",
+      "task": "across-2",
+      "area": 2,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "forbidden": [
+          true,
+          false,
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "It states pagesift is MPL-2.0 and dotkit is Apache-2.0, calls no other repo open source, and keeps Satchel closed; fieldnotes and Tidewell are listed as having no licence recorded rather than as open source.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1424,
+          "cache_read": 0,
+          "output": 93,
+          "all_input": 1426,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1424,
+              "cache_read": 0,
+              "output": 93
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:05.931Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 27468,
+        "input": 6,
+        "cache_write": 5315,
+        "cache_read": 22147,
+        "output": 730
+      },
+      "turns": 3,
+      "duration_ms": 13684,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 2
+    },
+    {
+      "run": "r009",
+      "task": "across-3",
+      "area": 2,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": [
+          true,
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply names exactly Second Chapter (book club) and the Spending Summary (Money sheet) as the Google Sheets projects, and explicitly excludes Small Hours and Quiet.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1295,
+          "cache_read": 0,
+          "output": 76,
+          "all_input": 1297,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1295,
+              "cache_read": 0,
+              "output": 76
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:10.560Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 24640,
+        "input": 6,
+        "cache_write": 3713,
+        "cache_read": 20921,
+        "output": 618
+      },
+      "turns": 3,
+      "duration_ms": 15325,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 2
+    },
+    {
+      "run": "r010",
+      "task": "no-past-2",
+      "area": 8,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 6690,
+        "input": 2,
+        "cache_write": 1147,
+        "cache_read": 5541,
+        "output": 581
+      },
+      "turns": 1,
+      "duration_ms": 7102,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r011",
+      "task": "recall-2",
+      "area": 1,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 16513,
+        "input": 4,
+        "cache_write": 4318,
+        "cache_read": 12191,
+        "output": 267
+      },
+      "turns": 2,
+      "duration_ms": 5915,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r012",
+      "task": "across-1",
+      "area": 2,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": [
+          false,
+          false
+        ]
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 15238,
+        "input": 4,
+        "cache_write": 3045,
+        "cache_read": 12189,
+        "output": 354
+      },
+      "turns": 2,
+      "duration_ms": 8741,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r013",
+      "task": "no-past-3",
+      "area": 8,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 6698,
+        "input": 2,
+        "cache_write": 1155,
+        "cache_read": 5541,
+        "output": 272
+      },
+      "turns": 1,
+      "duration_ms": 4412,
+      "tool_calls": 0,
+      "looked": false,
+      "reads": 0
+    },
+    {
+      "run": "r014",
+      "task": "changed-2",
+      "area": 3,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply states the tickets live in Linear (team key ENG) and identifies Jira as the previous system, not the current one.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1064,
+          "cache_read": 0,
+          "output": 52,
+          "all_input": 1066,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1064,
+              "cache_read": 0,
+              "output": 52
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:13.802Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 16073,
+        "input": 4,
+        "cache_write": 3882,
+        "cache_read": 12187,
+        "output": 262
+      },
+      "turns": 2,
+      "duration_ms": 5622,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r015",
+      "task": "real-work-2",
+      "area": 6,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "forbidden": [
+          false,
+          false
+        ]
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 101782,
+        "input": 14,
+        "cache_write": 12785,
+        "cache_read": 88983,
+        "output": 3318
+      },
+      "turns": 15,
+      "duration_ms": 35459,
+      "tool_calls": 14,
+      "looked": true,
+      "reads": 2
+    },
+    {
+      "run": "r016",
+      "task": "chat-1",
+      "area": 7,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true
+        ],
+        "forbidden": [
+          false
+        ]
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 74859,
+        "input": 10,
+        "cache_write": 17364,
+        "cache_read": 57485,
+        "output": 7897
+      },
+      "turns": 12,
+      "duration_ms": 67063,
+      "tool_calls": 11,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r017",
+      "task": "never-1",
+      "area": 4,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says no decision about translating Satchel is recorded, presents nothing as a decision of the user's, and only notes related facts (digest time zone, English subject line) while explicitly saying they don't indicate a language decision.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1338,
+          "cache_read": 0,
+          "output": 84,
+          "all_input": 1340,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1338,
+              "cache_read": 0,
+              "output": 84
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:18.771Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 26487,
+        "input": 6,
+        "cache_write": 6081,
+        "cache_read": 20400,
+        "output": 616
+      },
+      "turns": 3,
+      "duration_ms": 19313,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r018",
+      "task": "your-way-3",
+      "area": 5,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          false
+        ],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply advises against logins and gives the settled reason (members will not make accounts for a book club) alongside the shared link and club code setup; the conditions under which logins might be added are a caveat and do not amount to recommending them.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1424,
+          "cache_read": 0,
+          "output": 83,
+          "all_input": 1426,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1424,
+              "cache_read": 0,
+              "output": 83
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:24.580Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 16084,
+        "input": 4,
+        "cache_write": 3894,
+        "cache_read": 12186,
+        "output": 571
+      },
+      "turns": 2,
+      "duration_ms": 15499,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r019",
+      "task": "never-3",
+      "area": 4,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [],
+        "forbidden": []
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply says the notes record no decision about backing up the book club data, presents nothing as decided, and offers backup options only as new suggestions if the user hasn't decided yet.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1324,
+          "cache_read": 0,
+          "output": 68,
+          "all_input": 1326,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1324,
+              "cache_read": 0,
+              "output": 68
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:32.705Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 24175,
+        "input": 6,
+        "cache_write": 3959,
+        "cache_read": 20210,
+        "output": 623
+      },
+      "turns": 3,
+      "duration_ms": 21930,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r020",
+      "task": "real-work-1",
+      "area": 6,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 77266,
+        "input": 12,
+        "cache_write": 13236,
+        "cache_read": 64018,
+        "output": 5929
+      },
+      "turns": 12,
+      "duration_ms": 47978,
+      "tool_calls": 11,
+      "looked": true,
+      "reads": 4
+    },
+    {
+      "run": "r021",
+      "task": "recall-3",
+      "area": 1,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 15235,
+        "input": 4,
+        "cache_write": 3042,
+        "cache_read": 12189,
+        "output": 226
+      },
+      "turns": 2,
+      "duration_ms": 7831,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r022",
+      "task": "chat-3",
+      "area": 7,
+      "user": "delegator",
+      "status": "done",
+      "verdict": "right",
+      "by": "checks",
+      "checks": {
+        "required": [
+          true,
+          true,
+          true
+        ],
+        "forbidden": []
+      },
+      "judge": null,
+      "hand": null,
+      "tokens": {
+        "all_input": 102877,
+        "input": 16,
+        "cache_write": 11412,
+        "cache_read": 91449,
+        "output": 5748
+      },
+      "turns": 16,
+      "duration_ms": 61061,
+      "tool_calls": 15,
+      "looked": true,
+      "reads": 3
+    },
+    {
+      "run": "r023",
+      "task": "changed-1",
+      "area": 3,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          true
+        ],
+        "forbidden": [
+          true,
+          false
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "The reply states the user's own projects now use node:test (Node's built-in runner), notes the move off Vitest, and says Tidewell work follows the team's pipeline, so it does not give Vitest or Jest as the current one.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1375,
+          "cache_read": 0,
+          "output": 85,
+          "all_input": 1377,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1375,
+              "cache_read": 0,
+              "output": 85
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:37.451Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 15552,
+        "input": 4,
+        "cache_write": 3358,
+        "cache_read": 12190,
+        "output": 543
+      },
+      "turns": 2,
+      "duration_ms": 12972,
+      "tool_calls": 1,
+      "looked": true,
+      "reads": 1
+    },
+    {
+      "run": "r024",
+      "task": "your-way-2",
+      "area": 5,
+      "user": "developer",
+      "status": "done",
+      "verdict": "right",
+      "by": "hand",
+      "checks": {
+        "required": [
+          false
+        ],
+        "forbidden": [
+          false
+        ]
+      },
+      "judge": {
+        "verdict": "right",
+        "reason": "It advises against raw SQL, citing the team rule \"Prisma for every query, raw SQL only inside migrations,\" and keeps its personal-project preference out of the work decision, though it leaves a rule-exception path open only after raising it with the team.",
+        "tokens": {
+          "input": 2,
+          "cache_write": 1576,
+          "cache_read": 0,
+          "output": 91,
+          "all_input": 1578,
+          "by_model": {
+            "claude-sonnet-5-5": {
+              "input": 2,
+              "cache_write": 1576,
+              "cache_read": 0,
+              "output": 91
+            }
+          }
+        },
+        "at": "2026-11-05T14:54:43.426Z"
+      },
+      "hand": "right",
+      "tokens": {
+        "all_input": 25427,
+        "input": 6,
+        "cache_write": 4375,
+        "cache_read": 21046,
+        "output": 879
+      },
+      "turns": 3,
+      "duration_ms": 22291,
+      "tool_calls": 2,
+      "looked": true,
+      "reads": 2
+    }
+  ]
+}

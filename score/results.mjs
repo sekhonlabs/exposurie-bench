@@ -14,6 +14,8 @@
 // stay as score/long.mjs saved them, beside the hand read that overrides them.
 // Part 10's C again with exposurie's rebuilt read is published the same way,
 // and its numbers sit beside 1.2.0's under rebuilt_read; 1.2.0's stay as they are.
+// C again with exposurie 1.3.1, whose pointer also fires before work, sits
+// beside both under pointer_for_work.
 // check/results.mjs holds results/ to what this writes.
 //
 // Run it with the sandbox's own Node.
@@ -58,6 +60,12 @@ const STRATEGY_NAMES = { keep: 'keep going', compact: '/compact', sync: 'sync + 
  */
 export const REBUILT_BATCHES = ['full-2', 'stability-3', 'stability-4'];
 const REBUILT_STABILITY = ['stability-3', 'stability-4'];
+/**
+ * C again with exposurie 1.3.1, whose pointer also fires before work in the
+ * user's projects, on the same brains, each run's copy made 3 days old: the
+ * full run's C cells once. A, B and D stand.
+ */
+export const V131_BATCHES = ['full-3'];
 
 const sum = (xs) => xs.reduce((a, b) => a + b, 0);
 /** The middle value, or the mean of the middle two. */
@@ -81,8 +89,8 @@ function publishInputs(runs) {
     const conditions = Object.fromEntries(cells.map((c) => [c.run, c.condition]).sort(([a], [b]) => a.localeCompare(b)));
     console.log(`Saved ${saveToRepo(`results/${batch}/conditions.json`, json({ batch, conditions }))}`);
   }
-  // A rebuilt batch's conditions also name the exposurie its runs recorded, which must be one.
-  for (const batch of REBUILT_BATCHES) {
+  // A rebuilt or 1.3.1 batch's conditions also name the exposurie its runs recorded, which must be one.
+  for (const batch of [...REBUILT_BATCHES, ...V131_BATCHES]) {
     const cells = readJson(join(runs, batch, 'batch.json')).cells;
     const labels = [...new Set(cells.map((c) => readJson(join(runs, batch, c.run, 'run.json')).versions?.exposurie))];
     if (labels.length !== 1 || !labels[0]) throw new Stop(`${batch}'s runs recorded ${labels.length} exposurie versions`);
@@ -298,9 +306,11 @@ export function computeNumbers(root = REPO) {
   const [againBatch] = REBUILT_BATCHES;
   const again = runsOf(root, againBatch);
   const againStability = REBUILT_STABILITY.map((b) => runsOf(root, b));
+  const [v131Batch] = V131_BATCHES;
+  const v131 = runsOf(root, v131Batch);
   return {
     note: 'Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9; ' +
-      'then C again with exposurie\'s rebuilt read, under rebuilt_read.',
+      'then C again with exposurie\'s rebuilt read, under rebuilt_read, and with exposurie 1.3.1, under pointer_for_work.',
     tokens: 'Every input token, cached or not (all_input), is the primary number. Output is counted beside it.',
     conditions: NAMES,
     runs: { full: full.length, stability: sum(stability.map((rs) => rs.length)), scored_by: scoredBy(full) },
@@ -315,6 +325,13 @@ export function computeNumbers(root = REPO) {
         tasks, full: [...full.filter((r) => r.condition !== 'C'), ...again], stab: [area3Of(again), ...againStability], batches: REBUILT_BATCHES,
       }),
       area_9: longNumbers(root, REBUILT_BATCH),
+    },
+    pointer_for_work: {
+      note: 'Condition C again, with exposurie 1.3.1, whose pointer also fires before work in the user\'s projects, on the same ' +
+        'brains as 1.2.0\'s C, each run\'s copy made 3 days old, as part 10\'s brains were. A, B and D stand. Area 3 under C ran once here.',
+      exposurie: readJson(join(root, 'results', v131Batch, 'conditions.json')).exposurie,
+      runs: { [v131Batch]: v131.length, scored_by: scoredBy(v131) },
+      ...areaNumbers({ tasks, full: [...full.filter((r) => r.condition !== 'C'), ...v131], stab: [area3Of(v131)], batches: V131_BATCHES }),
     },
   };
 }
@@ -662,21 +679,26 @@ function printNumbers(N) {
     for (const p of STRATEGIES) strategy(STRATEGY_NAMES[p], t.strategies[p]);
   }
 
-  const R = N.rebuilt_read;
   const C = (o) => fmt(o.C);
-  console.log(`\nC again, with exposurie ${R.exposurie}, beside the same A, B and D:`);
-  console.log(`Right answers, areas 1–7, of ${R.right_answers.of}: C ${R.right_answers.pooled.C}.`);
-  console.log(`Tokens per run, median of areas 1–7: C ${C(R.tokens_per_run.median)}; of a question ${C(R.tokens_per_run.median_questions)}, of a work task ${C(R.tokens_per_run.median_work)}.`);
-  console.log(`Tokens per right answer: C ${C(R.tokens_per_right_answer)}.`);
-  console.log(`Area 8, median per run: C ${C(R.overhead.per_run_median)}; C − A ${fmt(R.overhead.c_minus_a)}.`);
-  console.log(`Made-up answers, area 4: C ${R.made_up_answers.C}.`);
-  const l2 = R.looked_vs_found;
-  console.log(`Looked vs found: C looked in ${l2.looked} of ${l2.runs}, right in ${l2.right_when_looked} of those; right in ${l2.right_when_not} of the ${l2.runs - l2.looked} that did not.`);
-  console.log(`Stability: area 3 under C right in ${R.stability.right} of ${R.stability.runs}; tasks whose verdict changed: ${R.stability.changed}.`);
+  /** C again, beside the same A, B and D: part 10's rebuilt read, or 1.3.1. */
+  const again = (R) => {
+    console.log(`\nC again, with exposurie ${R.exposurie}, beside the same A, B and D:`);
+    console.log(`Right answers, areas 1–7, of ${R.right_answers.of}: C ${R.right_answers.pooled.C}.`);
+    console.log(`Tokens per run, median of areas 1–7: C ${C(R.tokens_per_run.median)}; of a question ${C(R.tokens_per_run.median_questions)}, of a work task ${C(R.tokens_per_run.median_work)}.`);
+    console.log(`Tokens per right answer: C ${C(R.tokens_per_right_answer)}.`);
+    console.log(`Area 8, median per run: C ${C(R.overhead.per_run_median)}; C − A ${fmt(R.overhead.c_minus_a)}; C looked in ${R.overhead.c_looked} of 3.`);
+    console.log(`Made-up answers, area 4: C ${R.made_up_answers.C}.`);
+    const l2 = R.looked_vs_found;
+    console.log(`Looked vs found: C looked in ${l2.looked} of ${l2.runs}, right in ${l2.right_when_looked} of those; right in ${l2.right_when_not} of the ${l2.runs - l2.looked} that did not.`);
+    console.log(`Stability: area 3 under C right in ${R.stability.right} of ${R.stability.runs}; tasks whose verdict changed: ${R.stability.changed}.`);
+  };
+  const R = N.rebuilt_read;
+  again(R);
   for (const t of R.area_9.tasks) {
     console.log(`Area 9, ${t.task}, again from ${t.from}'s fork:`);
     strategy(STRATEGY_NAMES.sync, t.strategies.sync);
   }
+  again(N.pointer_for_work);
 }
 
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
