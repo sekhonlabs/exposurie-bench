@@ -551,7 +551,7 @@ The owner's point: a brain belongs to the person, and stays with them when they 
 
 #### 13. Many agents, one job
 
-**Plan usage:** yes, the most of the parts left. **Decided 2026-11-05, with three agents. The pointer change below comes first, and the live runs need the owner's go.**
+**Plan usage:** yes, the most of the parts left. **Decided 2026-11-05, with three agents. The pointer change below comes first, and is done. The design is Claude's to make, the owner's word of 2026-11-05, and the live runs need his go.**
 
 The owner's point: someone running several agents in parallel on one job, with the brain as their shared memory. The owner set it at three agents, not five.
 - One job is split across three agents, each in its own copy of one repository, none seeing the others' sessions.
@@ -560,7 +560,7 @@ The owner's point: someone running several agents in parallel on one job, with t
 - The agents run one at a time, since none of them sees another anyway.
 
 - **Conditions:** no memory, exposurie, and a perfect hand-written `AGENTS.md`, which is what D stands for.
-- **Scored on:** the merged work passing its tests, the five agreeing, the work done the user's way, and the plan meter.
+- **Scored on:** the merged work passing its tests, the three agreeing, the work done the user's way, and the plan meter.
 - **What it depends on:** the agent opening the brain during work. real-work-2 never ran `exposurie read` with either read, because exposurie's pointer is worded for questions about the user, not for work in their projects. As things stand, this part would measure the pointer.
   - So a conditional line in the pointer comes first. That is an exposurie change, released as 1.3.1, which this part runs.
   - It is measured first on all of areas 1–8, the owner's call of 2026-11-05, since every C run carries the pointer and it is paid for on every message. Each run's copy of the brain is made 3 days old, so the brains' 7-day arrow doesn't reach it. See *1.3.1, measured*.
