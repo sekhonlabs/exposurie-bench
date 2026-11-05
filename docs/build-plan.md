@@ -483,11 +483,21 @@ node runner/long.mjs rebuilt <task>
 node score/long.mjs <task> --rebuilt
 ```
 
-### 11–13. Beyond retrieval (proposed 2026-11-05, not decided)
+### 11–13. Beyond retrieval (decided 2026-11-05: 13 and 12)
 
-On 2026-10-28 the owner found that the benchmark mostly tests `read`: retrieval and its input tokens. These three parts test what exposurie does beyond it. They stay within the owner's two bounds: no other paid agent, and exposurie the only thing under test. Each reports counts or pass and fail, and how far the plan meter moved, with tokens in a side column and no ratios. **None is decided.** The next session puts them to the owner before anything is built. Claude's proposed order is 11 and 12 first, since they need almost no plan usage, then 13.
+On 2026-10-28 the owner found that the benchmark mostly tests `read`: retrieval and its input tokens. These three parts test what exposurie does beyond it. They stay within the owner's two bounds: no other paid agent, and exposurie the only thing under test. Each reports counts or pass and fail, and how far the plan meter moved, with tokens in a side column and no ratios.
 
-#### 11. What the sync wrote
+**Decided 2026-11-05, by the owner:** 13, with three agents rather than five, and 12. 11 is not built. The order:
+1. exposurie's pointer gains a condition for work, released as exposurie 1.3.1 (see 13, *What it depends on*)
+2. 13, run on 1.3.1
+3. 12
+4. the README rewritten as one finished account of the benchmark
+
+Why is in [decisions.md](decisions.md).
+
+#### 11. What the sync wrote (not built)
+
+**Not built,** the owner's call of 2026-11-05, to fit the time left. The design stays here for the record.
 
 **Plan usage:** the judge's calls only. No agent session runs.
 
@@ -504,7 +514,7 @@ Areas 1–9 test whether an agent finds a fact. This part tests whether the sync
 
 #### 12. It's yours
 
-**Plan usage:** none. No model is called.
+**Plan usage:** none. No model is called. **Decided 2026-11-05.** Whether it runs against 1.3.0 or the 1.3.1 that part 13 needs is settled when it is built.
 
 The owner's point: a brain belongs to the person, and stays with them when they change agent or lab. Each line of this checklist is a script, run against exposurie 1.3.0 from npm in the sandbox:
 
@@ -520,19 +530,19 @@ The owner's point: a brain belongs to the person, and stays with them when they 
 
 #### 13. Many agents, one job
 
-**Plan usage:** yes, the most of the three. **It needs the owner's go, and the pointer change below first.**
+**Plan usage:** yes, the most of the parts left. **Decided 2026-11-05, with three agents. The pointer change below comes first, and the live runs need the owner's go.**
 
-The owner's point: someone running five agents in parallel on one job, with the brain as their shared memory.
-- One job is split across five agents, each in its own copy of one repository, none seeing the others' sessions.
+The owner's point: someone running several agents in parallel on one job, with the brain as their shared memory. The owner set it at three agents, not five.
+- One job is split across three agents, each in its own copy of one repository, none seeing the others' sessions.
 - Their work is merged and tested, then synced.
-- Then a second round of five needs what round 1 decided only in conversation, often by another agent.
+- Then a second round of three needs what round 1 decided only in conversation, often by another agent.
 - The agents run one at a time, since none of them sees another anyway.
 
 - **Conditions:** no memory, exposurie, and a perfect hand-written `AGENTS.md`, which is what D stands for.
 - **Scored on:** the merged work passing its tests, the five agreeing, the work done the user's way, and the plan meter.
 - **What it depends on:** the agent opening the brain during work. real-work-2 never ran `exposurie read` with either read, because exposurie's pointer is worded for questions about the user, not for work in their projects. As things stand, this part would measure the pointer.
-  - So a conditional line in the pointer comes first. That is an exposurie change.
-  - It is measured again on real-work-2, and on area 8, since the pointer is paid for on every message.
+  - So a conditional line in the pointer comes first. That is an exposurie change, released as 1.3.1, which this part runs.
+  - It is measured again on real-work-2, and on area 8, since the pointer is paid for on every message. How those C runs meet the brains' 7-day arrow (last synced 2026-10-21) is settled when that is built.
 - **What it would also show:** sync has no lock, never files the session it runs in, and files decisions rather than where a task stands.
 - It reverses the decision of 2026-10-18 to run no second agent.
 
