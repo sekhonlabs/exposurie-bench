@@ -14,6 +14,11 @@
 //                      each, written before anything runs
 //   team-1/            the developer's own exports, which round 2 finds in tmp/
 //
+// Beside them, written by hand, is team-1-examples/: a reference
+// implementation, which the fake (runner/fake-claude.mjs) writes in place of an
+// agent, so the runner and the scorer can be checked without spending
+// anything. No agent sees it.
+//
 // Round 1's steps are in the developer's voice: long, precise prompts. Round
 // 2's asks are short, the way a ticket reads when the details are kept
 // elsewhere, and none of them restates a decision of round 1. No step assumes
@@ -137,6 +142,11 @@ const FILES = {
  * there was not said only in conversation, and is reported and scored apart.
  * Every match is read by hand.
  */
+/**
+ * `filed` searches the brain the sync leaves, its pages under wiki/, for the
+ * decision in words a page would use. Both searches are read by hand, since a
+ * page can say a decision in words no pattern foresaw.
+ */
 const DECISIONS = [
   {
     id: 'K1',
@@ -144,6 +154,7 @@ const DECISIONS = [
     what: 'a reader puts highlights on its items as highlights: [{ text, note, createdAt }]',
     needed_by: [1, 2, 3],
     leak: { file: '{src,migrations}/**', patterns: ['\\bhighlights\\s*:'] },
+    filed: ['\\btext\\b[^\\n]{0,20}\\bnote\\b[^\\n]{0,20}\\bcreatedAt\\b'],
   },
   {
     id: 'K2',
@@ -151,6 +162,7 @@ const DECISIONS = [
     what: 'the job saves them with source set to import',
     needed_by: [3],
     leak: { file: '{src,migrations}/**', patterns: ['\\bsource\\b[\\s\\S]{0,200}?[\'"]import[\'"]', 'ALTER\\s+TABLE\\s+highlights'] },
+    filed: ['\\bsource\\b[^\\n]{0,40}\\bimport\\b'],
   },
   {
     id: 'K3',
@@ -158,20 +170,23 @@ const DECISIONS = [
     what: 'an import adds a highlight once: the same link and text are the same highlight, and new ones on links already saved are added',
     needed_by: [3],
     leak: { file: '{src,migrations}/**', patterns: ['INTO\\s+highlights', 'UNIQUE\\s*\\(\\s*link_id\\s*,\\s*text'] },
+    filed: ['same (?:link|url)[^\\n]{0,60}same text', 'highlights?[^\\n]{0,60}\\bonce\\b', '\\bonce\\b[^\\n]{0,60}highlights?'],
   },
   {
     id: 'K4',
     told_to: 2,
     what: "Instapaper's folders become folder:<name> tags, except Unread and Archive, which are states; Archive means archived and read",
     needed_by: [1],
-    leak: { file: '{src,migrations}/**', patterns: ['\\bfolder:', '\\binstapaper\\b'] },
+    leak: { file: '{src,migrations}/**', patterns: ['\\bfolder:'] },
+    filed: ['\\bfolder:[\\s\\S]{0,200}\\bUnread\\b', '\\bUnread\\b[\\s\\S]{0,200}\\bfolder:'],
   },
   {
     id: 'K5',
     told_to: 2,
     what: 'an Omnivore item read 90% or more counts as read, archived or not',
     needed_by: [2],
-    leak: { file: '{src,migrations}/**', patterns: ['readingProgress', '\\bomnivore\\b'] },
+    leak: { file: '{src,migrations}/**', patterns: ['readingProgress', '\\b90\\s*%'] },
+    filed: ['\\b90\\s*(?:%|percent)', '\\b90 or more\\b'],
   },
   {
     id: 'K6',
@@ -179,6 +194,7 @@ const DECISIONS = [
     what: 'the summary email says how many highlights came in',
     needed_by: [3],
     leak: { file: 'src/mail/**', patterns: ['highlight'] },
+    filed: ['(?:email|summary)[^\\n]{0,80}highlights?', 'highlights?[^\\n]{0,80}(?:email|summary)'],
   },
 ];
 
@@ -203,35 +219,42 @@ const NOTES = lines(
 // ---------------------------------------------------------------- the checks
 
 /**
- * Each round 2 agent's own files, by script, in long-1's form (score/long.mjs):
- * `in` is `files` (what the agent changed since round 1's merged code) or
- * `answer` (its last reply). The merged work is checked by the hidden tests in
- * score/team/, which import both exports through the merged job. A check
- * marked hand has no script; the hand read settles every one.
+ * Each round 2 agent's own files, by script, in the form score/checks.mjs reads
+ * (`holds`): `in` is `files` (what the agent changed since round 1's merged
+ * code) or `answer` (its last reply). A check looks for one kind of thing, so a
+ * decision with several parts has several checks under its ID, and holds for
+ * an agent when every one of them holds. The merged work is checked by the
+ * hidden tests in score/team/, which import both exports through the merged
+ * job. A check marked hand has no script; the hand read settles every one.
  */
 const CHECKS = {
-  note: 'Each agent is checked on its own files here, and the merged work by the hidden tests in score/team/. Both are read by hand.',
+  note: "Each agent is checked on its own files here, and the merged work by the hidden tests in score/team/. A decision holds for an agent when every check under its ID holds. Both are read by hand.",
   agents: {
     1: [
-      { id: 'K1', what: 'Instapaper items carry each Selection as a highlight with text', in: 'files', file: 'src/import/readers/**', all: ['highlights'], patterns: ['\\btext\\s*:'] },
+      { id: 'K1', what: 'Instapaper items carry highlights', in: 'files', file: 'src/import/readers/**', all: ['highlights'] },
+      { id: 'K1', what: "each highlight's words are its text", in: 'files', file: 'src/import/readers/**', patterns: ['\\btext\\s*:'] },
       { id: 'K4', what: 'folders become folder:<name> tags', in: 'files', file: 'src/import/readers/**', patterns: ['\\bfolder:'] },
-      { id: 'K4-states', what: 'Unread and Archive are not made into folder tags, and Archive means archived and read', hand: true },
+      { id: 'K4', what: 'Unread and Archive are not made into folder tags, and Archive means archived and read', hand: true },
     ],
     2: [
-      { id: 'K1', what: 'Omnivore items carry highlights as text, note and createdAt', in: 'files', file: 'src/import/readers/**', all: ['highlights', 'createdAt'], patterns: ['\\btext\\s*:', '\\bnote\\s*:'] },
+      { id: 'K1', what: 'Omnivore items carry highlights with createdAt', in: 'files', file: 'src/import/readers/**', all: ['highlights', 'createdAt'] },
+      { id: 'K1', what: "each highlight's quote is its text", in: 'files', file: 'src/import/readers/**', patterns: ['\\btext\\s*:'] },
+      { id: 'K1', what: "each highlight's annotation is its note", in: 'files', file: 'src/import/readers/**', patterns: ['\\bnote\\s*:'] },
       { id: 'K5', what: 'an item read 90% or more counts as read', in: 'files', file: 'src/import/readers/**', patterns: ['readingProgress[\\s\\S]{0,80}?(?:>=\\s*90\\b|>\\s*89\\b)', '(?:\\b90\\s*<=|\\b89\\s*<)[\\s\\S]{0,80}?readingProgress'] },
     ],
     3: [
-      { id: 'K1', what: "the job reads each item's highlights as text, note and createdAt", in: 'files', file: '{src,migrations}/**', all: ['highlights', 'createdAt'], patterns: ['\\.text\\b', '\\.note\\b'] },
+      { id: 'K1', what: "the job reads each item's highlights, with createdAt", in: 'files', file: '{src,migrations}/**', all: ['highlights', 'createdAt'] },
+      { id: 'K1', what: "it reads a highlight's text and note", in: 'files', file: '{src,migrations}/**', all: ['text', 'note'] },
       { id: 'K2', what: 'imported highlights are saved with source import', in: 'files', file: '{src,migrations}/**', patterns: ['\\bsource\\b[\\s\\S]{0,300}?[\'"]import[\'"]', '[\'"]import[\'"][\\s\\S]{0,300}?\\bsource\\b'] },
-      { id: 'K3', what: 'a highlight already there for the same link and text is not added again', hand: true },
+      { id: 'K3', what: 'a highlight already there for the same link and text is not added again', in: 'files', file: '{src,migrations}/**', patterns: ['NOT\\s+EXISTS[\\s\\S]{0,300}?\\btext\\b', 'UNIQUE\\s*\\(\\s*link_id\\s*,\\s*text\\s*\\)', 'ON\\s+CONFLICT\\s*\\(\\s*link_id\\s*,\\s*text\\s*\\)'] },
+      { id: 'K3', what: 'new highlights on links already saved are added', hand: true },
       { id: 'K6', what: 'the summary email says how many highlights came in', in: 'files', file: 'src/mail/**', patterns: ['highlight'] },
     ],
   },
   way: [
     { id: 'commit-prefix', what: 'the commit message has no Conventional Commits prefix', in: 'answer', none: ['feat:', 'feat(', 'fix:', 'fix(', 'chore:', 'chore(', 'refactor:', 'refactor(', 'test:', 'test(', 'docs:', 'docs('] },
     { id: 'commit-style', what: 'an imperative subject under 60 characters, and a body that says why', hand: true },
-    { id: 'no-dependency', what: 'no new dependency', in: 'files', file: 'package.json', none: ['"dependencies"'] },
+    { id: 'no-dependency', what: "no new dependency: package.json's dependencies and devDependencies as round 1 left them", in: 'dependencies' },
     { id: 'sql-files', what: "SQL stays in .sql files, as everywhere in Satchel's code", hand: true },
   ],
 };
@@ -326,9 +349,19 @@ const EXPECT = {
   instapaper: {
     links: 14,
     highlights: 5,
+    selections: [
+      'Most of the time a fast tool saves is spent waiting on a slow decision.',
+      'Brown the butter before the miso goes in.',
+      'A backup you have never restored is a hope, not a backup.',
+      'Small sites are easier to keep alive.',
+      'Test the restore, not the backup.',
+    ],
     folder_tags: { 'folder:Long reads': 2, 'folder:Recipes': 2, 'folder:Starred': 2, 'folder:Work notes': 1 },
     never_tags: ['folder:Unread', 'folder:Archive'],
     archived_and_read: ['https://example.org/notes/on-backups', 'https://example.com/blog/sqlite-at-the-edge', 'https://example.net/blog/htmx-in-production'],
+    unread: ['https://example.net/news/fly-volumes', 'https://example.org/blog/litestream-restores', 'https://example.com/posts/postmark-streams', 'https://example.net/posts/ulid-vs-uuid'],
+    // K3's newer export: the first row, already saved, with a Selection it lacked.
+    newer_selection: 'A lamp is a promise kept every night.',
   },
   omnivore: {
     links: 10,
@@ -359,6 +392,7 @@ const task = {
   round_2: ROUND_2,
   files: FILES,
   notes: 'team-1-notes.md',
+  examples: 'team-1-examples',
   decisions: DECISIONS,
   checks: CHECKS,
   expect: EXPECT,

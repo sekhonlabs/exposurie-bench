@@ -551,7 +551,7 @@ The owner's point: a brain belongs to the person, and stays with them when they 
 
 #### 13. Many agents, one job
 
-**Plan usage:** yes, the most of the parts left: 9 steps in round 1, one sync and 9 runs in round 2, estimated at $5–10 at list prices. **Decided 2026-11-05, with three agents. The pointer change it depended on is done (1.3.1). Designed by Claude the same day, on the owner's word, and the live runs need his go.** Why each choice was made is in [decisions.md](decisions.md).
+**Plan usage:** yes, the most of the parts left: 9 steps in round 1, one sync and 9 runs in round 2, estimated at $3–7 at list prices. **Decided 2026-11-05, with three agents, and designed by Claude the same day, on the owner's word. Built and checked against the fake on 2026-11-06. The live runs need his go.** Why each choice was made is in [decisions.md](decisions.md).
 
 The owner's point: someone running several agents in parallel on one job, with the brain as their shared memory. While agents work side by side, none hears what the others are told. What one of them heard reaches the next round only through whatever carries it: the code alone, exposurie, or a file a person keeps by hand.
 
@@ -621,7 +621,17 @@ node score/team.mjs team-1                          the tests, the checks and th
 node check/team.mjs                                 all of it through the fake, with exposurie 1.3.1's real sync
 ```
 
-- **Done when:** `check/team.mjs` holds with the fake, and a fault test breaks the runner and the scorer and sees every break caught. Then, on the owner's go, every session has run, and every condition is scored and read by hand. Then the README gets the results.
+- **Built 2026-11-06.** `tasks/team/team-1-examples/` holds a reference implementation, which the fake replays: what a good agent writes at each step of round 1, and a right and a wrong version of each round 2 agent. No agent ever sees it. Merged as the runner merges and tested as the scorer tests:
+  - round 1's three copies merge with no conflict, and pass Satchel's 50 tests and the gate
+  - round 2's right versions pass all 13 hidden tests
+  - the wrong versions pass their own 55 tests and fail all nine decision tests, which is the gap the scorer must tell apart
+- **`check/team.mjs` holds**, in about 80 seconds:
+  - the task: `team-1.mjs` writes the same bytes again, the exports hold what the hidden tests expect, and each decision is said in its own agent's second step and nowhere else in round 1, is in D's notes, and is in no ask of round 2
+  - the union merge on a made-up repository
+  - the whole task through the fake, with exposurie 1.3.1's real sync: a usage limit in round 1, a read outside the folder in round 1 and in round 2 and a saved session in round 2, each accepted by hand; the runs blind; every step's tokens its own. Then the scorer: C and D keep all six decisions and agree, A keeps none and does not, nothing of round 1 leaked, and the brain holds every decision.
+  - the gate: a round 1 step that breaks the contract stops the task there, and a repair by hand, recorded as a patch, lets it go on
+- **A fault test** broke the runner and the scorer 15 ways, and every break was caught. Every earlier check still holds.
+- **Done when:** `check/team.mjs` holds with the fake, and a fault test breaks the runner and the scorer and sees every break caught. **Done 2026-11-06.** Then, on the owner's go, every session has run, and every condition is scored and read by hand. Then the README gets the results.
 - **What it depended on, done:** the agent opening the brain during work. real-work-2 never ran `exposurie read` with either read, because exposurie's pointer was worded for questions about the user, not for work in their projects. So a conditional line in the pointer came first, released as 1.3.1, and measured on all of areas 1–8 (see *1.3.1, measured*).
 - It reverses the decision of 2026-10-18 to run no second agent.
 

@@ -333,6 +333,37 @@ export function recover(ctx) {
 /** How old a 1.3.1 run's copy of the brain is made: part 10's runs saw `last sync 3d ago`. */
 export const AGE_131_DAYS = 3;
 
+/** exposurie 1.3.1's answer to `--version`, asked in the run's home with C's environment. */
+export function ask131(ctx) {
+  const r = spawnSync(process.execPath, [EXPOSURIE_131, '--version'], { env: envFor(ctx, 'C'), cwd: ctx.home, encoding: 'utf8', windowsHide: true });
+  return { status: r.status, out: `${r.stdout ?? ''}${r.stderr ?? ''}` };
+}
+
+/**
+ * The first half of prepare131, which part 13's sync takes alone: once the
+ * kept kit is in the home, 1.3.1 brings its own files up to date by its own
+ * update step, and must say so. The brain is left as it is, nothing new is
+ * left in the home, the pointer has 1.3.1's line for work, and exposurie's
+ * config says 1.3.1. What the update changed is returned.
+ */
+export function update131(ctx) {
+  const before = Object.fromEntries(C_PATHS.map((rel) => [rel, hashPath(join(ctx.home, rel))]));
+  const strayBefore = strays(ctx.home).join('\n');
+  const up = ask131(ctx);
+  if (up.status !== 0 || !up.out.includes(`UPDATED TO ${PINS.exposurie131.version}`)) {
+    fail(`exposurie 1.3.1 did not bring the run's home up to date:\n${up.out.slice(0, 600)}`);
+  }
+  const updated = C_PATHS.filter((rel) => hashPath(join(ctx.home, rel)) !== before[rel]);
+  if (updated.includes('brain')) fail("exposurie 1.3.1's update changed the brain");
+  if (strays(ctx.home).join('\n') !== strayBefore) fail("exposurie 1.3.1's update left something new in the home");
+  if (!readFileSync(join(ctx.home, '.claude', 'CLAUDE.md'), 'utf8').includes(POINTER_FOR_WORK)) {
+    fail("after exposurie 1.3.1's update, the pointer has no line for work");
+  }
+  const config = readJson(join(ctx.home, '.exposurie', 'config.json'));
+  if (config.version !== PINS.exposurie131.version) fail(`after the update, exposurie's config says ${config.version}`);
+  return updated;
+}
+
 /**
  * Before a 1.3.1 C run starts, once its condition is in the home. The kept
  * brains were set up by exposurie 1.2.0 and last synced on 2026-10-21, and two
@@ -356,25 +387,7 @@ export const AGE_131_DAYS = 3;
  * returned, for batch.json.
  */
 export function prepare131(ctx) {
-  const env = envFor(ctx, 'C');
-  const ask = () => {
-    const r = spawnSync(process.execPath, [EXPOSURIE_131, '--version'], { env, cwd: ctx.home, encoding: 'utf8', windowsHide: true });
-    return { status: r.status, out: `${r.stdout ?? ''}${r.stderr ?? ''}` };
-  };
-  const before = Object.fromEntries(C_PATHS.map((rel) => [rel, hashPath(join(ctx.home, rel))]));
-  const strayBefore = strays(ctx.home).join('\n');
-  const up = ask();
-  if (up.status !== 0 || !up.out.includes(`UPDATED TO ${PINS.exposurie131.version}`)) {
-    fail(`exposurie 1.3.1 did not bring the run's home up to date:\n${up.out.slice(0, 600)}`);
-  }
-  const updated = C_PATHS.filter((rel) => hashPath(join(ctx.home, rel)) !== before[rel]);
-  if (updated.includes('brain')) fail("exposurie 1.3.1's update changed the brain");
-  if (strays(ctx.home).join('\n') !== strayBefore) fail("exposurie 1.3.1's update left something new in the home");
-  if (!readFileSync(join(ctx.home, '.claude', 'CLAUDE.md'), 'utf8').includes(POINTER_FOR_WORK)) {
-    fail("after exposurie 1.3.1's update, the pointer has no line for work");
-  }
-  const config = readJson(join(ctx.home, '.exposurie', 'config.json'));
-  if (config.version !== PINS.exposurie131.version) fail(`after the update, exposurie's config says ${config.version}`);
+  const updated = update131(ctx);
 
   const stateFile = join(ctx.home, 'brain', '.exposurie', 'state.json');
   const text = readFileSync(stateFile, 'utf8');
@@ -384,7 +397,7 @@ export function prepare131(ctx) {
   const lastSync = new Date(Date.now() - AGE_131_DAYS * DAY).toISOString();
   writeFileSync(stateFile, text.replace(at, `$1"${lastSync}"`));
 
-  const again = ask();
+  const again = ask131(ctx);
   const stateLine = again.out.split('\n')[0].trim();
   if (again.status !== 0 || !stateLine.includes(`last sync ${AGE_131_DAYS}d ago`) || /-> RUN:|UPDATED TO/.test(again.out)) {
     fail(`exposurie 1.3.1 does not see the brain as part 10's runs saw it:\n${again.out.slice(0, 600)}`);
@@ -397,7 +410,7 @@ export function prepare131(ctx) {
  * transcript it wrote is moved into its own folder, so the home is clean for
  * the next run and the evidence is kept.
  */
-function homeAfterRun(ctx, placed, dir, strayBefore) {
+export function homeAfterRun(ctx, placed, dir, strayBefore) {
   const problems = [];
   const left = strays(ctx.home).map((s) => s.replace(/\\/g, '/')).filter((s) => !strayBefore.includes(s) && !placed.some((p) => p.rel === s));
   if (left.length) problems.push(`the run left ${left.join(', ')} in the sandbox home`);

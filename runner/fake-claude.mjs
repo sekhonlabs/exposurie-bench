@@ -19,11 +19,12 @@
 //
 // A step of a long session (area 9, part 8) saves its session, which nothing
 // else does, so that is how the fake tells one apart. See the long session's
-// own section below.
+// own section below. A scenario with `team` plays part 13 instead: see its
+// section, before the long session's.
 
 import { spawnSync } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
-import { existsSync, mkdirSync, readdirSync, readFileSync, statSync, utimesSync, writeFileSync } from 'node:fs';
+import { appendFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, utimesSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { PINS, TOOLS, sandboxEnv } from './sandbox.mjs';
@@ -141,7 +142,8 @@ if (arg('-p') === '/exposurie-sync') {
     mkdirSync(pages, { recursive: true });
     const title = `The ${user}, batch ${readdirSync(pages).length + 1}`;
     const page = join(pages, `${title}.md`);
-    const body = `---\ntype: source\n---\n\n# ${title}\n\nThis brain belongs to the ${user}. Batch ${batch.id}, ${(text.match(/^## /gm) ?? []).length} sessions.\n`;
+    const copied = scenario.build?.copy ? `\n## What was said\n\n${text}\n` : '';
+    const body = `---\ntype: source\n---\n\n# ${title}\n\nThis brain belongs to the ${user}. Batch ${batch.id}, ${(text.match(/^## /gm) ?? []).length} sessions.\n${copied}`;
     writeFileSync(page, body);
     tool('Write', { file_path: page, content: body }, `File created successfully at: ${page}`);
     if (kind === 'limit') {
@@ -189,6 +191,259 @@ if (arg('-p') === '/exposurie-sync') {
   print({
     type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: out.length / 2 + 1, duration_ms: 60,
     session_id: session, result: said, permission_denials: [], ...spent,
+  });
+  process.exit(0);
+}
+
+// ---------------------------------------------------------------- part 13: many agents, one job
+
+// A scenario with `team` plays a team task (runner/team.mjs). `team.task` is
+// the task as tasks/team/<task>.json has it. A round 1 step is one that saves
+// its session: it is told apart from the others by its message, writes the
+// files of tasks/team/<examples>/round-1/agent-<n>/step-<k>/, says what the
+// examples' index.json says, and keeps its session as a transcript in the
+// history folder, the way Claude Code does, so the sync can read it. A round 2
+// run is unsaved, and writes round-2/agent-<n>/<right|wrong>/: wrong in A and
+// right in C and D, unless `team.write` names another for a condition.
+// `team.conflict` makes agents 1 and 2 of round 2 both add a line to the
+// README, at the same place. `team.backdate` dates a saved transcript ten
+// minutes back, so a sync takes it at once. What a step or run does instead,
+// once, is in `team.steps` ("round-1/<agent>/<step>") or `team.runs`
+// ("<condition>/<agent>"): limit, api-error, outside, no-save, persist, and
+// for a step, break, which leaves its agent's main file broken.
+//
+// Each one checks what the runner handed it: its arguments, its environment,
+// its folder and what is in it, its condition, which exposurie the shell finds
+// and what exposurie says, and in round 2's C, that the brain filed round 1.
+if (scenario.team && arg('-p') !== '/exposurie-sync') {
+  const team = scenario.team;
+  const t = team.task;
+  const ex = join(REPO, 'tasks', 'team', t.examples);
+  const index = JSON.parse(readFileSync(join(ex, 'index.json'), 'utf8'));
+  const ask = arg('-p');
+  const cwd = process.cwd();
+  const problems = [];
+  const saved = !args.includes('--no-session-persistence');
+  // Claude Code keeps a folder's sessions under a name made from its path.
+  const store = join(CONFIG, 'projects', cwd.replace(/[^A-Za-z0-9]/g, '-'));
+  const fileOf = (id) => join(store, `${id}.jsonl`);
+  const resume = arg('--resume');
+  const named = arg('--session-id');
+  const carriedOn = resume && existsSync(fileOf(resume)) ? readFileSync(fileOf(resume), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
+  const askedBefore = carriedOn.filter((l) => l.type === 'user' && typeof l.message?.content === 'string').map((l) => l.message.content);
+  // A message more than one agent is sent (the third step is the same for all
+  // three) is told apart by the asks before it in the session carried on.
+  const candidates = [];
+  for (const a of t.round_1) a.steps.forEach((step, i) => {
+    if (step === ask) candidates.push({ agent: a.agent, n: i });
+  });
+  const stepsBefore = (c) => t.round_1.find((a) => a.agent === c.agent).steps.slice(0, c.n);
+  const r1 = candidates.find((c) => JSON.stringify(stepsBefore(c)) === JSON.stringify(askedBefore)) ?? candidates[0] ?? null;
+  const r2 = t.round_2.find((a) => a.ask === ask) ?? null;
+  if (!r1 && !r2) problems.push(`no step or run of ${t.id} asks ${JSON.stringify(String(ask).slice(0, 80))}`);
+  if (r1 && !saved) problems.push('a round 1 step with its session unsaved');
+  if (r2 && saved) problems.push('a round 2 run with its session saved');
+
+  const want = {
+    '--model': PINS.model, '--output-format': 'stream-json', '--tools': TOOLS.join(','),
+    '--allowedTools': 'Bash(exposurie:*)', '--permission-mode': 'acceptEdits',
+  };
+  for (const [k, v] of Object.entries(want)) if (arg(k) !== v) problems.push(`${k} is ${arg(k)}, not ${v}`);
+  for (const f of ['--verbose', '--strict-mcp-config']) if (!args.includes(f)) problems.push(`no ${f}`);
+  if (r1 && process.env.DISABLE_AUTO_COMPACT !== '1') problems.push('auto-compact is not off in a round 1 step');
+  const own = new Set([...Object.keys(sandboxEnv()), 'EXPOSURIE_BENCH_FAKE', ...(r1 ? ['DISABLE_AUTO_COMPACT'] : [])].map((k) => k.toUpperCase()));
+  const inherited = Object.keys(process.env).filter((k) => !own.has(k.toUpperCase()));
+  if (inherited.length) problems.push(`inherited ${inherited.join(', ')}`);
+  if (process.env.USERPROFILE !== HOME || resolve(CONFIG) !== resolve(HOME, '.claude')) problems.push('HOME, USERPROFILE and CLAUDE_CONFIG_DIR disagree');
+  if (basename(cwd) !== t.folder) problems.push(`runs in ${basename(cwd)}, not ${t.folder}`);
+
+  // The condition, read off the home the way Claude Code would meet it.
+  const md = existsSync(join(CONFIG, 'CLAUDE.md')) ? readFileSync(join(CONFIG, 'CLAUDE.md'), 'utf8') : null;
+  let condition = '?';
+  if (md === null) condition = 'A';
+  else if (md.includes('<!-- exposurie:start -->')) condition = 'C';
+  else if (md === readFileSync(join(REPO, 'tasks', 'team', t.notes), 'utf8')) condition = 'D';
+  else problems.push("the instructions file is no condition's");
+  if (r1 && condition !== 'C') problems.push(`a round 1 step in ${condition}, not C`);
+  const has = (rel) => existsSync(join(HOME, rel));
+  for (const rel of ['.claude/skills/exposurie/SKILL.md', '.claude/commands/exposurie-sync.md', '.exposurie/config.json', 'brain']) {
+    if ((condition === 'C') !== has(rel)) problems.push(`${condition} ${has(rel) ? 'with' : 'without'} ${rel}`);
+  }
+
+  // What the agent's shell finds, and what exposurie says there.
+  const bash = (command) => spawnSync(process.env.CLAUDE_CODE_GIT_BASH_PATH, ['-c', command], { encoding: 'utf8', windowsHide: true });
+  const where = bash('command -v exposurie');
+  if ((where.status === 0) !== (condition === 'C')) problems.push(`exposurie is ${where.status === 0 ? '' : 'not '}on the PATH in ${condition}`);
+  if (where.status === 0 && basename(dirname(where.stdout.trim())) !== (scenario.exposurie_dir ?? 'npm-131')) problems.push(`the exposurie found is ${where.stdout.trim()}`);
+
+  // What the folder holds: a round 1 step its own agent's copy alone; a round 2 run round 1's merged code and the task's files.
+  const marks = { 1: 'src/jobs/handlers/import-file.js', 2: 'src/lib/csv.js', 3: 'src/import/services.js' };
+  if (r1) {
+    for (const [a, f] of Object.entries(marks)) {
+      const mine = Number(a) === r1.agent;
+      if (existsSync(join(cwd, f)) !== (mine && r1.n > 0)) problems.push(`step ${r1.n + 1} of agent ${r1.agent} ${existsSync(join(cwd, f)) ? 'finds' : 'lacks'} ${f}`);
+    }
+  }
+  if (r2) {
+    for (const f of [...Object.values(marks), ...Object.keys(t.files ?? {})]) if (!existsSync(join(cwd, f))) problems.push(`a round 2 run lacks ${f}`);
+  }
+
+  const key = r1 ? `round-1/${r1.agent}/${r1.n + 1}` : r2 ? `${condition}/${r2.agent}` : '?';
+  const flag = join(dirname(process.env.EXPOSURIE_BENCH_FAKE ?? '.'), `team-done-${key.replace(/\//g, '-')}`);
+  const planned = r1 ? team.steps?.[key] : team.runs?.[key];
+  const kind = planned && !existsSync(flag) ? planned : null;
+  if (kind) writeFileSync(flag, '');
+
+  if (r1) {
+    if (r1.n === 0 && (!named || resume)) problems.push('a first step that does not start its own session');
+    if (r1.n > 0 && (!resume || named)) problems.push('a later step that does not carry its session on');
+    if (resume && !existsSync(fileOf(resume))) {
+      process.stderr.write(`No conversation found with session ID: ${resume}\n`);
+      process.exit(1);
+    }
+    if (JSON.stringify(askedBefore) !== JSON.stringify(stepsBefore(r1))) problems.push(`the session carried on holds ${askedBefore.length} asks, not this agent's first ${r1.n}`);
+  }
+  const session = named ?? resume ?? randomUUID();
+  const lines = carriedOn;
+
+  const stamp = { sessionId: session, cwd, entrypoint: 'sdk-cli', version: PINS.claudeCode, isSidechain: false, userType: 'external' };
+  let parent = lines.findLast((l) => l.uuid)?.uuid ?? null;
+  const add = (l) => {
+    const uuid = randomUUID();
+    lines.push({ ...l, ...stamp, uuid, parentUuid: parent, timestamp: new Date().toISOString() });
+    parent = uuid;
+  };
+  const contextOf = () => 6400 + lines.reduce((n, l) => n + (l.fakeTokens ?? 0), 0);
+  const out = [];
+  const prompts = [];
+  const denials = [];
+  const call = (content, fakeTokens) => {
+    const prompt = contextOf();
+    prompts.push(prompt);
+    const message = { id: `msg_${randomUUID()}`, role: 'assistant', model: PINS.model, content, usage: { input_tokens: 2, cache_creation_input_tokens: 400, cache_read_input_tokens: prompt - 402, output_tokens: 150 } };
+    add({ type: 'assistant', message, fakeTokens });
+    out.push({ type: 'assistant', message, session_id: session });
+  };
+  const tool = (name, input, result, { fakeTokens = 200, denied = false } = {}) => {
+    const id = `toolu_${randomUUID().replace(/-/g, '').slice(0, 24)}`;
+    call([{ type: 'tool_use', id, name, input }], 120);
+    const content = denied ? 'Permission to use this tool has been denied.' : result;
+    add({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: id, content }] }, fakeTokens });
+    out.push({ type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: id, is_error: denied, content }] }, session_id: session });
+    if (denied) denials.push({ tool_name: name, tool_use_id: id, tool_input: input });
+  };
+
+  add({ type: 'user', message: { role: 'user', content: ask }, fakeTokens: Math.ceil(String(ask).length / 3) });
+  if (condition === 'C') {
+    const r = bash(`exposurie read --search "${t.folder} import"`);
+    tool('Bash', { command: `exposurie read --search "${t.folder} import"` }, r.stdout, { fakeTokens: 2000 });
+    const line = r.stdout.split('\n')[0].trim();
+    if (/-> RUN:|UPDATED TO/.test(r.stdout)) problems.push(`exposurie printed an arrow or an update: ${r.stdout.slice(0, 200)}`);
+    if (r1 && !line.includes(team.state ?? 'last sync 3d ago')) problems.push(`exposurie's state line is "${line}"`);
+    if (r1 && !(md ?? '').includes('before starting work in one of')) problems.push("the pointer has no line for work");
+    if (r2) {
+      let st = {};
+      try {
+        st = JSON.parse(readFileSync(join(HOME, 'brain', '.exposurie', 'state.json'), 'utf8'));
+      } catch {
+        // No state: the check below says so.
+      }
+      const filedRound1 = Object.keys(st.files ?? {}).filter((p) => p.replace(/\\/g, '/').includes(`-work-${t.folder}/`)).length;
+      if (filedRound1 < t.round_1.length) problems.push(`the brain filed ${filedRound1} of round 1's sessions`);
+    }
+  }
+  tool('Read', { file_path: join(cwd, 'README.md') }, 'the readme', { fakeTokens: r1 ? 30_000 : 20_000 });
+
+  let answer = 'Done.';
+  if (r1) {
+    const from = join(ex, 'round-1', `agent-${r1.agent}`, `step-${r1.n + 1}`);
+    answer = index.round_1[r1.agent]?.[r1.n] ?? 'Done.';
+    if (existsSync(from)) writeAll(from);
+  } else if (r2) {
+    const variant = team.write?.[condition] ?? (condition === 'A' ? 'wrong' : 'right');
+    answer = index.round_2[r2.agent]?.[variant] ?? 'Done.';
+    writeAll(join(ex, 'round-2', `agent-${r2.agent}`, variant));
+    if (team.conflict && r2.agent !== 3) {
+      appendFileSync(join(cwd, 'README.md'), `\nImports: agent ${r2.agent} was here.\n`);
+      tool('Edit', { file_path: join(cwd, 'README.md'), old_string: '', new_string: `Imports: agent ${r2.agent} was here.` }, 'The file has been updated.');
+    }
+  }
+  /** Write every file under an example's folder into the run's folder, each with a Write call. */
+  function writeAll(from) {
+    const walk = (d, rel) => {
+      for (const n of readdirSync(d)) {
+        const src = join(d, n);
+        if (statSync(src).isDirectory()) walk(src, `${rel}${n}/`);
+        else {
+          const to = join(cwd, rel, n);
+          const text = readFileSync(src, 'utf8');
+          mkdirSync(dirname(to), { recursive: true });
+          writeFileSync(to, text);
+          tool('Write', { file_path: to, content: text }, `File created successfully at: ${to}`, { fakeTokens: Math.ceil(text.length / 3) });
+        }
+      }
+    };
+    walk(from, '');
+  }
+  if (kind === 'outside') tool('Read', { file_path: join(REPO, 'tasks', 'team', `${t.id}.json`) }, '{"decisions": []}');
+  if (kind === 'break' && r1) {
+    // A step whose code no longer fits the contract: its main file exports nothing the others use.
+    writeFileSync(join(cwd, marks[r1.agent]), 'export const broken = true\n');
+    tool('Write', { file_path: join(cwd, marks[r1.agent]), content: 'export const broken = true\n' }, 'File created successfully.');
+  }
+  if (kind === 'persist') {
+    mkdirSync(join(CONFIG, 'projects', 'fake'), { recursive: true });
+    writeFileSync(join(CONFIG, 'projects', 'fake', `${session}.jsonl`), '{}\n');
+  }
+  if (problems.length) answer = `FAKE-PROBLEM: ${problems.join('; ')}\n\n${answer}`;
+  call([{ type: 'text', text: answer }], 150);
+
+  const skills = [...BUILT_IN_SKILLS, ...(has('.claude/skills/exposurie/SKILL.md') ? ['exposurie'] : [])];
+  print({
+    type: 'system', subtype: 'init', cwd, session_id: session, tools: (arg('--tools') ?? '').split(',').filter(Boolean),
+    mcp_servers: [], model: arg('--model'), permissionMode: arg('--permission-mode') ?? 'default',
+    slash_commands: [...skills, 'compact', 'context', ...(has('.claude/commands/exposurie-sync.md') ? ['exposurie-sync'] : [])],
+    apiKeySource: 'none', claude_code_version: PINS.claudeCode, output_style: 'default',
+    agents: ['claude', 'Explore', 'general-purpose', 'Plan', 'statusline-setup'], skills,
+    plugins: [{ name: 'cc-plugin-agents-md', path: 'builtin', source: 'cc-plugin-agents-md@builtin' }],
+  });
+  const limit = kind === 'limit';
+  const rate = { type: 'rate_limit_event', rate_limit_info: { status: limit ? 'rejected' : 'allowed', rateLimitType: 'five_hour', unifiedWindows: { five_hour: { utilization: limit ? 1 : 0.4 }, seven_day: { utilization: 0.1 } } }, session_id: session };
+  // A saved session's result counts the session from its start; the totals ride along in the transcript.
+  const carried = lines.findLast((l) => l.type === 'fake-usage')?.total ?? null;
+  const mine = { inputTokens: 2 * prompts.length, outputTokens: 150 * prompts.length, cacheReadInputTokens: prompts.reduce((n, p) => n + p - 402, 0), cacheCreationInputTokens: 400 * prompts.length };
+  const stopped = limit || kind === 'api-error';
+  const zero = { inputTokens: 0, outputTokens: 0, cacheReadInputTokens: 0, cacheCreationInputTokens: 0 };
+  const total = Object.fromEntries(Object.entries(stopped ? zero : mine).map(([k, v]) => [k, (saved ? carried?.[k] ?? 0 : 0) + v]));
+  total.costUSD = (total.inputTokens * 2 + total.cacheCreationInputTokens * 4 + total.cacheReadInputTokens * 0.1 + total.outputTokens * 10) / 1e6;
+  if (stopped) {
+    print(rate);
+    print({
+      type: 'result', subtype: 'success', is_error: true, terminal_reason: 'api_error', num_turns: 1, session_id: session,
+      api_error_status: limit ? 429 : 529, api_error: limit ? 'usage_limit_reached' : 'overloaded_error',
+      result: limit ? "You've hit your session limit · resets 5pm" : 'API Error: 529 Overloaded', permission_denials: [],
+      usage: { input_tokens: 0, cache_creation_input_tokens: 0, cache_read_input_tokens: 0, output_tokens: 0 },
+      modelUsage: { [PINS.model]: total }, total_cost_usd: total.costUSD,
+    });
+    process.exit(1);
+  }
+  if (saved && kind !== 'no-save') {
+    lines.push({ type: 'fake-usage', total });
+    mkdirSync(store, { recursive: true });
+    writeFileSync(fileOf(session), lines.map((l) => JSON.stringify(l)).join('\n') + '\n');
+    if (team.backdate) {
+      const then = new Date(Date.now() - 10 * 60 * 1000);
+      utimesSync(fileOf(session), then, then);
+    }
+  }
+  for (const m of out) print(m);
+  print(rate);
+  print({
+    type: 'result', subtype: 'success', is_error: false, terminal_reason: 'completed', num_turns: prompts.length, duration_ms: 50,
+    session_id: session, result: answer, permission_denials: denials,
+    usage: { input_tokens: mine.inputTokens, cache_creation_input_tokens: mine.cacheCreationInputTokens, cache_read_input_tokens: mine.cacheReadInputTokens, output_tokens: mine.outputTokens },
+    modelUsage: { [PINS.model]: total },
+    total_cost_usd: total.costUSD,
   });
   process.exit(0);
 }

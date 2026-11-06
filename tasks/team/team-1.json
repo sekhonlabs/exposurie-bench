@@ -60,6 +60,7 @@
     "tmp/omnivore-export.json": "omnivore-export.json"
   },
   "notes": "team-1-notes.md",
+  "examples": "team-1-examples",
   "decisions": [
     {
       "id": "K1",
@@ -75,7 +76,10 @@
         "patterns": [
           "\\bhighlights\\s*:"
         ]
-      }
+      },
+      "filed": [
+        "\\btext\\b[^\\n]{0,20}\\bnote\\b[^\\n]{0,20}\\bcreatedAt\\b"
+      ]
     },
     {
       "id": "K2",
@@ -90,7 +94,10 @@
           "\\bsource\\b[\\s\\S]{0,200}?['\"]import['\"]",
           "ALTER\\s+TABLE\\s+highlights"
         ]
-      }
+      },
+      "filed": [
+        "\\bsource\\b[^\\n]{0,40}\\bimport\\b"
+      ]
     },
     {
       "id": "K3",
@@ -105,7 +112,12 @@
           "INTO\\s+highlights",
           "UNIQUE\\s*\\(\\s*link_id\\s*,\\s*text"
         ]
-      }
+      },
+      "filed": [
+        "same (?:link|url)[^\\n]{0,60}same text",
+        "highlights?[^\\n]{0,60}\\bonce\\b",
+        "\\bonce\\b[^\\n]{0,60}highlights?"
+      ]
     },
     {
       "id": "K4",
@@ -117,10 +129,13 @@
       "leak": {
         "file": "{src,migrations}/**",
         "patterns": [
-          "\\bfolder:",
-          "\\binstapaper\\b"
+          "\\bfolder:"
         ]
-      }
+      },
+      "filed": [
+        "\\bfolder:[\\s\\S]{0,200}\\bUnread\\b",
+        "\\bUnread\\b[\\s\\S]{0,200}\\bfolder:"
+      ]
     },
     {
       "id": "K5",
@@ -133,9 +148,13 @@
         "file": "{src,migrations}/**",
         "patterns": [
           "readingProgress",
-          "\\bomnivore\\b"
+          "\\b90\\s*%"
         ]
-      }
+      },
+      "filed": [
+        "\\b90\\s*(?:%|percent)",
+        "\\b90 or more\\b"
+      ]
     },
     {
       "id": "K6",
@@ -149,21 +168,31 @@
         "patterns": [
           "highlight"
         ]
-      }
+      },
+      "filed": [
+        "(?:email|summary)[^\\n]{0,80}highlights?",
+        "highlights?[^\\n]{0,80}(?:email|summary)"
+      ]
     }
   ],
   "checks": {
-    "note": "Each agent is checked on its own files here, and the merged work by the hidden tests in score/team/. Both are read by hand.",
+    "note": "Each agent is checked on its own files here, and the merged work by the hidden tests in score/team/. A decision holds for an agent when every check under its ID holds. Both are read by hand.",
     "agents": {
       "1": [
         {
           "id": "K1",
-          "what": "Instapaper items carry each Selection as a highlight with text",
+          "what": "Instapaper items carry highlights",
           "in": "files",
           "file": "src/import/readers/**",
           "all": [
             "highlights"
-          ],
+          ]
+        },
+        {
+          "id": "K1",
+          "what": "each highlight's words are its text",
+          "in": "files",
+          "file": "src/import/readers/**",
           "patterns": [
             "\\btext\\s*:"
           ]
@@ -178,7 +207,7 @@
           ]
         },
         {
-          "id": "K4-states",
+          "id": "K4",
           "what": "Unread and Archive are not made into folder tags, and Archive means archived and read",
           "hand": true
         }
@@ -186,15 +215,29 @@
       "2": [
         {
           "id": "K1",
-          "what": "Omnivore items carry highlights as text, note and createdAt",
+          "what": "Omnivore items carry highlights with createdAt",
           "in": "files",
           "file": "src/import/readers/**",
           "all": [
             "highlights",
             "createdAt"
-          ],
+          ]
+        },
+        {
+          "id": "K1",
+          "what": "each highlight's quote is its text",
+          "in": "files",
+          "file": "src/import/readers/**",
           "patterns": [
-            "\\btext\\s*:",
+            "\\btext\\s*:"
+          ]
+        },
+        {
+          "id": "K1",
+          "what": "each highlight's annotation is its note",
+          "in": "files",
+          "file": "src/import/readers/**",
+          "patterns": [
             "\\bnote\\s*:"
           ]
         },
@@ -212,16 +255,22 @@
       "3": [
         {
           "id": "K1",
-          "what": "the job reads each item's highlights as text, note and createdAt",
+          "what": "the job reads each item's highlights, with createdAt",
           "in": "files",
           "file": "{src,migrations}/**",
           "all": [
             "highlights",
             "createdAt"
-          ],
-          "patterns": [
-            "\\.text\\b",
-            "\\.note\\b"
+          ]
+        },
+        {
+          "id": "K1",
+          "what": "it reads a highlight's text and note",
+          "in": "files",
+          "file": "{src,migrations}/**",
+          "all": [
+            "text",
+            "note"
           ]
         },
         {
@@ -237,6 +286,17 @@
         {
           "id": "K3",
           "what": "a highlight already there for the same link and text is not added again",
+          "in": "files",
+          "file": "{src,migrations}/**",
+          "patterns": [
+            "NOT\\s+EXISTS[\\s\\S]{0,300}?\\btext\\b",
+            "UNIQUE\\s*\\(\\s*link_id\\s*,\\s*text\\s*\\)",
+            "ON\\s+CONFLICT\\s*\\(\\s*link_id\\s*,\\s*text\\s*\\)"
+          ]
+        },
+        {
+          "id": "K3",
+          "what": "new highlights on links already saved are added",
           "hand": true
         },
         {
@@ -277,12 +337,8 @@
       },
       {
         "id": "no-dependency",
-        "what": "no new dependency",
-        "in": "files",
-        "file": "package.json",
-        "none": [
-          "\"dependencies\""
-        ]
+        "what": "no new dependency: package.json's dependencies and devDependencies as round 1 left them",
+        "in": "dependencies"
       },
       {
         "id": "sql-files",
@@ -295,6 +351,13 @@
     "instapaper": {
       "links": 14,
       "highlights": 5,
+      "selections": [
+        "Most of the time a fast tool saves is spent waiting on a slow decision.",
+        "Brown the butter before the miso goes in.",
+        "A backup you have never restored is a hope, not a backup.",
+        "Small sites are easier to keep alive.",
+        "Test the restore, not the backup."
+      ],
       "folder_tags": {
         "folder:Long reads": 2,
         "folder:Recipes": 2,
@@ -309,7 +372,14 @@
         "https://example.org/notes/on-backups",
         "https://example.com/blog/sqlite-at-the-edge",
         "https://example.net/blog/htmx-in-production"
-      ]
+      ],
+      "unread": [
+        "https://example.net/news/fly-volumes",
+        "https://example.org/blog/litestream-restores",
+        "https://example.com/posts/postmark-streams",
+        "https://example.net/posts/ulid-vs-uuid"
+      ],
+      "newer_selection": "A lamp is a promise kept every night."
     },
     "omnivore": {
       "links": 10,

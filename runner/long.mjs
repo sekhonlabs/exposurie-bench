@@ -231,7 +231,7 @@ export function writesIn(msgs, work) {
 }
 
 /** Why a step's start-up line rules it out: a C run's checks, the session it was told to use, and /compact for the compact step. */
-function longStartupProblems(init, work, session, kind) {
+export function longStartupProblems(init, work, session, kind) {
   const p = startupProblems(init, 'C', work);
   if (session && init.session_id !== session) p.push(`session ${init.session_id}, not ${session}`);
   if (kind === 'compact' && !(init.slash_commands ?? []).includes('compact')) p.push('no /compact among the slash commands');
@@ -240,26 +240,26 @@ function longStartupProblems(init, work, session, kind) {
 
 // ---------------------------------------------------------------- the home
 
-const projectsDir = (ctx) => join(ctx.home, '.claude', 'projects');
+export const projectsDir = (ctx) => join(ctx.home, '.claude', 'projects');
 const sessionMarker = (ctx) => join(dirname(ctx.placed), 'placed-session.json');
-const kitItems = (from) => C_PATHS.map((rel) => ({ rel, from: join(from, rel) }));
-const originalKit = (ctx, user) => join(ctx.brains, user, 'home');
+export const kitItems = (from) => C_PATHS.map((rel) => ({ rel, from: join(from, rel) }));
+export const originalKit = (ctx, user) => join(ctx.brains, user, 'home');
 
 /** Claude Code's own files in its config folder, which it rewrites by itself on any run. */
 const OWN_CONFIG = /^(?:\.claude\.json|\.credentials\.json|settings\.json|\.last-cleanup|history\.jsonl|(?:backups|cache|plugins|statsig)\/)/;
 
 /** The files of the config folder that are neither the condition, nor the history folder, nor Claude Code's own. */
-const configFiles = (ctx) => filesUnder(join(ctx.home, '.claude'))
+export const configFiles = (ctx) => filesUnder(join(ctx.home, '.claude'))
   .filter((f) => !f.startsWith('projects/') && !OWN_CONFIG.test(f) && !C_PATHS.some((rel) => `.claude/${f}`.startsWith(rel)));
 
 /** Put a saved session back where Claude Code wrote it. The marker goes first, so a stop part-way can be undone. */
-function placeSession(ctx, dir, from) {
+export function placeSession(ctx, dir, from) {
   writeFileSync(sessionMarker(ctx), JSON.stringify({ run: dir, from }, null, 2) + '\n');
   if (existsSync(from)) cpSync(from, projectsDir(ctx), { recursive: true, preserveTimestamps: true });
 }
 
 /** Move the whole history folder out of the home into `to` (replacing it), and drop the marker. */
-function takeSession(ctx, to) {
+export function takeSession(ctx, to) {
   if (existsSync(projectsDir(ctx))) {
     rmSync(to, { recursive: true, force: true });
     mkdirSync(dirname(to), { recursive: true });
@@ -269,7 +269,7 @@ function takeSession(ctx, to) {
 }
 
 /** A runner stopped part-way may have left a session in the home: it goes into its run's folder, kept. */
-function recoverSession(ctx) {
+export function recoverSession(ctx) {
   if (!existsSync(sessionMarker(ctx))) return;
   const { run } = readJson(sessionMarker(ctx));
   takeSession(ctx, join(run, `recovered-${now().replace(/[:.]/g, '-')}`));
@@ -277,14 +277,14 @@ function recoverSession(ctx) {
 }
 
 /** Copy a folder over another, replacing it. */
-function restore(from, to) {
+export function restore(from, to) {
   rmSync(to, { recursive: true, force: true });
   mkdirSync(from, { recursive: true });
   cpSync(from, to, { recursive: true, preserveTimestamps: true });
 }
 
 /** What a step did to the home besides its session: the condition unchanged, nothing new outside the config folder. */
-function homeAfterStep(ctx, placed, strayBefore, { except = [] } = {}) {
+export function homeAfterStep(ctx, placed, strayBefore, { except = [] } = {}) {
   const problems = [];
   const left = strays(ctx.home).map((s) => s.replace(/\\/g, '/')).filter((s) => !strayBefore.includes(s) && !placed.some((p) => p.rel === s));
   if (left.length) problems.push(`the step left ${left.join(', ')} in the sandbox home`);
@@ -297,14 +297,14 @@ function homeAfterStep(ctx, placed, strayBefore, { except = [] } = {}) {
 }
 
 /** Files the step added to the config folder that are not its session, moved beside the step and noted. */
-function moveExtras(ctx, before, sdir) {
+export function moveExtras(ctx, before, sdir) {
   const extra = configFiles(ctx).filter((f) => !before.has(f));
   for (const f of extra) move(join(ctx.home, '.claude', f), join(sdir, 'left', f));
   return extra.length ? [`Claude Code wrote ${extra.length} more file(s) into its config folder, moved to left/: ${extra.slice(0, 5).join(', ')}`] : [];
 }
 
 /** Why a kit cannot serve a step: no brain, or one exposurie itself would ask to sync. */
-function kitProblems(kit) {
+export function kitProblems(kit) {
   const st = brainState(join(kit, 'brain'));
   if (!st?.lastSyncUtc) return [`the brain in ${kit} was never synced`];
   const days = Math.floor((Date.now() - Date.parse(st.lastSyncUtc)) / 86_400_000);

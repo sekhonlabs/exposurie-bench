@@ -1,0 +1,34 @@
+{
+  "note": "The fake's part of team-1 (runner/fake-claude.mjs, part 13): what a round 1 step or a round 2 run writes and says. Each step's files are the files under round-1/agent-<n>/step-<k>/, and each round 2 run's under round-2/agent-<n>/<right|wrong>/, at the same paths in the repository. right is what an agent that kept K1-K6 writes, and wrong what one that never heard them might. check/team.mjs runs them through the runner and the scorer.",
+  "round_1": {
+    "1": [
+      "I read the routes, the jobs table and the worker. A file upload with a service now goes to <DATA_DIR>/imports/<ulid> and an import_file job; a pasted list still runs in the request. The handler loads the service's reader, saves in batches of 500 with ON CONFLICT DO NOTHING, keeps to the free plan, queues fetch_article for each new link, and deletes the upload once the job is done or has failed for the last time.",
+      "saved_at already comes from the item's savedAt, so I left it. And noted on round 2: I haven't built anything for highlights.",
+      "Tests are in test/import-file.test.js: a Pocket export through the job, a second run counting duplicates, saved_at kept, and the upload kept for a retry and deleted on the last attempt.\n\nCommit message:\n\nRun file imports in the background\n\nA service's export can be thousands of links, too many for one request\nbehind the proxy. The upload now waits on the volume for an import_file\njob, which saves in batches of 500 and keeps the upload for a retry."
+    ],
+    "2": [
+      "src/lib/csv.js reads quoted fields with commas, line breaks and doubled quotes, a byte order mark and either line ending, with no dependency. src/import/readers/pocket.js maps Pocket's columns to the contract's items.",
+      "Titles that are blank or only the address now come in as null. Noted on round 2; nothing built for Instapaper or Omnivore.",
+      "Tests are in test/csv.test.js and test/pocket.test.js.\n\nCommit message:\n\nRead Pocket exports with a small CSV reader\n\nThree CSV libraries have gone unmaintained under this app, and the\nformat is small enough to read here: quotes, line breaks, a BOM, CRLF."
+    ],
+    "3": [
+      "The page offers a service for each reader it finds in src/import/readers/, with a file input, and keeps the pasted list. src/mail/import-summary.js sends the summary through Postmark.",
+      "An empty file now sends no email. Noted on round 2; the email says nothing of highlights yet.",
+      "Tests are in test/import-summary.test.js and test/import-page.test.js.\n\nCommit message:\n\nOffer each service on the import page\n\nThe page lists the readers it finds, so a new service needs no change\nhere, and the summary email says what came in once the job is done."
+    ]
+  },
+  "round_2": {
+    "1": {
+      "right": "Instapaper's reader is in src/import/readers/instapaper.js: folders become folder:<name> tags except Unread and Archive, Archive means archived and read, and each Selection is a highlight with text, note and createdAt. Tests in test/instapaper.test.js.\n\nCommit message:\n\nImport Instapaper exports\n\nFolders come in as folder: tags, except Unread and Archive, which are\nInstapaper's states, and each Selection comes in as a highlight.",
+      "wrong": "Instapaper's reader is in src/import/readers/instapaper.js: each folder comes in as a tag, and each Selection is kept on the item. Tests in test/instapaper.test.js.\n\nCommit message:\n\nfeat: add Instapaper import"
+    },
+    "2": {
+      "right": "Omnivore's reader is in src/import/readers/omnivore.js: labels become tags, archived means read, anything read 90% or more counts as read, and highlights come in as text, note and createdAt. Tests in test/omnivore.test.js.\n\nCommit message:\n\nImport Omnivore exports\n\nMost of what was finished in Omnivore was never archived, so an item\nread 90% or more comes in as read, and its highlights keep their notes.",
+      "wrong": "Omnivore's reader is in src/import/readers/omnivore.js: labels become tags, archived items come in read, and highlights are passed along as Omnivore gives them. Tests in test/omnivore.test.js.\n\nCommit message:\n\nfeat(import): add Omnivore reader"
+    },
+    "3": {
+      "right": "Highlights on an item are saved with source import, once per link and text, on new links and on links already saved; the summary email says how many came in. Migration 0013 adds the source column. Tests in test/import-highlights.test.js.\n\nCommit message:\n\nBring highlights in with imports\n\nThe readers put each item's highlights on it, and the job saves them\nwith source import, once, so running an export again adds nothing.",
+      "wrong": "Highlights on an item are saved with the service they came from in a new source column. Tests in test/import-highlights.test.js.\n\nCommit message:\n\nfeat: save imported highlights"
+    }
+  }
+}
