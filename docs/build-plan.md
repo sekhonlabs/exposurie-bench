@@ -551,20 +551,78 @@ The owner's point: a brain belongs to the person, and stays with them when they 
 
 #### 13. Many agents, one job
 
-**Plan usage:** yes, the most of the parts left. **Decided 2026-11-05, with three agents. The pointer change below comes first, and is done. The design is Claude's to make, the owner's word of 2026-11-05, and the live runs need his go.**
+**Plan usage:** yes, the most of the parts left: 9 steps in round 1, one sync and 9 runs in round 2, estimated at $5–10 at list prices. **Decided 2026-11-05, with three agents. The pointer change it depended on is done (1.3.1). Designed by Claude the same day, on the owner's word, and the live runs need his go.** Why each choice was made is in [decisions.md](decisions.md).
 
-The owner's point: someone running several agents in parallel on one job, with the brain as their shared memory. The owner set it at three agents, not five.
-- One job is split across three agents, each in its own copy of one repository, none seeing the others' sessions.
-- Their work is merged and tested, then synced.
-- Then a second round of three needs what round 1 decided only in conversation, often by another agent.
-- The agents run one at a time, since none of them sees another anyway.
+The owner's point: someone running several agents in parallel on one job, with the brain as their shared memory. While agents work side by side, none hears what the others are told. What one of them heard reaches the next round only through whatever carries it: the code alone, exposurie, or a file a person keeps by hand.
 
-- **Conditions:** no memory, exposurie, and a perfect hand-written `AGENTS.md`, which is what D stands for.
-- **Scored on:** the merged work passing its tests, the three agreeing, the work done the user's way, and the plan meter.
-- **What it depends on:** the agent opening the brain during work. real-work-2 never ran `exposurie read` with either read, because exposurie's pointer is worded for questions about the user, not for work in their projects. As things stand, this part would measure the pointer.
-  - So a conditional line in the pointer comes first. That is an exposurie change, released as 1.3.1, which this part runs.
-  - It is measured first on all of areas 1–8, the owner's call of 2026-11-05, since every C run carries the pointer and it is paid for on every message. Each run's copy of the brain is made 3 days old, so the brains' 7-day arrow doesn't reach it. See *1.3.1, measured*.
-- **What it would also show:** sync has no lock, never files the session it runs in, and files decisions rather than where a task stands.
+**The job: Satchel's imports from Pocket, Instapaper and Omnivore,** on long-1's starter, the developer's own project. Round 1 builds the import's groundwork and Pocket. Round 2 adds Instapaper, Omnivore and imported highlights.
+
+**How it runs:**
+
+1. **Round 1: three agents, once.** Each works in its own copy of the starter, one after another, since none sees another anyway. They run in condition C on exposurie 1.3.1, as the user would work. Before every step the developer's kept brain is brought up to 1.3.1 and made 3 days old, as in `full-3`. Each session is saved, and gets three steps in the developer's voice:
+   - agent 1, **the job:** the upload saved to disk and imported by an `import_file` job, in batches of 500, with duplicates counted
+   - agent 2, **Pocket:** a CSV reader with no new dependency, and Pocket's reader
+   - agent 3, **the page and the email:** the import page, which lists the readers it finds, and the summary email
+
+   Every first step gives all three the same plan and the same contract: the item a reader returns, the job's payload, and the email's function. It tells them to stay in their own files and to leave no notes in the code about round 2's work. The second step corrects a detail of their own part, then tells them **decisions for round 2's work**, which they are told not to build. The third asks for tests and a commit message.
+2. **Merged and tested.** The three copies are merged onto the starter with the sandbox's Git, in the order 1, 2, 3. A conflict is resolved by keeping both sides (Git's union merge), mechanically, and recorded. Then the repository's own tests run, and a hidden test imports a Pocket export through the merged job. If the merged code fails either, the run stops for a person. They either repair it by hand, with the smallest change and no round 2 decision written into it, recorded in decisions.md, or run round 1 again.
+3. **Synced.** Once the newest of round 1's transcripts has been still for five minutes, a session of its own types `/exposurie-sync` in the brain's folder, as area 9's sync did. It gets the developer's kept brain, brought up to 1.3.1, with round 1's three transcripts as the only history. The brain it leaves is round 2's, in condition C.
+4. **Round 2: three agents in each of three conditions.** Each agent gets a copy of round 1's merged code, the developer's own two exports in `tmp/`, and one short ask, the way a ticket reads when the details are kept elsewhere. No ask restates a decision of round 1:
+   - agent 1: Instapaper, from `tmp/instapaper-export.csv`
+   - agent 2: Omnivore, from `tmp/omnivore-export.json`
+   - agent 3: imported highlights, "the highlights side", while the other two write the readers
+
+   Each ask says the other two are at work at the same time in their own copies, and ends with tests and a commit message. The 9 runs are blind (`r001`…), in a seeded mixed order, with session persistence off, like areas 1–8.
+5. **Merged and tested again,** per condition: the three copies onto round 1's merged code, the same way.
+
+**The conditions of round 2.** Round 1 is the same for all three, so they differ only in what carries round 1's conversations into round 2.
+
+| | Condition | What carries round 1's conversations |
+|---|---|---|
+| A | no memory | nothing: the merged code is all there is |
+| C | exposurie | the brain the sync left, with 1.3.1's pointer, skill and command |
+| D | a perfect notes file | round 1's decisions that round 2 needs, and the developer's commit style, one line each in the sandbox's `~/.claude/CLAUDE.md`, where D's file goes: what a perfect, hand-kept `AGENTS.md` would hold |
+
+**Round 1's decisions for round 2,** in `tasks/team/team-1.json`. Each round 2 agent needs decisions told to two different round 1 agents, and one decision is needed by all three:
+
+| | Told to | Decision | Needed by |
+|---|---|---|---|
+| K1 | agent 1 | a reader puts highlights on its items as `highlights: [{ text, note, createdAt }]` | agents 1, 2, 3 |
+| K2 | agent 1 | the job saves them with `source` set to `import` | agent 3 |
+| K3 | agent 1 | an import adds a highlight once: the same link and text are the same highlight, and new ones on links already saved are added | agent 3 |
+| K4 | agent 2 | Instapaper's folders become `folder:<name>` tags, except Unread and Archive, which are states; Archive means archived and read | agent 1 |
+| K5 | agent 2 | an Omnivore item read 90% or more counts as read, archived or not | agent 2 |
+| K6 | agent 3 | the summary email says how many highlights came in | agent 3 |
+
+- **Every value is a choice a fresh agent can't guess, and the exports show each one.** Instapaper's has Unread, Archive and Starred beside folders of the developer's own. Omnivore's has items read 95%, 91% and 89% that are not archived.
+- **A decision counts as said only in conversation when round 1's merged code lacks it,** as area 9 defined it. Round 1's merged code is searched for each. One found there is reported, and scored apart.
+
+**Scored on, per condition:**
+- **The merged work passing its tests:** the conflicts, the repository's own tests, and hidden tests that import both exports through the merged job (`score/team/`).
+- **The three agreeing:** whether Instapaper's and Omnivore's highlights reach the database through the third agent's code. That needs all three to have K1 the same way.
+- **The decisions kept:** K1–K6, from the hidden tests on the merged work, and from each agent's own files by script. A hand read settles both.
+- **The user's way:** each commit message in the developer's style, a fact from the history: no Conventional Commits prefix, an imperative subject under 60 characters, and a body that says why. Also no new dependency, and SQL kept in `.sql` files.
+- **What it cost:** every input token, cached or not, per condition, and for round 1 and the sync apart. How far the plan meter moved, from the runs' own rate-limit events. Tokens go in a side column, with no ratios.
+- **Looked:** whether C's agents ran `exposurie read`, and what they searched for.
+- **Filed:** which of K1–K6 the sync wrote into the brain, read off its pages. A decision the brain lacks is one C cannot keep.
+
+**What it does not show:**
+- One job, one user and one run per cell.
+- The agents can't run the tests, as in every area: they keep the standing tools, which run no code. The tests run after each merge.
+- One sync, so exposurie's missing lock, where two syncs at once take the same batch, never comes up.
+- The decisions were written for this test. Round 1 is told not to write them into code, as a person who keeps an `AGENTS.md` would. That person is condition D.
+
+**The runner and the scorer:**
+```
+node runner/team.mjs plan team-1
+node runner/team.mjs go team-1 [--accept "<why>"]   round 1, its merge, the sync, round 2 and its merges: spends plan usage
+node runner/team.mjs status team-1
+node score/team.mjs team-1                          the tests, the checks and the numbers, into scores.json
+node check/team.mjs                                 all of it through the fake, with exposurie 1.3.1's real sync
+```
+
+- **Done when:** `check/team.mjs` holds with the fake, and a fault test breaks the runner and the scorer and sees every break caught. Then, on the owner's go, every session has run, and every condition is scored and read by hand. Then the README gets the results.
+- **What it depended on, done:** the agent opening the brain during work. real-work-2 never ran `exposurie read` with either read, because exposurie's pointer was worded for questions about the user, not for work in their projects. So a conditional line in the pointer came first, released as 1.3.1, and measured on all of areas 1–8 (see *1.3.1, measured*).
 - It reverses the decision of 2026-10-18 to run no second agent.
 
 **Not proposed:**

@@ -1,0 +1,15 @@
+URL,Title,Selection,Folder,Timestamp,Tags
+https://example.org/long-reads/the-last-lamplighter,The Last Lamplighter,,Long reads,1717000000,[]
+https://example.com/essays/slow-software,"Slow Software, Fast Teams",Most of the time a fast tool saves is spent waiting on a slow decision.,Long reads,1717600000,"[""software""]"
+https://example.net/recipes/one-pan-gnocchi,One-Pan Gnocchi,,Recipes,1718200000,"[""weeknight""]"
+https://example.com/recipes/miso-butter-corn,Miso Butter Corn,Brown the butter before the miso goes in.,Recipes,1718800000,"[""weeknight"",""summer""]"
+https://example.org/notes/on-backups,On Backups,"A backup you have never restored is a hope, not a backup.",Archive,1715000000,"[""ops""]"
+https://example.com/blog/sqlite-at-the-edge,SQLite at the Edge,,Archive,1715600000,"[""sqlite""]"
+https://example.net/blog/htmx-in-production,htmx in Production,,Archive,1716200000,[]
+https://example.org/talks/boring-technology,"Choose ""Boring"" Technology",,Starred,1714400000,"[""talks""]"
+https://example.com/essays/small-web,The Small Web,Small sites are easier to keep alive.,Starred,1714000000,[]
+https://example.net/news/fly-volumes,Fly Volumes Explained,,Unread,1719400000,"[""fly""]"
+https://example.org/blog/litestream-restores,Litestream Restores in Practice,"Test the restore, not the backup.",Unread,1720000000,"[""sqlite"",""ops""]"
+https://example.com/posts/postmark-streams,Postmark Message Streams,,Unread,1720600000,[]
+https://example.net/posts/ulid-vs-uuid,ULIDs vs UUIDs,,Unread,1721200000,[]
+https://example.org/work/estimates,Estimates Are Guesses,,Work notes,1721800000,"[""work""]"
