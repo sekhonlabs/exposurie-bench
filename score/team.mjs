@@ -316,23 +316,26 @@ export function scoreTeam(dir, task, { runs = RUNS } = {}) {
 }
 
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
-  const { teamTask } = await import('../runner/team.mjs');
-  const { ownNodeOnly } = await import('../runner/sandbox.mjs');
-  ownNodeOnly();
-  const id = process.argv[2];
-  const task = teamTask(id);
-  const dir = join(RUNS, task.id);
-  if (!existsSync(join(dir, 'team.json'))) {
-    console.error(`score/team: ${id} has not run`);
-    process.exit(1);
-  }
-  const s = scoreTeam(dir, task);
-  writeFileSync(join(dir, 'scores.json'), `${JSON.stringify(s, null, 2)}\n`);
-  console.log(`round 1: ${s.round_1.steps} steps, ${s.round_1.tokens.all_input} in; gate ${s.round_1.gate.passed ? 'passed' : 'failed'}; ` +
-    `in its code already: ${Object.entries(s.round_1.leaks).filter(([, v]) => v.leaked).map(([k]) => k).join(', ') || 'none'}`);
-  console.log(`sync: ${s.sync.tokens.all_input} in; filed ${Object.entries(s.sync.filed).filter(([, v]) => v.filed).map(([k]) => k).join(', ') || 'none'}`);
-  for (const [c, r] of Object.entries(s.conditions)) {
-    console.log(`${c}  kept ${r.kept.merged}/${r.kept.of}, agreed ${r.agreed ? 'yes' : 'no'}, tests ${r.tests.passed ? 'pass' : 'fail'}, conflicts ${r.merge.conflicts.length}, ${r.tokens.all_input} in`);
-  }
-  console.log(`\nRead by hand as well:\n  ${s.by_hand.join('\n  ')}\nScores: ${join(dir, 'scores.json')}`);
+  // No top-level await here: runner/team.mjs imports this module, so this
+  // module must finish loading before runner/team.mjs can. Awaiting it at the
+  // top level left each waiting on the other, and Node exited with code 13.
+  Promise.all([import('../runner/team.mjs'), import('../runner/sandbox.mjs')]).then(([{ teamTask }, { ownNodeOnly }]) => {
+    ownNodeOnly();
+    const id = process.argv[2];
+    const task = teamTask(id);
+    const dir = join(RUNS, task.id);
+    if (!existsSync(join(dir, 'team.json'))) {
+      console.error(`score/team: ${id} has not run`);
+      process.exit(1);
+    }
+    const s = scoreTeam(dir, task);
+    writeFileSync(join(dir, 'scores.json'), `${JSON.stringify(s, null, 2)}\n`);
+    console.log(`round 1: ${s.round_1.steps} steps, ${s.round_1.tokens.all_input} in; gate ${s.round_1.gate.passed ? 'passed' : 'failed'}; ` +
+      `in its code already: ${Object.entries(s.round_1.leaks).filter(([, v]) => v.leaked).map(([k]) => k).join(', ') || 'none'}`);
+    console.log(`sync: ${s.sync.tokens.all_input} in; filed ${Object.entries(s.sync.filed).filter(([, v]) => v.filed).map(([k]) => k).join(', ') || 'none'}`);
+    for (const [c, r] of Object.entries(s.conditions)) {
+      console.log(`${c}  kept ${r.kept.merged}/${r.kept.of}, agreed ${r.agreed ? 'yes' : 'no'}, tests ${r.tests.passed ? 'pass' : 'fail'}, conflicts ${r.merge.conflicts.length}, ${r.tokens.all_input} in`);
+    }
+    console.log(`\nRead by hand as well:\n  ${s.by_hand.join('\n  ')}\nScores: ${join(dir, 'scores.json')}`);
+  });
 }
