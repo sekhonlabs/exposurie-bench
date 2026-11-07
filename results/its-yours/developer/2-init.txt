@@ -1,0 +1,119 @@
+exposurie  no brain yet
+
+FOR YOUR USER — 2 pending
+
+  [claude-code-retention]  Claude Code is deleting your history every 30 days
+    WHY: Claude Code removes its own transcripts after 30 days by default.
+    That happens whether or not exposurie is installed, and everything
+    older is already gone. One line in their settings keeps them instead —
+    after that, this brain stops depending on another tool's cleanup
+    schedule.
+    ASK YOUR USER, in your own words:
+        "Quick thing worth knowing: Claude Code deletes your session
+        transcripts after 30 days, so anything older than that is already
+        gone. I can change one setting to keep them for ten years instead —
+        want me to?"
+    IF THEY SAY YES, DO IT YOURSELF — do not read this out:
+        ONLY IF THEY SAID YES. Ask first, in the conversation, and wait for a
+        real answer — this edits a file belonging to software we do not own, on
+        their machine, and silence is not consent. If they said no, or did not
+        answer, record it instead:
+            exposurie decline claude-code-retention --because "<their words>"
+        
+        Edit ~\.claude\settings.json and set:
+            "cleanupPeriodDays": 3650
+        
+        Keep every other key exactly as it is, and keep the file valid JSON —
+        if it will not parse, Claude Code stops reading its own settings. Create
+        the file with just that one key if it does not exist yet.
+        
+        This changes nothing about how Claude Code runs. It only stops the
+        delete. Tell them it is done, and that old transcripts are not coming
+        back — this protects what they have from here on.
+    DONE WHEN: cleanupPeriodDays is set to a year or more in that file
+    IF THEY SAY NO, RECORD IT — it stops asking, and it is reversible:
+        exposurie decline claude-code-retention --because "<their words>"
+    This does NOT block anything. Keep working.
+
+  [obsidian]  Seeing the brain — the folder now, Obsidian for the graph
+    WHY: Nothing in the system needs Obsidian — the brain is plain
+    Markdown and your agent reads the files directly. Both halves of this
+    are here so the user actually LOOKS at it, which is the moment most
+    people start trusting it. Opening the folder does that on its own and
+    cannot fail; the graph is the better version of the same moment.
+    ASK YOUR USER, in your own words:
+        "Want to look at your brain? I can open the folder right now — it is
+        plain Markdown, nothing to install. And if you want to see it as a
+        linked graph, Obsidian is free and opens the folder as-is."
+    IF THEY SAY YES, DO IT YOURSELF — do not read this out:
+        FIRST, and this always works — open their brain for them:
+          explorer "~\brain"
+        
+        That is it on screen: plain Markdown, ~\brain. Everything below is
+        optional, and nothing is blocked if it fails.
+        
+        THEN offer the graph view. Obsidian is free and opens the folder as-is:
+          winget install Obsidian.Obsidian
+        
+        ONE attempt. If it stalls, asks for a password, or the download is
+        blocked, STOP and say so plainly — their brain is already open and
+        Obsidian can wait. Do NOT try a second package manager, do NOT route
+        around a blocked download, and do NOT leave an installer running while
+        they watch. A person three minutes into a progress bar has learned that
+        this tool is work.
+        
+        If it did install, walk them in. These four, in order:
+          1. Open Obsidian.
+          2. Click "Open folder as vault".
+          3. Choose this exact folder:
+               ~\brain
+          4. Trust the vault when it asks. Nothing here runs code.
+        
+        Then tell them to press Ctrl+G (Cmd+G on a Mac) for the graph view. That
+        is the picture of their own head, and it is the moment this stops feeling
+        like a folder of notes.
+        
+        If they are happy reading Markdown without it, that is a real answer and
+        not a failure. Record it with the decline line below so it stops asking.
+    DONE WHEN: the user says it is installed, or an Obsidian vault config appears
+    IF THEY SAY NO, RECORD IT — it stops asking, and it is reversible:
+        exposurie decline obsidian --because "<their words>"
+    This does NOT block anything. Keep working.
+
+STATE
+  exposurie        installed  (<npm>\exposurie.cmd)
+  brain            not created  (will go at ~/brain)
+  claude-code      1 session · 33%   (~/.claude)
+  codex            1 session · 33%   (~/.codex)
+  cursor           1 session · 33%   (~/AppData/Roaming/Cursor/User)
+  claude.ai chats  1 conversation   (~/Downloads/data-2026-11-07-batch-0000)
+  chatgpt chats    export found   (~/Downloads/chatgpt-export)
+
+DO THESE IN ORDER
+  1. RUN:  exposurie scaffold --at "~/brain"
+      Creates the brain and copies in the schema, the page templates and the
+      prompt that writes pages — those become the user's, and are never
+      overwritten. Writes nothing else and reads no transcripts.
+  2. ASK YOUR USER, in your own words:
+      "Quick thing worth knowing: Claude Code deletes your session
+      transcripts after 30 days, so anything older than that is already
+      gone. I can change one setting to keep them for ten years instead —
+      want me to?"
+      Do NOT wait for an answer. Continue to the next step.
+  3. ASK YOUR USER, in your own words:
+      "Want to look at your brain? I can open the folder right now — it is
+      plain Markdown, nothing to install. And if you want to see it as a
+      linked graph, Obsidian is free and opens the folder as-is."
+      Do NOT wait for an answer. Continue to the next step.
+
+SCOPE
+  Conversation is read directly — Claude Code, Codex and Cursor on this
+  machine, plus claude.ai and ChatGPT chats from an export. Files dropped in
+  raw/ are FOUND and handed to you to open; exposurie never parses a
+  document itself, so a PDF becomes a page only because you read it.
+  Documents attached to a claude.ai Project are listed but not fetched. A
+  ChatGPT export that cannot be parsed is reported as a parse failure by
+  name, never as an empty account. opencode, Gemini CLI, Windsurf and Aider
+  are not read. Do not invent a command for any of that.
+
+EXIT 10 — there is a step for your user. Nothing has failed. Do the RUN steps above, relay the FOR YOUR USER steps, and carry on.

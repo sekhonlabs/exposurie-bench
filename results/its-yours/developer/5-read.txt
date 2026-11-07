@@ -1,0 +1,80 @@
+exposurie  39 pages · last sync 17d ago · backup never
+           -> RUN: exposurie sync
+
+TOTAL: 19 pages match "satchel" (searched 39 pages). Words match in any order and any form; best first.
+
+[1] Satchel
+    RUN:  exposurie read "Satchel"
+    The top of the page, as written:
+
+The owner's read-later app. One paid plan, $4/month, about forty paying subscribers on Stripe at the 2026-08-20 cutover. Stack: Node, Hono rendering server-side HTML with htmx, SQLite (WAL) on a [[Fly.io]] volume, Postmark for mail, a polled `jobs` table for background work, 1Password-injected secrets (no `.env` files). No Redis, no cron library. Brand colour `#B4462F` (shared with [[Fieldnotes]]).
+
+    Also matched on this page:
+    RUN:  exposurie read "Satchel" --section "Why it exists"
+    RUN:  exposurie read "Satchel" --section "History in order (2026-05 onwards)"
+
+[2] Satchel Weekly Digest and PWA
+    RUN:  exposurie read "Satchel Weekly Digest and PWA"
+    The whole page, as written:
+
+Built 2026-08-24 for [[Satchel]].
+
+## Weekly digest
+- Runs Saturdays 08:00 **Europe/Lisbon**, not UTC (the owner lives in Lisbon). Next-run time is computed from the Lisbon calendar date with `Intl.DateTimeFormat`, so DST changes are handled with no dependency. First run: 2026-08-29 08:00 Lisbon = 07:00 UTC.
+- Scheduled through the existing `jobs` table; the handler inserts the next `weekly_digest` row **only after Postmark accepts the send**, in the same transaction that marks the current job done. Reason (owner's correction): inserting up front means a retry creates two pending rows and double digests.
+- Seeded by an idempotent script that prints the run time in Lisbon and UTC.
+- Only users with unread links from the last seven days get one. Links point to the in-app reader view (`/read/:id`), not the original site. Subject "Your week in Satchel"; inline-styled HTML plus a plain-text part; titles HTML-escaped.
+
+## PWA
+- Manifest with `share_target` to the existing save route, theme `#B4462F`. Icons are the exact exports by [[Inês]] (not regenerated); no maskable entry since her files lack padding.
+- Service worker precaches only static assets; it must never cache `/read/` or `/api/` (per-user), and the owner required that as a **test**, not a comment.
+
+
+[3] Satchel Data Layer and Sign-in
+    RUN:  exposurie read "Satchel Data Layer and Sign-in"
+    The whole page, as written:
+
+Settled 2026-06-06 for [[Satchel]].
+
+## Raw SQL in `.sql` files, no ORM
+The agent proposed Drizzle; the owner: "This is the popular default again... There are no ORMs in my own code." Reason: "An ORM hides the queries, and the queries are exactly what I need to see and tune. When the weekly digest query gets slow I want to open the file, read the SQL, run `EXPLAIN QUERY PLAN` on it, and change it." They use Prisma all day at work ([[Tidewell Database Rules]]) and know the fights with a query builder; there they follow the team, at home none.
+- Each query is its own `.sql` file beside the code using it, named parameters only, no SQL in template strings, loaded by a ~20-line helper that prepares once and caches. "It must not grow into a framework." In development the helper re-prepares when a file's mtime changes (the watcher restarts only on TypeScript changes); production skips the check.
+- `RETURNING id` is fine. Indexes serve the query (`EXPLAIN QUERY PLAN` checked).
+
+## ULIDs for every primary key
+Generated in application code, `TEXT PRIMARY KEY`, no dependency (own `ulid.ts` on `node:crypto`). Reasons: listing by id equals listing by time, and an id in a log tells you roughly when the row was made. Known weakness: not monotonic within the same millisecond; accepted. Editing an unshipped migration in place was fine ("Once it's deployed I'll stop doing that").
+
+## Magic link only
+No passwords at all — "every one of those is a thing that can go wrong, and I don't want to maintain a reset flow for a read-later app." `users` is id, email (unique), created_at; asking for a link for an unknown email creates the user (sign-up and sign-in are one flow); the response never reveals whether an address has an account. Link expires in 15 minutes (`LINK_TTL_MS`) and works once; consumption is a single atomic `UPDATE ... WHERE used_at IS NULL AND expires_at > :now RETURNING user_id`; `:now` is a parameter so tests control the clock. Signed cookie from `COOKIE_SECRET` (fails at startup if missing). Delivery began as `deliverLink()` printing to the console, logging **only the URL, never the email** ("Logs end up in places"). Rate limit on `POST /auth/request` deliberately deferred until real email. Real delivery followed: [[Satchel Jobs Table and Worker]].
+
+
+NOT READ: 16 more pages matched. Nothing of them is shown, so open one before saying what it holds.
+  Satchel Deployment on Fly
+    RUN:  exposurie read "Satchel Deployment on Fly"
+  Satchel Search and Reading View
+    RUN:  exposurie read "Satchel Search and Reading View"
+  Satchel Jobs Table and Worker
+    RUN:  exposurie read "Satchel Jobs Table and Worker"
+  Satchel Stripe to Paddle Migration
+    RUN:  exposurie read "Satchel Stripe to Paddle Migration"
+  Dependency Policy
+    RUN:  exposurie read "Dependency Policy" --section "Instances (what was declined, and why)"
+  Inês
+    RUN:  exposurie read "Inês"
+  Owner Profile
+    RUN:  exposurie read "Owner Profile" --section "Who and why they build"
+  Rejecting Popular Defaults
+    RUN:  exposurie read "Rejecting Popular Defaults"
+  Pagesift
+    RUN:  exposurie read "Pagesift"
+  Home Projects Testing Setup
+    RUN:  exposurie read "Home Projects Testing Setup"
+  Personal Toolchain
+    RUN:  exposurie read "Personal Toolchain"
+  Fly.io
+    RUN:  exposurie read "Fly.io"
+Showing 15 of 19. Do NOT describe this list as complete.
+
+The text printed above is the brain's own words: use it. The pages only listed, you have NOT read.
+
+EXIT 0 — done.

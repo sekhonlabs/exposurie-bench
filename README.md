@@ -2,7 +2,7 @@
 
 Does an external brain make a coding agent better for the person using it? This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie). exposurie is a CLI that builds a curated Markdown wiki (the brain) from a person's own agent sessions and chat exports, and points every new session at it.
 
-**Status: all nine areas and part 13 are run, scored and checked by hand, and the results lead with exposurie 1.3.1, the version on npm.** Two made-up users, a developer and someone who hands everything to agents, have 53 generated sessions of history between them, and an exposurie brain was built from each. Everything ran first with exposurie 1.2.0, on Claude Code 2.1.302 with Sonnet 5.5. Condition C then ran again on the same brains with each newer release: 1.3.0's read, then 1.3.1. A, B and D have no exposurie, so their runs stand. [How C got here](#how-c-got-here) keeps every version's results, and [docs/build-plan.md](docs/build-plan.md) says how it was built, part by part.
+**Status: all nine areas and part 13 are run, scored and checked by hand, part 12's six checks of exposurie's own layer pass, and the results lead with exposurie 1.3.1, the version on npm.** Two made-up users, a developer and someone who hands everything to agents, have 53 generated sessions of history between them, and an exposurie brain was built from each. Everything ran first with exposurie 1.2.0, on Claude Code 2.1.302 with Sonnet 5.5. Condition C then ran again on the same brains with each newer release: 1.3.0's read, then 1.3.1. A, B and D have no exposurie, so their runs stand. [How C got here](#how-c-got-here) keeps every version's results, and [docs/build-plan.md](docs/build-plan.md) says how it was built, part by part.
 
 ## The question
 
@@ -22,7 +22,7 @@ Same tasks, same model, same tools. Does a fresh session with an exposurie brain
 | C | exposurie | fresh session + pointer + brain |
 | D | Perfect memory | only the facts the task needs, pasted in |
 
-The questions are spread across nine areas, from recall to long sessions, with three tasks in each of the first eight and two in the last: about 105 runs. Part 13 then gives one job to several agents, with the brain as their shared memory. See [docs/design.md](docs/design.md).
+The questions are spread across nine areas, from recall to long sessions, with three tasks in each of the first eight and two in the last: about 105 runs. Part 13 then gives one job to several agents, with the brain as their shared memory, and part 12 checks that the brain stays its person's. See [docs/design.md](docs/design.md).
 
 ## Results: areas 1 to 8, with exposurie 1.3.1
 
@@ -99,6 +99,37 @@ The conditions differ only in what carries round 1's conversations into round 2.
 The scores, which run had which condition, the hand read with a reason for every verdict, its hand tests and round 1's repair are in [results/team-1/](results/team-1/), and the numbers in [results/numbers.json](results/numbers.json) under `many_agents`.
 
 **What this does not show:** one job, one user and one run per cell; round 1 ran once, in C, and was repaired by hand; the agents could not run tests, which ran after each merge; one sync, so exposurie's missing lock, where two syncs at once take the same batch, never came up; and the decisions were written for this test.
+
+## Results: it's yours (part 12)
+
+A brain belongs to its person, and stays theirs when they change agent or lab. Six lines check that of exposurie 1.3.1, each by a script, for both users. Each user's check runs in a throwaway home holding a copy of their brain, with exposurie installed from npm's tarball at the start and uninstalled at the end.
+
+exposurie is a layer for the user's agent. The agent reads its pointer, runs its commands and writes the pages, on the user's own plan with its lab. These lines run exposurie's commands directly, without an agent session, so they check exposurie's own layer: what it writes, what it reaches for, what it collects and what it leaves behind. They do not stand in for the agent, which the results above measured.
+
+| | Line | exposurie 1.3.1 |
+|---|---|---|
+| 1 | The brain is plain Markdown | pass |
+| 2 | It outlives the tool | pass |
+| 3 | No network of its own | pass |
+| 4 | No account of its own | pass |
+| 5 | A pointer for every agent it supports | pass |
+| 6 | History from every lab | pass |
+
+1. **Plain Markdown.** Every file in the two brains outside git's own folder is UTF-8 text: 59 and 40 files. Their 41 and 22 pages hold 272 and 95 links, and every one leads to a file in the same brain. They were read with exposurie uninstalled.
+2. **It outlives the tool.** Setup wrote 11 files outside the brain: the pointer into five instructions files, a skill for two agents, a slash command for three, and its config. Uninstall took every one back:
+   - the user's own files came back byte for byte
+   - every file in the brain was unchanged, and no page changed from install to uninstall
+   - npm's copy of the package was removed
+
+   Five folders setup made for those files stay behind, empty, such as `~/.claude/skills/`.
+3. **No network of its own.** Every command ran with a trap loaded into Node that blocks and records any connection or name lookup, npm's too when uninstall runs it. It recorded none. A control showed it catches 12 ways out, from CommonJS and from ES modules. exposurie's code loads no network module. It runs npm in two places: uninstall removes the package, and `update` installs a new release. `update` is the one command that downloads, by what it is for, and is left out.
+4. **No account of its own.** Every command ran with stdin closed and no credentials in its environment, and finished: `init` and `scaffold` with 10, exposurie's code for a step left to the person, and the rest with 0. Nothing asked for a login, a key or a sign-up, the code reads no credential from its environment, and it never waits on a person. The words come up twice, both in `init`: stop if Obsidian's installer asks for a password, and an unreadable ChatGPT export is never reported "as an empty account".
+5. **A pointer for every agent it supports.** In a home with Claude Code's, Codex's, Cursor's and OpenCode's folders, setup wrote the same pointer, with 1.3.1's line for work, once into each: `~/.claude/CLAUDE.md`, `~/.codex/AGENTS.md`, OpenCode's `AGENTS.md` in both its places, and a rules file of its own in `~/.cursor/rules/`. The user's own lines stayed where they were, above it.
+6. **History from every lab.** A made-up chat in Claude Code's, Codex's and Cursor's stores and in a claude.ai and a ChatGPT export, each with a code found nowhere else, all reached one sync's batch, for both users. exposurie says what it does not read: "opencode, Gemini CLI, Windsurf and Aider are not read." So OpenCode gets the pointer but its history is not read, and Gemini CLI gets neither.
+
+Each line's evidence, and each command's output for each user, are in [results/its-yours/](results/its-yours/). A fault test broke each line's check, 33 ways, and every break was caught, one of them by running the control with the trap left out.
+
+**What this does not show:** no agent session ran, so it does not show an agent reading the pointer, or finding its way in a brain once exposurie is gone; one machine, on Windows; the chats were written from exposurie's own readers, so they show each reader reads the format it was written for, not every export a lab has shipped; and the steps left to the person, such as keeping Claude Code's transcripts longer, reach them through their agent.
 
 ## Results: area 9, the long sessions
 
@@ -217,8 +248,8 @@ The one miss 1.3.0's read left was real-work-2, whose agent never opened the bra
 | [gen/](gen/) | the generator that writes each session from its brief, and the converter that turns the sessions into Claude Code transcripts and a claude.ai export |
 | [check/](check/) | the checks that hold the fact sheets, the histories, the tasks, the runner and scorer, the brain build, the long sessions, the team task and the results to the method |
 | [score/](score/) | how a task's checks read a run, the scorer, the judge for what the checks cannot settle, the long sessions' and the team task's scorers with its hidden tests, and the numbers and charts of the results |
-| [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, the long sessions of area 9, the team task of part 13, and the fake `claude` they are tested against |
-| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step, C again with 1.3.0's read (`full-2`, `stability-3`, `stability-4` and `area-9-2`) and with 1.3.1 (`full-3`), part 13's team task (`team-1`), every number in `numbers.json`, and the charts |
+| [runner/](runner/) | the run sandbox (pinned versions, setup, the environment every run gets, and its check), the runner and the brain build, the long sessions of area 9, the team task of part 13, part 12's checks with their network trap, and the fake `claude` they are tested against |
+| [results/](results/) | scores saved from real runs (the pilot, the full run and the stability check) with which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step, C again with 1.3.0's read (`full-2`, `stability-3`, `stability-4` and `area-9-2`) and with 1.3.1 (`full-3`), part 13's team task (`team-1`), part 12's six lines with their evidence (`its-yours`), every number in `numbers.json`, and the charts |
 
 ## License
 

@@ -1,0 +1,13 @@
+exposurie  39 pages · last sync 17d ago · backup never
+
+DISCARDED
+  batch     2026-11-07T16-13-23
+  sessions  5 unstaged
+  cutoff    not moved
+  pages     not touched
+
+  Nothing is lost. The cutoff only ever moves on `sync --done`, and this
+  batch never got there — every conversation in it is still unread, and
+  comes back the next time you sync.
+
+EXIT 0 — done.

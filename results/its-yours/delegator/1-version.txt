@@ -1,0 +1,10 @@
+exposurie  20 pages · last sync 17d ago · backup never
+           -> RUN: exposurie sync
+
+VERSION
+  1.3.1
+
+  @sekhon/exposurie — MIT, zero runtime dependencies.
+  Installed on this machine at <npm>\exposurie.cmd
+
+EXIT 0 — done.

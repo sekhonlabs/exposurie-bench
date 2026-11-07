@@ -1,0 +1,78 @@
+exposurie  20 pages · last sync 17d ago · backup never
+           -> RUN: exposurie sync
+
+TOTAL: 9 pages match "book club" (searched 20 pages). Words match in any order and any form; best first.
+
+[1] Book Club Voting Process   [has every word]
+    RUN:  exposurie read "Book Club Voting Process"
+    The whole page, as written:
+
+Decided 2026-09-20 for [[Second Chapter]]. Motive: stop the loudest voice winning and bring quiet members back. The owner wanted "a simple vote that feels fair": no scoring, no ranked lists, one round, usable on phones from the club page.
+
+## The rules and why
+
+1. **Each member suggests one book by Friday.** One each so nobody floods the list and quiet members get equal space. Not suggesting is fine; they still vote.
+2. **Everyone votes for one book; the button says "Cast my vote".** Chosen over "Submit" (a tax form) and "Vote now" (an advert); first person and slightly ceremonial. It is the only button on the screen, followed by a confirmation: "Your vote is in. Results appear on Sunday at 20:00."
+3. **Results are hidden until voting closes.** The owner's instinct was a live count, but they sensed it would "cause the same problem again". Reason accepted: a live bar chart becomes a bandwagon, the loud voice in another form. Everyone sees full totals (not only the winner) at the same moment.
+4. **Voting closes Sunday at 20:00 sharp.** An exact clock time so nobody can say they didn't realise it had closed.
+5. **A tie goes to the book suggested first.** The owner does not want to break ties personally ("someone would say I was playing favourites"), and it rewards suggesting early rather than at 11pm Friday. Duplicates appear once.
+
+The group-chat announcement deliberately omits the member count, because "nine of us" would go stale when someone joins (and the cap is 12).
+
+## Status
+
+Not yet on the club page as of 2026-09-20. The owner planned to add it later that week and asked for plain click-by-click steps ([[Working Style]]). Whether it has been built is unknown.
+
+
+[2] Second Chapter   [has every word]
+    RUN:  exposurie read "Second Chapter"
+    The whole page, as written:
+
+A book club of nine people run by [[About Me]]. Meets on the **first Thursday of the month at 19:00 at Hartley's, a café**. Capped at **12 members** (set 2026-09-06).
+
+## The club page
+
+A Google Apps Script web app (`Code.gs`, `Index.html`, `appsscript.json`) reading a member Google Sheet; code kept in a `book-club` project folder on the owner's Mac. Shows the club name, member count, a "Next meeting" box and places left ("9 of 12 taken", "3 places left", "Full" at 12). Shared link and a four-digit club code.
+
+- **2026-07-20:** built from an empty folder. Chosen because it is free, nothing to host, and the names come from the Google Sheet the owner already maintains (a separate list "would go stale within a month"). First version just listed names from column A; the heading cell "Name" showed as a tenth member until the first row was skipped. First styling was "looks bad".
+- **2026-07-22: access and RSVP.** No accounts: one shared link plus a **four-digit club code** kept in the `Settings` tab (cell B1) and checked server-side; change it every three months so it does not outlive members, with a reminder row in `Settings`. Sign-in with Google was rejected because "members will not make accounts for a book club". RSVP buttons "I'm in" and "Not this time" (friendlier than "No") write one row per member per meeting to an `RSVPs` tab, replacing earlier answers. A day-before email reminder (`sendReminders`, daily trigger 9 to 10am, Google account sender) goes only to "I'm in" members; nobody who declined or did not answer is nagged. Tested end to end; the owner got the test email. The buttons were "bad" at first and became bigger green solid/outline buttons.
+
+- 2026-08-23: the page broke with "Couldn't find column: Joined" because the owner renamed the column to "Date joined". `getMembers()` now matches headings by keyword (`name`, `email`, `joined`), ignoring case and spaces, and the error lists the headings it found. Blank rows skipped. A full reword (e.g. "Member since") would still break it.
+- 2026-09-06: added the next-meeting box. The date is computed by a first-Thursday rule, so no one types dates; day, time, café and the member cap are settings at the top of `Code.gs`. Bug: the date displayed Wednesday because the time zone defaulted; fixed with `Europe/London` in `appsscript.json` and building the date at 19:00 instead of midnight. The first styling looked "bad" (grey, thin text) and was replaced with the look in [[Visual Style]].
+- The deploy step is where this repeatedly goes wrong: see [[Apps Script Deployment]].
+
+## Why the voting process exists
+
+Picking books was "whoever talks loudest in the group chat wins", and quieter members, who "usually have the best picks", had stopped suggesting. See [[Book Club Voting Process]].
+
+
+[3] Visual Style   [has every word]
+    RUN:  exposurie read "Visual Style"
+    The whole page, as written:
+
+[[About Me]]'s projects share one palette: **deep green `#2F6B4F`** with **warm off-white `#FAF7F2`**. It appears in [[Small Hours]] (button and text), [[Quiet]] (toolbar icon), and the [[Second Chapter]] club page (next-meeting box, with a green left border).
+
+**Origin (2026-07-09):** the owner asked the agent to "make the site green, but not bright" for [[Small Hours]]. `#2F6B4F` (dark, muted, "pine needles") with `#FAF7F2` (warm off-white, softer than stark white) came from that answer, and they said "looks good". On 2026-07-06 they had rejected a dark theme for Small Hours as a "costume" and chose plain, warm, paper-like. The palette was then reused on everything else.
+
+The palette was already in use on the first book club page (2026-07-20) and on the Small Hours contact page (2026-08-09), and was carried into new work without being asked. "looks bad" followed an agent's first attempt at least seven times between 2026-07-20 and 2026-09-06 (club page, RSVP buttons, terminal table, phone sheet, Send button, sign-up button, meeting box); each time the fix was more space, matching existing components, and the palette.
+
+Verdicts on design, both after a plain first attempt: the grey, thin-text box on the club page "looks bad", and the full-width button on Small Hours "looks bad". Both fixes moved toward warmer, more deliberate styling and natural-width controls. No source states the palette as a rule, so this is a pattern, not a stated preference.
+
+
+NOT READ: 6 more pages matched. Nothing of them is shown, so open one before saying what it holds.
+  Working Style   [has every word]
+    RUN:  exposurie read "Working Style"
+  About Me   [has every word]
+    RUN:  exposurie read "About Me" --section "Projects and things they run"
+  Apps Script Deployment   [has: club · lacks: book]
+    RUN:  exposurie read "Apps Script Deployment"
+  Niamh's 30th Birthday Gift   [has: book · lacks: club]
+    RUN:  exposurie read "Niamh's 30th Birthday Gift" --section "Why this and not something else"
+  Valencia Trip   [has: book · lacks: club]
+    RUN:  exposurie read "Valencia Trip" --section "Decisions and why"
+  Niamh   [has: book · lacks: club]
+    RUN:  exposurie read "Niamh" --section "What was learned about Niamh (from the owner, 2026-10-04)"
+
+The text printed above is the brain's own words: use it. The pages only listed, you have NOT read.
+
+EXIT 0 — done.

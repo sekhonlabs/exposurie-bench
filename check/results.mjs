@@ -8,6 +8,8 @@
 // is held to its task file: every run of round 2 done, round 1 through its gate
 // with each repair published, and a finished hand read, every verdict of which
 // gives a reason; and the README gives its headline as the numbers have it.
+// Part 12's six lines are held to runner/its-yours.mjs, to exposurie 1.3.1,
+// to every command's published output, and to the README's table.
 //
 //   node check/results.mjs
 //
@@ -24,6 +26,7 @@ import {
   AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, REBUILT_NAME, TEAM_TASKS, USERS, V131_BATCHES, finalChecks, outputs,
 } from '../score/results.mjs';
 import { WINDOWS_PATH } from '../score/score.mjs';
+import { LINES as ITS_LINES, USERS as ITS_USERS } from '../runner/its-yours.mjs';
 import { find } from './text.mjs';
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..');
@@ -282,6 +285,35 @@ if (M) {
     `${M.conditions.C.kept.held} with exposurie ${M.exposurie}, and ${M.conditions.D.kept.held} with a perfect notes file.`;
   if (!readFileSync(join(REPO, 'README.md'), 'utf8').includes(headline)) fail('README.md', `does not say, as results/numbers.json has it: "${headline}"`);
 }
+
+// ---- part 12: its six lines, run on exposurie 1.3.1 for both users, each with a verdict and evidence, every
+// command's output published, and the README's table as the lines came out
+const YOURS = 'results/its-yours/its-yours.json';
+const yours = existsSync(join(REPO, YOURS)) ? readJson(YOURS) : null;
+if (!yours) fail(YOURS, 'is missing; run node runner/its-yours.mjs --save');
+else {
+  if (yours.exposurie !== PINS.exposurie131.version) fail(YOURS, `ran exposurie ${yours.exposurie}, not ${PINS.exposurie131.version}`);
+  if (yours.tarball?.integrity !== PINS.exposurie131.integrity) fail(YOURS, "does not name the tarball runner/pins.json pins");
+  if (JSON.stringify(yours.users) !== JSON.stringify(Object.keys(ITS_USERS))) fail(YOURS, `ran for ${yours.users}, not ${Object.keys(ITS_USERS)}`);
+  if (JSON.stringify(yours.lines?.map((l) => [l.id, l.name])) !== JSON.stringify(ITS_LINES.map((l) => [l.id, l.name]))) {
+    fail(YOURS, 'does not hold the six lines of runner/its-yours.mjs, in order');
+  }
+  const readme = readFileSync(join(REPO, 'README.md'), 'utf8');
+  for (const l of yours.lines ?? []) {
+    if (typeof l.pass !== 'boolean') fail(YOURS, `line ${l.id} has no verdict`);
+    for (const u of yours.users) {
+      if (typeof l.evidence?.[u]?.pass !== 'boolean') fail(YOURS, `line ${l.id} has no verdict and evidence for ${u}`);
+      else if (l.pass && !l.evidence[u].pass) fail(YOURS, `line ${l.id} passes though it failed for ${u}`);
+    }
+    const row = `| ${l.id} | ${l.name} | ${l.pass ? 'pass' : 'fail'} |`;
+    if (!readme.includes(row)) fail('README.md', `does not give part 12's line as results/its-yours has it: "${row}"`);
+  }
+  for (const u of yours.users) {
+    const outs = existsSync(join(REPO, 'results', 'its-yours', u)) ? readdirSync(join(REPO, 'results', 'its-yours', u)) : [];
+    const labels = yours.lines?.[2]?.evidence?.[u]?.commands ?? [];
+    if (!labels.length || outs.length !== labels.length) fail(`results/its-yours/${u}`, `does not hold one output for each of the ${labels.length} commands`);
+  }
+}
 console.log(
   `${ALL_BATCHES.filter((b) => cellsOf[b]).length} batches keyed, ${Object.values(cellsOf).flat().length} runs. ` +
     (n ? `Right answers, areas 1–7: ${CONDITIONS.map((c) => `${c} ${n.right_answers.pooled[c]}`).join(', ')} of ${n.right_answers.of}, ` +
@@ -289,6 +321,7 @@ console.log(
       `and C ${n.pointer_for_work.right_answers.pooled.C} with exposurie ${n.pointer_for_work.exposurie}. ` : '') +
     `Area 9: ${longTasks.length} long tasks, ${strategiesKeyed[LONG_BATCH]} strategies keyed, and ${strategiesKeyed[REBUILT_BATCH]} again. ` +
     (M ? `Part 13: kept ${['A', 'C', 'D'].map((c) => `${c} ${M.conditions[c].kept.held}`).join(', ')} of ${M.conditions.A.kept.of}. ` : '') +
+    (yours ? `Part 12: ${yours.lines.filter((l) => l.pass).length} of ${yours.lines.length} lines pass. ` : '') +
     `${Object.keys(written).filter((r) => r.endsWith('.svg')).length} charts.`,
 );
 if (problems.length) {

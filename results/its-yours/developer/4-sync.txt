@@ -1,0 +1,25 @@
+exposurie  39 pages · last sync 17d ago · backup never
+
+STAGED
+  batch         2026-11-07T16-13-23
+  sessions      5 staged
+  from          3 on this machine, 1 from claude.ai, 1 from chatgpt
+  conversation  382 chars, out of 1 KB of transcript  (2x smaller)
+
+DO THESE IN ORDER
+  1. READ: ~\brain\.exposurie\staged\2026-11-07T16-13-23\conversations.md
+  2. READ: ~\brain\.exposurie\how-they-work.md
+      Their taste, in their own words, collected from their own corrections.
+      Read it before the prompt: where the two disagree, this one wins.
+  3. READ: ~\brain\.exposurie\wiki-prompt.md
+  4. WRITE THE PAGES.
+      Fold this batch into the brain, following the prompt above. Update
+      existing pages before creating new ones, then update index.md and
+      append one entry to log.md.
+  5. RUN:  exposurie sync --done
+
+  The last step is what moves the cutoff, and it refuses to move if the
+  brain did not change — so an interrupted sync re-stages this material
+  rather than losing it.
+
+EXIT 0 — done.

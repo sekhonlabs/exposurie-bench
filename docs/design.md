@@ -36,7 +36,7 @@ For area 4, D gets the facts closest to the question, which is what perfect retr
 
 Condition C is set up like this:
 
-- exposurie 1.2.0 is installed in the sandbox, and so is each version C ran again with, on the same brains: the rebuilt `read` of commit `b6855ee` (part 10), which npm has served as 1.3.0 since 2026-11-04, and 1.3.1 from npm, which part 13 runs on too. Each run records the version it ran: see [decisions.md](decisions.md).
+- exposurie 1.2.0 is installed in the sandbox, and so is each version C ran again with, on the same brains: the rebuilt `read` of commit `b6855ee` (part 10), which npm has served as 1.3.0 since 2026-11-04, and 1.3.1 from npm, which part 13 runs on too. Part 12 checks 1.3.1 too, installed from the same tarball into throwaway homes, since its uninstall removes the package. Each run records the version it ran: see [decisions.md](decisions.md).
 - The brain is built from the same history by `exposurie sync`, with the agent writing the pages, as a real user's agent would.
 - The pointer sits in the sandbox's `~/.claude/CLAUDE.md`.
 - The task runs from an empty folder.

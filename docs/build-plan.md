@@ -490,7 +490,7 @@ On 2026-10-28 the owner found that the benchmark mostly tests `read`: retrieval 
 **Decided 2026-11-05, by the owner:** 13, with three agents rather than five, and 12. 11 is not built. The order:
 1. exposurie's pointer gains a condition for work, released as exposurie 1.3.1 (see 13, *What it depends on*), and measured first on areas 1–8 (see *1.3.1, measured*)
 2. 13, run on 1.3.1
-3. 12
+3. 12, on 1.3.1 (done 2026-11-07)
 4. the README rewritten as one finished account of the benchmark (begun 2026-11-07: the README and its charts lead with 1.3.1, and the versions before it are its history)
 
 Why is in [decisions.md](decisions.md).
@@ -535,19 +535,29 @@ Areas 1–9 test whether an agent finds a fact. This part tests whether the sync
 
 #### 12. It's yours
 
-**Plan usage:** none. No model is called. **Decided 2026-11-05.** Whether it runs against 1.3.0 or the 1.3.1 that part 13 needs is settled when it is built.
+**Decided 2026-11-05. Built, checked and published 2026-11-07, on exposurie 1.3.1 alone, the owner's call: all six lines pass, for both users.** The results are in the README, under *Results: it's yours*. Why each choice was made is in [decisions.md](decisions.md), 2026-11-07.
 
-The owner's point: a brain belongs to the person, and stays with them when they change agent or lab. Each line of this checklist is a script, run against exposurie 1.3.0 from npm in the sandbox:
+**What it checks, and what it does not.** exposurie is a layer for the user's agent: the agent reads the pointer, runs the commands and writes the pages, on the user's own plan with its lab. This part runs exposurie's commands directly, with no agent session, so it checks exposurie's own layer: what it writes, what it reaches for, what it collects and what it leaves behind. It does not stand in for the agent, which areas 1–9 and part 13 measured on the plan. This replaces the heading the plan first gave the part, "Plan usage: none. No model is called.", on the owner's correction of 2026-11-07.
 
-1. **The brain is plain Markdown.** Every page opens as UTF-8 text, and its links are wikilinks to pages in the same folder.
-2. **It outlives the tool.** After `exposurie uninstall`, every page's bytes are unchanged and `~/.exposurie/config.json` is gone. 1.2.0 runs this line too, since it leaves that file behind, so the check is seen to fail once.
-3. **No network.** exposurie's commands work with networking blocked, and its code loads no network module. How to block it is settled when the part is built.
-4. **No account.** Nothing in setup, sync, read or uninstall asks for a login, a key or a sign-up.
-5. **A pointer for every agent it supports.** In a sandbox home that holds Claude Code's, Codex's, Cursor's and OpenCode's folders, setup writes the pointer into each one's instructions file.
-6. **History from every lab.** Made-up sessions in Codex's, Cursor's, claude.ai's and ChatGPT's formats are all read into one sync's batch, with their formats taken from exposurie's own readers. Only the staging step runs, so no model is called.
+The owner's point: a brain belongs to the person, and stays with them when they change agent or lab. Each line is checked by `runner/its-yours.mjs`, for both users. Each user's checks run in a throwaway home holding a copy of their kept brain, with exposurie 1.3.1 installed offline from npm's tarball, pinned in `runner/pins.json` by the registry's sha512, into the home's own npm folder, since uninstall removes the package too:
 
-- **The sandbox:** exposurie 1.3.0 installs from npm's tarball, pinned in `runner/pins.json` by the registry's sha512, beside 1.2.0 and the rebuilt read.
-- **Done when:** every line passes or fails with its evidence in `results/its-yours/`. The README lists them, and a fault test breaks each line's check and sees it caught.
+1. **The brain is plain Markdown.** Every file in the brain outside git's own folder is UTF-8 text, and every `[[link]]` in a page leads to a file in the same brain. Read after uninstall.
+2. **It outlives the tool.** After `exposurie uninstall`, every file in the brain is byte-identical, every file exposurie wrote outside the brain is gone, the user's own files are back byte for byte, and npm's copy of the package is removed. No page changed from install to uninstall.
+3. **No network of its own.** setup, sync, read and uninstall run with `runner/no-net.cjs` loaded into every Node process through `NODE_OPTIONS`, npm's included, which records and blocks any connection or name lookup. Before an empty record is trusted, a control shows the trap catches 12 ways out, from CommonJS and from ES modules. A scan finds no network module in the code. `update` downloads a new release by what it is for, and is left out.
+4. **No account of its own.** Every command runs with stdin closed and no credentials in its environment, and finishes with 0 or 10. No line of its output asks for a login, a key or a sign-up. The code reads no credential from its environment and never waits on a person.
+5. **A pointer for every agent it supports.** In a home holding Claude Code's, Codex's, Cursor's and OpenCode's folders, OpenCode's in both its places, setup writes the same pointer, with 1.3.1's line for work, once into each, beside the user's own lines.
+6. **History from every lab.** Made-up chats in Claude Code's, Codex's and Cursor's stores and in a claude.ai and a ChatGPT export, written from exposurie's own readers, each with a code of its own, all reach one sync's batch. Only the collecting step runs, and `sync --abort` then throws the batch away.
+
+- **The runs:** `node runner/its-yours.mjs` writes to `../runs/part12-<time>/`. With `--save` it also publishes `results/its-yours/`: `its-yours.json`, and each command's output for each user, with machine paths taken out.
+- **Done when, met 2026-11-07:**
+  - every line passes or fails with its evidence in `results/its-yours/`, the README lists them, and `check/results.mjs` holds them
+  - a fault test breaks each line's check and sees it caught: 33 breaks, all caught, one of them a real run of the control with the trap left out
+  - a fault test breaks what is published 9 ways, and `check/results.mjs` catches every one
+
+```
+node runner/its-yours.mjs --save
+node check/results.mjs
+```
 
 #### 13. Many agents, one job
 

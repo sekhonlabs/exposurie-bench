@@ -1,0 +1,41 @@
+exposurie  20 pages · last sync 17d ago · backup never
+           -> RUN: exposurie sync
+
+UNINSTALLED
+  Claude Code          removed   ~/.claude/CLAUDE.md
+  Codex                removed   ~/.codex/AGENTS.md
+  OpenCode             removed   ~/.config/opencode/AGENTS.md
+  OpenCode             removed   ~/AppData/Roaming/opencode/AGENTS.md
+  Cursor               removed   ~/.cursor/rules/exposurie.mdc
+  Claude Code skill    removed   ~/.claude/skills/exposurie/SKILL.md
+  Claude Code command  removed   ~/.claude/commands/exposurie-sync.md
+  Cursor skill         removed   ~/.cursor/skills/exposurie/SKILL.md
+  Cursor command       removed   ~/.cursor/commands/exposurie-sync.md
+  Codex command        removed   ~/.codex/prompts/exposurie-sync.md
+  machine config       removed   ~/.exposurie/config.json
+
+  That is every byte exposurie wrote outside your brain. Where it had added
+  a block to a file of yours, the block came out and nothing around it
+  moved; where the whole file was ours — a skill, a slash command — the file
+  is gone, and so is the folder it sat in if nothing else was in there.
+
+YOUR BRAIN IS UNTOUCHED
+  ~/brain
+
+  Plain Markdown, and a git repo with its own history. It opens in Obsidian,
+  in any editor, in anything that reads text — with this tool gone and
+  forever after. Nothing in there needs exposurie to be read.
+
+  If you want it gone, delete that folder yourself. This command will not,
+  and no flag makes it: a tool that can erase the thing it spent months
+  building for you is not one you should have trusted with it.
+
+THE PACKAGE
+  Removed, so nothing named exposurie is left on this machine. That was part
+  of this command rather than a second one for you to remember.
+
+  Changed your mind later? `npm install -g @sekhon/exposurie`, then
+  `exposurie scaffold` — it picks up exactly where this left off, because
+  what has been synced is recorded inside the brain, not in the tool.
+
+EXIT 0 — done.

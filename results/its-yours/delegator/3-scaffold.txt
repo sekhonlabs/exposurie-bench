@@ -1,0 +1,105 @@
+exposurie  20 pages · last sync 17d ago · backup never
+           -> RUN: exposurie sync
+
+FOR YOUR USER — 1 pending
+
+  [claude-code-retention]  Claude Code is deleting your history every 30 days
+    WHY: Claude Code removes its own transcripts after 30 days by default.
+    That happens whether or not exposurie is installed, and everything
+    older is already gone. One line in their settings keeps them instead —
+    after that, this brain stops depending on another tool's cleanup
+    schedule.
+    ASK YOUR USER, in your own words:
+        "Quick thing worth knowing: Claude Code deletes your session
+        transcripts after 30 days, so anything older than that is already
+        gone. I can change one setting to keep them for ten years instead —
+        want me to?"
+    IF THEY SAY YES, DO IT YOURSELF — do not read this out:
+        ONLY IF THEY SAID YES. Ask first, in the conversation, and wait for a
+        real answer — this edits a file belonging to software we do not own, on
+        their machine, and silence is not consent. If they said no, or did not
+        answer, record it instead:
+            exposurie decline claude-code-retention --because "<their words>"
+        
+        Edit ~\.claude\settings.json and set:
+            "cleanupPeriodDays": 3650
+        
+        Keep every other key exactly as it is, and keep the file valid JSON —
+        if it will not parse, Claude Code stops reading its own settings. Create
+        the file with just that one key if it does not exist yet.
+        
+        This changes nothing about how Claude Code runs. It only stops the
+        delete. Tell them it is done, and that old transcripts are not coming
+        back — this protects what they have from here on.
+    DONE WHEN: cleanupPeriodDays is set to a year or more in that file
+    IF THEY SAY NO, RECORD IT — it stops asking, and it is reversible:
+        exposurie decline claude-code-retention --because "<their words>"
+    This does NOT block anything. Keep working.
+
+TOPPED UP
+  brain  ~/brain
+  git    already a repository — left alone
+
+KEPT — yours, not touched
+  CLAUDE.md                    already there, not touched
+  AGENTS.md                    already there, not touched
+  index.md                     already there, not touched
+  log.md                       already there, not touched
+  .exposurie/wiki-prompt.md    already there, not touched
+  .exposurie/examples.md       already there, not touched
+  .exposurie/how-they-work.md  already there, not touched
+  .exposurie/sync.md           already there, not touched
+  .exposurie/curate.md         already there, not touched
+  .exposurie/curate-allow.txt  already there, not touched
+  .gitignore                   already there, not touched
+  .exposurie/templates/        4 page templates, not touched
+  .exposurie/config.json       the seam — your settings kept, stamps refreshed
+
+REACH — so the agent knows this exists from any folder
+  claude-code  updated — ~/.claude/CLAUDE.md
+  codex        updated — ~/.codex/AGENTS.md   (location unconfirmed)
+  opencode     updated — ~/.config/opencode/AGENTS.md   (location unconfirmed)
+  opencode     updated — ~/AppData/Roaming/opencode/AGENTS.md   (location unconfirmed)
+  cursor       created — ~/.cursor/rules/exposurie.mdc   (location unconfirmed)
+  names  exposurie read --search "<topic or project>"
+  A few hundred bytes per client, between exposurie markers, appended to a
+  file that otherwise belongs to the user. The schema stays in the brain. It
+  comes back out whenever they want, in one command they can type themselves
+  — `exposurie uninstall` — which leaves their own files byte-identical and
+  never touches the brain.
+
+YOURS TO TYPE — the sync, without having to ask an agent for it
+  claude-code skill    created — ~/.claude/skills/exposurie/SKILL.md
+  claude-code command  created — ~/.claude/commands/exposurie-sync.md   (location unconfirmed)
+  cursor skill         created — ~/.cursor/skills/exposurie/SKILL.md
+  cursor command       created — ~/.cursor/commands/exposurie-sync.md   (location unconfirmed)
+  codex command        created — ~/.codex/prompts/exposurie-sync.md   (location unconfirmed)
+
+  TELL YOUR USER: they can type /exposurie-sync in Claude Code, Cursor and
+  Codex to sync their brain themselves, whenever they want it caught up.
+  They do not have to explain what that means to you first, and they can
+  read the file to see exactly what it does.
+
+  These are whole files, ours end to end — not a block inside a file of
+  theirs — so uninstall deletes them outright rather than editing around
+  anything. What they run is `.exposurie/sync.md` inside the brain, which is
+  the user's and is never overwritten.
+
+BACKUP
+  This brain is on one disk. git gives local history and undo, which covers
+  an agent mangling a page; it does not survive the disk dying. exposurie
+  will never create a remote for you, because a visibility setting wrong
+  once publishes every conversation the user has ever had with an AI.
+  TELL YOUR USER: their brain is local-only until they configure a remote.
+
+DO THESE IN ORDER
+  1. READ: ~\brain\CLAUDE.md
+  2. READ: ~\brain\.exposurie\wiki-prompt.md
+  3. READ: ~\brain\.exposurie\examples.md
+      Worked examples of a good page and three ways one goes wrong. Rules
+      produce median pages; this is the part that transfers by example.
+
+  Those belong to the user now, not to us. They are meant to be edited as
+  the brain finds its shape, and exposurie will never overwrite them.
+
+EXIT 10 — there is a step for your user. Nothing has failed. Do the RUN steps above, relay the FOR YOUR USER steps, and carry on.

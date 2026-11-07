@@ -1,0 +1,403 @@
+{
+  "part": 12,
+  "name": "It's yours",
+  "exposurie": "1.3.1",
+  "tarball": {
+    "file": "exposurie-1.3.1.tgz",
+    "integrity": "sha512-JCY6E/GQXVlh7W5U/pXHgL5O0IFCoL8xxB6GOXXxsjkaPmNBalr3RnmVn9k4kedS7E7hL2SJGx4Tp/tYrSLR0w=="
+  },
+  "node": "v24.22.0",
+  "date": "2026-11-07",
+  "scope": "exposurie is a layer for the user's agent: the agent reads its pointer, runs its commands and writes the brain's pages, and it runs on the user's own plan with its lab. These lines run exposurie's commands directly, without an agent session, so they check exposurie's own layer: what it writes, what it reaches for, what it collects and what it leaves behind. They do not stand in for the agent, which areas 1-9 and part 13 measured on the plan.",
+  "users": [
+    "developer",
+    "delegator"
+  ],
+  "lines": [
+    {
+      "id": 1,
+      "name": "The brain is plain Markdown",
+      "claim": "Every file in the brain outside git's own folder is UTF-8 text, and every [[link]] in a page leads to a file in the same brain. Checked with exposurie uninstalled.",
+      "pass": true,
+      "evidence": {
+        "developer": {
+          "pass": true,
+          "files": 59,
+          "pages": 41,
+          "links": 272,
+          "notUtf8": [],
+          "dead": []
+        },
+        "delegator": {
+          "pass": true,
+          "files": 40,
+          "pages": 22,
+          "links": 95,
+          "notUtf8": [],
+          "dead": []
+        }
+      }
+    },
+    {
+      "id": 2,
+      "name": "It outlives the tool",
+      "claim": "After `exposurie uninstall`, every file in the brain is byte-identical, every file exposurie wrote outside the brain is gone, the user's own files are back byte for byte, and npm's copy of the package is removed. No page changed from install to uninstall.",
+      "pass": true,
+      "evidence": {
+        "developer": {
+          "pass": true,
+          "brainFiles": 102,
+          "brainChangedByUninstall": [],
+          "pages": 41,
+          "pagesChangedFromInstallToUninstall": [],
+          "otherBrainFilesChangedFromInstallToUninstall": [
+            ".exposurie/pending/claude-code-retention.md"
+          ],
+          "setupWrote": [
+            ".claude/CLAUDE.md",
+            ".claude/commands/exposurie-sync.md",
+            ".claude/skills/exposurie/SKILL.md",
+            ".codex/AGENTS.md",
+            ".codex/prompts/exposurie-sync.md",
+            ".config/opencode/AGENTS.md",
+            ".cursor/commands/exposurie-sync.md",
+            ".cursor/rules/exposurie.mdc",
+            ".cursor/skills/exposurie/SKILL.md",
+            ".exposurie/config.json",
+            "AppData/Roaming/opencode/AGENTS.md"
+          ],
+          "leftAfterUninstall": [],
+          "emptyFoldersLeft": [
+            ".claude/commands/",
+            ".claude/skills/",
+            ".codex/prompts/",
+            ".cursor/commands/",
+            ".cursor/skills/"
+          ],
+          "packageRemoved": true
+        },
+        "delegator": {
+          "pass": true,
+          "brainFiles": 83,
+          "brainChangedByUninstall": [],
+          "pages": 22,
+          "pagesChangedFromInstallToUninstall": [],
+          "otherBrainFilesChangedFromInstallToUninstall": [
+            ".exposurie/pending/claude-code-retention.md"
+          ],
+          "setupWrote": [
+            ".claude/CLAUDE.md",
+            ".claude/commands/exposurie-sync.md",
+            ".claude/skills/exposurie/SKILL.md",
+            ".codex/AGENTS.md",
+            ".codex/prompts/exposurie-sync.md",
+            ".config/opencode/AGENTS.md",
+            ".cursor/commands/exposurie-sync.md",
+            ".cursor/rules/exposurie.mdc",
+            ".cursor/skills/exposurie/SKILL.md",
+            ".exposurie/config.json",
+            "AppData/Roaming/opencode/AGENTS.md"
+          ],
+          "leftAfterUninstall": [],
+          "emptyFoldersLeft": [
+            ".claude/commands/",
+            ".claude/skills/",
+            ".codex/prompts/",
+            ".cursor/commands/",
+            ".cursor/skills/"
+          ],
+          "packageRemoved": true
+        }
+      }
+    },
+    {
+      "id": 3,
+      "name": "No network of its own",
+      "claim": "exposurie's commands open no network connection, and its code loads no network module. The agent it serves talks to its lab as it always does. `update`, which downloads a new release from npm, is the one command left out, by what it is for.",
+      "pass": true,
+      "evidence": {
+        "developer": {
+          "pass": true,
+          "commands": [
+            "version",
+            "init",
+            "scaffold",
+            "sync",
+            "read",
+            "sync --abort",
+            "uninstall"
+          ],
+          "attempts": []
+        },
+        "delegator": {
+          "pass": true,
+          "commands": [
+            "version",
+            "init",
+            "scaffold",
+            "sync",
+            "read",
+            "sync --abort",
+            "uninstall"
+          ],
+          "attempts": []
+        },
+        "shared": {
+          "control": {
+            "cjs": {
+              "tried": [
+                "fetch",
+                "http.get",
+                "https.request",
+                "net.Socket.connect",
+                "tls.connect",
+                "dns.lookup",
+                "dns.promises.lookup",
+                "dns.promises.Resolver.resolve4",
+                "dgram.createSocket"
+              ],
+              "caught": [
+                "fetch",
+                "http.get",
+                "https.request",
+                "net.Socket.connect",
+                "tls.connect",
+                "dns.lookup",
+                "dns.promises.lookup",
+                "dns.promises.Resolver.resolve4",
+                "dgram.createSocket"
+              ],
+              "missed": []
+            },
+            "esm": {
+              "tried": [
+                "https.get",
+                "net.Socket.connect",
+                "dns.lookup"
+              ],
+              "caught": [
+                "https.get",
+                "net.Socket.connect",
+                "dns.lookup"
+              ],
+              "missed": []
+            },
+            "all": true
+          },
+          "networkCode": [],
+          "npmRunsInCode": [
+            {
+              "file": "src/package-removal.js",
+              "line": 222,
+              "text": "const r = run(['uninstall', '-g', PACKAGE]);"
+            },
+            {
+              "file": "src/package-update.js",
+              "line": 94,
+              "text": "const r = run(['install', '-g', PACKAGE], { timeout: 0 });"
+            }
+          ],
+          "filesRead": 38
+        }
+      }
+    },
+    {
+      "id": 4,
+      "name": "No account of its own",
+      "claim": "No command asks for a login, a key or a sign-up, and every one runs with stdin closed and no credentials in reach. The agent it serves runs on the user's own plan, which is their account with their lab.",
+      "pass": true,
+      "evidence": {
+        "developer": {
+          "pass": true,
+          "exits": {
+            "version": 0,
+            "init": 10,
+            "scaffold": 10,
+            "sync": 0,
+            "read": 0,
+            "sync --abort": 0,
+            "uninstall": 0
+          },
+          "credentialsInReach": [],
+          "badExits": [],
+          "asks": [],
+          "mentions": [
+            "init: ONE attempt. If it stalls, asks for a password, or the download is",
+            "init: name, never as an empty account. opencode, Gemini CLI, Windsurf and Aider"
+          ]
+        },
+        "delegator": {
+          "pass": true,
+          "exits": {
+            "version": 0,
+            "init": 10,
+            "scaffold": 10,
+            "sync": 0,
+            "read": 0,
+            "sync --abort": 0,
+            "uninstall": 0
+          },
+          "credentialsInReach": [],
+          "badExits": [],
+          "asks": [],
+          "mentions": [
+            "init: ONE attempt. If it stalls, asks for a password, or the download is",
+            "init: name, never as an empty account. opencode, Gemini CLI, Windsurf and Aider"
+          ]
+        },
+        "shared": {
+          "envRead": [
+            "APPDATA",
+            "EXPOSURIE_SKIP_PACKAGE_REMOVAL",
+            "EXPOSURIE_SKIP_PACKAGE_UPDATE",
+            "NODE_TEST_CONTEXT"
+          ],
+          "credentialEnvRead": [],
+          "prompts": []
+        }
+      }
+    },
+    {
+      "id": 5,
+      "name": "A pointer for every agent it supports",
+      "claim": "In a home holding Claude Code's, Codex's, Cursor's and OpenCode's folders, setup writes the same pointer, with 1.3.1's line for work, into each one's instructions, beside the user's own lines.",
+      "pass": true,
+      "evidence": {
+        "developer": {
+          "pass": true,
+          "agents": [
+            {
+              "agent": "Claude Code",
+              "file": "~/.claude/CLAUDE.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "Codex",
+              "file": "~/.codex/AGENTS.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "OpenCode",
+              "file": "~/.config/opencode/AGENTS.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "OpenCode",
+              "file": "~/AppData/Roaming/opencode/AGENTS.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "Cursor",
+              "file": "~/.cursor/rules/exposurie.mdc",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            }
+          ],
+          "cursorRuleOfTheirsUntouched": true,
+          "pointer": "<!-- exposurie:start -->\nThe user has an external brain: a curated wiki of their past work,\ndecisions, people and projects, built by this tool.\n\nOn anything about THIS USER — their decisions, preferences, projects,\npeople, history — the brain is authoritative. It outranks what you\nassume and whatever you infer from the current folder. You cannot see\nit; you must read it.\n\nBefore answering any such question, before starting work in one of\ntheir projects, and before saying you do not know something about\nthem, run:\n\n    exposurie read --search \"<topic or project>\"\n\nEvery result names the exact next command. Do not answer from memory first.\n<!-- exposurie:end -->"
+        },
+        "delegator": {
+          "pass": true,
+          "agents": [
+            {
+              "agent": "Claude Code",
+              "file": "~/.claude/CLAUDE.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "Codex",
+              "file": "~/.codex/AGENTS.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "OpenCode",
+              "file": "~/.config/opencode/AGENTS.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "OpenCode",
+              "file": "~/AppData/Roaming/opencode/AGENTS.md",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            },
+            {
+              "agent": "Cursor",
+              "file": "~/.cursor/rules/exposurie.mdc",
+              "pointer": true,
+              "once": true,
+              "same": true,
+              "forWork": true,
+              "usersLinesKept": true
+            }
+          ],
+          "cursorRuleOfTheirsUntouched": true,
+          "pointer": "<!-- exposurie:start -->\nThe user has an external brain: a curated wiki of their past work,\ndecisions, people and projects, built by this tool.\n\nOn anything about THIS USER — their decisions, preferences, projects,\npeople, history — the brain is authoritative. It outranks what you\nassume and whatever you infer from the current folder. You cannot see\nit; you must read it.\n\nBefore answering any such question, before starting work in one of\ntheir projects, and before saying you do not know something about\nthem, run:\n\n    exposurie read --search \"<topic or project>\"\n\nEvery result names the exact next command. Do not answer from memory first.\n<!-- exposurie:end -->"
+        }
+      }
+    },
+    {
+      "id": 6,
+      "name": "History from every lab",
+      "claim": "Made-up chats in Claude Code's, Codex's, Cursor's, claude.ai's and ChatGPT's formats all reach one sync's batch. Only the collecting step runs: folding the batch into pages is the agent's work, on the user's plan.",
+      "pass": true,
+      "evidence": {
+        "developer": {
+          "pass": true,
+          "batches": 1,
+          "reachedTheBatch": {
+            "Claude Code": true,
+            "Codex": true,
+            "Cursor": true,
+            "claude.ai": true,
+            "ChatGPT": true
+          }
+        },
+        "delegator": {
+          "pass": true,
+          "batches": 1,
+          "reachedTheBatch": {
+            "Claude Code": true,
+            "Codex": true,
+            "Cursor": true,
+            "claude.ai": true,
+            "ChatGPT": true
+          }
+        }
+      }
+    }
+  ]
+}
