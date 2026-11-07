@@ -337,5 +337,8 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
       console.log(`${c}  kept ${r.kept.merged}/${r.kept.of}, agreed ${r.agreed ? 'yes' : 'no'}, tests ${r.tests.passed ? 'pass' : 'fail'}, conflicts ${r.merge.conflicts.length}, ${r.tokens.all_input} in`);
     }
     console.log(`\nRead by hand as well:\n  ${s.by_hand.join('\n  ')}\nScores: ${join(dir, 'scores.json')}`);
+  }).catch((e) => {
+    console.error(`score/team: ${e.message}`);
+    process.exitCode = 1;
   });
 }

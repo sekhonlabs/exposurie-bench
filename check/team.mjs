@@ -342,6 +342,15 @@ const fakeProblems = (dir) => filesIn(dir).filter((f) => f.endsWith('stream.json
   noLeftovers(ctx, 'after the repair');
 }
 
+// The scorer's own command line loads and answers: on 2026-11-07 it awaited
+// runner/team.mjs at the top level, which imports the scorer, and Node exited
+// with code 13 before scoring anything. Everything above calls scoreTeam directly.
+{
+  const r = spawnSync(process.execPath, [fileURLToPath(new URL('../score/team.mjs', import.meta.url)), 'no-such-task'], { encoding: 'utf8', timeout: 60_000 });
+  expect(r.status === 1 && (r.stderr ?? '').includes('score/team: no team task no-such-task'),
+    `node score/team.mjs did not answer from its command line: exit ${r.status}, ${(r.stderr ?? '').trim().split('\n')[0]}`);
+}
+
 expect(snapshot(HOME).join('\n') === realHome, 'the real sandbox home changed during the check');
 
 if (problems.length) {

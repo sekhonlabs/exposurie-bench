@@ -36,7 +36,7 @@ For area 4, D gets the facts closest to the question, which is what perfect retr
 
 Condition C is set up like this:
 
-- exposurie 1.2.0 is installed in the sandbox. Part 10 runs C again with exposurie's `read` rebuilt (commit `b6855ee`), on the same brains, beside 1.2.0's results: see [decisions.md](decisions.md).
+- exposurie 1.2.0 is installed in the sandbox, and so is each version C ran again with, on the same brains: the rebuilt `read` of commit `b6855ee` (part 10), which npm has served as 1.3.0 since 2026-11-04, and 1.3.1 from npm, which part 13 runs on too. Each run records the version it ran: see [decisions.md](decisions.md).
 - The brain is built from the same history by `exposurie sync`, with the agent writing the pages, as a real user's agent would.
 - The pointer sits in the sandbox's `~/.claude/CLAUDE.md`.
 - The task runs from an empty folder.
@@ -171,7 +171,7 @@ Every rule here exists because breaking it produces a wrong number.
 
 - **Isolated home and Claude Code config for every run**, logged in with a Claude plan, never an API key. `HOME`, `USERPROFILE`, `APPDATA`, `LOCALAPPDATA`, `TEMP` and `CLAUDE_CONFIG_DIR` all point into the sandbox. Auto-memory and claude.ai connectors are off, and no MCP server loads. Nothing from the machine owner's own setup (instructions, skills, plugins, memory, connectors) can load.
 - **The environment is built, never inherited:** Windows' own variables plus the sandbox's paths, so nothing from the process that starts a run reaches it.
-- **The sandbox's own pinned copies** of Node, Git, Claude Code and exposurie 1.2.0, with auto-update off. Claude Code went through 44 version numbers in the 46 days before this benchmark was designed, and the run takes several days.
+- **The sandbox's own pinned copies** of Node, Git, Claude Code and exposurie (1.2.0, the rebuilt read and 1.3.1), with auto-update off. Claude Code went through 44 version numbers in the 46 days before this benchmark was designed, and the run takes several days.
 - **No remote feature flags** (`DISABLE_GROWTHBOOK=1`). Every run gets the pinned binary's own defaults, the same on every day.
 - **Transcript retention is set before any history is placed.** Claude Code deletes transcripts older than its `cleanupPeriodDays` (30 by default). exposurie orders history by file date, so the history's files carry dates months in the past.
 - **A fresh folder per run, outside this repository.** It is empty, except for the task's starter repository in areas 6 and 7. The answer key lives in this repository. The folder's path names neither the task nor the condition, since the agent sees it, and no instructions file (`CLAUDE.md`, `AGENTS.md`) sits in any folder above it.

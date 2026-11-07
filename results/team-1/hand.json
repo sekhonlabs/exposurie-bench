@@ -1,0 +1,230 @@
+{
+  "task": "team-1",
+  "read": "2026-11-07",
+  "note": "The hand read of part 13's live run. A verdict here overrides the scorer's, as everywhere in the benchmark; scores.json stays as score/team.mjs saved it. The decisions settled by hand rest on hand.test.js, published beside this file: it ran through score/team.mjs's own test runner, on a copy of each condition's merged work, with the hidden tests' helpers and data. The user's way was read from each run's last reply and the files it changed.",
+  "scorer_faults": [
+    "The hidden K5 test's expected read list (team-1.json, expect.omnivore.read) includes https://example.net/cooking/sourdough-without-a-schedule, which is Archived at 40% read. K5 as told to round 1, and as D's notes put it, is only 'an Omnivore item read 90% or more counts as read, archived or not'. The test stopped at that item, so it never reached the items read 95%, 91% and 89%. K5 is settled on those by hand.",
+    "The per-agent K5 check looks for readingProgress followed by '>= 90' written out. C's and D's Omnivore readers both write '>= READ_AT' with 'const READ_AT = 90', so the check missed both.",
+    "The hidden K3 and K6 tests use Instapaper's export as their vehicle. Where Instapaper's reader brings no highlights, they fail before reaching agent 3's code, whatever agent 3 did. They are settled by hand on Omnivore's export.",
+    "The commit-prefix check matches its prefixes anywhere in the last reply. r009's reply says '**BOM test:**' about a test, which matched 'test:'. Its commit subject, 'Add Instapaper import reader', has no prefix."
+  ],
+  "decisions": {
+    "A": {
+      "K1": {
+        "kept": false,
+        "why": "Neither reader puts highlights on its items (agents 1 and 2), so none reach the database; agent 3's own code has the shape by script."
+      },
+      "K2": {
+        "kept": false,
+        "why": "No highlight reaches the database to carry a source."
+      },
+      "K3": {
+        "kept": false,
+        "why": "No highlight reaches the database, so the merged work cannot show it; agent 3's own code holds it by script."
+      },
+      "K4": {
+        "kept": false,
+        "why": "The hidden K4 test fails: Instapaper's folders do not become folder:<name> tags as told."
+      },
+      "K5": {
+        "kept": false,
+        "why": "By hand: the items read 95% and 91% that are not archived come in unread. A's reader makes archived items read instead, which K5 does not say."
+      },
+      "K6": {
+        "kept": false,
+        "why": "The email names no highlights; none came in."
+      }
+    },
+    "C": {
+      "K1": {
+        "kept": false,
+        "why": "Omnivore's reader (agent 2) puts highlights on its items as told, but Instapaper's (agent 1, r002) leaves the Selection column out. It read the brain page that holds K1 and said: 'Highlights belong to the other agent's side, and the highlights shape isn't built yet.' So Instapaper's Selections never reach the database."
+      },
+      "K2": {
+        "kept": true,
+        "why": "The hidden K2 test passes, and by hand every highlight from Omnivore's export has source import."
+      },
+      "K3": {
+        "kept": true,
+        "why": "By hand on Omnivore's export: run again it adds no highlight twice, and a newer export adds its new highlight on a link already saved. The hidden K3 tests failed only because Instapaper's reader brings no highlights."
+      },
+      "K4": {
+        "kept": true,
+        "why": "The hidden K4 test passes."
+      },
+      "K5": {
+        "kept": true,
+        "why": "By hand: every item read 90% or more is read, and no item under 90% that is not archived is. The hidden test failed only on the archived item read 40%."
+      },
+      "K6": {
+        "kept": true,
+        "why": "By hand on Omnivore's export, the email says '6 highlights came in.' The hidden K6 test failed only because Instapaper's reader brings no highlights."
+      }
+    },
+    "D": {
+      "K1": {
+        "kept": true,
+        "why": "The hidden K1 tests pass for both readers."
+      },
+      "K2": {
+        "kept": true,
+        "why": "The hidden K2 test passes."
+      },
+      "K3": {
+        "kept": true,
+        "why": "The hidden K3 tests pass, and the hand tests on Omnivore's export too."
+      },
+      "K4": {
+        "kept": true,
+        "why": "The hidden K4 test passes."
+      },
+      "K5": {
+        "kept": true,
+        "why": "By hand: every item read 90% or more is read, and no item under 90% that is not archived is. The hidden test failed only on the archived item read 40%."
+      },
+      "K6": {
+        "kept": true,
+        "why": "The hidden K6 test passes."
+      }
+    }
+  },
+  "agents": {
+    "C": {
+      "2": {
+        "K5": {
+          "holds": true,
+          "why": "src/import/readers/omnivore.js: read is Number(entry.readingProgress) >= READ_AT, with READ_AT = 90."
+        }
+      }
+    },
+    "D": {
+      "2": {
+        "K5": {
+          "holds": true,
+          "why": "src/import/readers/omnivore.js: read is (record.readingProgress ?? 0) >= READ_AT, with READ_AT = 90."
+        }
+      }
+    }
+  },
+  "agreed": {
+    "A": {
+      "agreed": false,
+      "why": "No reader puts highlights on its items."
+    },
+    "C": {
+      "agreed": false,
+      "why": "Omnivore's reader and agent 3's code agree on K1; Instapaper's reader does not take part."
+    },
+    "D": {
+      "agreed": true,
+      "why": "Both readers' highlights reach the database through agent 3's code."
+    }
+  },
+  "way": {
+    "note": "commit-style and sql-files are marked hand in team-1.json, so the scorer never scores them; these are their verdicts. A body says why when it gives a reason for the change or for a choice in it. SQL in tests does not count: the starter's own tests hold 33 lines of it, and its src/ none outside .sql files.",
+    "r009": {
+      "commit-prefix": {
+        "holds": true,
+        "why": "The subject is 'Add Instapaper import reader'; the script matched '**BOM test:**' elsewhere in the reply."
+      },
+      "commit-style": {
+        "holds": false,
+        "why": "'Add Instapaper import reader', 28 characters, imperative; the body says what the reader does and gives no reason."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r007": {
+      "commit-style": {
+        "holds": false,
+        "why": "'Add Omnivore import reader', 26 characters, imperative; the body says what the reader does and gives no reason."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r006": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Import highlights from file imports', 35 characters, imperative; the body gives its reason: 'so re-importing a file is safe'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "Its new SQL is in import-highlight.sql and import-link-id.sql."
+      }
+    },
+    "r002": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Add Instapaper import reader', 28 characters, imperative; the body gives its reason: 'so imported links don't land in one weekly digest'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r003": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Add Omnivore import reader', 26 characters, imperative; the body gives its reason: 'so a large import doesn't flood the weekly digest'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r005": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Import highlights from reader exports', 37 characters, imperative; the body gives its reason: 'so they can be told apart from highlights made in Satchel'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "Its new SQL is in a migration, import-highlight.sql and import-link-exists.sql."
+      }
+    },
+    "r008": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Add Instapaper reader for file import', 37 characters, imperative; the body opens with its reason: 'Instapaper exports are the next service people bring to Satchel.'"
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r001": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Add Omnivore reader for file import', 35 characters, imperative; the body gives its reasons, among them 'since Omnivore archives by hand rather than on finishing'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r004": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Import highlights from reader exports', 37 characters, imperative; the body opens with its reason: 'the import job dropped them'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "Its new SQL is in a migration, import-highlight.sql and import-link-id.sql."
+      }
+    }
+  },
+  "filed": {
+    "K1": true,
+    "K2": true,
+    "K3": true,
+    "K4": true,
+    "K5": true,
+    "K6": true,
+    "why": "All six read by hand on the page the sync wrote, concepts/Satchel Background Import.md, lines 28 to 30. K6 is its last sentence: 'The email will get a highlights count on its own line after the links.' K1 and K6 are worded as plans ('readers will put', 'will get'), the others as rules."
+  },
+  "still_to_read": []
+}

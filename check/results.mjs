@@ -4,7 +4,10 @@
 // of every step agree with one another and with the task's steps file. Part
 // 10's C again with the rebuilt read is held the same way, and to the rebuilt
 // exposurie; its sync + fresh again must come from area 9's own forks. C again
-// with exposurie 1.3.1 is held the same way, and to 1.3.1.
+// with exposurie 1.3.1 is held the same way, and to 1.3.1. Part 13's team task
+// is held to its task file: every run of round 2 done, round 1 through its gate
+// with each repair published, and a finished hand read, every verdict of which
+// gives a reason; and the README gives its headline as the numbers have it.
 //
 //   node check/results.mjs
 //
@@ -18,7 +21,7 @@ import { REBUILT_BATCH, STRATEGIES } from '../runner/long.mjs';
 import { PINS, loginIdentity } from '../runner/sandbox.mjs';
 import { LONG_GROUPS } from '../score/checks.mjs';
 import {
-  AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, USERS, V131_BATCHES, finalChecks, outputs,
+  AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, REBUILT_NAME, TEAM_TASKS, USERS, V131_BATCHES, finalChecks, outputs,
 } from '../score/results.mjs';
 import { WINDOWS_PATH } from '../score/score.mjs';
 import { find } from './text.mjs';
@@ -174,6 +177,53 @@ for (const batch of [LONG_BATCH, REBUILT_BATCH]) {
   }
 }
 
+// ---- part 13: each team task's scores, hand read and conditions agree with its task file and with one another
+for (const id of TEAM_TASKS) {
+  const files = ['scores', 'hand', 'conditions'].map((f) => `results/${id}/${f}.json`);
+  for (const f of files.filter((x) => !existsSync(join(REPO, x)))) fail(f, `is missing; ${SAVE}`);
+  if (!files.every((f) => existsSync(join(REPO, f)))) continue;
+  const [s, h, k] = files.map((f) => readJson(f));
+  const task = readJson('tasks', 'team', `${id}.json`);
+  if (s.task !== id || h.task !== id || k.task !== id) fail(`results/${id}`, 'holds files that name another task');
+  if (k.exposurie !== PINS.exposurie131.version) fail(`results/${id}/conditions.json`, `names exposurie ${k.exposurie}, not ${PINS.exposurie131.version}`);
+  const agents = task.round_2.map((a) => a.agent).sort();
+  for (const c of task.conditions) {
+    const runs = s.conditions[c]?.runs ?? [];
+    if (JSON.stringify(runs.map((r) => r.agent).sort()) !== JSON.stringify(agents)) fail(`${id} ${c}`, 'does not hold one run for each agent of round 2');
+    for (const r of runs) {
+      if (k.conditions[r.run] !== c || k.agents[r.run] !== r.agent) fail(`${id}/${r.run}`, `is not ${c}'s agent ${r.agent} in conditions.json`);
+      if (r.status !== 'done' && !r.accepted) fail(`${id}/${r.run}`, `is ${r.status}, not done`);
+    }
+  }
+  if (Object.keys(k.conditions).length !== task.conditions.length * agents.length) fail(`results/${id}/conditions.json`, 'names runs that have no score');
+  const steps = task.round_1.reduce((n, a) => n + a.steps.length, 0);
+  if (s.round_1.steps !== steps) fail(`${id} round 1`, `scores ${s.round_1.steps} steps, where its task has ${steps}`);
+  if (!s.round_1.gate.passed) fail(`${id} round 1`, 'did not pass the gate');
+  for (const r of s.round_1.repairs) {
+    if (!existsSync(join(REPO, 'results', id, r.patch))) fail(`results/${id}/${r.patch}`, `is missing; ${SAVE}`);
+    if (!r.what) fail(`${id} round 1`, `its repair ${r.patch} says nothing of what it changed`);
+  }
+  if (h.still_to_read?.length) fail(`results/${id}/hand.json`, `is not finished: ${h.still_to_read.length} still to read`);
+  for (const c of task.conditions) {
+    for (const d of task.decisions) {
+      const v = h.decisions?.[c]?.[d.id];
+      if (!v) fail(`${id} ${c} ${d.id}`, 'has no verdict from the hand read');
+      else if (typeof v.kept !== 'boolean' || !v.why) fail(`${id} ${c} ${d.id}`, 'has a hand verdict that is not true or false with a reason');
+    }
+    const a = h.agreed?.[c];
+    if (!a || typeof a.agreed !== 'boolean' || !a.why) fail(`${id} ${c}`, 'has no hand verdict, with a reason, on whether its three agents agreed');
+  }
+  const handOnly = task.checks.way.filter((x) => x.hand).map((x) => x.id);
+  for (const r of task.conditions.flatMap((c) => s.conditions[c]?.runs ?? [])) {
+    for (const check of handOnly) {
+      const v = h.way?.[r.run]?.[check];
+      if (!v || typeof v.holds !== 'boolean' || !v.why) fail(`${id}/${r.run}`, `${check} is read only by hand, and the hand read gives no verdict with a reason`);
+    }
+  }
+  for (const d of task.decisions) if (typeof (h.filed?.[d.id] ?? s.sync.filed[d.id]?.filed) !== 'boolean') fail(`${id} sync`, `has no verdict on whether ${d.id} was filed`);
+  if (!existsSync(join(REPO, 'results', id, 'hand.test.js'))) fail(`results/${id}/hand.test.js`, `is missing; ${SAVE}`);
+}
+
 // ---- results/ holds exactly what score/results.mjs writes
 let written = {};
 if (!problems.length) {
@@ -224,12 +274,21 @@ for (const file of walk(join(REPO, 'results'))) {
 
 // ---- what there is
 const n = written['results/numbers.json'] ? JSON.parse(written['results/numbers.json']) : null;
+
+// ---- the README gives part 13's headline as the numbers have it
+const M = n?.many_agents;
+if (M) {
+  const headline = `By hand, round 2's merged work kept ${M.conditions.A.kept.held} of round 1's ${M.conditions.A.kept.of} decisions with no memory, ` +
+    `${M.conditions.C.kept.held} with exposurie ${M.exposurie}, and ${M.conditions.D.kept.held} with a perfect notes file.`;
+  if (!readFileSync(join(REPO, 'README.md'), 'utf8').includes(headline)) fail('README.md', `does not say, as results/numbers.json has it: "${headline}"`);
+}
 console.log(
   `${ALL_BATCHES.filter((b) => cellsOf[b]).length} batches keyed, ${Object.values(cellsOf).flat().length} runs. ` +
     (n ? `Right answers, areas 1–7: ${CONDITIONS.map((c) => `${c} ${n.right_answers.pooled[c]}`).join(', ')} of ${n.right_answers.of}, ` +
-      `C ${n.rebuilt_read.right_answers.pooled.C} with exposurie ${n.rebuilt_read.exposurie}, ` +
+      `C ${n.rebuilt_read.right_answers.pooled.C} with ${REBUILT_NAME} (recorded as ${n.rebuilt_read.exposurie}), ` +
       `and C ${n.pointer_for_work.right_answers.pooled.C} with exposurie ${n.pointer_for_work.exposurie}. ` : '') +
     `Area 9: ${longTasks.length} long tasks, ${strategiesKeyed[LONG_BATCH]} strategies keyed, and ${strategiesKeyed[REBUILT_BATCH]} again. ` +
+    (M ? `Part 13: kept ${['A', 'C', 'D'].map((c) => `${c} ${M.conditions[c].kept.held}`).join(', ')} of ${M.conditions.A.kept.of}. ` : '') +
     `${Object.keys(written).filter((r) => r.endsWith('.svg')).length} charts.`,
 );
 if (problems.length) {

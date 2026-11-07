@@ -491,7 +491,7 @@ On 2026-10-28 the owner found that the benchmark mostly tests `read`: retrieval 
 1. exposurie's pointer gains a condition for work, released as exposurie 1.3.1 (see 13, *What it depends on*), and measured first on areas 1–8 (see *1.3.1, measured*)
 2. 13, run on 1.3.1
 3. 12
-4. the README rewritten as one finished account of the benchmark
+4. the README rewritten as one finished account of the benchmark (begun 2026-11-07: the README and its charts lead with 1.3.1, and the versions before it are its history)
 
 Why is in [decisions.md](decisions.md).
 
@@ -551,7 +551,7 @@ The owner's point: a brain belongs to the person, and stays with them when they 
 
 #### 13. Many agents, one job
 
-**Plan usage:** yes, the most of the parts left: 9 steps in round 1, one sync and 9 runs in round 2, estimated at $3–7 at list prices. **Decided 2026-11-05, with three agents, and designed by Claude the same day, on the owner's word. Built and checked against the fake on 2026-11-06. Run live on 2026-11-07, on his go, then scored and read by hand (see decisions.md). Publishing is next.** Why each choice was made is in [decisions.md](decisions.md).
+**Plan usage:** yes, the most of the parts left: 9 steps in round 1, one sync and 9 runs in round 2, estimated at $3–7 at list prices. **Decided 2026-11-05, with three agents, and designed by Claude the same day, on the owner's word. Built and checked against the fake on 2026-11-06. Run live on 2026-11-07, on his go, then scored, read by hand and published the same day (see decisions.md).** Why each choice was made is in [decisions.md](decisions.md).
 
 The owner's point: someone running several agents in parallel on one job, with the brain as their shared memory. While agents work side by side, none hears what the others are told. What one of them heard reaches the next round only through whatever carries it: the code alone, exposurie, or a file a person keeps by hand.
 

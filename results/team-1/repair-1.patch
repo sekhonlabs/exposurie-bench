@@ -1,0 +1,111 @@
+diff --git a/src/import/routes.js b/src/import/routes.js
+index 63edd58..553d16b 100644
+--- a/src/import/routes.js
++++ b/src/import/routes.js
+@@ -1,14 +1,8 @@
+-import { mkdir, writeFile } from 'node:fs/promises'
+ import { mkdirSync, writeFileSync } from 'node:fs'
+ import { join } from 'node:path'
+ import { Hono } from 'hono'
+-import { html } from 'hono/html'
+ import { requireUser } from '../auth/session.js'
+ import { config } from '../config.js'
+-import { services } from '../jobs/handlers/import-file.js'
+-import { enqueue } from '../jobs/queue.js'
+-import { ulid } from '../lib/ulid.js'
+-import { importPage, importResult } from '../views/import.js'
+ import { enqueue } from '../jobs/queue.js'
+ import { ulid } from '../lib/ulid.js'
+ import { importPage, importRejected, importResult, importStarted } from '../views/import.js'
+@@ -17,20 +11,11 @@ import { fetchTitle as fetchPageTitle } from './fetch-title.js'
+ import { runImport } from './run.js'
+ import { listServices } from './services.js'
+ 
+-async function saveUpload(file) {
+-  const dir = join(config.dataDir, 'imports')
+-  await mkdir(dir, { recursive: true })
+-  const path = join(dir, ulid())
+-  await writeFile(path, Buffer.from(await file.arrayBuffer()))
+-  return path
+-}
+-
+-export function importRoutes(db, { fetchTitle = fetchPageTitle } = {}) {
+ export function importRoutes(
+   db,
+   {
+     fetchTitle = fetchPageTitle,
+-    dataDir = process.env.DATA_DIR ?? '.',
++    dataDir,
+     services = listServices,
+   } = {},
+ ) {
+@@ -51,25 +36,13 @@ export function importRoutes(
+   app.post('/import', requireUser, async (c) => {
+     const form = await c.req.parseBody()
+     const user = c.get('user')
+-    const service = String(form.service ?? '')
+-    if (service) {
+-      if (!(form.file instanceof File) || !services().includes(service)) {
+-        return c.text('Choose a service and a file to import.', 400)
+-      }
+-      const path = await saveUpload(form.file)
+-      enqueue(db, 'import_file', { userId: user.id, service, path })
+-      const started = html`<p class="notice">Your import has started. We will email you when it is done.</p>`
+-      return c.html(layout('Import', html`${importPage()}${started}`, { user }))
+-    }
+-    const text = form.file instanceof File ? await form.file.text() : String(form.links ?? '')
+-    const result = await runImport(db, user, text, { fetchTitle })
+ 
+     if (form.file instanceof File && form.file.size > 0) {
+       const service = String(form.service ?? '')
+       if (!services().includes(service)) {
+         return answer(c, importRejected('Choose which service the file comes from.'), 400)
+       }
+-      const dir = join(dataDir, 'imports')
++      const dir = join(dataDir ?? config.dataDir, 'imports')
+       const path = join(dir, ulid())
+       mkdirSync(dir, { recursive: true })
+       writeFileSync(path, Buffer.from(await form.file.arrayBuffer()))
+diff --git a/test/import-file.test.js b/test/import-file.test.js
+index ffc1656..33b20b9 100644
+--- a/test/import-file.test.js
++++ b/test/import-file.test.js
+@@ -1,13 +1,19 @@
+ import assert from 'node:assert/strict'
+-import { existsSync } from 'node:fs'
++import { existsSync, mkdtempSync, readFileSync } from 'node:fs'
+ import { mkdir, mkdtemp, readdir, writeFile } from 'node:fs/promises'
+ import { tmpdir } from 'node:os'
+ import { join } from 'node:path'
+ import { test } from 'node:test'
++import { Hono } from 'hono'
++import { authRoutes } from '../src/auth/routes.js'
++import { currentUser } from '../src/auth/session.js'
+ import { config } from '../src/config.js'
++import { openDatabase } from '../src/db.js'
++import { importRoutes } from '../src/import/routes.js'
+ import { services } from '../src/jobs/handlers/import-file.js'
+ import { handlers } from '../src/jobs/handlers/index.js'
+ import { MAX_ATTEMPTS } from '../src/jobs/queue.js'
++import { importSummaryEmail, sendImportSummary } from '../src/mail/import-summary.js'
+ import { jobsOf, setup, signIn } from './helpers.js'
+ 
+ const SAVED_AT = '2024-03-05T10:00:00.000Z'
+@@ -173,17 +179,6 @@ test('an unknown service queues nothing', async () => {
+   assert.equal(res.status, 400)
+   assert.equal(jobsOf(db, 'import_file').length, 0)
+ })
+-import { mkdtempSync, readFileSync } from 'node:fs'
+-import { tmpdir } from 'node:os'
+-import { join } from 'node:path'
+-import { test } from 'node:test'
+-import { Hono } from 'hono'
+-import { authRoutes } from '../src/auth/routes.js'
+-import { currentUser } from '../src/auth/session.js'
+-import { openDatabase } from '../src/db.js'
+-import { importRoutes } from '../src/import/routes.js'
+-import { importSummaryEmail, sendImportSummary } from '../src/mail/import-summary.js'
+-import { jobsOf, signIn } from './helpers.js'
+ 
+ async function importApp() {
+   const db = openDatabase(':memory:')

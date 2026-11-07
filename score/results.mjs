@@ -15,7 +15,8 @@
 // Part 10's C again with exposurie's rebuilt read is published the same way,
 // and its numbers sit beside 1.2.0's under rebuilt_read; 1.2.0's stay as they are.
 // C again with exposurie 1.3.1, whose pointer also fires before work, sits
-// beside both under pointer_for_work.
+// beside both under pointer_for_work. Part 13, many agents, one job, is
+// published from its scores and their hand read, under many_agents.
 // check/results.mjs holds results/ to what this writes.
 //
 // Run it with the sandbox's own Node.
@@ -59,6 +60,13 @@ const STRATEGY_NAMES = { keep: 'keep going', compact: '/compact', sync: 'sync + 
  * again in REBUILT_BATCH. A, B and D have no exposurie, so their runs stand.
  */
 export const REBUILT_BATCHES = ['full-2', 'stability-3', 'stability-4'];
+/**
+ * What the README and the charts call part 10's exposurie. Its runs recorded
+ * 1.2.0+b6855ee, the package's version and the commit, because 1.3.0 was not on
+ * npm yet; npm has served the same search and read as 1.3.0 since 2026-11-04,
+ * byte for byte, so it is shown by its release. The records keep what was recorded.
+ */
+export const REBUILT_NAME = '1.3.0\'s read';
 const REBUILT_STABILITY = ['stability-3', 'stability-4'];
 /**
  * C again with exposurie 1.3.1, whose pointer also fires before work in the
@@ -66,6 +74,13 @@ const REBUILT_STABILITY = ['stability-3', 'stability-4'];
  * full run's C cells once. A, B and D stand.
  */
 export const V131_BATCHES = ['full-3'];
+/**
+ * Part 13, many agents, one job: round 1's three agents in C on exposurie
+ * 1.3.1, merged and synced, then three agents in each of A, C and D. Each is
+ * published with its scores, the hand read that overrides them, the hand tests
+ * the hand read rests on, and round 1's repairs by hand.
+ */
+export const TEAM_TASKS = ['team-1'];
 
 const sum = (xs) => xs.reduce((a, b) => a + b, 0);
 /** The middle value, or the mean of the middle two. */
@@ -113,6 +128,7 @@ function publishInputs(runs) {
   console.log(`Saved ${saveToRepo('results/builds.json', json({ note, builds }))}`);
   publishLong(runs, LONG_BATCH);
   publishLong(runs, REBUILT_BATCH);
+  for (const id of TEAM_TASKS) publishTeam(runs, id);
 }
 
 const tokenKinds = (t) => Object.fromEntries(TOKEN_KINDS.map((k) => [k, t?.[k] ?? 0]));
@@ -216,6 +232,40 @@ function publishLong(runs, batch) {
   console.log(`Saved ${saveToRepo(`results/${batch}/steps.json`, json({ batch, note, runs: steps }))}`);
 }
 
+/**
+ * A team task of part 13, published from the runner's folder once it is read
+ * by hand: its scores as score/team.mjs saved them, the hand read that
+ * overrides them, the hand tests the hand read rests on, round 1's repairs by
+ * hand with the run's machine paths taken out of their file names, and which
+ * condition each run of round 2 had, with the one exposurie everything recorded.
+ */
+function publishTeam(runs, id) {
+  const dir = join(runs, id);
+  const scores = readJson(join(dir, 'scores.json'));
+  const hand = readJson(join(dir, 'hand.json'));
+  if (scores.task !== id || hand.task !== id) throw new Stop(`${id}'s scores or hand read name another task`);
+  if (hand.still_to_read?.length) throw new Stop(`${id}'s hand read is not finished: ${hand.still_to_read.join('; ')}`);
+  const T = readJson(join(dir, 'team.json'));
+  const b = readJson(join(dir, 'batch.json'));
+  const recorded = [
+    ...Object.entries(T.round_1).filter(([k]) => /^\d+$/.test(k)).flatMap(([, a]) => a.steps.map((r) => r.versions?.exposurie)),
+    ...T.sync.tries.map((r) => r.versions?.exposurie),
+    ...b.cells.map((c) => readJson(join(dir, c.run, 'run.json')).versions?.exposurie),
+  ];
+  const labels = [...new Set(recorded)];
+  if (labels.length !== 1 || !labels[0]) throw new Stop(`${id}'s steps and runs recorded ${labels.length} exposurie versions`);
+  const conditions = Object.fromEntries(b.cells.map((c) => [c.run, c.condition]).sort(([x], [y]) => x.localeCompare(y)));
+  const agents = Object.fromEntries(b.cells.map((c) => [c.run, c.agent]).sort(([x], [y]) => x.localeCompare(y)));
+  console.log(`Saved ${saveToRepo(`results/${id}/conditions.json`, json({ task: id, exposurie: labels[0], conditions, agents }))}`);
+  console.log(`Saved ${saveToRepo(`results/${id}/scores.json`, json(scores))}`);
+  console.log(`Saved ${saveToRepo(`results/${id}/hand.json`, json(hand))}`);
+  console.log(`Saved ${saveToRepo(`results/${id}/hand.test.js`, readFileSync(join(runs, `${id}-hand`, 'hand.test.js'), 'utf8'))}`);
+  for (const r of scores.round_1.repairs) {
+    const patch = readFileSync(join(dir, 'round-1', r.patch), 'utf8').replace(/\b([ab])\/[A-Za-z]:\/\S*?\/round-1\/merged(?:-as-merged)?\//g, '$1/');
+    console.log(`Saved ${saveToRepo(`results/${id}/${r.patch}`, patch)}`);
+  }
+}
+
 /** A batch's scored runs, each with its condition. */
 function runsOf(root, batch) {
   const { conditions } = readJson(join(root, 'results', batch, 'conditions.json'));
@@ -310,7 +360,8 @@ export function computeNumbers(root = REPO) {
   const v131 = runsOf(root, v131Batch);
   return {
     note: 'Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9; ' +
-      'then C again with exposurie\'s rebuilt read, under rebuilt_read, and with exposurie 1.3.1, under pointer_for_work.',
+      'then C again with exposurie\'s rebuilt read, under rebuilt_read, and with exposurie 1.3.1, under pointer_for_work; ' +
+      'then part 13, many agents, one job, under many_agents.',
     tokens: 'Every input token, cached or not (all_input), is the primary number. Output is counted beside it.',
     conditions: NAMES,
     runs: { full: full.length, stability: sum(stability.map((rs) => rs.length)), scored_by: scoredBy(full) },
@@ -333,6 +384,7 @@ export function computeNumbers(root = REPO) {
       runs: { [v131Batch]: v131.length, scored_by: scoredBy(v131) },
       ...areaNumbers({ tasks, full: [...full.filter((r) => r.condition !== 'C'), ...v131], stab: [area3Of(v131)], batches: V131_BATCHES }),
     },
+    many_agents: teamNumbers(root),
   };
 }
 
@@ -435,6 +487,77 @@ export function longNumbers(root = REPO, batch = LONG_BATCH) {
 // orange for exposurie (C) and greys for the other conditions, Georgia titles
 // and Calibri text, and no grid lines or decoration.
 
+/**
+ * Part 13's numbers, from results/<task>/ alone. A decision kept, the three
+ * agreeing, a decision filed and a check of the user's way are the hand read's
+ * where it gave one, else the scorer's, and how many the hand read overturned
+ * is counted beside them. Tokens are every input token, cached or not, and
+ * costs are Claude Code's own estimates, beside them. The plan meter is the
+ * seven-day reading after the first and the last thing that ran.
+ */
+export function teamNumbers(root = REPO, id = TEAM_TASKS[0]) {
+  const s = readJson(join(root, 'results', id, 'scores.json'));
+  const h = readJson(join(root, 'results', id, 'hand.json'));
+  const { exposurie } = readJson(join(root, 'results', id, 'conditions.json'));
+  const ids = Object.keys(s.sync.filed);
+  const held = (o) => Object.values(o).filter(Boolean).length;
+  const conditions = {};
+  for (const [c, v] of Object.entries(s.conditions)) {
+    const byScript = Object.fromEntries(ids.map((k) => [k, v.decisions[k].merged]));
+    const kept = Object.fromEntries(ids.map((k) => [k, h.decisions?.[c]?.[k]?.kept ?? byScript[k]]));
+    const way = {};
+    for (const r of v.runs) {
+      for (const [check, w] of Object.entries(r.way)) {
+        way[check] ??= { held: 0, of: 0 };
+        way[check].of += 1;
+        if (h.way?.[r.run]?.[check]?.holds ?? w.holds) way[check].held += 1;
+      }
+    }
+    const hidden = Object.values(v.tests.hidden);
+    conditions[c] = {
+      kept: { held: held(kept), of: ids.length, by_script: held(byScript), overturned_by_hand: ids.filter((k) => kept[k] !== byScript[k]).length },
+      decisions: kept,
+      agreed: h.agreed?.[c]?.agreed ?? v.agreed,
+      looked: { runs: v.looked, of: v.runs.length },
+      way,
+      tests: { hidden: { passed: hidden.filter(Boolean).length, of: hidden.length }, own: { passed: v.tests.own.passed, of: v.tests.own.total } },
+      conflicts: v.merge.conflicts.length,
+      tokens: tokenKinds(v.tokens),
+      cost_usd_estimate: round(v.cost_usd_estimate, 2),
+    };
+  }
+  const r1 = s.round_1;
+  const filed = Object.fromEntries(ids.map((k) => [k, h.filed?.[k] ?? s.sync.filed[k].filed]));
+  const meter = s.plan_meter.map((m) => m.seven_day).filter((x) => typeof x === 'number');
+  const cost = r1.cost_usd_estimate + s.sync.cost_usd_estimate + sum(Object.values(s.conditions).map((v) => v.cost_usd_estimate));
+  return {
+    note: 'Part 13: one job split across three agents. Round 1 ran once, in C, and was merged, tested and synced; then three ' +
+      'agents in each of A, C and D needed decisions told only to round 1. A verdict is the hand read\'s where it gave one, else the scorer\'s.',
+    task: id,
+    exposurie,
+    decisions: ids,
+    round_1: {
+      steps: r1.steps,
+      tokens: tokenKinds(r1.tokens),
+      cost_usd_estimate: round(r1.cost_usd_estimate, 2),
+      looked: r1.looked,
+      conflicts: r1.merge.conflicts,
+      repaired_by_hand: r1.repairs.length,
+      gate: {
+        passed: r1.gate.passed,
+        own: { passed: r1.gate.own.passed, of: r1.gate.own.total },
+        hidden: { passed: Object.values(r1.gate.hidden).filter(Boolean).length, of: Object.keys(r1.gate.hidden).length },
+      },
+      decisions_in_code: Object.values(r1.leaks).filter((l) => l.leaked).length,
+    },
+    sync: { tokens: tokenKinds(s.sync.tokens), cost_usd_estimate: round(s.sync.cost_usd_estimate, 2), pages: s.sync.pages, filed: { held: held(filed), of: ids.length } },
+    conditions,
+    plan_meter: { seven_day_first: meter[0] ?? null, seven_day_last: meter.at(-1) ?? null },
+    cost_usd_estimate: round(cost, 2),
+    scorer_faults_found_by_hand: h.scorer_faults?.length ?? 0,
+  };
+}
+
 const LOOK = {
   ink: '#141414', body: '#2B2B2B', grey: ['#474747', '#6B6B6B', '#8C8C8C'], rule: ['#E3E3E3', '#C9C9C9'],
   panel: '#F5F5F4', white: '#FFFFFF', orange: '#E37D4E', tint: '#FCF0E9',
@@ -467,51 +590,48 @@ function svg(width, height, label, body) {
 
 /**
  * Right answers by area: one dot per task, filled when its answer was right.
- * C has two columns: 1.2.0's runs, and part 10's runs again with the rebuilt
- * read (`R`), which share exposurie's orange and its tint.
+ * C is exposurie 1.3.1, the version on npm, beside the same runs of A, B and
+ * D, as pointer_for_work counts them. The versions of C before it are in the
+ * README's history, not here.
  */
 function rightAnswersChart(N) {
-  const W = 920;
+  const W = 840;
   const H = 578;
-  const cols = ['A', 'B', 'C', 'R', 'D'];
-  const col = { A: 380, B: 495, C: 610, R: 725, D: 840 };
-  const label = N.rebuilt_read.exposurie;
-  const head = { R: 'C', ...Object.fromEntries(CONDITIONS.map((c) => [c, c])) };
-  const sub = { ...NAMES, C: 'exposurie 1.2.0', R: label };
-  const verdictsOf = (c, tasks) => (c === 'R'
-    ? tasks.map((t) => N.rebuilt_read.by_task.find((x) => x.task === t.task).C)
-    : tasks.map((t) => t[c]));
-  const totals = { ...N.right_answers.pooled, R: N.rebuilt_read.right_answers.pooled.C };
+  const V = N.pointer_for_work;
+  const cols = CONDITIONS;
+  const col = { A: 410, B: 525, C: 640, D: 755 };
+  const sub = { ...NAMES, C: `exposurie ${V.exposurie}` };
+  const totals = V.right_answers.pooled;
   const rowY = (i) => 184 + i * 34;
   const out = [
     text(40, 46, 'Right answers, by area', { font: FONTS.title, size: 24, colour: LOOK.ink }),
     text(40, 72, 'One run per task and condition. Each dot is one task, filled when its answer was right.', { colour: LOOK.grey[1] }),
-    text(40, 92, `C ran twice on the same brains: with 1.2.0 from npm, and again with ${label}, its rebuilt read.`, { colour: LOOK.grey[1] }),
+    text(40, 92, `C is exposurie ${V.exposurie}, the version on npm. A, B and D have no exposurie; their runs stand.`, { colour: LOOK.grey[1] }),
   ];
   const y8 = rowY(MEMORY.length) + 64;
-  out.push(rect(col.C - 60, 112, col.R - col.C + 120, y8 + 24 - 112, LOOK.tint));
+  out.push(rect(col.C - 60, 112, 120, y8 + 24 - 112, LOOK.tint));
   for (const c of cols) {
-    out.push(text(col[c], 138, head[c], { font: FONTS.title, size: 20, colour: LOOK.ink, anchor: 'middle' }));
+    out.push(text(col[c], 138, c, { font: FONTS.title, size: 20, colour: LOOK.ink, anchor: 'middle' }));
     out.push(text(col[c], 158, sub[c], { size: 14, colour: LOOK.grey[1], anchor: 'middle' }));
   }
   const dots = (c, cy, verdicts) => verdicts.forEach((v, j) => {
     const cx = col[c] + (j - (verdicts.length - 1) / 2) * 20;
     out.push(v === 'right'
-      ? `<circle cx="${cx}" cy="${cy}" r="7" fill="${c === 'C' || c === 'R' ? LOOK.orange : LOOK.grey[1]}"/>`
+      ? `<circle cx="${cx}" cy="${cy}" r="7" fill="${c === 'C' ? LOOK.orange : LOOK.grey[1]}"/>`
       : `<circle cx="${cx}" cy="${cy}" r="6.25" fill="${LOOK.white}" stroke="${LOOK.rule[1]}" stroke-width="1.5"/>`);
   });
   const row = (area, y, conditions) => {
     out.push(text(40, y + 5, area, { size: 15, colour: LOOK.grey[2] }));
     out.push(text(64, y + 5, AREAS[area], { size: 16 }));
-    const tasks = N.by_task.filter((t) => t.area === area);
-    for (const c of conditions) dots(c, y, verdictsOf(c, tasks));
+    const tasks = V.by_task.filter((t) => t.area === area);
+    for (const c of conditions) dots(c, y, tasks.map((t) => t[c]));
   };
   MEMORY.forEach((a, i) => row(a, rowY(i), cols));
   const ruleY = rowY(MEMORY.length) - 14;
   out.push(rule(40, W - 40, ruleY));
-  out.push(text(40, ruleY + 38, `Areas 1–7, of ${N.right_answers.of}`, { size: 16, colour: LOOK.ink, bold: true }));
+  out.push(text(40, ruleY + 38, `Areas 1–7, of ${V.right_answers.of}`, { size: 16, colour: LOOK.ink, bold: true }));
   for (const c of cols) out.push(text(col[c], ruleY + 39, totals[c], { size: 22, colour: LOOK.ink, anchor: 'middle', bold: true }));
-  row(OTHER, y8, ['A', 'B', 'C', 'R']);
+  row(OTHER, y8, ['A', 'B', 'C']);
   out.push(text(col.D, y8 + 5, 'not run', { size: 14, colour: LOOK.grey[2], anchor: 'middle' }));
   out.push(text(40, H - 20, 'Area 8 needs no past, so it has no D and stays out of the totals.', { size: 14, colour: LOOK.grey[1] }));
   return svg(W, H, 'Right answers, by area and condition', out);
@@ -530,29 +650,28 @@ function bars(out, { top, scale, rows, x0 = 200, len = 470 }) {
   return top + rows.length * 34;
 }
 
-/** Tokens per run and per right answer in areas 1–7, and per run in area 8, on one scale, with C again under the rebuilt read beside 1.2.0's. */
+/** Tokens per run and per right answer in areas 1–7, and per run in area 8, on one scale, with C as exposurie 1.3.1 beside the same A, B and D. */
 function tokensChart(N) {
   const W = 880;
-  const R = N.rebuilt_read;
-  const outputs = [...Object.values(N.tokens_per_run.output_median), R.tokens_per_run.output_median.C];
+  const V = N.pointer_for_work;
+  const outputs = Object.values(V.tokens_per_run.output_median);
   const out = [
     text(40, 46, 'Tokens', { font: FONTS.title, size: 24, colour: LOOK.ink }),
     text(40, 72, 'Every input token, cached or not, with all three panels on one scale.', { colour: LOOK.grey[1] }),
     text(40, 92, `Output is counted apart: a median of ${fmt(Math.min(...outputs))} to ${fmt(Math.max(...outputs))} tokens a run, alike in every condition.`, { colour: LOOK.grey[1] }),
-    text(40, 112, `C ran twice on the same brains: with 1.2.0 from npm, and again with ${R.exposurie}, its rebuilt read.`, { colour: LOOK.grey[1] }),
+    text(40, 112, `C is exposurie ${V.exposurie}, the version on npm, beside the same runs of A, B and D.`, { colour: LOOK.grey[1] }),
   ];
-  const scale = Math.max(...Object.values(N.tokens_per_right_answer), ...Object.values(N.tokens_per_run.median), ...Object.values(N.overhead.per_run_median));
+  const scale = Math.max(...Object.values(V.tokens_per_right_answer), ...Object.values(V.tokens_per_run.median), ...Object.values(V.overhead.per_run_median));
   const panel = (top, title, rows) => {
     out.push(text(40, top, title, { size: 16, colour: LOOK.ink, bold: true }));
     return bars(out, { top: top + 16, scale, rows });
   };
-  /** Each condition's row, and under C's the same row for C again with the rebuilt read. */
-  const rows = (cs, f) => cs.flatMap((c) => (c === 'C' ? [{ c, name: 'exposurie 1.2.0', ...f(N, c) }, { c, name: R.exposurie, ...f(R, c) }] : [{ c, ...f(N, c) }]));
-  let y = panel(156, 'Per run: the median of areas 1–7', rows(CONDITIONS, (n, c) => ({ value: n.tokens_per_run.median[c] })));
-  y = panel(y + 42, 'Per right answer: all of a condition\'s tokens in areas 1–7 ÷ its right answers', rows(CONDITIONS, (n, c) => ({ value: n.tokens_per_right_answer[c], extra: `${n.right_answers.pooled[c]} right` })));
-  y = panel(y + 42, 'Per run on work that needs no past: the median of area 8', rows(['A', 'B', 'C'], (n, c) => ({ value: n.overhead.per_run_median[c] })));
-  const t = [N, R].flatMap((n) => n.overhead.by_task.map((x) => x.C - x.A));
-  out.push(text(40, y + 30, ['In area 8, C never ran ', { code: 'exposurie read' }, `, and what exposurie installs added ${fmt(Math.min(...t))} to ${fmt(Math.max(...t))} tokens a run.`], { size: 14, colour: LOOK.grey[1] }));
+  const rows = (cs, f) => cs.map((c) => ({ c, ...(c === 'C' ? { name: `exposurie ${V.exposurie}` } : {}), ...f(c) }));
+  let y = panel(156, 'Per run: the median of areas 1–7', rows(CONDITIONS, (c) => ({ value: V.tokens_per_run.median[c] })));
+  y = panel(y + 42, 'Per right answer: all of a condition\'s tokens in areas 1–7 ÷ its right answers', rows(CONDITIONS, (c) => ({ value: V.tokens_per_right_answer[c], extra: `${V.right_answers.pooled[c]} right` })));
+  y = panel(y + 42, 'Per run on work that needs no past: the median of area 8', rows(['A', 'B', 'C'], (c) => ({ value: V.overhead.per_run_median[c] })));
+  const t = V.overhead.by_task.map((x) => x.C - x.A);
+  out.push(text(40, y + 30, ['In area 8, C never ran ', { code: 'exposurie read' }, `, and used ${fmt(Math.min(...t))} to ${fmt(Math.max(...t))} tokens a run more than A.`], { size: 14, colour: LOOK.grey[1] }));
   return svg(W, y + 56, 'Tokens per run and per right answer, by condition', out);
 }
 
@@ -568,14 +687,14 @@ const strategyLabel = (p) => (p === 'compact' ? [{ code: '/compact' }] : STRATEG
 function longSessionsChart(N) {
   const W = 880;
   const A = N.area_9;
-  /** A task's sync + fresh again with the rebuilt read (part 10), if it ran, under the exposurie its runs recorded. */
+  /** A task's sync + fresh again with the rebuilt read (part 10), if it ran, shown by its release. */
   const again = (t) => N.rebuilt_read.area_9.tasks.find((x) => x.task === t.task)?.strategies.sync;
-  const label = N.rebuilt_read.exposurie;
+  const label = REBUILT_NAME;
   const out = [
     text(40, 46, 'Long sessions: three ways on from 500,000 tokens', { font: FONTS.title, size: 24, colour: LOOK.ink }),
     text(40, 72, 'Two long tasks, each one session filled to 500,000 tokens, then carried on three ways from there.', { colour: LOOK.grey[1] }),
     text(40, 92, 'Each dot is one check after the fork, filled when it held; the hand read overrides the script.', { colour: LOOK.grey[1] }),
-    text(40, 112, `${label}: the fresh session of sync + fresh again, with exposurie's rebuilt read.`, { colour: LOOK.grey[1] }),
+    text(40, 112, `All three ran on exposurie 1.2.0. Rows marked ${label} are sync + fresh's fresh session again.`, { colour: LOOK.grey[1] }),
   ];
   // Where each group's dots start, where its count stands, and its heading.
   const col = { finished: 240, kept: 540, retried: 730 };
@@ -641,7 +760,7 @@ function longSessionsChart(N) {
     if (found) {
       const said = found.kept_said_only;
       const team = found.team_conventions;
-      out.push(text(40, y + 30, `Run again with ${label}, the rebuilt read, a new fresh session's searches found the brain's pages.`, { size: 14, colour: LOOK.grey[1] }));
+      out.push(text(40, y + 30, `Run again with ${label}, a new fresh session's searches found the brain's pages.`, { size: 14, colour: LOOK.grey[1] }));
       out.push(text(40, y + 50, `It kept ${said.held} of the ${said.of} decisions said only in the conversation` +
         (team ? `, and ${team.held} of the team's ${team.of} conventions.` : '.'), { size: 14, colour: LOOK.grey[1] }));
       y += 50;
@@ -682,7 +801,8 @@ function printNumbers(N) {
   const C = (o) => fmt(o.C);
   /** C again, beside the same A, B and D: part 10's rebuilt read, or 1.3.1. */
   const again = (R) => {
-    console.log(`\nC again, with exposurie ${R.exposurie}, beside the same A, B and D:`);
+    const name = R === N.rebuilt_read ? `${REBUILT_NAME} (recorded as ${R.exposurie})` : `exposurie ${R.exposurie}`;
+    console.log(`\nC again, with ${name}, beside the same A, B and D:`);
     console.log(`Right answers, areas 1–7, of ${R.right_answers.of}: C ${R.right_answers.pooled.C}.`);
     console.log(`Tokens per run, median of areas 1–7: C ${C(R.tokens_per_run.median)}; of a question ${C(R.tokens_per_run.median_questions)}, of a work task ${C(R.tokens_per_run.median_work)}.`);
     console.log(`Tokens per right answer: C ${C(R.tokens_per_right_answer)}.`);
@@ -699,6 +819,18 @@ function printNumbers(N) {
     strategy(STRATEGY_NAMES.sync, t.strategies.sync);
   }
   again(N.pointer_for_work);
+
+  const M = N.many_agents;
+  console.log(`\nMany agents, one job (${M.task}, exposurie ${M.exposurie}):`);
+  console.log(`Round 1: ${M.round_1.steps} steps, ${fmt(M.round_1.tokens.all_input)} input tokens, about $${M.round_1.cost_usd_estimate.toFixed(2)}; ` +
+    `conflicts ${M.round_1.conflicts.length}, repaired by hand ${M.round_1.repaired_by_hand}; gate ${M.round_1.gate.passed ? 'passed' : 'failed'}.`);
+  console.log(`Sync: filed ${M.sync.filed.held} of ${M.sync.filed.of} decisions, ${fmt(M.sync.tokens.all_input)} input tokens, about $${M.sync.cost_usd_estimate.toFixed(2)}.`);
+  for (const [c, v] of Object.entries(M.conditions)) {
+    console.log(`  ${c} ${NAMES[c].padEnd(15)} kept ${v.kept.held} of ${v.kept.of} (by script ${v.kept.by_script}), agreed ${v.agreed ? 'yes' : 'no'}, ` +
+      `looked in ${v.looked.runs} of ${v.looked.of}, commit style ${v.way['commit-style'].held} of ${v.way['commit-style'].of}; ` +
+      `${fmt(v.tokens.all_input)} input tokens, about $${v.cost_usd_estimate.toFixed(2)}`);
+  }
+  console.log(`About $${M.cost_usd_estimate.toFixed(2)} in all; the seven-day meter read ${M.plan_meter.seven_day_first} after the first step and ${M.plan_meter.seven_day_last} after the last run.`);
 }
 
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
