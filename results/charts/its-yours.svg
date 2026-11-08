@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="666" viewBox="0 0 880 666" role="img" aria-label="It's yours: the six lines, and whether each held for each user">
+<title>It's yours: the six lines, and whether each held for each user</title>
+<rect x="0" y="0" width="880" height="666" fill="#FFFFFF"/>
+<text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">It's yours: six checks of exposurie 1.3.1's own layer</text>
+<text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Each line is a script, run for both users in a throwaway home, with exposurie installed from npm</text>
+<text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">and removed at the end. Each dot is one user, filled when the line held for them.</text>
+<text x="40" y="112" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">No agent session ran: this checks what exposurie itself writes, reaches for and leaves behind.</text>
+<text x="735" y="160" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">developer</text>
+<text x="815" y="160" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">delegator</text>
+<text x="40" y="205" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">1</text>
+<text x="76" y="205" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">The brain is plain Markdown</text>
+<text x="76" y="225" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">59 and 40 files, all UTF-8 text; 272 and 95 links, none dead</text>
+<circle cx="735" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="815" cy="200" r="7" fill="#E37D4E"/>
+<text x="40" y="259" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">2</text>
+<text x="76" y="259" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">It outlives the tool</text>
+<text x="76" y="279" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">uninstall took back all 11 files setup wrote outside the brain; no page changed</text>
+<circle cx="735" cy="254" r="7" fill="#E37D4E"/>
+<circle cx="815" cy="254" r="7" fill="#E37D4E"/>
+<text x="40" y="313" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">3</text>
+<text x="76" y="313" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">No network of its own</text>
+<text x="76" y="333" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">a trap in every Node process, npm's too, recorded no connection in 7 commands</text>
+<circle cx="735" cy="308" r="7" fill="#E37D4E"/>
+<circle cx="815" cy="308" r="7" fill="#E37D4E"/>
+<text x="40" y="367" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">4</text>
+<text x="76" y="367" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">No account of its own</text>
+<text x="76" y="387" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">stdin closed and no credentials in reach; no command asked for a login or key</text>
+<circle cx="735" cy="362" r="7" fill="#E37D4E"/>
+<circle cx="815" cy="362" r="7" fill="#E37D4E"/>
+<text x="40" y="421" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">5</text>
+<text x="76" y="421" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">A pointer for every agent it supports</text>
+<text x="76" y="441" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the same pointer, once, in 5 files: Claude Code, Codex, OpenCode and Cursor</text>
+<circle cx="735" cy="416" r="7" fill="#E37D4E"/>
+<circle cx="815" cy="416" r="7" fill="#E37D4E"/>
+<text x="40" y="475" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">6</text>
+<text x="76" y="475" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414">History from every lab</text>
+<text x="76" y="495" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">chats from Claude Code, Codex, Cursor, claude.ai and ChatGPT reached one sync</text>
+<circle cx="735" cy="470" r="7" fill="#E37D4E"/>
+<circle cx="815" cy="470" r="7" fill="#E37D4E"/>
+<line x1="40" y1="514" x2="840" y2="514" stroke="#E3E3E3" stroke-width="1"/>
+<text x="40" y="552" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Lines that held, of 6</text>
+<text x="735" y="553" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">6</text>
+<text x="815" y="553" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">6</text>
+<text x="40" y="598" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Line 3 leaves out <tspan font-family="Consolas, Menlo, monospace">update</tspan>, the one command that downloads, by what it is for.</text>
+<text x="40" y="618" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">5 empty folders that setup made stay after uninstall. The files that were in them are gone.</text>
+<text x="40" y="638" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Not shown: an agent reading the pointer, or finding its way with exposurie gone. One machine, on Windows.</text>
+</svg>

@@ -12,13 +12,13 @@ Claude Code builds and runs all of it.
 | `users/<user>/plan.json` | the session plan: each session's time, project or chat, and surface (part 1), and which facts come up in it and how (part 2) |
 | `users/<user>/sessions/` | each generated session as readable Markdown. This is the source of truth for that user's history |
 | `gen/` | the generator, and the converter that turns sessions into Claude Code transcripts and a claude.ai export |
-| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5), the brain build check (part 6), the long-session check (part 8) and the results check (part 9) |
-| `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6, 7 and 9 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`), example answers (`tasks/examples.json`), and area 9's steps files, the material their steps hand over, and the scripts that write both (`tasks/long/`) |
-| `runner/` | sandbox setup, the runner and the brain build, area 9's long sessions (`long.mjs`), and the fake `claude` they are tested against |
-| `score/` | how a task's checks read a run (part 4), the scorer and the judge (part 5), area 9's scorer (`long.mjs`), and the results' numbers and charts (`results.mjs`, part 9) |
-| `results/` | each batch's scores and which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step (`area-9/`), every number (`numbers.json`) and the charts (`charts/`). Raw run output stays outside the repository |
+| `check/` | the fact-sheet check (part 1), the history checker (part 3), the task check (part 4), the runner and scorer check (part 5), the brain build check (part 6), the long-session check (part 8), the results check (parts 9 to 13) and the team check (part 13) |
+| `tasks/` | the tasks, their checks and judge rubrics (`tasks/index.json`, which lists every task), the starter repositories for areas 6, 7 and 9 (`tasks/starters/`), the condition files for B and D (`tasks/conditions/`), example answers (`tasks/examples.json`), area 9's steps files, the material their steps hand over, and the scripts that write both (`tasks/long/`), and part 13's team task (`tasks/team/`) |
+| `runner/` | sandbox setup, the runner and the brain build, area 9's long sessions (`long.mjs`), part 13's team task (`team.mjs`), part 12's checks and their network trap (`its-yours.mjs`, `no-net.cjs`), and the fake `claude` they are tested against |
+| `score/` | how a task's checks read a run (part 4), the scorer and the judge (part 5), area 9's scorer (`long.mjs`), part 13's scorer and its hidden tests (`team.mjs`, `team/`), and every number and chart (`results.mjs`, part 9) |
+| `results/` | each batch's scores and which run had which condition, the brain builds' tokens, area 9's scores, hand read and record of every step (`area-9/`), C again with each release (`full-2/`, `full-3/` and the rest), part 13 (`team-1/`), part 12 (`its-yours/`), every number (`numbers.json`) and a chart for every result (`charts/`). Its README says which folder is which. Raw run output stays outside the repository |
 
-The sandbox and the raw output (`sandbox/` and `runs/`) sit next to this repository's folder, never inside it.
+The sandbox and the raw output (`sandbox/` and `runs/`) sit next to this repository's folder, never inside it. Every folder has a README of its own.
 
 ## Parts
 
@@ -460,7 +460,7 @@ node check/results.mjs
 
 ### 10. The rebuilt read
 
-**Plan usage:** yes: 30 C runs and two fresh sessions of area 9. **Done 2026-10-25.** It was built and checked against the fake, then run live the same day on the owner's go. All 30 C runs, both fresh sessions and their scoring took 18 minutes, with no usage-limit stop, for about $2.66 at list prices. Then it was read by hand and published beside 1.2.0's. The results are in the README, under *C again, with exposurie's rebuilt read*.
+**Plan usage:** yes: 30 C runs and two fresh sessions of area 9. **Done 2026-10-25.** It was built and checked against the fake, then run live the same day on the owner's go. All 30 C runs, both fresh sessions and their scoring took 18 minutes, with no usage-limit stop, for about $2.66 at list prices. Then it was read by hand and published beside 1.2.0's. The results are in the README, under *5. How C got here*.
 
 exposurie's `read` was rebuilt after the results (commit `b6855ee`), because its search had matched a whole phrase as one substring. This part runs C again with it, on the same brains, and sets the results beside 1.2.0's. Why each choice was made is in [decisions.md](decisions.md).
 
@@ -491,13 +491,13 @@ On 2026-10-28 the owner found that the benchmark mostly tests `read`: retrieval 
 1. exposurie's pointer gains a condition for work, released as exposurie 1.3.1 (see 13, *What it depends on*), and measured first on areas 1–8 (see *1.3.1, measured*)
 2. 13, run on 1.3.1
 3. 12, on 1.3.1 (done 2026-11-07)
-4. the README rewritten as one finished account of the benchmark (begun 2026-11-07: the README and its charts lead with 1.3.1, and the versions before it are its history)
+4. the README rewritten as one finished account of the benchmark, with a chart for every result (done 2026-11-08; see *The wrap*, below)
 
 Why is in [decisions.md](decisions.md).
 
 #### 1.3.1, measured
 
-**Plan usage:** yes: the 24 C runs of areas 1–8. **Done 2026-11-05.** It was built and checked against the fake, then run live the same day on the owner's go. All 24 runs ran in one go, with no usage-limit stop, for $1.00 at list prices with the judge. Then they were read by hand and published beside 1.2.0's and the rebuilt read's, and a fault test broke what they publish and saw every break caught. The results are in the README, under *C again, with exposurie 1.3.1's pointer*: 21 of 21 in areas 1–7.
+**Plan usage:** yes: the 24 C runs of areas 1–8. **Done 2026-11-05.** It was built and checked against the fake, then run live the same day on the owner's go. All 24 runs ran in one go, with no usage-limit stop, for $1.00 at list prices with the judge. Then they were read by hand and published beside 1.2.0's and the rebuilt read's, and a fault test broke what they publish and saw every break caught. The results are in the README, under *1. It knows you* and *5. How C got here*: 21 of 21 in areas 1–7.
 
 exposurie 1.3.1's pointer also fires before work in the user's projects, because real-work-2 never opened the brain. Every C run carries the pointer, so C runs again on all of areas 1–8, on the same kept brains, and the results are set beside 1.2.0's and the rebuilt read's. Why each choice was made is in [decisions.md](decisions.md).
 
@@ -535,7 +535,7 @@ Areas 1–9 test whether an agent finds a fact. This part tests whether the sync
 
 #### 12. It's yours
 
-**Decided 2026-11-05. Built, checked and published 2026-11-07, on exposurie 1.3.1 alone, the owner's call: all six lines pass, for both users.** The results are in the README, under *Results: it's yours*. Why each choice was made is in [decisions.md](decisions.md), 2026-11-07.
+**Decided 2026-11-05. Built, checked and published 2026-11-07, on exposurie 1.3.1 alone, the owner's call: all six lines pass, for both users.** The results are in the README, under *3. It's yours*. Why each choice was made is in [decisions.md](decisions.md), 2026-11-07.
 
 **What it checks, and what it does not.** exposurie is a layer for the user's agent: the agent reads the pointer, runs the commands and writes the pages, on the user's own plan with its lab. This part runs exposurie's commands directly, with no agent session, so it checks exposurie's own layer: what it writes, what it reaches for, what it collects and what it leaves behind. It does not stand in for the agent, which areas 1–9 and part 13 measured on the plan. This replaces the heading the plan first gave the part, "Plan usage: none. No model is called.", on the owner's correction of 2026-11-07.
 
@@ -648,3 +648,13 @@ node check/team.mjs                                 all of it through the fake, 
 **Not proposed:**
 - a switch of labs, which needs another paid agent
 - "the next session", which area 9 and part 13's second round already cover
+
+### The wrap (2026-11-08)
+
+**Plan usage:** none. **Done 2026-11-08.** Every check held before it started, so nothing was run again. Why each choice was made is in [decisions.md](decisions.md), 2026-11-08.
+
+- **A chart for every result.** `score/results.mjs` draws four more, from `results/` and the task files like the first three: `at-a-glance.svg` (every result in one view), `many-agents.svg` (part 13), `its-yours.svg` (part 12) and `versions.svg` (C with each release). Part 12's README table became its chart.
+- **The README is one finished account:** the answer first, with the at-a-glance chart and a one-minute summary, then one section per result with its chart, detail folded under each, and every limit in one place.
+- **A README in every folder,** and no file moved, so every script, check, link and commit keeps working.
+- **`check/results.mjs`** now holds the README to showing every chart, and to part 12's count in words, in place of its table.
+- **Done when:** every check holds, and `check/results.mjs` holds the new charts and the README.

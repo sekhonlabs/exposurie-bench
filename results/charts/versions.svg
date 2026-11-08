@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="1002" viewBox="0 0 880 1002" role="img" aria-label="How C got here: right answers and tokens for each release of exposurie">
+<title>How C got here: right answers and tokens for each release of exposurie</title>
+<rect x="0" y="0" width="880" height="1002" fill="#FFFFFF"/>
+<text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">How C got here: three releases on the same tasks</text>
+<text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Condition C ran again with each release of exposurie, on the same brains, with the same Claude</text>
+<text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Code, model, tools and scoring. A, B and D have no exposurie, so their runs stand.</text>
+<text x="40" y="138" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Right answers, areas 1–7: one dot per task, filled when right</text>
+<text x="40" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C">area</text>
+<text x="326" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C" text-anchor="middle">1</text>
+<text x="382" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C" text-anchor="middle">2</text>
+<text x="438" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C" text-anchor="middle">3</text>
+<text x="494" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C" text-anchor="middle">4</text>
+<text x="550" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C" text-anchor="middle">5</text>
+<text x="606" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C" text-anchor="middle">6</text>
+<text x="662" y="168" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#8C8C8C" text-anchor="middle">7</text>
+<text x="40" y="205" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.2.0</text>
+<text x="40" y="223" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the release first measured</text>
+<circle cx="310" cy="200" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="326" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="342" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="366" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="382" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="398" cy="200" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="422" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="438" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="454" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="478" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="494" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="510" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="534" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="550" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="566" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="590" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="606" cy="200" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="622" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="646" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="662" cy="200" r="7" fill="#E37D4E"/>
+<circle cx="678" cy="200" r="7" fill="#E37D4E"/>
+<text x="704" y="205" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">18 of 21</text>
+<text x="40" y="251" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.3.0's read</text>
+<text x="40" y="269" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">search: words in any order or form</text>
+<circle cx="310" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="326" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="342" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="366" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="382" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="398" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="422" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="438" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="454" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="478" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="494" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="510" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="534" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="550" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="566" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="590" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="606" cy="246" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="622" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="646" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="662" cy="246" r="7" fill="#E37D4E"/>
+<circle cx="678" cy="246" r="7" fill="#E37D4E"/>
+<text x="704" y="251" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">20 of 21</text>
+<text x="40" y="297" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">1.3.1</text>
+<text x="40" y="315" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the pointer also fires before work</text>
+<circle cx="310" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="326" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="342" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="366" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="382" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="398" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="422" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="438" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="454" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="478" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="494" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="510" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="534" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="550" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="566" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="590" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="606" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="622" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="646" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="662" cy="292" r="7" fill="#E37D4E"/>
+<circle cx="678" cy="292" r="7" fill="#E37D4E"/>
+<text x="704" y="297" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">21 of 21</text>
+<text x="40" y="342" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#6B6B6B">the tasks a release missed:</text>
+<text x="310" y="342" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#6B6B6B" text-anchor="middle">recall-1</text>
+<text x="398" y="342" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#6B6B6B" text-anchor="middle">across-3</text>
+<text x="606" y="342" font-family="Calibri, Carlito, Arial, sans-serif" font-size="12" fill="#6B6B6B" text-anchor="middle">real-work-2</text>
+<text x="40" y="394" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Tokens per run: the median of areas 1–7</text>
+<text x="40" y="426" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.2.0</text>
+<rect x="310" y="410" width="280.1" height="22" fill="#E37D4E"/>
+<text x="598.1" y="426" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">34,494</text>
+<text x="40" y="460" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.3.0's read</text>
+<rect x="310" y="444" width="158.7" height="22" fill="#E37D4E"/>
+<text x="476.7" y="460" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">19,551</text>
+<text x="40" y="494" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">1.3.1</text>
+<rect x="310" y="478" width="196.3" height="22" fill="#E37D4E"/>
+<text x="514.3" y="494" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">24,175</text>
+<text x="40" y="544" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Tokens per right answer: all of C's tokens in areas 1–7 ÷ its right answers</text>
+<text x="40" y="576" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.2.0</text>
+<rect x="310" y="560" width="400" height="22" fill="#E37D4E"/>
+<text x="718" y="576" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">49,263</text>
+<text x="40" y="610" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.3.0's read</text>
+<rect x="310" y="594" width="288.5" height="22" fill="#E37D4E"/>
+<text x="606.5" y="610" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">35,526</text>
+<text x="40" y="644" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">1.3.1</text>
+<rect x="310" y="628" width="288.6" height="22" fill="#E37D4E"/>
+<text x="606.6" y="644" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">35,546</text>
+<text x="40" y="694" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">long-2: what sync + fresh kept after the fork at 500,236 tokens</text>
+<text x="303" y="720" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the work's checks</text>
+<text x="583" y="720" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">the decisions</text>
+<text x="40" y="759" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.2.0</text>
+<circle cx="310" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="328" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="346" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="364" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="382" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="400" cy="754" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="418" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="436" cy="754" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="454" cy="754" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="472" cy="754" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="498" y="759" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">6 of 10</text>
+<circle cx="590" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="608" cy="754" r="7" fill="#E37D4E"/>
+<circle cx="626" cy="754" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="644" cy="754" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="670" y="759" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">2 of 4</text>
+<text x="40" y="793" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414">1.3.0's read</text>
+<circle cx="310" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="328" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="346" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="364" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="382" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="400" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="418" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="436" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="454" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="472" cy="788" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="498" y="793" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">9 of 10</text>
+<circle cx="590" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="608" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="626" cy="788" r="7" fill="#E37D4E"/>
+<circle cx="644" cy="788" r="7" fill="#E37D4E"/>
+<text x="670" y="793" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">4 of 4</text>
+<text x="40" y="827" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" font-weight="bold">1.3.1</text>
+<text x="303" y="827" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#8C8C8C">not run</text>
+<text x="40" y="861" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414"><tspan font-family="Consolas, Menlo, monospace">/compact</tspan>, for reference</text>
+<circle cx="310" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="328" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="346" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="364" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="382" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="400" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="418" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="436" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="454" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="472" cy="856" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<text x="498" y="861" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">9 of 10</text>
+<circle cx="590" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="608" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="626" cy="856" r="7" fill="#6B6B6B"/>
+<circle cx="644" cy="856" r="7" fill="#6B6B6B"/>
+<text x="670" y="861" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#141414">4 of 4</text>
+<text x="40" y="894" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">long-1's sync + fresh finished 7 of 7 and kept 5 of 5 with both reads. 1.3.1 did not run area 9.</text>
+<text x="40" y="936" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">C ran <tspan font-family="Consolas, Menlo, monospace">exposurie read</tspan> in 20, 20 and 21 of its 21 runs, and was right in 18, 20 and 21 of those.</text>
+<text x="40" y="956" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">On work that needs no past (area 8), C never opened the brain, in any release,</text>
+<text x="40" y="976" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">and used 298, 299 and 267 tokens a run more than A.</text>
+</svg>

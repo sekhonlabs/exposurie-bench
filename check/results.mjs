@@ -9,7 +9,8 @@
 // with each repair published, and a finished hand read, every verdict of which
 // gives a reason; and the README gives its headline as the numbers have it.
 // Part 12's six lines are held to runner/its-yours.mjs, to exposurie 1.3.1,
-// to every command's published output, and to the README's table.
+// to every command's published output, and to the README's count of them.
+// Every result is a chart, and the README shows every chart.
 //
 //   node check/results.mjs
 //
@@ -239,6 +240,11 @@ if (!problems.length) {
   for (const name of existsSync(charts) ? readdirSync(charts) : []) {
     if (!(`results/charts/${name}` in written)) fail(`results/charts/${name}`, 'is not written by score/results.mjs');
   }
+  // Every result is shown as a chart, so the README shows every chart.
+  const readmeText = readFileSync(join(REPO, 'README.md'), 'utf8');
+  for (const rel of Object.keys(written).filter((r) => r.endsWith('.svg'))) {
+    if (!readmeText.includes(`](${rel})`)) fail('README.md', `does not show ${rel}`);
+  }
 }
 
 // ---- the charts keep to the look in CLAUDE.md, and every line of text fits inside its chart
@@ -305,9 +311,11 @@ else {
       if (typeof l.evidence?.[u]?.pass !== 'boolean') fail(YOURS, `line ${l.id} has no verdict and evidence for ${u}`);
       else if (l.pass && !l.evidence[u].pass) fail(YOURS, `line ${l.id} passes though it failed for ${u}`);
     }
-    const row = `| ${l.id} | ${l.name} | ${l.pass ? 'pass' : 'fail'} |`;
-    if (!readme.includes(row)) fail('README.md', `does not give part 12's line as results/its-yours has it: "${row}"`);
   }
+  // Its chart, results/charts/its-yours.svg, draws each line from this file; the README gives the count in words.
+  const lines = yours.lines ?? [];
+  const headline = `${lines.filter((l) => l.pass).length} of ${lines.length} lines held, for both users.`;
+  if (!readme.includes(headline)) fail('README.md', `does not say, as results/its-yours has it: "${headline}"`);
   for (const u of yours.users) {
     const outs = existsSync(join(REPO, 'results', 'its-yours', u)) ? readdirSync(join(REPO, 'results', 'its-yours', u)) : [];
     const labels = yours.lines?.[2]?.evidence?.[u]?.commands ?? [];

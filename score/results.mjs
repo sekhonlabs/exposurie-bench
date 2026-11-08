@@ -17,11 +17,13 @@
 // C again with exposurie 1.3.1, whose pointer also fires before work, sits
 // beside both under pointer_for_work. Part 13, many agents, one job, is
 // published from its scores and their hand read, under many_agents.
+// Every result has a chart: at-a-glance, right-answers, tokens, many-agents,
+// its-yours (part 12, drawn from results/its-yours/), long-sessions and versions.
 // check/results.mjs holds results/ to what this writes.
 //
 // Run it with the sandbox's own Node.
 
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { REBUILT_BATCH, STRATEGIES } from '../runner/long.mjs';
@@ -769,13 +771,315 @@ function longSessionsChart(N) {
   return svg(W, y + 30, 'Long sessions: what each strategy kept after the fork, and its tokens', out);
 }
 
-/** Everything this writes into the repository, by path. */
-export function outputs(N = computeNumbers()) {
+/** A filled dot, orange for exposurie and grey otherwise, or an empty ring when it did not hold. */
+const mark = (cx, cy, held, orange) => (held
+  ? `<circle cx="${round(cx, 1)}" cy="${cy}" r="7" fill="${orange ? LOOK.orange : LOOK.grey[1]}"/>`
+  : `<circle cx="${round(cx, 1)}" cy="${cy}" r="6.25" fill="${LOOK.white}" stroke="${LOOK.rule[1]}" stroke-width="1.5"/>`);
+
+/** "1, 2 and 3", for a short list. */
+const andList = (xs) => (xs.length < 2 ? `${xs[0] ?? ''}` : `${xs.slice(0, -1).join(', ')} and ${xs.at(-1)}`);
+
+/** One value when both users' are the same, else both: "11", or "59 and 40". */
+const pair = (xs) => (xs.every((x) => x === xs[0]) ? `${xs[0]}` : andList(xs));
+
+/** Area 9's long task whose sync + fresh changed with part 10's read, beside what it kept with each. */
+function longChanged(N) {
+  const again = (t) => N.rebuilt_read.area_9.tasks.find((x) => x.task === t.task)?.strategies.sync;
+  const t = N.area_9.tasks.find((x) => again(x) && (again(x).finished.held !== x.strategies.sync.finished.held || again(x).kept.held !== x.strategies.sync.kept.held));
+  return t ? { t, before: t.strategies.sync, after: again(t), compact: t.strategies.compact, again } : { again };
+}
+
+/**
+ * The results at a glance: one tile per finding, each the number exposurie got,
+ * with what it stands beside. Every number is one the other charts draw, and
+ * each tile's orange edge marks it as exposurie's.
+ */
+function glanceChart(N, Y) {
+  const W = 880;
+  const P = N.pointer_for_work;
+  const M = N.many_agents;
+  const pooled = P.right_answers.pooled;
+  const med = P.tokens_per_run.median;
+  const { t: long, after, compact } = longChanged(N);
+  const level = long && after.finished.held === compact.finished.held && after.kept.held === compact.kept.held;
+  const releases = [N, N.rebuilt_read, P].map((R) => R.right_answers.pooled.C);
+  const tiles = [
+    ['Right answers about the user\'s past', `${pooled.C} of ${P.right_answers.of}`, `A ${pooled.A} · B ${pooled.B} · D ${pooled.D}, areas 1–7, one run each`],
+    ['Tokens a run, median of areas 1–7', fmt(med.C), `B ${fmt(med.B)} · A ${fmt(med.A)} · D ${fmt(med.D)}`],
+    ['Extra tokens on work that needs no past', `+${fmt(P.overhead.c_minus_a)}`, 'a run more than A, as measured (area 8)'],
+    ['Made-up answers, in any condition', `${sum(CONDITIONS.map((c) => P.made_up_answers[c]))}`, 'on questions the history never discussed'],
+    ['Decisions carried from agent to agent', `${M.conditions.C.kept.held} of ${M.conditions.C.kept.of}`, `A ${M.conditions.A.kept.held} · D ${M.conditions.D.kept.held}, by hand (part 13)`],
+    ['Checks of its own layer that held', `${Y.lines.filter((l) => l.pass).length} of ${Y.lines.length}`, 'for both users (part 12)'],
+    ...(long ? [['A long session, after sync + fresh', `${after.finished.held} of ${after.finished.of} · ${after.kept.held} of ${after.kept.of}`,
+      `${long.task} with ${REBUILT_NAME}; ${level ? 'level with /compact' : `/compact ${compact.finished.held} · ${compact.kept.held}`}`]] : []),
+    ['Right answers across three releases', releases.join(' → '), `1.2.0, ${REBUILT_NAME} and ${P.exposurie}, of ${P.right_answers.of}`],
+  ];
+  const out = [
+    text(40, 46, 'exposurie-bench at a glance', { font: FONTS.title, size: 24, colour: LOOK.ink }),
+    text(40, 72, `Same tasks, model and tools in every condition. C is exposurie ${P.exposurie}, the version on npm.`, { colour: LOOK.grey[1] }),
+    text(40, 92, 'A is a fresh session, B the whole history in context, D a perfect memory of what each task needs.', { colour: LOOK.grey[1] }),
+  ];
+  tiles.forEach(([label, value, beside], i) => {
+    const x = 40 + (i % 2) * 410;
+    const y = 124 + Math.floor(i / 2) * 138;
+    out.push(rect(x, y, 390, 118, LOOK.panel), rect(x, y, 4, 118, LOOK.orange));
+    out.push(text(x + 22, y + 32, label, { size: 15, colour: LOOK.ink, bold: true }));
+    out.push(text(x + 22, y + 78, value, { size: 36, colour: LOOK.ink, bold: true }));
+    out.push(text(x + 22, y + 104, beside, { size: 14, colour: LOOK.grey[1] }));
+  });
+  return svg(W, 124 + Math.ceil(tiles.length / 2) * 138 + 12, 'exposurie-bench at a glance: every result in one view', out);
+}
+
+/** Short names for part 13's six decisions, for its chart. Each one in full is in tasks/team/<task>.json. */
+const TEAM_DECISION_NAMES = {
+  K1: 'Highlights\' shape: text, note, createdAt',
+  K2: 'Imported highlights get source: import',
+  K3: 'A highlight is added only once',
+  K4: 'Instapaper folders become folder: tags',
+  K5: 'Omnivore: read 90% or more counts as read',
+  K6: 'The summary email counts highlights',
+};
+
+/**
+ * Part 13: one dot per decision round 1 was told and round 2 needed, filled
+ * when round 2's merged work kept it, by hand, in each condition, and then
+ * what else round 2 showed. C is exposurie, so it takes the orange.
+ */
+function manyAgentsChart(N, task) {
+  const W = 880;
+  const M = N.many_agents;
+  const cols = ['A', 'C', 'D'];
+  const col = { A: 540, C: 660, D: 780 };
+  const sub = { A: 'no memory', C: `exposurie ${M.exposurie}`, D: 'perfect notes' };
+  const told = Object.fromEntries(task.decisions.map((d) => [d.id, d]));
+  const out = [
+    text(40, 46, 'Many agents, one job', { font: FONTS.title, size: 24, colour: LOOK.ink }),
+    text(40, 72, `Round 1: three agents built one feature with exposurie ${M.exposurie}, each in its own copy.`, { colour: LOOK.grey[1] }),
+    text(40, 92, 'In chat, each was also told decisions for later work, and not to build them.', { colour: LOOK.grey[1] }),
+    text(40, 112, 'Round 2: three new agents in each condition built the rest, blind, from one short ask each.', { colour: LOOK.grey[1] }),
+    text(40, 132, 'Each dot is one decision, filled when round 2\'s merged work kept it, by hand.', { colour: LOOK.grey[1] }),
+  ];
+  const rowY = (i) => 252 + i * 46;
+  const ruleY = rowY(M.decisions.length) - 12;
+  const more = [
+    ['The three agreed on the highlights\' shape', (v) => (v.agreed ? 'yes' : 'no')],
+    ['Agents that opened the brain', (v, c) => (c === 'C' ? `${v.looked.runs} of ${v.looked.of}` : 'no brain')],
+    ['Commit messages in the developer\'s style', (v) => `${v.way['commit-style'].held} of ${v.way['commit-style'].of}`],
+    ['The repository\'s own tests after the merge', (v) => `${v.tests.own.passed} of ${v.tests.own.of}`],
+    ['Input tokens in round 2', (v) => fmt(v.tokens.all_input)],
+    ['Cost, in Claude Code\'s estimate', (v) => `$${v.cost_usd_estimate.toFixed(2)}`],
+  ];
+  const moreY = (i) => ruleY + 104 + i * 32;
+  const end = moreY(more.length - 1) + 16;
+  out.push(rect(col.C - 62, 152, 124, end - 152, LOOK.tint));
+  for (const c of cols) {
+    out.push(text(col[c], 182, c, { font: FONTS.title, size: 20, colour: LOOK.ink, anchor: 'middle' }));
+    out.push(text(col[c], 202, sub[c], { size: 14, colour: LOOK.grey[1], anchor: 'middle' }));
+  }
+  M.decisions.forEach((k, i) => {
+    const y = rowY(i);
+    out.push(text(40, y + 5, k, { size: 15, colour: LOOK.grey[2] }));
+    out.push(text(76, y + 5, TEAM_DECISION_NAMES[k] ?? k, { size: 16 }));
+    out.push(text(76, y + 24, `told to agent ${told[k].told_to} of round 1; needed by ${andList(told[k].needed_by)} of round 2`, { size: 13, colour: LOOK.grey[1] }));
+    for (const c of cols) out.push(mark(col[c], y, M.conditions[c].decisions[k] === true, c === 'C'));
+  });
+  out.push(rule(40, W - 40, ruleY));
+  out.push(text(40, ruleY + 38, `Decisions kept, of ${M.decisions.length}`, { size: 16, colour: LOOK.ink, bold: true }));
+  out.push(text(40, ruleY + 66, 'by the scorer, before the hand read', { size: 14, colour: LOOK.grey[1] }));
+  for (const c of cols) {
+    out.push(text(col[c], ruleY + 39, M.conditions[c].kept.held, { size: 22, colour: LOOK.ink, anchor: 'middle', bold: true }));
+    out.push(text(col[c], ruleY + 66, M.conditions[c].kept.by_script, { size: 14, colour: LOOK.grey[1], anchor: 'middle' }));
+  }
+  more.forEach(([label, f], i) => {
+    out.push(text(40, moreY(i), label, { size: 15 }));
+    for (const c of cols) out.push(text(col[c], moreY(i), f(M.conditions[c], c), { size: 15, colour: c === 'C' ? LOOK.ink : LOOK.body, anchor: 'middle', bold: c === 'C' }));
+  });
+  let y = end + 36;
+  const missed = M.decisions.filter((k) => !M.conditions.C.decisions[k] && M.conditions.D.decisions[k]);
+  if (missed.length === 1 && missed[0] === 'K1') {
+    out.push(text(40, y, 'C\'s one miss: its Instapaper agent read the page that holds the highlights\' shape, but the page', { size: 14, colour: LOOK.grey[1] }));
+    out.push(text(40, y + 20, 'words it as a plan, and the agent left Instapaper\'s highlights to another. D\'s notes word it as a rule.', { size: 14, colour: LOOK.grey[1] }));
+    y += 40;
+  }
+  if (M.round_1.repaired_by_hand) {
+    out.push(text(40, y, 'Round 1\'s merge collided, and was repaired by hand before round 2 ran, with nothing of round 2 in it.', { size: 14, colour: LOOK.grey[1] }));
+    y += 20;
+  }
+  return svg(W, y + 18, 'Many agents, one job: the decisions round 2 kept, by condition', out);
+}
+
+/**
+ * Part 12: its six lines, each a script run for both users, with what each
+ * found in short, from results/its-yours/ alone. Every line is exposurie's own,
+ * so a line that held for a user takes the orange.
+ */
+function itsYoursChart(Y) {
+  const W = 880;
+  const col = Object.fromEntries(Y.users.map((u, i) => [u, 735 + i * 80]));
+  const of = (l, f) => Y.users.map((u) => f(l.evidence[u]));
+  const n = (x) => (Array.isArray(x) ? x.length : Number(x ?? 0));
+  const none = (l, f) => of(l, (e) => n(f(e))).every((x) => x === 0);
+  const found = {
+    1: (l) => `${pair(of(l, (e) => e.files))} files, ${none(l, (e) => e.notUtf8) ? 'all UTF-8 text' : 'not all UTF-8 text'}; ` +
+      `${pair(of(l, (e) => e.links))} links, ${none(l, (e) => e.dead) ? 'none dead' : 'some dead'}`,
+    2: (l) => (none(l, (e) => e.leftAfterUninstall)
+      ? `uninstall took back all ${pair(of(l, (e) => n(e.setupWrote)))} files setup wrote outside the brain` : 'uninstall left files behind') +
+      (none(l, (e) => e.pagesChangedFromInstallToUninstall) ? '; no page changed' : '; a page changed'),
+    3: (l) => `a trap in every Node process, npm's too, recorded ${none(l, (e) => e.attempts) ? 'no connection' : 'connections'} in ${pair(of(l, (e) => n(e.commands)))} commands`,
+    4: (l) => `stdin closed and no credentials in reach; ${none(l, (e) => e.asks) ? 'no command asked for a login or key' : 'a command asked for a login'}`,
+    5: (l) => {
+      const agents = l.evidence[Y.users[0]].agents;
+      const ok = of(l, (e) => e.agents.every((a) => a.pointer && a.once && a.same && a.usersLinesKept)).every(Boolean);
+      return `${ok ? 'the same pointer, once,' : 'not the same pointer'} in ${agents.length} files: ${andList([...new Set(agents.map((a) => a.agent))])}`;
+    },
+    6: (l) => {
+      const reached = Object.entries(l.evidence[Y.users[0]].reachedTheBatch);
+      const missing = reached.filter(([, r]) => !r).map(([k]) => k);
+      return `chats from ${andList(reached.map(([k]) => k))} ${missing.length ? `reached one sync, but not ${andList(missing)}` : 'reached one sync'}`;
+    },
+  };
+  const out = [
+    text(40, 46, `It's yours: six checks of exposurie ${Y.exposurie}'s own layer`, { font: FONTS.title, size: 24, colour: LOOK.ink }),
+    text(40, 72, 'Each line is a script, run for both users in a throwaway home, with exposurie installed from npm', { colour: LOOK.grey[1] }),
+    text(40, 92, 'and removed at the end. Each dot is one user, filled when the line held for them.', { colour: LOOK.grey[1] }),
+    text(40, 112, 'No agent session ran: this checks what exposurie itself writes, reaches for and leaves behind.', { colour: LOOK.grey[1] }),
+  ];
+  for (const u of Y.users) out.push(text(col[u], 160, u, { size: 14, colour: LOOK.grey[1], anchor: 'middle' }));
+  Y.lines.forEach((l, i) => {
+    const y = 200 + i * 54;
+    out.push(text(40, y + 5, l.id, { size: 15, colour: LOOK.grey[2] }));
+    out.push(text(76, y + 5, l.name, { size: 16, colour: LOOK.ink }));
+    out.push(text(76, y + 25, found[l.id]?.(l) ?? '', { size: 13, colour: LOOK.grey[1] }));
+    for (const u of Y.users) out.push(mark(col[u], y, l.evidence[u].pass === true, true));
+  });
+  const ruleY = 200 + Y.lines.length * 54 - 10;
+  out.push(rule(40, W - 40, ruleY));
+  out.push(text(40, ruleY + 38, `Lines that held, of ${Y.lines.length}`, { size: 16, colour: LOOK.ink, bold: true }));
+  for (const u of Y.users) out.push(text(col[u], ruleY + 39, Y.lines.filter((l) => l.evidence[u].pass).length, { size: 22, colour: LOOK.ink, anchor: 'middle', bold: true }));
+  const left = pair(of(Y.lines[1], (e) => n(e.emptyFoldersLeft)));
+  const notes = [
+    ['Line 3 leaves out ', { code: 'update' }, ', the one command that downloads, by what it is for.'],
+    `${left} empty folders that setup made stay after uninstall. The files that were in them are gone.`,
+    'Not shown: an agent reading the pointer, or finding its way with exposurie gone. One machine, on Windows.',
+  ];
+  notes.forEach((s, i) => out.push(text(40, ruleY + 84 + i * 20, s, { size: 14, colour: LOOK.grey[1] })));
+  return svg(W, ruleY + 84 + notes.length * 20 + 8, 'It\'s yours: the six lines, and whether each held for each user', out);
+}
+
+/**
+ * C on the same tasks with each release of exposurie: 1.2.0, part 10's read
+ * (1.3.0's) and 1.3.1, each beside the same A, B and D. One dot per task of
+ * areas 1–7, then C's tokens on one scale, then the long task whose sync +
+ * fresh changed, beside /compact. Every row but /compact is exposurie's.
+ */
+function versionsChart(N) {
+  const W = 880;
+  const P = N.pointer_for_work;
+  const V = [
+    { name: '1.2.0', what: 'the release first measured', R: N },
+    { name: REBUILT_NAME, what: 'search: words in any order or form', R: N.rebuilt_read },
+    { name: P.exposurie, what: 'the pointer also fires before work', R: P },
+  ];
+  const latest = (i) => i === V.length - 1;
+  const out = [
+    text(40, 46, 'How C got here: three releases on the same tasks', { font: FONTS.title, size: 24, colour: LOOK.ink }),
+    text(40, 72, 'Condition C ran again with each release of exposurie, on the same brains, with the same Claude', { colour: LOOK.grey[1] }),
+    text(40, 92, 'Code, model, tools and scoring. A, B and D have no exposurie, so their runs stand.', { colour: LOOK.grey[1] }),
+  ];
+  const tasks = (R) => R.by_task.filter((t) => MEMORY.includes(t.area));
+  const order = tasks(N).map((t) => t.task);
+  const dotX = (j) => 310 + Math.floor(j / 3) * 56 + (j % 3) * 16;
+  let y = 138;
+  out.push(text(40, y, 'Right answers, areas 1–7: one dot per task, filled when right', { size: 16, colour: LOOK.ink, bold: true }));
+  out.push(text(40, y + 30, 'area', { size: 12, colour: LOOK.grey[2] }));
+  MEMORY.forEach((a, g) => out.push(text(dotX(g * 3 + 1), y + 30, a, { size: 12, colour: LOOK.grey[2], anchor: 'middle' })));
+  y += 62;
+  const missed = new Set();
+  V.forEach((v, i) => {
+    out.push(text(40, y + 5, v.name, { size: 15, colour: LOOK.ink, bold: latest(i) }));
+    out.push(text(40, y + 23, v.what, { size: 13, colour: LOOK.grey[1] }));
+    const verdict = Object.fromEntries(tasks(v.R).map((t) => [t.task, t.C]));
+    order.forEach((id, j) => {
+      if (verdict[id] !== 'right') missed.add(id);
+      out.push(mark(dotX(j), y, verdict[id] === 'right', true));
+    });
+    out.push(text(dotX(order.length - 1) + 26, y + 5, `${v.R.right_answers.pooled.C} of ${v.R.right_answers.of}`, { size: 15, colour: LOOK.ink, bold: latest(i) }));
+    y += 46;
+  });
+  if (missed.size) {
+    out.push(text(40, y + 4, 'the tasks a release missed:', { size: 12, colour: LOOK.grey[1] }));
+    for (const id of order.filter((x) => missed.has(x))) out.push(text(dotX(order.indexOf(id)), y + 4, id, { size: 12, colour: LOOK.grey[1], anchor: 'middle' }));
+  }
+  y += 56;
+  const scale = Math.max(...V.flatMap((v) => [v.R.tokens_per_run.median.C, v.R.tokens_per_right_answer.C]));
+  const tokenPanel = (title, f) => {
+    out.push(text(40, y, title, { size: 16, colour: LOOK.ink, bold: true }));
+    y += 16;
+    V.forEach((v, i) => {
+      out.push(text(40, y + 16, v.name, { size: 15, colour: LOOK.ink, bold: latest(i) }));
+      const w = Math.max(2, (f(v.R) / scale) * 400);
+      out.push(rect(310, y, w, 22, LOOK.orange));
+      out.push(text(310 + w + 8, y + 16, fmt(f(v.R)), { size: 15, colour: LOOK.ink, bold: latest(i) }));
+      y += 34;
+    });
+    y += 32;
+  };
+  tokenPanel('Tokens per run: the median of areas 1–7', (R) => R.tokens_per_run.median.C);
+  tokenPanel('Tokens per right answer: all of C\'s tokens in areas 1–7 ÷ its right answers', (R) => R.tokens_per_right_answer.C);
+
+  const { t: long, before, after, compact, again } = longChanged(N);
+  if (long) {
+    out.push(text(40, y, `${long.task}: what sync + fresh kept after the fork at ${fmt(long.fork.context)} tokens`, { size: 16, colour: LOOK.ink, bold: true }));
+    out.push(text(303, y + 26, 'the work\'s checks', { size: 13, colour: LOOK.grey[1] }));
+    out.push(text(583, y + 26, 'the decisions', { size: 13, colour: LOOK.grey[1] }));
+    y += 60;
+    const row = (label, v, orange, bold) => {
+      out.push(text(40, y + 5, label, { size: 15, colour: LOOK.ink, bold }));
+      if (!v) out.push(text(303, y + 5, 'not run', { size: 14, colour: LOOK.grey[2] }));
+      else {
+        Object.values(v.checks.finished).forEach((held, j) => out.push(mark(310 + j * 18, y, held === true, orange)));
+        out.push(text(310 + Object.keys(v.checks.finished).length * 18 + 8, y + 5, `${v.finished.held} of ${v.finished.of}`, { size: 14, colour: LOOK.ink }));
+        Object.values(v.checks.kept).forEach((held, j) => out.push(mark(590 + j * 18, y, held === true, orange)));
+        out.push(text(590 + Object.keys(v.checks.kept).length * 18 + 8, y + 5, `${v.kept.held} of ${v.kept.of}`, { size: 14, colour: LOOK.ink }));
+      }
+      y += 34;
+    };
+    row('1.2.0', before, true, false);
+    row(REBUILT_NAME, after, true, false);
+    row(P.exposurie, null, true, true);
+    row([{ code: '/compact' }, ', for reference'], compact, false, false);
+    const other = N.area_9.tasks.find((x) => x !== long && again(x));
+    if (other) {
+      const [a, b] = [other.strategies.sync, again(other)];
+      const same = a.finished.held === b.finished.held && a.kept.held === b.kept.held;
+      out.push(text(40, y + 4, same ? `${other.task}'s sync + fresh finished ${a.finished.held} of ${a.finished.of} and kept ${a.kept.held} of ${a.kept.of} with both reads. 1.3.1 did not run area 9.`
+        : `${other.task}'s sync + fresh: ${a.finished.held} and ${b.finished.held} of ${a.finished.of} finished, ${a.kept.held} and ${b.kept.held} of ${a.kept.of} kept.`, { size: 14, colour: LOOK.grey[1] }));
+      y += 24;
+    }
+    y += 22;
+  }
+  const looked = V.map((v) => v.R.looked_vs_found);
+  const extra = V.map((v) => v.R.overhead);
+  out.push(text(40, y, ['C ran ', { code: 'exposurie read' }, ` in ${andList(looked.map((l) => l.looked))} of its ${looked[0].runs} runs, and was right in ${andList(looked.map((l) => l.right_when_looked))} of those.`], { size: 14, colour: LOOK.grey[1] }));
+  out.push(text(40, y + 20, `On work that needs no past (area 8), C ${extra.every((o) => !o.c_looked) ? 'never opened the brain, in any release,' : 'sometimes opened the brain,'}`, { size: 14, colour: LOOK.grey[1] }));
+  out.push(text(40, y + 40, `and used ${andList(extra.map((o) => fmt(o.c_minus_a)))} tokens a run more than A.`, { size: 14, colour: LOOK.grey[1] }));
+  return svg(W, y + 66, 'How C got here: right answers and tokens for each release of exposurie', out);
+}
+
+/** Everything this writes into the repository, by path, from results/ and the task files alone. */
+export function outputs(N = computeNumbers(), root = REPO) {
+  const yours = join(root, 'results', 'its-yours', 'its-yours.json');
+  const Y = existsSync(yours) ? readJson(yours) : null;
+  const team = readJson(join(root, 'tasks', 'team', `${N.many_agents.task}.json`));
   return {
     'results/numbers.json': json(N),
+    ...(Y ? { 'results/charts/at-a-glance.svg': glanceChart(N, Y) } : {}),
     'results/charts/right-answers.svg': rightAnswersChart(N),
     'results/charts/tokens.svg': tokensChart(N),
+    'results/charts/many-agents.svg': manyAgentsChart(N, team),
+    ...(Y ? { 'results/charts/its-yours.svg': itsYoursChart(Y) } : {}),
     'results/charts/long-sessions.svg': longSessionsChart(N),
+    'results/charts/versions.svg': versionsChart(N),
   };
 }
 
