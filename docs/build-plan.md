@@ -661,7 +661,7 @@ node check/team.mjs                                 all of it through the fake, 
 
 ### 13 again, on 1.3.2 (2026-11-09)
 
-**Plan usage:** yes: one sync and three runs, which cost $0.99 together on 1.3.1. **Decided by the owner on 2026-11-09, once 1.3.2 was on npm. Built and checked against the fake the same day; the live run waits for his go.** Why each choice was made is in [decisions.md](decisions.md), 2026-11-09.
+**Plan usage:** yes: one sync and three runs, about $0.88 (they cost $0.99 together on 1.3.1). **Decided by the owner on 2026-11-09, once 1.3.2 was on npm. Built and checked against the fake the same day, then run live on his go, read by hand and published: C kept 6 of 6, and its three agents agreed.** Why each choice was made is in [decisions.md](decisions.md), 2026-11-09.
 
 **The question:** does 1.3.2's sync, which asks for each decision as the rule it set, file K1 so that C's Instapaper agent keeps it? On 1.3.1, C kept 5 of 6. The one it lost was K1 on Instapaper's side: the sync filed it as a plan (*"readers will put highlights on items"*), and the agent took it for another agent's job.
 
