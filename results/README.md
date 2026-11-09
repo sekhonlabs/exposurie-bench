@@ -29,6 +29,7 @@ A batch folder holds `scores.json`, the scorer's verdicts made without knowing t
 | `area-9-2/` | 1.3.0's read | 2026-10-25 | sync + fresh's fresh session again, in each long task |
 | `full-3/` | 1.3.1 | 2026-11-05 | C again on areas 1 to 8: 24 runs, the results the README leads with |
 | `team-1/` | 1.3.1 | 2026-11-07 | part 13: scores, the hand read and its tests (`hand.json`, `hand.test.js`), and round 1's repair (`repair-1.patch`) |
+| `team-1-132/` | 1.3.2 | 2026-11-09 | part 13 again: the sync and C's round 2 from team-1's round 1, with their scores, hand read and its tests |
 | `its-yours/` | 1.3.1 | 2026-11-07 | part 12: every line's evidence (`its-yours.json`), and each command's output for each user |
 
 "1.3.0's read" is exposurie's rebuilt read, which ran as `1.2.0+b6855ee` before npm shipped it, byte for byte, as 1.3.0. Its records keep the label they recorded.

@@ -1,0 +1,1225 @@
+{
+  "task": "team-1",
+  "batch": "team-1-132",
+  "exposurie": "1.3.2",
+  "scored": "2026-11-09T12:42:23.533Z",
+  "round_1": {
+    "from": "team-1",
+    "steps": 9,
+    "tokens": {
+      "input": 132,
+      "cache_write": 113321,
+      "cache_read": 1681406,
+      "output": 52159,
+      "all_input": 1794859
+    },
+    "cost_usd_estimate": 1.1432786,
+    "looked": 3,
+    "merge": {
+      "conflicts": [
+        "3:src/import/routes.js",
+        "3:test/import-file.test.js"
+      ]
+    },
+    "gate": {
+      "passed": true,
+      "own": {
+        "exit": 0,
+        "signal": null,
+        "tests": [
+          {
+            "name": "signing in emails a link that expires after 15 minutes",
+            "ok": true
+          },
+          {
+            "name": "a link signs in once",
+            "ok": true
+          },
+          {
+            "name": "an expired link is refused",
+            "ok": true
+          },
+          {
+            "name": "the same address signs in to the same account",
+            "ok": true
+          },
+          {
+            "name": "pages need a signed-in user",
+            "ok": true
+          },
+          {
+            "name": "plain rows split on commas and line breaks",
+            "ok": true
+          },
+          {
+            "name": "quoted fields keep commas, line breaks and doubled quotes",
+            "ok": true
+          },
+          {
+            "name": "a byte order mark is dropped and CRLF ends rows",
+            "ok": true
+          },
+          {
+            "name": "CRLF inside a quoted field is kept",
+            "ok": true
+          },
+          {
+            "name": "empty fields and a missing final newline survive",
+            "ok": true
+          },
+          {
+            "name": "blank lines are skipped and empty input has no rows",
+            "ok": true
+          },
+          {
+            "name": "records are keyed by the header, short rows padded",
+            "ok": true
+          },
+          {
+            "name": "test\\\\helpers.js",
+            "ok": true
+          },
+          {
+            "name": "links, tags, and the read and archived states are saved as they came",
+            "ok": true
+          },
+          {
+            "name": "a saved link keeps its highlights and tags when it comes round again",
+            "ok": true
+          },
+          {
+            "name": "a free account stops at 100 links, and links it already has are not left out",
+            "ok": true
+          },
+          {
+            "name": "more than one batch is written, and every link is fetched",
+            "ok": true
+          },
+          {
+            "name": "the upload is kept for a retry and removed after the last failure",
+            "ok": true
+          },
+          {
+            "name": "a service name cannot reach outside the readers",
+            "ok": true
+          },
+          {
+            "name": "an upload is saved and queued, and the page says it has started",
+            "ok": true
+          },
+          {
+            "name": "an unknown service queues nothing",
+            "ok": true
+          },
+          {
+            "name": "a file import is saved, queued, and the page says it started",
+            "ok": true
+          },
+          {
+            "name": "htmx gets only the notice",
+            "ok": true
+          },
+          {
+            "name": "a file for a service with no reader is refused and nothing is queued",
+            "ok": true
+          },
+          {
+            "name": "an empty file input still runs the pasted list",
+            "ok": true
+          },
+          {
+            "name": "the summary says what came in, and mentions the limit only when it bit",
+            "ok": true
+          },
+          {
+            "name": "an import that found nothing sends no email",
+            "ok": true
+          },
+          {
+            "name": "the summary goes to the user as plain text",
+            "ok": true
+          },
+          {
+            "name": "one of each link, and nothing that is not a link",
+            "ok": true
+          },
+          {
+            "name": "links already saved are skipped, and every new one is fetched",
+            "ok": true
+          },
+          {
+            "name": "a title that cannot be fetched leaves the address as the title",
+            "ok": true
+          },
+          {
+            "name": "a free account is filled to 100 links, and the rest are counted",
+            "ok": true
+          },
+          {
+            "name": "the import page answers with what happened",
+            "ok": true
+          },
+          {
+            "name": "jobs are claimed oldest first, and only once they are due",
+            "ok": true
+          },
+          {
+            "name": "a claimed job is not claimed again while it runs",
+            "ok": true
+          },
+          {
+            "name": "a finished job is never claimed again",
+            "ok": true
+          },
+          {
+            "name": "a failing job backs off, and the fifth failure is final",
+            "ok": true
+          },
+          {
+            "name": "a saved link shows on the unread page, and its page gets fetched",
+            "ok": true
+          },
+          {
+            "name": "something that is not a link is refused",
+            "ok": true
+          },
+          {
+            "name": "the free plan keeps 100 links",
+            "ok": true
+          },
+          {
+            "name": "a paid account has no limit",
+            "ok": true
+          },
+          {
+            "name": "done and archive take a link off the unread page",
+            "ok": true
+          },
+          {
+            "name": "saving a link again brings it back as unread",
+            "ok": true
+          },
+          {
+            "name": "a good signature passes, and a changed body does not",
+            "ok": true
+          },
+          {
+            "name": "a signature more than five minutes old does not pass",
+            "ok": true
+          },
+          {
+            "name": "a delivery that comes twice is recorded and queued once",
+            "ok": true
+          },
+          {
+            "name": "an older event never undoes a newer one",
+            "ok": true
+          },
+          {
+            "name": "reads every row of the Pocket export",
+            "ok": true
+          },
+          {
+            "name": "unread rows are neither archived nor read, and empty tags give an empty array",
+            "ok": true
+          },
+          {
+            "name": "a missing title, or the URL as the title, is null",
+            "ok": true
+          },
+          {
+            "name": "titles with commas and quotes, and a BOM with CRLF, are read",
+            "ok": true
+          },
+          {
+            "name": "Saturday at 07:59 in Lisbon goes out at 08:00 the same day",
+            "ok": true
+          },
+          {
+            "name": "Saturday at 08:01 waits a week",
+            "ok": true
+          },
+          {
+            "name": "the week the clocks go back, it is still 08:00 in Lisbon",
+            "ok": true
+          },
+          {
+            "name": "the first digest is scheduled once",
+            "ok": true
+          },
+          {
+            "name": "a match in the title ranks above a match in the text",
+            "ok": true
+          },
+          {
+            "name": "archived links are left out",
+            "ok": true
+          },
+          {
+            "name": "one account never sees another's results",
+            "ok": true
+          },
+          {
+            "name": "a quote in a search is not a syntax error",
+            "ok": true
+          },
+          {
+            "name": "page text in a snippet is escaped",
+            "ok": true
+          },
+          {
+            "name": "reading pages, the API and the pages themselves are never cached",
+            "ok": true
+          },
+          {
+            "name": "static files are",
+            "ok": true
+          }
+        ],
+        "passed": 62,
+        "failed": 0,
+        "total": 62
+      },
+      "hidden": {
+        "round-1 pocket: an export comes in through the import_file job": true,
+        "round-1 pocket: a second run adds nothing, and counts the duplicates": true,
+        "round-1 page: the import page offers Pocket": true
+      }
+    },
+    "repairs": [
+      {
+        "at": "2026-11-07T04:47:46.458Z",
+        "what": "Copies 1 and 3 both rewrote the upload in importRoutes and both added test/import-file.test.js, so the union merge declared everything twice. Kept the routes.js of copy 3, which meets the contract, with its data folder falling back to config.dataDir at request time, as the test of copy 1 expects. Joined the tests of both copies under one set of imports. No round 2 decision in it.",
+        "patch": "repair-1.patch",
+        "lines": 111
+      }
+    ],
+    "leaks": {
+      "K1": {
+        "leaked": false,
+        "files": []
+      },
+      "K2": {
+        "leaked": false,
+        "files": []
+      },
+      "K3": {
+        "leaked": false,
+        "files": []
+      },
+      "K4": {
+        "leaked": false,
+        "files": []
+      },
+      "K5": {
+        "leaked": false,
+        "files": []
+      },
+      "K6": {
+        "leaked": false,
+        "files": []
+      }
+    }
+  },
+  "sync": {
+    "tokens": {
+      "input": 18,
+      "cache_write": 43005,
+      "cache_read": 250538,
+      "output": 6459,
+      "all_input": 293561,
+      "by_model": {
+        "claude-sonnet-5-5": {
+          "input": 18,
+          "cache_write": 43005,
+          "cache_read": 250538,
+          "output": 6459
+        }
+      }
+    },
+    "cost_usd_estimate": 0.2616997999999999,
+    "pages": 40,
+    "filed": {
+      "K1": {
+        "filed": true,
+        "pages": [
+          "concepts/Satchel Background Import.md"
+        ]
+      },
+      "K2": {
+        "filed": true,
+        "pages": [
+          "concepts/Satchel Background Import.md"
+        ]
+      },
+      "K3": {
+        "filed": true,
+        "pages": [
+          "concepts/Satchel Background Import.md"
+        ]
+      },
+      "K4": {
+        "filed": true,
+        "pages": [
+          "concepts/Satchel Background Import.md"
+        ]
+      },
+      "K5": {
+        "filed": true,
+        "pages": [
+          "concepts/Satchel Background Import.md"
+        ]
+      },
+      "K6": {
+        "filed": true,
+        "pages": [
+          "concepts/Satchel Background Import.md"
+        ]
+      }
+    }
+  },
+  "conditions": {
+    "C": {
+      "runs": [
+        {
+          "run": "r001",
+          "agent": 1,
+          "status": "done",
+          "accepted": null,
+          "tokens": {
+            "input": 16,
+            "cache_write": 20233,
+            "cache_read": 135672,
+            "output": 5591,
+            "all_input": 155921,
+            "by_model": {
+              "claude-sonnet-5-5": {
+                "input": 16,
+                "cache_write": 20233,
+                "cache_read": 135672,
+                "output": 5591
+              }
+            }
+          },
+          "cost_usd_estimate": 0.1504412,
+          "looked": true,
+          "searched": [
+            "exposurie read --search \"Satchel\"",
+            "exposurie read \"Satchel Background Import\"",
+            "exposurie read \"Home Projects Testing Setup\"",
+            "exposurie read \"Dependency Policy\" --section \"Instances (what was declined, and why)\""
+          ],
+          "files": [
+            "src/import/readers/instapaper.js",
+            "test/instapaper.test.js"
+          ],
+          "decisions": {
+            "K1": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "Instapaper items carry highlights",
+                  "holds": true
+                },
+                {
+                  "what": "each highlight's words are its text",
+                  "holds": true
+                }
+              ]
+            },
+            "K4": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "folders become folder:<name> tags",
+                  "holds": true
+                },
+                {
+                  "what": "Unread and Archive are not made into folder tags, and Archive means archived and read",
+                  "holds": null
+                }
+              ]
+            }
+          },
+          "way": {
+            "commit-prefix": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "the commit message has no Conventional Commits prefix",
+                  "holds": true
+                }
+              ]
+            },
+            "commit-style": {
+              "holds": null,
+              "checks": [
+                {
+                  "what": "an imperative subject under 60 characters, and a body that says why",
+                  "holds": null
+                }
+              ]
+            },
+            "no-dependency": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "no new dependency: package.json's dependencies and devDependencies as round 1 left them",
+                  "holds": true
+                }
+              ]
+            },
+            "sql-files": {
+              "holds": null,
+              "checks": [
+                {
+                  "what": "SQL stays in .sql files, as everywhere in Satchel's code",
+                  "holds": null
+                }
+              ]
+            }
+          }
+        },
+        {
+          "run": "r002",
+          "agent": 2,
+          "status": "done",
+          "accepted": null,
+          "tokens": {
+            "input": 18,
+            "cache_write": 20754,
+            "cache_read": 151672,
+            "output": 5673,
+            "all_input": 172444,
+            "by_model": {
+              "claude-sonnet-5-5": {
+                "input": 18,
+                "cache_write": 20754,
+                "cache_read": 151672,
+                "output": 5673
+              }
+            }
+          },
+          "cost_usd_estimate": 0.15494919999999998,
+          "looked": true,
+          "searched": [
+            "exposurie read --search \"Satchel\"",
+            "exposurie read \"Satchel Background Import\"",
+            "exposurie read \"Home Projects Testing Setup\""
+          ],
+          "files": [
+            "src/import/readers/omnivore.js",
+            "test/omnivore.test.js"
+          ],
+          "decisions": {
+            "K1": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "Omnivore items carry highlights with createdAt",
+                  "holds": true
+                },
+                {
+                  "what": "each highlight's quote is its text",
+                  "holds": true
+                },
+                {
+                  "what": "each highlight's annotation is its note",
+                  "holds": true
+                }
+              ]
+            },
+            "K5": {
+              "holds": false,
+              "checks": [
+                {
+                  "what": "an item read 90% or more counts as read",
+                  "holds": false
+                }
+              ]
+            }
+          },
+          "way": {
+            "commit-prefix": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "the commit message has no Conventional Commits prefix",
+                  "holds": true
+                }
+              ]
+            },
+            "commit-style": {
+              "holds": null,
+              "checks": [
+                {
+                  "what": "an imperative subject under 60 characters, and a body that says why",
+                  "holds": null
+                }
+              ]
+            },
+            "no-dependency": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "no new dependency: package.json's dependencies and devDependencies as round 1 left them",
+                  "holds": true
+                }
+              ]
+            },
+            "sql-files": {
+              "holds": null,
+              "checks": [
+                {
+                  "what": "SQL stays in .sql files, as everywhere in Satchel's code",
+                  "holds": null
+                }
+              ]
+            }
+          }
+        },
+        {
+          "run": "r003",
+          "agent": 3,
+          "status": "done",
+          "accepted": null,
+          "tokens": {
+            "input": 30,
+            "cache_write": 32624,
+            "cache_read": 324130,
+            "output": 14935,
+            "all_input": 356784,
+            "by_model": {
+              "claude-sonnet-5-5": {
+                "input": 30,
+                "cache_write": 32624,
+                "cache_read": 324130,
+                "output": 14935
+              }
+            }
+          },
+          "cost_usd_estimate": 0.312319,
+          "looked": true,
+          "searched": [
+            "exposurie read --search \"Satchel import highlights\"",
+            "exposurie read \"Satchel Background Import\" --section \"Rules the owner set\"",
+            "exposurie read \"Satchel Background Import\" --section \"How it was built\""
+          ],
+          "files": [
+            "migrations/0013_highlight_source.sql",
+            "src/jobs/handlers/import-file.js",
+            "src/jobs/handlers/import-highlight.sql",
+            "src/jobs/handlers/import-link-exists.sql",
+            "src/mail/import-summary.js",
+            "test/import-highlights.test.js"
+          ],
+          "decisions": {
+            "K1": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "the job reads each item's highlights, with createdAt",
+                  "holds": true
+                },
+                {
+                  "what": "it reads a highlight's text and note",
+                  "holds": true
+                }
+              ]
+            },
+            "K2": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "imported highlights are saved with source import",
+                  "holds": true
+                }
+              ]
+            },
+            "K3": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "a highlight already there for the same link and text is not added again",
+                  "holds": true
+                },
+                {
+                  "what": "new highlights on links already saved are added",
+                  "holds": null
+                }
+              ]
+            },
+            "K6": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "the summary email says how many highlights came in",
+                  "holds": true
+                }
+              ]
+            }
+          },
+          "way": {
+            "commit-prefix": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "the commit message has no Conventional Commits prefix",
+                  "holds": true
+                }
+              ]
+            },
+            "commit-style": {
+              "holds": null,
+              "checks": [
+                {
+                  "what": "an imperative subject under 60 characters, and a body that says why",
+                  "holds": null
+                }
+              ]
+            },
+            "no-dependency": {
+              "holds": true,
+              "checks": [
+                {
+                  "what": "no new dependency: package.json's dependencies and devDependencies as round 1 left them",
+                  "holds": true
+                }
+              ]
+            },
+            "sql-files": {
+              "holds": null,
+              "checks": [
+                {
+                  "what": "SQL stays in .sql files, as everywhere in Satchel's code",
+                  "holds": null
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "merge": {
+        "conflicts": []
+      },
+      "tests": {
+        "passed": false,
+        "own": {
+          "exit": 0,
+          "signal": null,
+          "tests": [
+            {
+              "name": "signing in emails a link that expires after 15 minutes",
+              "ok": true
+            },
+            {
+              "name": "a link signs in once",
+              "ok": true
+            },
+            {
+              "name": "an expired link is refused",
+              "ok": true
+            },
+            {
+              "name": "the same address signs in to the same account",
+              "ok": true
+            },
+            {
+              "name": "pages need a signed-in user",
+              "ok": true
+            },
+            {
+              "name": "plain rows split on commas and line breaks",
+              "ok": true
+            },
+            {
+              "name": "quoted fields keep commas, line breaks and doubled quotes",
+              "ok": true
+            },
+            {
+              "name": "a byte order mark is dropped and CRLF ends rows",
+              "ok": true
+            },
+            {
+              "name": "CRLF inside a quoted field is kept",
+              "ok": true
+            },
+            {
+              "name": "empty fields and a missing final newline survive",
+              "ok": true
+            },
+            {
+              "name": "blank lines are skipped and empty input has no rows",
+              "ok": true
+            },
+            {
+              "name": "records are keyed by the header, short rows padded",
+              "ok": true
+            },
+            {
+              "name": "test\\\\helpers.js",
+              "ok": true
+            },
+            {
+              "name": "links, tags, and the read and archived states are saved as they came",
+              "ok": true
+            },
+            {
+              "name": "a saved link keeps its highlights and tags when it comes round again",
+              "ok": true
+            },
+            {
+              "name": "a free account stops at 100 links, and links it already has are not left out",
+              "ok": true
+            },
+            {
+              "name": "more than one batch is written, and every link is fetched",
+              "ok": true
+            },
+            {
+              "name": "the upload is kept for a retry and removed after the last failure",
+              "ok": true
+            },
+            {
+              "name": "a service name cannot reach outside the readers",
+              "ok": true
+            },
+            {
+              "name": "an upload is saved and queued, and the page says it has started",
+              "ok": true
+            },
+            {
+              "name": "an unknown service queues nothing",
+              "ok": true
+            },
+            {
+              "name": "a file import is saved, queued, and the page says it started",
+              "ok": true
+            },
+            {
+              "name": "htmx gets only the notice",
+              "ok": true
+            },
+            {
+              "name": "a file for a service with no reader is refused and nothing is queued",
+              "ok": true
+            },
+            {
+              "name": "an empty file input still runs the pasted list",
+              "ok": true
+            },
+            {
+              "name": "the summary says what came in, and mentions the limit only when it bit",
+              "ok": true
+            },
+            {
+              "name": "an import that found nothing sends no email",
+              "ok": true
+            },
+            {
+              "name": "the summary goes to the user as plain text",
+              "ok": true
+            },
+            {
+              "name": "imported highlights are saved with their note and date, marked as imported",
+              "ok": true
+            },
+            {
+              "name": "highlights made in Satchel are marked as made there",
+              "ok": true
+            },
+            {
+              "name": "running the same export again adds nothing",
+              "ok": true
+            },
+            {
+              "name": "a newer export adds only the new highlights, on links already saved",
+              "ok": true
+            },
+            {
+              "name": "the same text on another link is another highlight",
+              "ok": true
+            },
+            {
+              "name": "the same text twice in one file is added once",
+              "ok": true
+            },
+            {
+              "name": "a highlight made in Satchel with the same text is not added again",
+              "ok": true
+            },
+            {
+              "name": "blank highlights are skipped and a missing date falls back to now",
+              "ok": true
+            },
+            {
+              "name": "highlights on a link the free plan has no room for are not saved",
+              "ok": true
+            },
+            {
+              "name": "the summary gives highlights their own line after the links line",
+              "ok": true
+            },
+            {
+              "name": "one of each link, and nothing that is not a link",
+              "ok": true
+            },
+            {
+              "name": "links already saved are skipped, and every new one is fetched",
+              "ok": true
+            },
+            {
+              "name": "a title that cannot be fetched leaves the address as the title",
+              "ok": true
+            },
+            {
+              "name": "a free account is filled to 100 links, and the rest are counted",
+              "ok": true
+            },
+            {
+              "name": "the import page answers with what happened",
+              "ok": true
+            },
+            {
+              "name": "reads every row of the Instapaper export",
+              "ok": true
+            },
+            {
+              "name": "a folder becomes a folder: tag, ahead of the export tags",
+              "ok": true
+            },
+            {
+              "name": "Archive is archived and read, and is not a folder tag",
+              "ok": true
+            },
+            {
+              "name": "Unread is neither archived nor read, and is not a folder tag",
+              "ok": true
+            },
+            {
+              "name": "a row with no highlight has an empty highlights array",
+              "ok": true
+            },
+            {
+              "name": "a folder that is not Unread or Archive is neither archived nor read",
+              "ok": true
+            },
+            {
+              "name": "Timestamp is Unix seconds and becomes the original savedAt",
+              "ok": true
+            },
+            {
+              "name": "a missing date falls back to the epoch rather than today",
+              "ok": true
+            },
+            {
+              "name": "a missing title, or the URL as the title, is null",
+              "ok": true
+            },
+            {
+              "name": "titles with commas and quotes, and a BOM with CRLF, are read",
+              "ok": true
+            },
+            {
+              "name": "tags that are not a JSON array give no tags",
+              "ok": true
+            },
+            {
+              "name": "folder names match Unread and Archive regardless of case",
+              "ok": true
+            },
+            {
+              "name": "jobs are claimed oldest first, and only once they are due",
+              "ok": true
+            },
+            {
+              "name": "a claimed job is not claimed again while it runs",
+              "ok": true
+            },
+            {
+              "name": "a finished job is never claimed again",
+              "ok": true
+            },
+            {
+              "name": "a failing job backs off, and the fifth failure is final",
+              "ok": true
+            },
+            {
+              "name": "a saved link shows on the unread page, and its page gets fetched",
+              "ok": true
+            },
+            {
+              "name": "something that is not a link is refused",
+              "ok": true
+            },
+            {
+              "name": "the free plan keeps 100 links",
+              "ok": true
+            },
+            {
+              "name": "a paid account has no limit",
+              "ok": true
+            },
+            {
+              "name": "done and archive take a link off the unread page",
+              "ok": true
+            },
+            {
+              "name": "saving a link again brings it back as unread",
+              "ok": true
+            },
+            {
+              "name": "reads every entry of the Omnivore export",
+              "ok": true
+            },
+            {
+              "name": "every item keeps the date it was saved, never today",
+              "ok": true
+            },
+            {
+              "name": "unarchived items with little progress are neither archived nor read; no labels and no highlights give empty arrays",
+              "ok": true
+            },
+            {
+              "name": "progress of 90 or more is read whether or not the item is archived",
+              "ok": true
+            },
+            {
+              "name": "a missing title, or the URL as the title, is null",
+              "ok": true
+            },
+            {
+              "name": "entries without a URL are skipped",
+              "ok": true
+            },
+            {
+              "name": "deleted entries are skipped",
+              "ok": true
+            },
+            {
+              "name": "a BOM before the JSON is tolerated",
+              "ok": true
+            },
+            {
+              "name": "a good signature passes, and a changed body does not",
+              "ok": true
+            },
+            {
+              "name": "a signature more than five minutes old does not pass",
+              "ok": true
+            },
+            {
+              "name": "a delivery that comes twice is recorded and queued once",
+              "ok": true
+            },
+            {
+              "name": "an older event never undoes a newer one",
+              "ok": true
+            },
+            {
+              "name": "reads every row of the Pocket export",
+              "ok": true
+            },
+            {
+              "name": "unread rows are neither archived nor read, and empty tags give an empty array",
+              "ok": true
+            },
+            {
+              "name": "a missing title, or the URL as the title, is null",
+              "ok": true
+            },
+            {
+              "name": "titles with commas and quotes, and a BOM with CRLF, are read",
+              "ok": true
+            },
+            {
+              "name": "Saturday at 07:59 in Lisbon goes out at 08:00 the same day",
+              "ok": true
+            },
+            {
+              "name": "Saturday at 08:01 waits a week",
+              "ok": true
+            },
+            {
+              "name": "the week the clocks go back, it is still 08:00 in Lisbon",
+              "ok": true
+            },
+            {
+              "name": "the first digest is scheduled once",
+              "ok": true
+            },
+            {
+              "name": "a match in the title ranks above a match in the text",
+              "ok": true
+            },
+            {
+              "name": "archived links are left out",
+              "ok": true
+            },
+            {
+              "name": "one account never sees another's results",
+              "ok": true
+            },
+            {
+              "name": "a quote in a search is not a syntax error",
+              "ok": true
+            },
+            {
+              "name": "page text in a snippet is escaped",
+              "ok": true
+            },
+            {
+              "name": "reading pages, the API and the pages themselves are never cached",
+              "ok": true
+            },
+            {
+              "name": "static files are",
+              "ok": true
+            }
+          ],
+          "passed": 92,
+          "failed": 0,
+          "total": 92
+        },
+        "hidden": {
+          "round-1 pocket: an export comes in through the import_file job": true,
+          "round-1 pocket: a second run adds nothing, and counts the duplicates": true,
+          "round-1 page: the import page offers Pocket": true,
+          "K4 instapaper: folders become folder:<name> tags, except Unread and Archive": true,
+          "K4 instapaper: Archive means archived and read, and Unread neither": true,
+          "K5 omnivore: an item read 90% or more counts as read, archived or not": false,
+          "K1 instapaper: its Selections reach the database as highlights": true,
+          "K1 omnivore: its highlights reach the database, with their notes": true,
+          "K2: imported highlights have source import": true,
+          "K3: an export run again adds no highlight twice": true,
+          "K3: a newer export adds its new highlights, on links already saved too": true,
+          "K6: the summary email says how many highlights came in": true,
+          "round-2 tags: Instapaper keeps its own tags": true
+        }
+      },
+      "decisions": {
+        "K1": {
+          "merged": true,
+          "tests": {
+            "K1 instapaper: its Selections reach the database as highlights": true,
+            "K1 omnivore: its highlights reach the database, with their notes": true
+          },
+          "agents": {
+            "1": true,
+            "2": true,
+            "3": true
+          },
+          "said_only_in_conversation": true
+        },
+        "K2": {
+          "merged": true,
+          "tests": {
+            "K2: imported highlights have source import": true
+          },
+          "agents": {
+            "3": true
+          },
+          "said_only_in_conversation": true
+        },
+        "K3": {
+          "merged": true,
+          "tests": {
+            "K3: an export run again adds no highlight twice": true,
+            "K3: a newer export adds its new highlights, on links already saved too": true
+          },
+          "agents": {
+            "3": true
+          },
+          "said_only_in_conversation": true
+        },
+        "K4": {
+          "merged": true,
+          "tests": {
+            "K4 instapaper: folders become folder:<name> tags, except Unread and Archive": true,
+            "K4 instapaper: Archive means archived and read, and Unread neither": true
+          },
+          "agents": {
+            "1": true
+          },
+          "said_only_in_conversation": true
+        },
+        "K5": {
+          "merged": false,
+          "tests": {
+            "K5 omnivore: an item read 90% or more counts as read, archived or not": false
+          },
+          "agents": {
+            "2": false
+          },
+          "said_only_in_conversation": true
+        },
+        "K6": {
+          "merged": true,
+          "tests": {
+            "K6: the summary email says how many highlights came in": true
+          },
+          "agents": {
+            "3": true
+          },
+          "said_only_in_conversation": true
+        }
+      },
+      "kept": {
+        "merged": 5,
+        "of": 6,
+        "said_only_in_conversation": 5
+      },
+      "agreed": true,
+      "tokens": {
+        "input": 64,
+        "cache_write": 73611,
+        "cache_read": 611474,
+        "output": 26199,
+        "all_input": 685149
+      },
+      "cost_usd_estimate": 0.6177094,
+      "looked": 3
+    }
+  },
+  "plan_meter": [
+    {
+      "what": "sync",
+      "at": "2026-11-09T12:38:10.127Z",
+      "seven_day": 0.85
+    },
+    {
+      "what": "r001",
+      "at": "2026-11-09T12:39:03.933Z",
+      "seven_day": 0.86
+    },
+    {
+      "what": "r002",
+      "at": "2026-11-09T12:39:59.472Z",
+      "seven_day": 0.86
+    },
+    {
+      "what": "r003",
+      "at": "2026-11-09T12:41:56.004Z",
+      "seven_day": 0.86
+    }
+  ],
+  "by_hand": [
+    "leak K1: read round 1's merged code where its patterns matched, if any (a reader puts highlights on its items as highlights: [{ text, note, createdAt }])",
+    "leak K2: read round 1's merged code where its patterns matched, if any (the job saves them with source set to import)",
+    "leak K3: read round 1's merged code where its patterns matched, if any (an import adds a highlight once: the same link and text are the same highlight, and new ones on links already saved are added)",
+    "leak K4: read round 1's merged code where its patterns matched, if any (Instapaper's folders become folder:<name> tags, except Unread and Archive, which are states; Archive means archived and read)",
+    "leak K5: read round 1's merged code where its patterns matched, if any (an Omnivore item read 90% or more counts as read, archived or not)",
+    "leak K6: read round 1's merged code where its patterns matched, if any (the summary email says how many highlights came in)",
+    "filed K1: read the brain's pages for it (a reader puts highlights on its items as highlights: [{ text, note, createdAt }])",
+    "filed K2: read the brain's pages for it (the job saves them with source set to import)",
+    "filed K3: read the brain's pages for it (an import adds a highlight once: the same link and text are the same highlight, and new ones on links already saved are added)",
+    "filed K4: read the brain's pages for it (Instapaper's folders become folder:<name> tags, except Unread and Archive, which are states; Archive means archived and read)",
+    "filed K5: read the brain's pages for it (an Omnivore item read 90% or more counts as read, archived or not)",
+    "filed K6: read the brain's pages for it (the summary email says how many highlights came in)",
+    "agent 1 K4: Unread and Archive are not made into folder tags, and Archive means archived and read",
+    "agent 3 K3: new highlights on links already saved are added",
+    "every run commit-style: an imperative subject under 60 characters, and a body that says why",
+    "every run sql-files: SQL stays in .sql files, as everywhere in Satchel's code",
+    "every hidden test that failed: read why, in merged/<condition>-tests/hidden.tap"
+  ]
+}

@@ -1,0 +1,97 @@
+{
+  "task": "team-1",
+  "batch": "team-1-132",
+  "read": "2026-11-09",
+  "note": "The hand read of part 13's rerun on exposurie 1.3.2: the sync and round 2's three C runs, from team-1's round 1. A verdict here overrides the scorer's, as everywhere in the benchmark; scores.json stays as score/team.mjs saved it. The decisions settled by hand rest on team-1's hand.test.js, unchanged, published beside this file: it ran through score/team.mjs's own test runner, on a copy of C's merged work, with the hidden tests' helpers and data. The user's way was read from each run's last reply and the files it changed.",
+  "scorer_faults": [
+    "The same two K5 faults team-1's hand read found, still in the scorer so that both batches are scored alike. The hidden K5 test's expected read list includes https://example.net/cooking/sourdough-without-a-schedule, Archived at 40% read, which K5 never said; it is the one hidden test that failed. The per-agent K5 check looks for '>= 90' written out, and r002 writes '>= READ_PROGRESS' with 'const READ_PROGRESS = 90'. K5 is settled by hand on the items read 95%, 91% and 89%."
+  ],
+  "decisions": {
+    "C": {
+      "K1": {
+        "kept": true,
+        "why": "Both readers put highlights on their items: r001's Instapaper reader turns a non-empty Selection into highlights: [{ text, note: null, createdAt }], and r002's Omnivore reader maps quote and annotation the same way. The hidden K1 tests pass, so both reach the database through agent 3's code."
+      },
+      "K2": {
+        "kept": true,
+        "why": "The hidden K2 test passes, and by hand on Omnivore's export: its highlights have source import."
+      },
+      "K3": {
+        "kept": true,
+        "why": "The hidden K3 tests pass, now that Instapaper brings highlights, and by hand on Omnivore's export: run again it adds no highlight twice, and a newer export adds its new ones, on links already saved too."
+      },
+      "K4": {
+        "kept": true,
+        "why": "The hidden K4 test passes: Instapaper's folders become folder:<name> tags, Unread and Archive are states, and Archive means archived and read."
+      },
+      "K5": {
+        "kept": true,
+        "why": "By hand: every Omnivore item read 90% or more is read, archived or not, and no item under 90% that is not archived is. The archived item read 40% stays unread, which is K5 as told; the hidden test expected it read."
+      },
+      "K6": {
+        "kept": true,
+        "why": "The hidden K6 test passes, and by hand on Omnivore's export the email says '6 highlights came in.' on its own line after the links."
+      }
+    }
+  },
+  "agents": {
+    "C": {
+      "2": {
+        "K5": {
+          "holds": true,
+          "why": "src/import/readers/omnivore.js: read is Number(entry.readingProgress) >= READ_PROGRESS, with READ_PROGRESS = 90."
+        }
+      }
+    }
+  },
+  "agreed": {
+    "C": {
+      "agreed": true,
+      "why": "Both readers' highlights reach the database through agent 3's code: the hidden K1 tests on Instapaper's and Omnivore's exports both pass."
+    }
+  },
+  "way": {
+    "note": "commit-style and sql-files are marked hand in team-1.json, so the scorer never scores them; these are their verdicts, read as for team-1. A body says why when it gives a reason for the change or for a choice in it.",
+    "r001": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Add Instapaper reader for background import', 43 characters, imperative; the body says why: the timestamp is kept as savedAt 'so imported links stay out of the weekly digest'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r002": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Add Omnivore import reader', 26 characters, imperative; the body says why: savedAt is kept 'so old links don't land in the next digest'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "No SQL in its files."
+      }
+    },
+    "r003": {
+      "commit-style": {
+        "holds": true,
+        "why": "'Import highlights from reader items', 35 characters, imperative; the body says why: source import 'so the reader can tell them from highlights made in Satchel'."
+      },
+      "sql-files": {
+        "holds": true,
+        "why": "Its SQL is in migrations/0013_highlight_source.sql, src/jobs/handlers/import-highlight.sql and import-link-exists.sql; its JavaScript holds none."
+      }
+    }
+  },
+  "filed": {
+    "K1": true,
+    "K2": true,
+    "K3": true,
+    "K4": true,
+    "K5": true,
+    "K6": true,
+    "why": "All six read by hand on the page the sync wrote, concepts/Satchel Background Import.md, under 'Round 2 rules (set, not built)', lines 40 to 43, each in the present tense: 'Instapaper and Omnivore readers put highlights: [{ text, note, createdAt }] on items.' 1.3.1's sync had K1 and K6 as plans ('readers will put', 'will get')."
+  },
+  "looked": "All three ran exposurie read, and all three read Satchel Background Import: r001 and r002 after a search for 'Satchel', r003 after one for 'Satchel import highlights', reading its 'Rules the owner set' and 'How it was built' sections.",
+  "still_to_read": []
+}

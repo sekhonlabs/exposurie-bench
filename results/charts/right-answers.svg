@@ -3,7 +3,7 @@
 <rect x="0" y="0" width="840" height="578" fill="#FFFFFF"/>
 <text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">Right answers, by area</text>
 <text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">One run per task and condition. Each dot is one task, filled when its answer was right.</text>
-<text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">C is exposurie 1.3.1, the version on npm. A, B and D have no exposurie; their runs stand.</text>
+<text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">C is exposurie 1.3.1; 1.3.2 changed only the sync. A, B and D have none; their runs stand.</text>
 <rect x="580" y="112" width="120" height="398" fill="#FCF0E9"/>
 <text x="410" y="138" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">A</text>
 <text x="410" y="158" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">fresh session</text>

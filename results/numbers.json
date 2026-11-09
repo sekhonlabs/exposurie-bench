@@ -1,5 +1,5 @@
 {
-  "note": "Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9; then C again with exposurie's rebuilt read, under rebuilt_read, and with exposurie 1.3.1, under pointer_for_work; then part 13, many agents, one job, under many_agents.",
+  "note": "Written by score/results.mjs from results/ alone. Areas 1–8, then area 9, the long sessions, under area_9; then C again with exposurie's rebuilt read, under rebuilt_read, and with exposurie 1.3.1, under pointer_for_work; then part 13, many agents, one job, under many_agents, and its sync and C again on exposurie 1.3.2 under many_agents_again.",
   "tokens": "Every input token, cached or not (all_input), is the primary number. Output is counted beside it.",
   "conditions": {
     "A": "fresh session",
@@ -2488,5 +2488,103 @@
     },
     "cost_usd_estimate": 3.26,
     "scorer_faults_found_by_hand": 4
+  },
+  "many_agents_again": {
+    "note": "Part 13 again: the sync and C's three round 2 agents on exposurie 1.3.2, from team-1's round 1, which did not run again. A's and D's round 2 stand in team-1. A verdict is the hand read's where it gave one, else the scorer's.",
+    "task": "team-1",
+    "batch": "team-1-132",
+    "exposurie": "1.3.2",
+    "decisions": [
+      "K1",
+      "K2",
+      "K3",
+      "K4",
+      "K5",
+      "K6"
+    ],
+    "round_1": {
+      "from": "team-1"
+    },
+    "sync": {
+      "tokens": {
+        "all_input": 293561,
+        "input": 18,
+        "cache_write": 43005,
+        "cache_read": 250538,
+        "output": 6459
+      },
+      "cost_usd_estimate": 0.26,
+      "pages": 40,
+      "filed": {
+        "held": 6,
+        "of": 6
+      }
+    },
+    "conditions": {
+      "C": {
+        "kept": {
+          "held": 6,
+          "of": 6,
+          "by_script": 5,
+          "overturned_by_hand": 1
+        },
+        "decisions": {
+          "K1": true,
+          "K2": true,
+          "K3": true,
+          "K4": true,
+          "K5": true,
+          "K6": true
+        },
+        "agreed": true,
+        "looked": {
+          "runs": 3,
+          "of": 3
+        },
+        "way": {
+          "commit-prefix": {
+            "held": 3,
+            "of": 3
+          },
+          "commit-style": {
+            "held": 3,
+            "of": 3
+          },
+          "no-dependency": {
+            "held": 3,
+            "of": 3
+          },
+          "sql-files": {
+            "held": 3,
+            "of": 3
+          }
+        },
+        "tests": {
+          "hidden": {
+            "passed": 12,
+            "of": 13
+          },
+          "own": {
+            "passed": 92,
+            "of": 92
+          }
+        },
+        "conflicts": 0,
+        "tokens": {
+          "all_input": 685149,
+          "input": 64,
+          "cache_write": 73611,
+          "cache_read": 611474,
+          "output": 26199
+        },
+        "cost_usd_estimate": 0.62
+      }
+    },
+    "plan_meter": {
+      "seven_day_first": 0.85,
+      "seven_day_last": 0.86
+    },
+    "cost_usd_estimate": 0.88,
+    "scorer_faults_found_by_hand": 1
   }
 }

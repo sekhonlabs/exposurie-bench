@@ -2,7 +2,7 @@
 
 **Does a brain built from your own past sessions make a coding agent better for you, and what does it cost?** This repository measures that for [exposurie](https://github.com/sekhonlabs/exposurie), a CLI that builds a curated Markdown wiki, the *brain*, from a person's own agent sessions and chat exports, and points every new agent session at it.
 
-**Status: finished.** Every result is final, every answer a script could not settle was read by hand, and every number and chart is computed from [results/](results/) by [score/results.mjs](score/results.mjs). The results lead with exposurie **1.3.1**, the version on npm.
+**Status: finished.** Every result is final, every answer a script could not settle was read by hand, and every number and chart is computed from [results/](results/) by [score/results.mjs](score/results.mjs). The results lead with exposurie **1.3.1**. **1.3.2**, on npm since 2026-11-09, changed only the sync, so its read and pointer are 1.3.1's, and part 13's sync and C ran again on it.
 
 ![exposurie-bench at a glance: every result in one view](results/charts/at-a-glance.svg)
 
@@ -12,7 +12,7 @@
 - **For a fraction of the tokens of carrying your history.** A median of **24,175** input tokens a run, against 125,497 for putting the whole history in context, which also got 21 right. [More](#1-it-knows-you-areas-1-to-8)
 - **Almost free when no past is needed.** On work that needs no past it never opened the brain, and used **267 tokens a run** more than a fresh session as measured, about 313 like for like. [More](#1-it-knows-you-areas-1-to-8)
 - **It does not make things up.** No made-up answers, in any condition.
-- **It carries decisions from agent to agent.** When one job was split across agents that never saw each other, exposurie carried **5 of 6** decisions from the first round into the second. With no memory it was 0, and with a perfect hand-written notes file 6. [More](#2-many-agents-one-job-part-13)
+- **It carries decisions from agent to agent.** When one job was split across agents that never saw each other, exposurie 1.3.2 carried **6 of 6** decisions from the first round into the second, level with a perfect hand-written notes file. 1.3.1 carried 5, and no memory 0. [More](#2-many-agents-one-job-part-13)
 - **It stays yours.** **6 of 6** checks of exposurie's own layer held: plain Markdown, it outlives the tool, no network or account of its own, a pointer for every agent it supports, and history from every lab. [More](#3-its-yours-part-12)
 - **A long session can carry on from the brain.** Past 500,000 tokens, ending the session, syncing it and starting fresh kept as much as `/compact` did on the harder task, for about a quarter of the tokens of keeping going. [More](#4-long-sessions-area-9)
 - **Each fix was measured.** C went from 18 to 20 to 21 right across three releases, each one fixing a miss this benchmark found. [More](#5-how-c-got-here-three-releases)
@@ -81,12 +81,14 @@ Someone running several agents in parallel on one job, with the brain as their s
 
 ![Many agents, one job: the decisions round 2 kept, by condition](results/charts/many-agents.svg)
 
-**By hand, round 2's merged work kept 0 of round 1's 6 decisions with no memory, 5 with exposurie 1.3.1, and 6 with a perfect notes file.**
+**By hand, round 2's merged work kept 0 of round 1's 6 decisions with no memory, 5 with exposurie 1.3.1, and 6 with a perfect notes file.** **Run again on exposurie 1.3.2 from the same round 1, C kept 6 of 6, and its three agents agreed.**
 
 - **Round 1:** three agents built the import of Satchel, the developer's own app, in condition C, each in its own copy of the code: the job, a Pocket reader, and the import page with its summary email. In conversation, each was also told decisions for the work that came next, and not to build them. Their copies were merged with Git's union merge, tested, and synced into the developer's brain.
 - **The sync filed all six decisions,** into a page of their own. Round 1 wrote none of them into its code, so in round 2 they existed only in the brain, or in D's notes.
 - **Round 2:** three new agents in each condition built Instapaper's reader, Omnivore's reader and imported highlights, blind, from one short ask each. Each needed decisions told to two different agents of round 1, and the highlights' shape was needed by all three. The conditions differ only in what carried round 1's conversations into round 2.
 - **C's one miss was not the brain's.** Its Instapaper agent searched the brain, read the page that holds the highlights' shape, and left Instapaper's highlights out: "Highlights belong to the other agent's side." Its ask gave the third agent "the highlights side", and the page words that decision as a plan ("readers will put highlights"). D's notes word it as a rule, and D's Instapaper agent followed it. The brain carried every decision; its wording decided whether one was acted on.
+- **1.3.2 fixed the wording, and the miss went with it.** 1.3.2's sync asks for each decision as the rule it set. Run again from the same round 1, with the same transcripts, brain and asks, its page put the highlights' shape as a rule, "Instapaper and Omnivore readers put `highlights: [{ text, note, createdAt }]` on items", under "Round 2 rules (set, not built)". This time the Instapaper agent turned each highlighted passage into a highlight on its item and left saving them to the highlights agent, and all three agents agreed, as D's did. Only the sync and C's round 2 ran again: round 1 and A's and D's round 2 never used exposurie after round 1, so they stand.
+- **The rule reached the sync through its write step alone.** 1.3.2 also adds it to the wiki prompt, with this very decision as its example, but a brain keeps the prompt it was set up with, and an update never touches it. So the rerun measures the path every existing brain takes, and the example never reached it.
 - **Round 1's merge collided.** The job agent and the page agent both wrote the upload route, and both added a test file of the same name, so the union merge declared everything twice and the code did not load. It was repaired by hand, 9 lines in and 41 out, with nothing of round 2 in it: [results/team-1/repair-1.patch](results/team-1/repair-1.patch). That is a finding about parallel agents, not about exposurie.
 
 <details>
@@ -103,7 +105,9 @@ The hand read overturned the scorer where the scorer was wrong, in four ways, ea
 
 **Cost:** about $3.26 in Claude Code's estimates at list prices: $1.14 for round 1, $0.29 for the sync, and $0.58, $0.70 and $0.54 for round 2 in A, C and D. The plan's seven-day meter read 5% after the first step and 9% after the last run.
 
-The design is in [docs/build-plan.md](docs/build-plan.md), part 13. The scores, which run had which condition, the hand read with a reason for every verdict, and round 1's repair are in [results/team-1/](results/team-1/), and the numbers in [results/numbers.json](results/numbers.json) under `many_agents`.
+**Run again on 1.3.2:** about $0.88: $0.26 for the sync and $0.62 for C's round 2. The seven-day meter read 85% after the sync and 86% after the last run; the rest of it was the week's other use. Its hand read met the same two faults in K5's checks and settled K5 the same way, with the same hand tests.
+
+The design is in [docs/build-plan.md](docs/build-plan.md), part 13 and *13 again, on 1.3.2*. The scores, which run had which condition, the hand read with a reason for every verdict, and round 1's repair are in [results/team-1/](results/team-1/), the rerun's in [results/team-1-132/](results/team-1-132/), and the numbers in [results/numbers.json](results/numbers.json) under `many_agents` and `many_agents_again`.
 
 </details>
 
@@ -207,7 +211,7 @@ C ran three times on the same brains, with the same Claude Code, model, tools, a
 - **One agent and one model:** Claude Code with Sonnet 5.5.
 - **Two made-up users,** with histories small enough for B to fit in context, which a real history would not.
 - **The fixes were measured on the tasks that found them.** 1.3.0's search and 1.3.1's pointer were each made after a miss on these same tasks, so these tasks show that those misses are fixed. Part 13's tasks did not shape them, and test them more fairly.
-- **Part 13:** one job and one user; round 1 ran once, in C, and was repaired by hand; the agents could not run tests, which ran after each merge; one sync, so exposurie's missing lock, where two syncs at once take the same batch, never came up; and the decisions were written for this test.
+- **Part 13:** one job and one user; round 1 ran once, in C, and was repaired by hand; the agents could not run tests, which ran after each merge; one sync, so exposurie's missing lock, where two syncs at once take the same batch, never came up; and the decisions were written for this test. The rerun on 1.3.2 is one more run of three cells, so its 6 of 6 is a sign, not proof, and its fix was written after the miss it fixes.
 - **Part 12:** no agent session ran, so it does not show an agent reading the pointer, or finding its way in a brain once exposurie is gone; one machine, on Windows; and the chats were written from exposurie's own readers, so they show each reader reads the format it was written for, not every export a lab has shipped.
 - **Area 9:** two tasks and one user, with one run of each strategy, so it is an illustration, not a rate. The sessions ended at about 580,000 tokens, too close to the mark to test whether quality falls past half the window. 1.3.1 did not run it.
 

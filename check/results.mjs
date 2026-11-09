@@ -24,7 +24,7 @@ import { REBUILT_BATCH, STRATEGIES } from '../runner/long.mjs';
 import { PINS, loginIdentity } from '../runner/sandbox.mjs';
 import { LONG_GROUPS } from '../score/checks.mjs';
 import {
-  AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, REBUILT_NAME, TEAM_TASKS, USERS, V131_BATCHES, finalChecks, outputs,
+  AREAS, BATCHES, CONDITIONS, LONG_BATCH, REBUILT_BATCHES, REBUILT_NAME, TEAM_PINS, TEAM_TASKS, USERS, V131_BATCHES, finalChecks, outputs,
 } from '../score/results.mjs';
 import { WINDOWS_PATH } from '../score/score.mjs';
 import { LINES as ITS_LINES, USERS as ITS_USERS } from '../runner/its-yours.mjs';
@@ -181,17 +181,29 @@ for (const batch of [LONG_BATCH, REBUILT_BATCH]) {
   }
 }
 
-// ---- part 13: each team task's scores, hand read and conditions agree with its task file and with one another
+// ---- part 13: each team batch's scores, hand read and conditions agree with its task file and with one another.
+// A batch planned again from another's round 1 names its task and itself, and runs only the conditions it names.
 for (const id of TEAM_TASKS) {
   const files = ['scores', 'hand', 'conditions'].map((f) => `results/${id}/${f}.json`);
   for (const f of files.filter((x) => !existsSync(join(REPO, x)))) fail(f, `is missing; ${SAVE}`);
   if (!files.every((f) => existsSync(join(REPO, f)))) continue;
   const [s, h, k] = files.map((f) => readJson(f));
-  const task = readJson('tasks', 'team', `${id}.json`);
-  if (s.task !== id || h.task !== id || k.task !== id) fail(`results/${id}`, 'holds files that name another task');
-  if (k.exposurie !== PINS.exposurie131.version) fail(`results/${id}/conditions.json`, `names exposurie ${k.exposurie}, not ${PINS.exposurie131.version}`);
+  const taskId = k.task;
+  const task = readJson('tasks', 'team', `${taskId}.json`);
+  const named = (o) => o.batch ?? o.task;
+  if (named(s) !== id || named(h) !== id || named(k) !== id || s.task !== taskId || h.task !== taskId) fail(`results/${id}`, 'holds files that name another batch or task');
+  const want = PINS[TEAM_PINS[id]]?.version;
+  if (!want || k.exposurie !== want) fail(`results/${id}/conditions.json`, `names exposurie ${k.exposurie}, not ${want}`);
+  const from = k.round_1_from ?? null;
+  if ((s.round_1.from ?? null) !== from) fail(`results/${id}`, `says its round 1 is from ${s.round_1.from ?? 'itself'} in scores.json and ${from ?? 'itself'} in conditions.json`);
+  if (from && !TEAM_TASKS.includes(from)) fail(`results/${id}/conditions.json`, `takes its round 1 from ${from}, which is not published`);
+  const ran = task.conditions.filter((c) => Object.values(k.conditions).includes(c));
+  if (!ran.length || Object.values(k.conditions).some((c) => !task.conditions.includes(c)) || (!from && ran.length !== task.conditions.length)) {
+    fail(`results/${id}/conditions.json`, `names conditions ${[...new Set(Object.values(k.conditions))].join(', ')}, where its task has ${task.conditions.join(', ')}`);
+  }
+  if (JSON.stringify(Object.keys(s.conditions).sort()) !== JSON.stringify([...ran].sort())) fail(`results/${id}/scores.json`, `scores ${Object.keys(s.conditions).join(', ')}, not the conditions it ran`);
   const agents = task.round_2.map((a) => a.agent).sort();
-  for (const c of task.conditions) {
+  for (const c of ran) {
     const runs = s.conditions[c]?.runs ?? [];
     if (JSON.stringify(runs.map((r) => r.agent).sort()) !== JSON.stringify(agents)) fail(`${id} ${c}`, 'does not hold one run for each agent of round 2');
     for (const r of runs) {
@@ -199,16 +211,17 @@ for (const id of TEAM_TASKS) {
       if (r.status !== 'done' && !r.accepted) fail(`${id}/${r.run}`, `is ${r.status}, not done`);
     }
   }
-  if (Object.keys(k.conditions).length !== task.conditions.length * agents.length) fail(`results/${id}/conditions.json`, 'names runs that have no score');
+  if (Object.keys(k.conditions).length !== ran.length * agents.length) fail(`results/${id}/conditions.json`, 'names runs that have no score');
   const steps = task.round_1.reduce((n, a) => n + a.steps.length, 0);
   if (s.round_1.steps !== steps) fail(`${id} round 1`, `scores ${s.round_1.steps} steps, where its task has ${steps}`);
   if (!s.round_1.gate.passed) fail(`${id} round 1`, 'did not pass the gate');
+  // A round 1's repairs are published with the batch it ran in.
   for (const r of s.round_1.repairs) {
-    if (!existsSync(join(REPO, 'results', id, r.patch))) fail(`results/${id}/${r.patch}`, `is missing; ${SAVE}`);
+    if (!existsSync(join(REPO, 'results', from ?? id, r.patch))) fail(`results/${from ?? id}/${r.patch}`, `is missing; ${SAVE}`);
     if (!r.what) fail(`${id} round 1`, `its repair ${r.patch} says nothing of what it changed`);
   }
   if (h.still_to_read?.length) fail(`results/${id}/hand.json`, `is not finished: ${h.still_to_read.length} still to read`);
-  for (const c of task.conditions) {
+  for (const c of ran) {
     for (const d of task.decisions) {
       const v = h.decisions?.[c]?.[d.id];
       if (!v) fail(`${id} ${c} ${d.id}`, 'has no verdict from the hand read');
@@ -218,7 +231,7 @@ for (const id of TEAM_TASKS) {
     if (!a || typeof a.agreed !== 'boolean' || !a.why) fail(`${id} ${c}`, 'has no hand verdict, with a reason, on whether its three agents agreed');
   }
   const handOnly = task.checks.way.filter((x) => x.hand).map((x) => x.id);
-  for (const r of task.conditions.flatMap((c) => s.conditions[c]?.runs ?? [])) {
+  for (const r of ran.flatMap((c) => s.conditions[c]?.runs ?? [])) {
     for (const check of handOnly) {
       const v = h.way?.[r.run]?.[check];
       if (!v || typeof v.holds !== 'boolean' || !v.why) fail(`${id}/${r.run}`, `${check} is read only by hand, and the hand read gives no verdict with a reason`);
@@ -291,6 +304,13 @@ if (M) {
     `${M.conditions.C.kept.held} with exposurie ${M.exposurie}, and ${M.conditions.D.kept.held} with a perfect notes file.`;
   if (!readFileSync(join(REPO, 'README.md'), 'utf8').includes(headline)) fail('README.md', `does not say, as results/numbers.json has it: "${headline}"`);
 }
+// ...and the rerun's, C again on 1.3.2 from the same round 1
+const M2 = n?.many_agents_again;
+if (M2) {
+  const C2 = M2.conditions.C;
+  const again = `Run again on exposurie ${M2.exposurie} from the same round 1, C kept ${C2.kept.held} of ${C2.kept.of}, and its three agents ${C2.agreed ? 'agreed' : 'did not agree'}.`;
+  if (!readFileSync(join(REPO, 'README.md'), 'utf8').includes(again)) fail('README.md', `does not say, as results/numbers.json has it: "${again}"`);
+}
 
 // ---- part 12: its six lines, run on exposurie 1.3.1 for both users, each with a verdict and evidence, every
 // command's output published, and the README's table as the lines came out
@@ -328,7 +348,8 @@ console.log(
       `C ${n.rebuilt_read.right_answers.pooled.C} with ${REBUILT_NAME} (recorded as ${n.rebuilt_read.exposurie}), ` +
       `and C ${n.pointer_for_work.right_answers.pooled.C} with exposurie ${n.pointer_for_work.exposurie}. ` : '') +
     `Area 9: ${longTasks.length} long tasks, ${strategiesKeyed[LONG_BATCH]} strategies keyed, and ${strategiesKeyed[REBUILT_BATCH]} again. ` +
-    (M ? `Part 13: kept ${['A', 'C', 'D'].map((c) => `${c} ${M.conditions[c].kept.held}`).join(', ')} of ${M.conditions.A.kept.of}. ` : '') +
+    (M ? `Part 13: kept ${['A', 'C', 'D'].map((c) => `${c} ${M.conditions[c].kept.held}`).join(', ')} of ${M.conditions.A.kept.of}` +
+      `${M2 ? `, and C ${M2.conditions.C.kept.held} again on ${M2.exposurie}` : ''}. ` : '') +
     (yours ? `Part 12: ${yours.lines.filter((l) => l.pass).length} of ${yours.lines.length} lines pass. ` : '') +
     `${Object.keys(written).filter((r) => r.endsWith('.svg')).length} charts.`,
 );

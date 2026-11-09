@@ -1,88 +1,107 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="910" viewBox="0 0 880 910" role="img" aria-label="Many agents, one job: the decisions round 2 kept, by condition">
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="960" viewBox="0 0 880 960" role="img" aria-label="Many agents, one job: the decisions round 2 kept, by condition">
 <title>Many agents, one job: the decisions round 2 kept, by condition</title>
-<rect x="0" y="0" width="880" height="910" fill="#FFFFFF"/>
+<rect x="0" y="0" width="880" height="960" fill="#FFFFFF"/>
 <text x="40" y="46" font-family="Georgia, serif" font-size="24" fill="#141414">Many agents, one job</text>
 <text x="40" y="72" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Round 1: three agents built one feature with exposurie 1.3.1, each in its own copy.</text>
 <text x="40" y="92" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">In chat, each was also told decisions for later work, and not to build them.</text>
 <text x="40" y="112" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Round 2: three new agents in each condition built the rest, blind, from one short ask each.</text>
-<text x="40" y="132" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Each dot is one decision, filled when round 2's merged work kept it, by hand.</text>
-<rect x="598" y="152" width="124" height="644" fill="#FCF0E9"/>
-<text x="540" y="182" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">A</text>
-<text x="540" y="202" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">no memory</text>
-<text x="660" y="182" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">C</text>
-<text x="660" y="202" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">exposurie 1.3.1</text>
-<text x="780" y="182" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">D</text>
-<text x="780" y="202" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">perfect notes</text>
-<text x="40" y="257" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K1</text>
-<text x="76" y="257" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Highlights' shape: text, note, createdAt</text>
-<text x="76" y="276" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 1 of round 1; needed by 1, 2 and 3 of round 2</text>
-<circle cx="540" cy="252" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="660" cy="252" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="780" cy="252" r="7" fill="#6B6B6B"/>
-<text x="40" y="303" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K2</text>
-<text x="76" y="303" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Imported highlights get source: import</text>
-<text x="76" y="322" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 1 of round 1; needed by 3 of round 2</text>
-<circle cx="540" cy="298" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="660" cy="298" r="7" fill="#E37D4E"/>
-<circle cx="780" cy="298" r="7" fill="#6B6B6B"/>
-<text x="40" y="349" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K3</text>
-<text x="76" y="349" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">A highlight is added only once</text>
-<text x="76" y="368" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 1 of round 1; needed by 3 of round 2</text>
-<circle cx="540" cy="344" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="660" cy="344" r="7" fill="#E37D4E"/>
-<circle cx="780" cy="344" r="7" fill="#6B6B6B"/>
-<text x="40" y="395" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K4</text>
-<text x="76" y="395" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Instapaper folders become folder: tags</text>
-<text x="76" y="414" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 2 of round 1; needed by 1 of round 2</text>
-<circle cx="540" cy="390" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="660" cy="390" r="7" fill="#E37D4E"/>
-<circle cx="780" cy="390" r="7" fill="#6B6B6B"/>
-<text x="40" y="441" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K5</text>
-<text x="76" y="441" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Omnivore: read 90% or more counts as read</text>
-<text x="76" y="460" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 2 of round 1; needed by 2 of round 2</text>
-<circle cx="540" cy="436" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="660" cy="436" r="7" fill="#E37D4E"/>
-<circle cx="780" cy="436" r="7" fill="#6B6B6B"/>
-<text x="40" y="487" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K6</text>
-<text x="76" y="487" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">The summary email counts highlights</text>
-<text x="76" y="506" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 3 of round 1; needed by 3 of round 2</text>
-<circle cx="540" cy="482" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
-<circle cx="660" cy="482" r="7" fill="#E37D4E"/>
-<circle cx="780" cy="482" r="7" fill="#6B6B6B"/>
-<line x1="40" y1="516" x2="840" y2="516" stroke="#E3E3E3" stroke-width="1"/>
-<text x="40" y="554" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Decisions kept, of 6</text>
-<text x="40" y="582" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">by the scorer, before the hand read</text>
-<text x="540" y="555" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">0</text>
-<text x="540" y="582" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">0</text>
-<text x="660" y="555" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">5</text>
-<text x="660" y="582" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">2</text>
-<text x="780" y="555" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">6</text>
-<text x="780" y="582" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">5</text>
-<text x="40" y="620" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">The three agreed on the highlights' shape</text>
-<text x="540" y="620" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">no</text>
-<text x="660" y="620" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">no</text>
-<text x="780" y="620" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">yes</text>
-<text x="40" y="652" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Agents that opened the brain</text>
-<text x="540" y="652" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">no brain</text>
-<text x="660" y="652" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">3 of 3</text>
-<text x="780" y="652" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">no brain</text>
-<text x="40" y="684" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Commit messages in the developer's style</text>
-<text x="540" y="684" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">1 of 3</text>
-<text x="660" y="684" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">3 of 3</text>
-<text x="780" y="684" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">3 of 3</text>
-<text x="40" y="716" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">The repository's own tests after the merge</text>
-<text x="540" y="716" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">79 of 79</text>
-<text x="660" y="716" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">90 of 92</text>
-<text x="780" y="716" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">82 of 84</text>
-<text x="40" y="748" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Input tokens in round 2</text>
-<text x="540" y="748" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">636,942</text>
-<text x="660" y="748" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">866,701</text>
-<text x="780" y="748" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">562,370</text>
-<text x="40" y="780" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Cost, in Claude Code's estimate</text>
-<text x="540" y="780" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">$0.58</text>
-<text x="660" y="780" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">$0.70</text>
-<text x="780" y="780" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">$0.54</text>
-<text x="40" y="832" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">C's one miss: its Instapaper agent read the page that holds the highlights' shape, but the page</text>
-<text x="40" y="852" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">words it as a plan, and the agent left Instapaper's highlights to another. D's notes word it as a rule.</text>
-<text x="40" y="872" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Round 1's merge collided, and was repaired by hand before round 2 ran, with nothing of round 2 in it.</text>
+<text x="40" y="132" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Then the sync and C's round 2 ran again on exposurie 1.3.2, from the same round 1.</text>
+<text x="40" y="152" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#6B6B6B">Each dot is one decision, filled when round 2's merged work kept it, by hand.</text>
+<rect x="538" y="172" width="204" height="654" fill="#FCF0E9"/>
+<text x="640" y="192" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">exposurie</text>
+<text x="490" y="222" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">A</text>
+<text x="490" y="242" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">no memory</text>
+<text x="590" y="222" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">C</text>
+<text x="590" y="242" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">1.3.1</text>
+<text x="690" y="222" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">C</text>
+<text x="690" y="242" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">1.3.2</text>
+<text x="785" y="222" font-family="Georgia, serif" font-size="20" fill="#141414" text-anchor="middle">D</text>
+<text x="785" y="242" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">perfect notes</text>
+<text x="40" y="287" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K1</text>
+<text x="76" y="287" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Highlights' shape: text, note, createdAt</text>
+<text x="76" y="306" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 1 of round 1; needed by 1, 2 and 3 of round 2</text>
+<circle cx="490" cy="282" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="590" cy="282" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="690" cy="282" r="7" fill="#E37D4E"/>
+<circle cx="785" cy="282" r="7" fill="#6B6B6B"/>
+<text x="40" y="333" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K2</text>
+<text x="76" y="333" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Imported highlights get source: import</text>
+<text x="76" y="352" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 1 of round 1; needed by 3 of round 2</text>
+<circle cx="490" cy="328" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="590" cy="328" r="7" fill="#E37D4E"/>
+<circle cx="690" cy="328" r="7" fill="#E37D4E"/>
+<circle cx="785" cy="328" r="7" fill="#6B6B6B"/>
+<text x="40" y="379" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K3</text>
+<text x="76" y="379" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">A highlight is added only once</text>
+<text x="76" y="398" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 1 of round 1; needed by 3 of round 2</text>
+<circle cx="490" cy="374" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="590" cy="374" r="7" fill="#E37D4E"/>
+<circle cx="690" cy="374" r="7" fill="#E37D4E"/>
+<circle cx="785" cy="374" r="7" fill="#6B6B6B"/>
+<text x="40" y="425" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K4</text>
+<text x="76" y="425" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Instapaper folders become folder: tags</text>
+<text x="76" y="444" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 2 of round 1; needed by 1 of round 2</text>
+<circle cx="490" cy="420" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="590" cy="420" r="7" fill="#E37D4E"/>
+<circle cx="690" cy="420" r="7" fill="#E37D4E"/>
+<circle cx="785" cy="420" r="7" fill="#6B6B6B"/>
+<text x="40" y="471" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K5</text>
+<text x="76" y="471" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">Omnivore: read 90% or more counts as read</text>
+<text x="76" y="490" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 2 of round 1; needed by 2 of round 2</text>
+<circle cx="490" cy="466" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="590" cy="466" r="7" fill="#E37D4E"/>
+<circle cx="690" cy="466" r="7" fill="#E37D4E"/>
+<circle cx="785" cy="466" r="7" fill="#6B6B6B"/>
+<text x="40" y="517" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#8C8C8C">K6</text>
+<text x="76" y="517" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#2B2B2B">The summary email counts highlights</text>
+<text x="76" y="536" font-family="Calibri, Carlito, Arial, sans-serif" font-size="13" fill="#6B6B6B">told to agent 3 of round 1; needed by 3 of round 2</text>
+<circle cx="490" cy="512" r="6.25" fill="#FFFFFF" stroke="#C9C9C9" stroke-width="1.5"/>
+<circle cx="590" cy="512" r="7" fill="#E37D4E"/>
+<circle cx="690" cy="512" r="7" fill="#E37D4E"/>
+<circle cx="785" cy="512" r="7" fill="#6B6B6B"/>
+<line x1="40" y1="546" x2="840" y2="546" stroke="#E3E3E3" stroke-width="1"/>
+<text x="40" y="584" font-family="Calibri, Carlito, Arial, sans-serif" font-size="16" fill="#141414" font-weight="bold">Decisions kept, of 6</text>
+<text x="40" y="612" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">by the scorer, before the hand read</text>
+<text x="490" y="585" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">0</text>
+<text x="490" y="612" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">0</text>
+<text x="590" y="585" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">5</text>
+<text x="590" y="612" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">2</text>
+<text x="690" y="585" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">6</text>
+<text x="690" y="612" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">5</text>
+<text x="785" y="585" font-family="Calibri, Carlito, Arial, sans-serif" font-size="22" fill="#141414" text-anchor="middle" font-weight="bold">6</text>
+<text x="785" y="612" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B" text-anchor="middle">5</text>
+<text x="40" y="650" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">The three agreed on the highlights' shape</text>
+<text x="490" y="650" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">no</text>
+<text x="590" y="650" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">no</text>
+<text x="690" y="650" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">yes</text>
+<text x="785" y="650" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">yes</text>
+<text x="40" y="682" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Agents that opened the brain</text>
+<text x="490" y="682" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">no brain</text>
+<text x="590" y="682" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">3 of 3</text>
+<text x="690" y="682" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">3 of 3</text>
+<text x="785" y="682" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">no brain</text>
+<text x="40" y="714" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Commit messages in the developer's style</text>
+<text x="490" y="714" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">1 of 3</text>
+<text x="590" y="714" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">3 of 3</text>
+<text x="690" y="714" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">3 of 3</text>
+<text x="785" y="714" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">3 of 3</text>
+<text x="40" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">The repository's own tests after the merge</text>
+<text x="490" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">79 of 79</text>
+<text x="590" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">90 of 92</text>
+<text x="690" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">92 of 92</text>
+<text x="785" y="746" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">82 of 84</text>
+<text x="40" y="778" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Input tokens in round 2</text>
+<text x="490" y="778" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">636,942</text>
+<text x="590" y="778" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">866,701</text>
+<text x="690" y="778" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">685,149</text>
+<text x="785" y="778" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">562,370</text>
+<text x="40" y="810" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B">Cost, in Claude Code's estimate</text>
+<text x="490" y="810" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">$0.58</text>
+<text x="590" y="810" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">$0.70</text>
+<text x="690" y="810" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#141414" text-anchor="middle" font-weight="bold">$0.62</text>
+<text x="785" y="810" font-family="Calibri, Carlito, Arial, sans-serif" font-size="15" fill="#2B2B2B" text-anchor="middle">$0.54</text>
+<text x="40" y="862" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">On 1.3.1, C's one miss: its Instapaper agent read the page that holds the highlights' shape,</text>
+<text x="40" y="882" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">but the page worded it as a plan, and the agent left the highlights to another agent.</text>
+<text x="40" y="902" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">D's notes word it as a rule. On 1.3.2, the sync wrote it as a rule, and the same agent kept it.</text>
+<text x="40" y="922" font-family="Calibri, Carlito, Arial, sans-serif" font-size="14" fill="#6B6B6B">Round 1's merge collided, and was repaired by hand before round 2 ran, with nothing of round 2 in it.</text>
 </svg>
