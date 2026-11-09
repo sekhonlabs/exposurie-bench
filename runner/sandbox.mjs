@@ -4,6 +4,7 @@
 //   node runner/sandbox.mjs setup          install the pinned Git, Claude Code and exposurie
 //   node runner/sandbox.mjs setup-rebuilt  install exposurie with its read rebuilt (part 10), beside 1.2.0
 //   node runner/sandbox.mjs setup-131      install exposurie 1.3.1 from npm's tarball, beside them
+//   node runner/sandbox.mjs setup-132      install exposurie 1.3.2 from npm's tarball, beside them
 //   node runner/sandbox.mjs login          log in once, by hand, with a Claude plan
 //   node runner/sandbox.mjs check          one tiny run, then check its start-up line
 //   node runner/sandbox.mjs recheck <dir>  check a saved run again, without running anything
@@ -52,6 +53,30 @@ export const EXPOSURIE_REBUILT = join(PREFIX_REBUILT, 'node_modules', '@sekhon',
  */
 const PREFIX_131 = join(SANDBOX, 'npm-131');
 export const EXPOSURIE_131 = join(PREFIX_131, 'node_modules', '@sekhon', 'exposurie', 'bin', 'exposurie.js');
+/**
+ * exposurie 1.3.2, whose sync asks for each decision as the rule it set, from
+ * npm's tarball into a prefix of its own. Part 13's sync and round 2's C run
+ * on it again.
+ */
+const PREFIX_132 = join(SANDBOX, 'npm-132');
+export const EXPOSURIE_132 = join(PREFIX_132, 'node_modules', '@sekhon', 'exposurie', 'bin', 'exposurie.js');
+
+/** The line exposurie 1.3.1 added to its pointer, as its source spells it. */
+export const POINTER_FOR_WORK = 'Before answering any such question, before starting work in one of';
+/** What 1.3.2's sync asks of the pages it writes, as its source spells it and its output prints it. */
+export const RULE_FOR_DECISIONS = 'rule it set, in the present tense and naming everything it covers';
+
+/**
+ * The exposuries installed from npm's tarballs, by version: each one's prefix,
+ * its command, its pin in pins.json, and what its source must say, file by file.
+ */
+export const NPM_EXPOSURIES = {
+  '1.3.1': { prefix: PREFIX_131, bin: EXPOSURIE_131, pin: 'exposurie131', says: { 'src/reach.js': POINTER_FOR_WORK } },
+  '1.3.2': {
+    prefix: PREFIX_132, bin: EXPOSURIE_132, pin: 'exposurie132',
+    says: { 'src/reach.js': POINTER_FOR_WORK, 'src/commands/sync.js': RULE_FOR_DECISIONS },
+  },
+};
 
 /** The tools every condition gets. Each run's start-up line is checked against this. */
 export const TOOLS = ['Bash', 'Edit', 'Glob', 'Grep', 'Read', 'Write'];
@@ -74,8 +99,8 @@ const FROM_WINDOWS = [
  * unless a test gives it its own. With `exposurie: false` the PATH leaves out
  * the sandbox's npm folder, which holds the `exposurie` command: conditions A,
  * B and D run without it, since it is part of what exposurie installs. With
- * `exposurie: 'rebuilt'` or `'1.3.1'` that one's folder comes first, so its
- * `exposurie` is the one found, and the PATH is otherwise C's own.
+ * `exposurie: 'rebuilt'`, `'1.3.1'` or `'1.3.2'` that one's folder comes first,
+ * so its `exposurie` is the one found, and the PATH is otherwise C's own.
  */
 export function sandboxEnv({ home = HOME, exposurie = true } = {}) {
   const env = {};
@@ -93,7 +118,7 @@ export function sandboxEnv({ home = HOME, exposurie = true } = {}) {
     TEMP: TMP,
     TMP,
     PATH: [
-      ...(exposurie === '1.3.1' ? [PREFIX_131] : []),
+      ...(NPM_EXPOSURIES[exposurie] ? [NPM_EXPOSURIES[exposurie].prefix] : []),
       ...(exposurie === 'rebuilt' ? [PREFIX_REBUILT] : []), ...(exposurie ? [PREFIX] : []), NODE, join(GIT, 'cmd'),
       join(win, 'System32'), win, join(win, 'System32', 'Wbem'), join(win, 'System32', 'WindowsPowerShell', 'v1.0'),
     ].join(';'),
@@ -196,31 +221,35 @@ export function versions() {
     exposurie: out(run(process.execPath, [EXPOSURIE, '--version'])),
     ...(existsSync(EXPOSURIE_REBUILT) ? { exposurie_rebuilt: out(run(process.execPath, [EXPOSURIE_REBUILT, '--version'])) } : {}),
     ...(existsSync(EXPOSURIE_131) ? { exposurie_131: out(run(process.execPath, [EXPOSURIE_131, '--version'])) } : {}),
+    ...(existsSync(EXPOSURIE_132) ? { exposurie_132: out(run(process.execPath, [EXPOSURIE_132, '--version'])) } : {}),
   };
 }
 
-/** The line exposurie 1.3.1 added to its pointer, as its source spells it. */
-export const POINTER_FOR_WORK = 'Before answering any such question, before starting work in one of';
-
 /**
- * exposurie 1.3.1 from npm's tarball, checked against the registry's sha512, by
- * the sandbox's own npm into a prefix of its own. 1.2.0, the rebuilt read and
- * Claude Code stay where they are.
+ * An exposurie from npm's tarball, checked against the registry's sha512, by
+ * the sandbox's own npm into a prefix of its own. 1.2.0, the rebuilt read, the
+ * other npm releases and Claude Code stay where they are. Its source must say
+ * what NPM_EXPOSURIES says it does.
  */
-async function setup131() {
+async function setupNpm(version) {
   ownNodeOnly();
   if (process.version !== `v${PINS.node.version}`) fail(`Node is ${process.version}, pinned ${PINS.node.version}`);
-  const pin = PINS.exposurie131;
+  const e = NPM_EXPOSURIES[version];
+  const pin = PINS[e.pin];
+  if (pin.version !== version) fail(`pins.json's ${e.pin} is ${pin.version}, not ${version}`);
   const file = await fetchPinned(pin);
-  mkdirSync(PREFIX_131, { recursive: true });
-  const npm = run(process.execPath, [NPM_CLI, 'install', '--global', '--prefix', PREFIX_131, file], { stdio: 'inherit' });
+  mkdirSync(e.prefix, { recursive: true });
+  const npm = run(process.execPath, [NPM_CLI, 'install', '--global', '--prefix', e.prefix, file], { stdio: 'inherit' });
   if (npm.status !== 0) fail('npm install failed');
   const v = versions();
   console.log(JSON.stringify(v, null, 2));
   if (!v.exposurie.includes(PINS.exposurie)) fail(`exposurie is ${v.exposurie}, pinned ${PINS.exposurie}`);
-  if (!v.exposurie_131?.includes(pin.version)) fail(`exposurie 1.3.1 says it is ${v.exposurie_131}`);
-  const reach = readFileSync(join(dirname(dirname(EXPOSURIE_131)), 'src', 'reach.js'), 'utf8');
-  if (!reach.includes(POINTER_FOR_WORK)) fail("exposurie 1.3.1's pointer has no line for work");
+  const asked = run(process.execPath, [e.bin, '--version']);
+  const said = (asked.stdout || asked.stderr).trim();
+  if (!said.includes(version)) fail(`exposurie ${version} says it is ${said}`);
+  for (const [rel, line] of Object.entries(e.says)) {
+    if (!readFileSync(join(dirname(dirname(e.bin)), rel), 'utf8').includes(line)) fail(`exposurie ${version}'s ${rel} does not say "${line}"`);
+  }
 }
 
 /**
@@ -422,7 +451,8 @@ function printEnv() {
 if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   const [cmd, ...rest] = process.argv.slice(2);
   const commands = {
-    setup, 'setup-rebuilt': setupRebuilt, 'setup-131': setup131, login, check, env: printEnv, claude: () => claude(rest),
+    setup, 'setup-rebuilt': setupRebuilt, 'setup-131': () => setupNpm('1.3.1'), 'setup-132': () => setupNpm('1.3.2'),
+    login, check, env: printEnv, claude: () => claude(rest),
     recheck: () => report(resolve(rest[0] ?? fail('usage: node runner/sandbox.mjs recheck <run folder>'))),
   };
   if (!commands[cmd]) fail(`usage: node runner/sandbox.mjs ${Object.keys(commands).join(' | ')}`);

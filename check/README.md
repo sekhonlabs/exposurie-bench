@@ -11,7 +11,7 @@ One check per part, each holding that part to the method in [docs/design.md](../
 | [build.mjs](build.mjs) | 6 | the brain build, end to end against the fake `claude`, with exposurie's real sync |
 | [long.mjs](long.mjs) | 8 | the long sessions, end to end against the fake `claude` |
 | [results.mjs](results.mjs) | 9 to 13 | that `results/` and its charts are exactly what `score/results.mjs` computes, in the look, with no personal data, and that the README shows every chart and gives its headlines as the results have them |
-| [team.mjs](team.mjs) | 13 | the team task's runner and scorer, end to end against the fake `claude` |
+| [team.mjs](team.mjs) | 13 | the team task's runner and scorer, end to end against the fake `claude`, and its rerun on 1.3.2 from team-1's round 1 |
 | [text.mjs](text.mjs) | | how the checks read text, shared so that a spelling counts the same way everywhere |
 | [rivals.json](rivals.json) | | the names a history may mention only where a fact or a turned-down option plans them |
 

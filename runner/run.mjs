@@ -49,7 +49,7 @@ import {
 import { dirname, join, parse, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  CLAUDE, EXPOSURIE, EXPOSURIE_131, EXPOSURIE_REBUILT, HOME, PINS, POINTER_FOR_WORK, RUNS, SANDBOX, TOOLS, lockSandbox, ownNodeOnly,
+  CLAUDE, EXPOSURIE, EXPOSURIE_REBUILT, HOME, NPM_EXPOSURIES, PINS, POINTER_FOR_WORK, RUNS, SANDBOX, TOOLS, lockSandbox, ownNodeOnly,
   sandboxEnv, strays,
 } from './sandbox.mjs';
 import { convertUser } from '../gen/convert.mjs';
@@ -102,8 +102,8 @@ export function sandboxContext() {
   };
 }
 
-/** The exposuries a batch may name besides 1.2.0: the rebuilt read (part 10), and 1.3.1 from npm. */
-export const OTHER_EXPOSURIES = ['rebuilt', '1.3.1'];
+/** The exposuries a batch may name besides 1.2.0: the rebuilt read (part 10), and 1.3.1 and 1.3.2 from npm. */
+export const OTHER_EXPOSURIES = ['rebuilt', ...Object.keys(NPM_EXPOSURIES)];
 
 /**
  * A run's environment. C gets the `exposurie` command on its PATH: 1.2.0, or
@@ -194,8 +194,8 @@ export function readRun(dir) {
  * Fix a batch. Every task asked for runs once under each condition asked for,
  * and the order comes from sorting on a hash of the seed and the cell: mixed,
  * and the same every time for the same seed. `exposurie: 'rebuilt'` (part 10)
- * runs C with the rebuilt read, and `'1.3.1'` with exposurie 1.3.1; only C has
- * exposurie, so such a batch is C's alone.
+ * runs C with the rebuilt read, and `'1.3.1'` or `'1.3.2'` with that release
+ * from npm; only C has exposurie, so such a batch is C's alone.
  */
 export function plan(ctx, batch, { users = USERS, tasks: only = null, conditions = CONDITIONS, seed = batch, exposurie = null } = {}) {
   if (!/^[a-z0-9][a-z0-9-]*$/i.test(batch ?? '')) fail('a batch name is letters, digits and dashes');
@@ -250,9 +250,9 @@ const DAY = 86_400_000;
 /**
  * Why a condition cannot run now, if it cannot. C needs its user's brain, built
  * and synced to the end within the last 7 days: from 7 days, or with anything
- * left unfiled, exposurie's own status line asks the agent to sync. A 1.3.1
- * batch is the exception to the 7 days, since each of its runs gets a copy of
- * the brain made 3 days old (see prepare131).
+ * left unfiled, exposurie's own status line asks the agent to sync. A batch on
+ * an npm release (1.3.1, 1.3.2) is the exception to the 7 days, since each of
+ * its runs gets a copy of the brain made 3 days old (see prepareNpm).
  */
 export function setupProblems(ctx, condition, task) {
   const missing = conditionFiles(ctx, condition, task).filter((f) => !existsSync(f.from));
@@ -271,7 +271,7 @@ export function setupProblems(ctx, condition, task) {
   const last = Date.parse(state.lastSyncUtc ?? '');
   if (!last) return [`the ${task.user}'s brain was never synced`];
   const days = Math.floor((Date.now() - last) / DAY);
-  if (days >= 7 && ctx.exposurie !== '1.3.1') return [`the ${task.user}'s brain was last synced ${days} days ago; exposurie asks for a sync from 7`];
+  if (days >= 7 && !NPM_EXPOSURIES[ctx.exposurie]) return [`the ${task.user}'s brain was last synced ${days} days ago; exposurie asks for a sync from 7`];
   if ((state.unfiled ?? 0) > 0) return [`the ${task.user}'s brain has ${state.unfiled} conversations not filed yet`];
   return [];
 }
@@ -330,47 +330,56 @@ export function recover(ctx) {
   if (unplace(ctx)) console.log('A run that stopped part-way had left its condition in the sandbox home. It has been taken out.');
 }
 
-/** How old a 1.3.1 run's copy of the brain is made: part 10's runs saw `last sync 3d ago`. */
+/** How old a 1.3.1 or 1.3.2 run's copy of the brain is made: part 10's runs saw `last sync 3d ago`. */
 export const AGE_131_DAYS = 3;
 
-/** exposurie 1.3.1's answer to `--version`, asked in the run's home with C's environment. */
-export function ask131(ctx) {
-  const r = spawnSync(process.execPath, [EXPOSURIE_131, '--version'], { env: envFor(ctx, 'C'), cwd: ctx.home, encoding: 'utf8', windowsHide: true });
+/** The npm release a batch names: its command, and the version its pin gives. */
+export function npmOf(ctx) {
+  const e = NPM_EXPOSURIES[ctx.exposurie];
+  if (!e) fail(`exposurie ${ctx.exposurie} is not one installed from npm`);
+  return { ...e, version: PINS[e.pin].version };
+}
+
+/** The batch's npm exposurie's answer to `--version`, asked in the run's home with C's environment. */
+export function askNpm(ctx) {
+  const r = spawnSync(process.execPath, [npmOf(ctx).bin, '--version'], { env: envFor(ctx, 'C'), cwd: ctx.home, encoding: 'utf8', windowsHide: true });
   return { status: r.status, out: `${r.stdout ?? ''}${r.stderr ?? ''}` };
 }
 
 /**
- * The first half of prepare131, which part 13's sync takes alone: once the
- * kept kit is in the home, 1.3.1 brings its own files up to date by its own
- * update step, and must say so. The brain is left as it is, nothing new is
- * left in the home, the pointer has 1.3.1's line for work, and exposurie's
- * config says 1.3.1. What the update changed is returned.
+ * The first half of prepareNpm, which part 13's sync takes alone: once the
+ * kept kit is in the home, the batch's npm release brings its own files up to
+ * date by its own update step, and must say so. The brain is left as it is,
+ * its own wiki prompt with it, nothing new is left in the home, the pointer
+ * has 1.3.1's line for work, and exposurie's config names the release. What
+ * the update changed is returned.
  */
-export function update131(ctx) {
+export function updateNpm(ctx) {
+  const { version } = npmOf(ctx);
   const before = Object.fromEntries(C_PATHS.map((rel) => [rel, hashPath(join(ctx.home, rel))]));
   const strayBefore = strays(ctx.home).join('\n');
-  const up = ask131(ctx);
-  if (up.status !== 0 || !up.out.includes(`UPDATED TO ${PINS.exposurie131.version}`)) {
-    fail(`exposurie 1.3.1 did not bring the run's home up to date:\n${up.out.slice(0, 600)}`);
+  const up = askNpm(ctx);
+  if (up.status !== 0 || !up.out.includes(`UPDATED TO ${version}`)) {
+    fail(`exposurie ${version} did not bring the run's home up to date:\n${up.out.slice(0, 600)}`);
   }
   const updated = C_PATHS.filter((rel) => hashPath(join(ctx.home, rel)) !== before[rel]);
-  if (updated.includes('brain')) fail("exposurie 1.3.1's update changed the brain");
-  if (strays(ctx.home).join('\n') !== strayBefore) fail("exposurie 1.3.1's update left something new in the home");
+  if (updated.includes('brain')) fail(`exposurie ${version}'s update changed the brain`);
+  if (strays(ctx.home).join('\n') !== strayBefore) fail(`exposurie ${version}'s update left something new in the home`);
   if (!readFileSync(join(ctx.home, '.claude', 'CLAUDE.md'), 'utf8').includes(POINTER_FOR_WORK)) {
-    fail("after exposurie 1.3.1's update, the pointer has no line for work");
+    fail(`after exposurie ${version}'s update, the pointer has no line for work`);
   }
   const config = readJson(join(ctx.home, '.exposurie', 'config.json'));
-  if (config.version !== PINS.exposurie131.version) fail(`after the update, exposurie's config says ${config.version}`);
+  if (config.version !== version) fail(`after the update, exposurie's config says ${config.version}`);
   return updated;
 }
 
 /**
- * Before a 1.3.1 C run starts, once its condition is in the home. The kept
- * brains were set up by exposurie 1.2.0 and last synced on 2026-10-21, and two
- * things follow, each settled the same way for every run:
+ * Before a C run on an npm release (1.3.1, 1.3.2) starts, once its condition is
+ * in the home. The kept brains were set up by exposurie 1.2.0 and last synced
+ * on 2026-10-21, and two things follow, each settled the same way for every run:
  *
  *   - The pointer, skill and command in the home are 1.2.0's, and Claude Code
- *     reads the pointer once, as the session starts. So 1.3.1 first brings its
+ *     reads the pointer once, as the session starts. So the release first brings its
  *     own files up to date, by its own update step (its src/refresh.js), which
  *     any command takes when it finds the machine set up by an older release.
  *     The step writes the pointer, the skill, the command and the version in
@@ -386,8 +395,8 @@ export function update131(ctx) {
  * runs saw it, with no arrow and no word of an update. What was done is
  * returned, for batch.json.
  */
-export function prepare131(ctx) {
-  const updated = update131(ctx);
+export function prepareNpm(ctx) {
+  const updated = updateNpm(ctx);
 
   const stateFile = join(ctx.home, 'brain', '.exposurie', 'state.json');
   const text = readFileSync(stateFile, 'utf8');
@@ -397,10 +406,10 @@ export function prepare131(ctx) {
   const lastSync = new Date(Date.now() - AGE_131_DAYS * DAY).toISOString();
   writeFileSync(stateFile, text.replace(at, `$1"${lastSync}"`));
 
-  const again = ask131(ctx);
+  const again = askNpm(ctx);
   const stateLine = again.out.split('\n')[0].trim();
   if (again.status !== 0 || !stateLine.includes(`last sync ${AGE_131_DAYS}d ago`) || /-> RUN:|UPDATED TO/.test(again.out)) {
-    fail(`exposurie 1.3.1 does not see the brain as part 10's runs saw it:\n${again.out.slice(0, 600)}`);
+    fail(`exposurie ${npmOf(ctx).version} does not see the brain as part 10's runs saw it:\n${again.out.slice(0, 600)}`);
   }
   return { updated, kept_last_sync: found[0][2], last_sync: lastSync, state_line: stateLine };
 }
@@ -849,9 +858,9 @@ async function runCell(ctx, b, cell, versions) {
   if (setup.length) return save({ status: 'not-run', reason: setup.join('; ') });
 
   let placed = place(ctx, cell.run, cell.condition, task);
-  if (cell.condition === 'C' && ctx.exposurie === '1.3.1') {
+  if (cell.condition === 'C' && NPM_EXPOSURIES[ctx.exposurie]) {
     try {
-      cell.prepared = prepare131(ctx);
+      cell.prepared = prepareNpm(ctx);
     } catch (e) {
       unplace(ctx);
       throw e;
@@ -929,8 +938,8 @@ async function runCell(ctx, b, cell, versions) {
 /**
  * The versions every run records. exposurie prints its state line first, so the
  * version is found by its shape. The rebuilt exposurie's package still says
- * 1.2.0, so it is recorded by its label, which names its commit. 1.3.1 is
- * recorded as itself.
+ * 1.2.0, so it is recorded by its label, which names its commit. 1.3.1 and
+ * 1.3.2 are recorded as themselves.
  */
 export function versionsOf(ctx) {
   const env = sandboxEnv({ home: ctx.home });
@@ -948,11 +957,11 @@ export function versionsOf(ctx) {
     if (v !== label.split('+')[0]) fail(`the rebuilt exposurie says it is ${v}, where its label is ${label}`);
     exposurie = label;
   }
-  if (ctx.exposurie === '1.3.1') {
-    const want = PINS.exposurie131.version;
-    if (!existsSync(EXPOSURIE_131)) fail('exposurie 1.3.1 is not in the sandbox; run node runner/sandbox.mjs setup-131');
-    const v = out(process.execPath, [EXPOSURIE_131, '--version']);
-    if (v !== want) fail(`the sandbox's exposurie 1.3.1 says it is ${v}`);
+  if (NPM_EXPOSURIES[ctx.exposurie]) {
+    const { bin, version: want } = npmOf(ctx);
+    if (!existsSync(bin)) fail(`exposurie ${want} is not in the sandbox; run node runner/sandbox.mjs setup-${want.replace(/\./g, '')}`);
+    const v = out(process.execPath, [bin, '--version']);
+    if (v !== want) fail(`the sandbox's exposurie ${want} says it is ${v}`);
     exposurie = want;
   }
   return { claude_code: out(cmd, [...pre, '--version']), exposurie, node: process.version.slice(1) };

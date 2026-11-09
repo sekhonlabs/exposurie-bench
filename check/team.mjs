@@ -25,8 +25,16 @@
 //                     tokens its own; then the scorer: C and D keep all six
 //                     decisions and agree, A keeps none and does not, nothing
 //                     of round 1 leaked, and the brain holds every decision
+//   again, on 1.3.2   team-1 planned again from its own round 1 as team-1-132:
+//                     what `again` refuses; round 1 copied, never run; the
+//                     sync on 1.3.2's real sync, asked for each decision as the
+//                     rule it set (1.3.1's never was), with the brain's own wiki
+//                     prompt kept; round 2 in C alone, in team-1's order, a read
+//                     outside accepted by hand; the scorer on C alone, with a
+//                     plan meter of only what ran; team-1 untouched
 //   the gate          a round 1 step that breaks the contract stops the task at
-//                     the gate, and a repair by hand, recorded, lets it go on
+//                     the gate, `again` refuses it there, and a repair by hand,
+//                     recorded, lets it go on
 //
 // Run it with the sandbox's own Node. Exit 0 when everything holds; exit 1
 // lists every problem.
@@ -36,9 +44,10 @@ import { createHash } from 'node:crypto';
 import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { EXPOSURIE, HOME, POINTER_FOR_WORK, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
+import { EXPOSURIE, HOME, POINTER_FOR_WORK, RULE_FOR_DECISIONS, RUNS, ownNodeOnly, sandboxEnv } from '../runner/sandbox.mjs';
 import { DECLINED, Stop, keepBrain, neutralProblems } from '../runner/run.mjs';
-import { TEAM, goTeam, mergeCopies, planTeam, teamTask } from '../runner/team.mjs';
+import { originalKit } from '../runner/long.mjs';
+import { TEAM, againTeam, goTeam, mergeCopies, planTeam, teamTask } from '../runner/team.mjs';
 import { scoreTeam } from '../score/team.mjs';
 
 ownNodeOnly();
@@ -211,11 +220,26 @@ const noLeftovers = (ctx, where) => {
 };
 const fakeProblems = (dir) => filesIn(dir).filter((f) => f.endsWith('stream.jsonl') || f.endsWith('answer.md'))
   .filter((f) => readFileSync(join(dir, f), 'utf8').includes('FAKE-PROBLEM'));
+/** Every tool result in a session's stream, as one text with its whitespace run together. */
+const toolText = (file) => readFileSync(file, 'utf8').split('\n').filter(Boolean)
+  .flatMap((l) => {
+    try {
+      return JSON.parse(l).message?.content ?? [];
+    } catch {
+      return [];
+    }
+  })
+  .filter((c) => c?.type === 'tool_result')
+  .map((c) => (typeof c.content === 'string' ? c.content : JSON.stringify(c.content)))
+  .join('\n').replace(/\s+/g, ' ');
 
 // ---------------------------------------------------------------- the whole of it
 
+/** The sandbox the whole task ran in, which the rerun on 1.3.2 starts from. */
+let whole = null;
 {
   const { ctx, dir } = sandbox('whole', { steps: { 'round-1/2/2': 'limit', 'round-1/3/2': 'outside' }, runs: { 'C/2': 'outside', 'D/3': 'persist' } });
+  whole = { ctx, dir };
   const b = planTeam(ctx, 'team-1');
   expect(b.cells.length === 9 && ['A', 'C', 'D'].every((c) => b.cells.filter((x) => x.condition === c).length === 3), `the plan: ${JSON.stringify(b.cells)}`);
   expect(b.cells.map((c) => c.run).join() === 'r001,r002,r003,r004,r005,r006,r007,r008,r009', 'the runs are not numbered in order');
@@ -227,6 +251,8 @@ const fakeProblems = (dir) => filesIn(dir).filter((f) => f.endsWith('stream.json
   expect([0, 1, 2].every((n) => lastTry(T.round_1[1].steps, n)?.status === 'done'), 'agent 1 did not finish its three steps first');
   expect(lastTry(T.round_1[2].steps, 1)?.status === 'not-run' && /usage limit/.test(lastTry(T.round_1[2].steps, 1).reason), `the limited step: ${JSON.stringify(T.round_1[2].steps.map((r) => r.status))}`);
   noLeftovers(ctx, 'after the limit');
+  expect(/round 1 is not finished/.test((await stops(() => againTeam(ctx, 'team-1', 'team-1-early', { exposurie: '1.3.2' }))) ?? ''), 'again took a round 1 that had not finished');
+  expect(!existsSync(join(ctx.runs, 'team-1-early')), 'a refused again left a folder behind');
 
   expect((await go()) === false, 'a round 1 step that read outside its folder carried on');
   T = record(dir);
@@ -322,6 +348,83 @@ const fakeProblems = (dir) => filesIn(dir).filter((f) => f.endsWith('stream.json
   expect(/--repaired is for/.test((await stops(() => go({ repaired: 'nothing to repair' }))) ?? ''), '--repaired was taken with the gate passed');
 }
 
+// ---------------------------------------------------------------- again, on 1.3.2
+
+{
+  const { ctx, dir: from } = whole;
+  const id = 'team-1-132';
+  const dir = join(ctx.runs, id);
+  const fromBefore = snapshot(from).join('\n');
+  const tryAgain = (o = {}, src = 'team-1') => stops(() => againTeam(ctx, src, id, { exposurie: '1.3.2', ...o }));
+  expect(/names a release installed from npm/.test((await tryAgain({ exposurie: '1.2.0' })) ?? ''), 'again took an exposurie not installed from npm');
+  expect(/conditions are/.test((await tryAgain({ conditions: ['B'] })) ?? ''), 'again took a condition the task does not have');
+  expect(/has not run/.test((await tryAgain({}, 'team-9')) ?? ''), 'again took a batch that never ran');
+  expect(!existsSync(dir), 'a refused again left a folder behind');
+
+  // The fake now finds 1.3.2's exposurie, and one run of round 2 reads outside its folder.
+  const scenario = readJson(ctx.env.EXPOSURIE_BENCH_FAKE);
+  writeFileSync(ctx.env.EXPOSURIE_BENCH_FAKE, JSON.stringify({
+    ...scenario, exposurie_dir: 'npm-132', team: { ...scenario.team, steps: {}, runs: { 'C/1': 'outside' } },
+  }, null, 2) + '\n');
+  const b = againTeam(ctx, 'team-1', id, { exposurie: '1.3.2' });
+  const was = readJson(join(from, 'batch.json'));
+  expect(b.task === 'team-1' && b.exposurie === '1.3.2' && b.round_1_from === 'team-1' && b.conditions.join() === 'C', `the rerun's batch: ${JSON.stringify({ ...b, cells: undefined })}`);
+  expect(b.cells.length === 3 && b.cells.every((c) => c.condition === 'C') && b.cells.map((c) => c.run).join() === 'r001,r002,r003', `the rerun's runs: ${JSON.stringify(b.cells)}`);
+  expect(b.cells.map((c) => c.agent).join() === was.cells.filter((c) => c.condition === 'C').map((c) => c.agent).join(), "the rerun's agents are not in team-1's order");
+  expect(/already exists/.test((await tryAgain()) ?? ''), 'a batch was planned again over itself');
+
+  expect((await goTeam(ctx, id)) === false, "a run of the rerun that read outside its folder carried on");
+  let T = record(dir);
+  expect(T.stopped?.kind === 'run' && T.stopped.problems.some((p) => /outside its folder/.test(p)), `the rerun's read outside: ${JSON.stringify(T.stopped)}`);
+  expect((await goTeam(ctx, id, { accept: 'read by hand: the fake read the task file, nothing came of it' })) === true, 'the rerun did not finish');
+  T = record(dir);
+  noLeftovers(ctx, 'after the rerun');
+
+  // Round 1 did not run again: its record, sessions and merged code are team-1's, and no step ran.
+  const T0 = record(from);
+  expect(JSON.stringify(T.round_1) === JSON.stringify(T0.round_1) && JSON.stringify(T.sessions) === JSON.stringify(T0.sessions) && T.round_1_from?.batch === 'team-1',
+    "the rerun's round 1 record is not team-1's");
+  const same = (rel) => {
+    const a = filesIn(join(from, rel));
+    return a.length > 0 && JSON.stringify(a) === JSON.stringify(filesIn(join(dir, rel))) && a.every((f) => sha(join(from, rel, f)) === sha(join(dir, rel, f)));
+  };
+  expect(['round-1/merged', 'round-1/agent-1/session', 'round-1/agent-2/session', 'round-1/agent-3/session'].every(same), "the rerun's round 1 code or sessions are not team-1's");
+  expect(!existsSync(join(dir, 'work')), 'a round 1 step ran in the rerun');
+
+  // The sync ran on 1.3.2, whose write step asks for each decision as the rule it set; team-1's 1.3.1 sync was never asked.
+  const sync = T.sync.tries.at(-1);
+  expect(T.sync.tries.length === 1 && sync.status === 'done' && sync.brain_after.filed && sync.brain_after.newly_read === 3,
+    `the rerun's sync: ${JSON.stringify({ s: sync?.status, r: sync?.reason, b: sync?.brain_after })}`);
+  expect(toolText(join(dir, 'sync', 'sync', 'stream.jsonl')).includes(RULE_FOR_DECISIONS), "the rerun's sync was not asked to write each decision as the rule it set");
+  expect(!toolText(join(from, 'sync', 'sync', 'stream.jsonl')).includes(RULE_FOR_DECISIONS), "team-1's sync on 1.3.1 was asked for rules too, so the check cannot tell the releases apart");
+  expect(readJson(join(dir, 'sync', 'kit', '.exposurie', 'config.json')).version === '1.3.2' && sync.versions.exposurie === '1.3.2', "the rerun's sync did not run on 1.3.2");
+  // The brain keeps its own wiki prompt: 1.3.2's update never touches it, so the prompt's new example never reaches the sync.
+  const prompt = (kit) => join(kit, 'brain', '.exposurie', 'wiki-prompt.md');
+  expect(sha(prompt(join(dir, 'sync', 'kit'))) === sha(prompt(originalKit(ctx, 'developer'))) && !readFileSync(prompt(join(dir, 'sync', 'kit')), 'utf8').includes('rule it set'),
+    "the rerun's brain does not keep its own wiki prompt");
+
+  // Round 2: C alone, on 1.3.2, each run looking in the brain the sync left.
+  for (const cell of b.cells) {
+    const r = readJson(join(dir, cell.run, 'run.json'));
+    expect(r.status === 'done' || r.accepted, `rerun ${cell.run}: ${r.status} ${r.reason ?? ''}`);
+    expect(r.versions?.exposurie === '1.3.2' && /synced today/.test(r.exposurie_state ?? '') && (r.exposurie_commands ?? []).some((x) => /\bread\b/.test(x)),
+      `rerun ${cell.run}: ${JSON.stringify({ v: r.versions?.exposurie, state: r.exposurie_state, commands: r.exposurie_commands })}`);
+  }
+  expect(Object.keys(T.round_2.merged).join() === 'C' && T.round_2.merged.C.conflicts.length === 0 && T.round_2.merged.C.order.join() === '1,2,3',
+    `the rerun's merges: ${JSON.stringify(T.round_2.merged)}`);
+  expect(fakeProblems(dir).length === 0, `the fake found problems in the rerun: ${fakeProblems(dir).join(', ')}`);
+
+  // The scorer, on C alone, with a plan meter of only what ran in the rerun.
+  const s = scoreTeam(dir, task);
+  const C = s.conditions.C;
+  expect(Object.keys(s.conditions).join() === 'C' && s.batch === id && s.exposurie === '1.3.2', `the rerun's scores: ${JSON.stringify({ c: Object.keys(s.conditions), batch: s.batch, e: s.exposurie })}`);
+  expect(C.kept.merged === 6 && C.agreed && C.tests.passed && C.looked === 3, `the rerun's C: ${JSON.stringify({ kept: C.kept, agreed: C.agreed, passed: C.tests.passed, looked: C.looked })}`);
+  expect(s.round_1.from === 'team-1' && s.plan_meter.length === 4 && s.plan_meter.every((m) => m.seven_day !== null),
+    `the rerun's round 1 and plan meter: ${JSON.stringify({ from: s.round_1.from, meter: s.plan_meter.map((m) => m.what) })}`);
+  expect(Object.values(s.sync.filed).every((v) => v.filed), `the rerun's brain lacks: ${JSON.stringify(Object.entries(s.sync.filed).filter(([, v]) => !v.filed).map(([k]) => k))}`);
+  expect(snapshot(from).join('\n') === fromBefore, 'the rerun changed team-1');
+}
+
 // ---------------------------------------------------------------- the gate
 
 {
@@ -330,6 +433,7 @@ const fakeProblems = (dir) => filesIn(dir).filter((f) => f.endsWith('stream.json
   expect((await goTeam(ctx, 'team-1')) === false, 'round 1 with a broken handler went past the gate');
   let T = record(dir);
   expect(T.round_1.gate?.passed === false && T.round_1.gate.hidden.failed > 0, `the gate on broken code: ${JSON.stringify(T.round_1.gate?.hidden)}`);
+  expect(/has not passed its gate/.test((await stops(() => againTeam(ctx, 'team-1', 'team-1-again', { exposurie: '1.3.2' }))) ?? ''), 'again took a round 1 that failed its gate');
   expect(!existsSync(join(dir, 'sync')) && !existsSync(join(dir, 'r001')), 'something ran after the gate stopped the task');
   expect((await goTeam(ctx, 'team-1')) === false, 'the gate let broken code through on a second try');
   noLeftovers(ctx, 'after the gate');

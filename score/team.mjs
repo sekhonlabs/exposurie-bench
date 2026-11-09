@@ -2,7 +2,10 @@
 // condition. Every result here is also read by hand (docs/build-plan.md,
 // part 13), and the checks marked hand are listed for that.
 //
-//   node score/team.mjs <task>      writes scores.json beside team.json
+//   node score/team.mjs <batch>     writes scores.json beside team.json
+//
+// A batch is named for its task, or planned again from another batch's round 1
+// (runner/team.mjs again), when it scores only the conditions it ran.
 //
 // For each condition of round 2:
 //   - the merged work's tests: the repository's own (`node --test`), and the
@@ -210,7 +213,9 @@ const counted = (r) => !!r && (r.status === 'done' || !!r.accepted);
 export function scoreTeam(dir, task, { runs = RUNS } = {}) {
   const T = readJson(join(dir, 'team.json'));
   const b = readJson(join(dir, 'batch.json'));
-  if (!task.conditions.every((c) => T.round_2.merged[c])) throw new Error(`${task.id} has not finished: round 2's merges are not all done`);
+  // A batch planned again from another's round 1 runs only the conditions it names.
+  const conditionsRun = b.conditions ?? task.conditions;
+  if (!conditionsRun.every((c) => T.round_2.merged[c])) throw new Error(`${b.batch ?? task.id} has not finished: round 2's merges are not all done`);
   const base = join(dir, 'round-2-base');
   const data = {
     'pocket.csv': join(task.starterDir, 'test', 'fixtures', 'pocket.csv'),
@@ -221,6 +226,8 @@ export function scoreTeam(dir, task, { runs = RUNS } = {}) {
   const steps = agents.flatMap((a) => T.round_1[a].steps.filter(counted).map((r) => ({ agent: a, ...r })));
   const sync = T.sync.tries.findLast(counted);
   const round1 = {
+    // Round 1 copied from an earlier batch ran there, and its usage is counted there.
+    from: T.round_1_from?.batch ?? null,
     steps: steps.length,
     tokens: sum(steps.map((r) => r.tokens)),
     cost_usd_estimate: steps.reduce((n, r) => n + (r.cost_usd_estimate ?? 0), 0),
@@ -238,7 +245,7 @@ export function scoreTeam(dir, task, { runs = RUNS } = {}) {
   };
 
   const conditions = {};
-  for (const condition of task.conditions) {
+  for (const condition of conditionsRun) {
     const cells = b.cells.filter((c) => c.condition === condition).sort((x, y) => x.agent - y.agent);
     const runs2 = cells.map((c) => {
       const r = readJson(join(dir, c.run, 'run.json'));
@@ -288,9 +295,9 @@ export function scoreTeam(dir, task, { runs = RUNS } = {}) {
     };
   }
 
-  // The plan meter, in the order everything ran.
+  // The plan meter, in the order everything in this batch ran.
   const meter = [
-    ...steps.map((r) => ({ what: `round-1/agent-${r.agent}/${r.step}`, at: r.finished, seven_day: r.plan_usage_after?.seven_day ?? null })),
+    ...(round1.from ? [] : steps.map((r) => ({ what: `round-1/agent-${r.agent}/${r.step}`, at: r.finished, seven_day: r.plan_usage_after?.seven_day ?? null }))),
     { what: 'sync', at: sync.finished, seven_day: sync.plan_usage_after?.seven_day ?? null },
     ...b.cells.map((c) => {
       const r = readJson(join(dir, c.run, 'run.json'));
@@ -300,6 +307,7 @@ export function scoreTeam(dir, task, { runs = RUNS } = {}) {
 
   return {
     task: task.id,
+    ...(b.batch && b.batch !== task.id ? { batch: b.batch, exposurie: b.exposurie } : {}),
     scored: new Date().toISOString(),
     round_1: round1,
     sync: synced,
@@ -321,16 +329,18 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   // top level left each waiting on the other, and Node exited with code 13.
   Promise.all([import('../runner/team.mjs'), import('../runner/sandbox.mjs')]).then(([{ teamTask }, { ownNodeOnly }]) => {
     ownNodeOnly();
+    // A batch names its task; one planned before `again` existed is named for it.
     const id = process.argv[2];
-    const task = teamTask(id);
-    const dir = join(RUNS, task.id);
+    const dir = join(RUNS, /^[a-z0-9-]+$/.test(id ?? '') ? id : '.missing');
+    const planned = existsSync(join(dir, 'batch.json')) ? readJson(join(dir, 'batch.json')) : null;
+    const task = teamTask(planned?.task ?? id);
     if (!existsSync(join(dir, 'team.json'))) {
       console.error(`score/team: ${id} has not run`);
       process.exit(1);
     }
     const s = scoreTeam(dir, task);
     writeFileSync(join(dir, 'scores.json'), `${JSON.stringify(s, null, 2)}\n`);
-    console.log(`round 1: ${s.round_1.steps} steps, ${s.round_1.tokens.all_input} in; gate ${s.round_1.gate.passed ? 'passed' : 'failed'}; ` +
+    console.log(`round 1${s.round_1.from ? `, as it ran in ${s.round_1.from}` : ''}: ${s.round_1.steps} steps, ${s.round_1.tokens.all_input} in; gate ${s.round_1.gate.passed ? 'passed' : 'failed'}; ` +
       `in its code already: ${Object.entries(s.round_1.leaks).filter(([, v]) => v.leaked).map(([k]) => k).join(', ') || 'none'}`);
     console.log(`sync: ${s.sync.tokens.all_input} in; filed ${Object.entries(s.sync.filed).filter(([, v]) => v.filed).map(([k]) => k).join(', ') || 'none'}`);
     for (const [c, r] of Object.entries(s.conditions)) {

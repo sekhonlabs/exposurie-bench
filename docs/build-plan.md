@@ -658,3 +658,35 @@ node check/team.mjs                                 all of it through the fake, 
 - **A README in every folder,** and no file moved, so every script, check, link and commit keeps working.
 - **`check/results.mjs`** now holds the README to showing every chart, and to part 12's count in words, in place of its table.
 - **Done when:** every check holds, and `check/results.mjs` holds the new charts and the README.
+
+### 13 again, on 1.3.2 (2026-11-09)
+
+**Plan usage:** yes: one sync and three runs, which cost $0.99 together on 1.3.1. **Decided by the owner on 2026-11-09, once 1.3.2 was on npm. Built and checked against the fake the same day; the live run waits for his go.** Why each choice was made is in [decisions.md](decisions.md), 2026-11-09.
+
+**The question:** does 1.3.2's sync, which asks for each decision as the rule it set, file K1 so that C's Instapaper agent keeps it? On 1.3.1, C kept 5 of 6. The one it lost was K1 on Instapaper's side: the sync filed it as a plan (*"readers will put highlights on items"*), and the agent took it for another agent's job.
+
+**What runs again, and what stands:**
+- **Again:** the sync, and round 2's three C runs, on exposurie 1.3.2.
+- **Stands:** round 1, its merge with the repair by hand, and A's and D's round 2. None of them used exposurie after round 1, so none can change with its version.
+- **The same:** round 1's three transcripts, the developer's kept brain, the asks, and the three C agents' order, from team-1's seed. Only exposurie changes.
+
+**How it runs:**
+1. `node runner/sandbox.mjs setup-132` installs npm's 1.3.2 tarball, pinned in `runner/pins.json` by the registry's sha512, into `sandbox/npm-132/`. The tarball's 57 files are byte-identical to commit `edafdb6`. Four differ from 1.3.1: the README, `package.json`, `src/commands/sync.js` and `src/templates/wiki-prompt.md`.
+2. `node runner/team.mjs again team-1 team-1-132 --exposurie 1.3.2` plans a batch of the same task from team-1's round 1. Round 1 is copied as the gate passed it, with its record, so it never runs again.
+3. `node runner/team.mjs go team-1-132` runs the sync, then the three C runs, then merges them onto round 1's merged code. The sync gets the developer's kept brain brought up to 1.3.2 by its own update step, with round 1's three transcripts as its only history, as on 1.3.1.
+4. `node score/team.mjs team-1-132` scores C alone, with a plan meter of only what ran. Then a hand read, as for team-1.
+
+**The new rule reaches the sync one way only.** 1.3.2 puts it in two places: the wiki prompt, and the sync's write step. A brain's copy of the prompt is made once, when the brain is set up, and an update never touches it. So the kept brain keeps the prompt it had, and the rule reaches this sync through the write step alone, the way it reaches every brain made before 1.3.2. That matters here: the new prompt's example is K1 itself, nearly word for word. A brain set up by 1.3.2 would show the agent the answer, and this one does not.
+
+**Checked against the fake** (`check/team.mjs`, *again, on 1.3.2*): what `again` refuses; round 1 copied and never run; the sync on 1.3.2's real sync, asked for each decision as the rule it set (1.3.1's sync never was); the brain's own wiki prompt kept, byte for byte; round 2 in C alone, in team-1's order, with a read outside its folder accepted by hand; the scorer on C alone; team-1 untouched. **A fault test** broke the new code 10 ways, and every break was caught. Every other check still holds.
+
+**Found on the way: a merge could miss a change.** Git took a copied file as unchanged when its size, time and creation time matched, so it never read the bytes (see decisions.md). `mergeCopies` now reads every tracked file again. team-1's four merges, done again with the fix, come out byte for byte the same.
+
+**What it does not show:** one run per cell again, so a 6 of 6 would be a sign, not proof. The fix was written after the miss it fixes and is measured on the same job, as 1.3.1's pointer was.
+
+```
+node runner/sandbox.mjs setup-132
+node runner/team.mjs again team-1 team-1-132 --exposurie 1.3.2   no plan usage
+node runner/team.mjs go team-1-132                               the sync and three runs: spends plan usage
+node score/team.mjs team-1-132
+```

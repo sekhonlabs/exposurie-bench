@@ -4,19 +4,26 @@
 // decisions round 1 is told for round 2 are in tasks/team/<task>.json.
 //
 //   node runner/team.mjs plan <task> [--seed text]
-//   node runner/team.mjs go <task> [--accept "<why>"] [--repaired "<what>"]
-//   node runner/team.mjs status <task>
+//   node runner/team.mjs again <batch> <new batch> --exposurie <version> [--conditions C] [--seed text]
+//   node runner/team.mjs go <batch> [--accept "<why>"] [--repaired "<what>"]
+//   node runner/team.mjs status <batch>
 //
 // `plan` fixes round 2's nine runs, three agents in each of conditions A, C
 // and D, in a mixed order worked out from the seed, each with a run ID that
-// says neither. `go` carries the task as far as it goes, and can be stopped and
-// started again; it spends plan usage:
+// says neither; the batch takes the task's name. `again` plans a new batch of
+// the same task from an earlier batch's round 1, which does not run again: it
+// is copied as the gate passed it, and `go` starts at the sync, on the
+// exposurie named, with round 2 in the conditions named (C by default), in the
+// order the earlier batch's seed gives them. A batch names its task, so every
+// command takes a batch. `go` carries the batch as far as it goes, and can be
+// stopped and started again; it spends plan usage:
 //
-//   1. Round 1, once, in condition C on exposurie 1.3.1: each agent's steps in
+//   1. Round 1, once, in condition C on the batch's exposurie (1.3.1 for
+//      team-1): each agent's steps in
 //      one saved session, `--session-id` for the first and `--resume` after,
 //      in `work/<folder>`, which holds that agent's own copy while it runs.
 //      Before every step the developer's kept kit goes into the home, and
-//      1.3.1 brings it up to date and makes the brain 3 days old, as in
+//      that release brings it up to date and makes the brain 3 days old, as in
 //      full-3. Between steps the home holds nothing of the session.
 //   2. Round 1's three copies merged onto the starter with the sandbox's Git,
 //      in agent order; a conflict is resolved by keeping both sides (Git's
@@ -26,7 +33,7 @@
 //      `--repaired`, or runs round 1 again.
 //   3. The sync: once round 1's newest transcript has been still for five
 //      minutes, a session of its own types /exposurie-sync in the brain's
-//      folder, with the kept kit brought up to 1.3.1, not made younger, and
+//      folder, with the kept kit brought up to the batch's exposurie, not made younger, and
 //      round 1's three transcripts as the only history. The brain it leaves
 //      is condition C's in round 2.
 //   4. Round 2: each run gets a copy of round 1's merged code with the task's
@@ -49,12 +56,12 @@ import { createHash, randomUUID } from 'node:crypto';
 import { cpSync, existsSync, mkdirSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { PINS, SANDBOX, lockSandbox, ownNodeOnly, sandboxEnv, strays } from './sandbox.mjs';
+import { NPM_EXPOSURIES, PINS, SANDBOX, lockSandbox, ownNodeOnly, sandboxEnv, strays } from './sandbox.mjs';
 import {
-  BUILD_ASK, C_PATHS, Stop, TASKS, aboveProblems, ask131, audit, brainState, buildStartupProblems, changedFiles, envFor,
-  exposurieCommands, filed, filesUnder, hashPath, homeAfterRun, isText, keepEarlier, launch, move, neutralProblems, outcome,
-  pagesIn, parseLine, placeItems, prepare131, readJson, readRun, recover, runArgs, sandboxContext,
-  startupProblems, tokensOf, unplace, update131, versionsOf,
+  BUILD_ASK, C_PATHS, Stop, TASKS, aboveProblems, askNpm, audit, brainState, buildStartupProblems, changedFiles, envFor,
+  exposurieCommands, filed, filesUnder, hashPath, homeAfterRun, isText, keepEarlier, launch, move, neutralProblems, npmOf, outcome,
+  pagesIn, parseLine, placeItems, prepareNpm, readJson, readRun, recover, runArgs, sandboxContext,
+  startupProblems, tokensOf, unplace, updateNpm, versionsOf,
 } from './run.mjs';
 import {
   IN_FLIGHT_MS, LONG_ENV, callTokens, compactionsIn, configFiles, contextOf, homeAfterStep, kitItems, longArgs,
@@ -98,27 +105,98 @@ const askOf = (task, agent) => task.round_2.find((a) => a.agent === agent).ask;
 
 // ---------------------------------------------------------------- the plan
 
-const batchFile = (ctx, task) => join(ctx.runs, task.id, 'batch.json');
+const batchFile = (ctx, id) => join(ctx.runs, id, 'batch.json');
 const recordFile = (dir) => join(dir, 'team.json');
 const saveRecord = (dir, T) => writeFileSync(recordFile(dir), JSON.stringify(T, null, 2) + '\n');
+const writeBatch = (ctx, b) => {
+  mkdirSync(dirname(batchFile(ctx, b.batch)), { recursive: true });
+  writeFileSync(batchFile(ctx, b.batch), JSON.stringify(b, null, 2) + '\n');
+};
+
+/** A planned batch, and its task. A batch planned before `again` existed is named for its task. */
+function batchOf(ctx, id) {
+  if (!/^[a-z0-9-]+$/.test(id ?? '') || !existsSync(batchFile(ctx, id))) fail(`${id} is not planned; plan it first`);
+  const b = readJson(batchFile(ctx, id));
+  const task = teamTask(b.task ?? id);
+  return { b, task, conditions: b.conditions ?? task.conditions };
+}
 
 /**
- * Fix round 2's runs: every agent once in every condition, ordered by a hash of
- * the seed and the cell, so the order is mixed and the same for the same seed.
+ * Round 2's runs: every agent once in every condition given, ordered by a hash
+ * of the seed and the cell, so the order is mixed and the same for the same
+ * seed, and numbered in that order.
  */
-export function planTeam(ctx, id, { seed = id } = {}) {
-  const task = teamTask(id);
-  if (existsSync(batchFile(ctx, task))) fail(`${id} is already planned; run it with go`);
+function cellsOf(task, conditions, seed) {
   const cells = [];
-  for (const condition of task.conditions) for (const agent of task.round_2.map((a) => a.agent)) cells.push({ condition, agent });
+  for (const condition of conditions) for (const agent of task.round_2.map((a) => a.agent)) cells.push({ condition, agent });
   const key = (c) => createHash('sha256').update(`${seed}\n${c.condition}\n${c.agent}`).digest('hex');
   cells.sort((a, b) => key(a).localeCompare(key(b)));
   cells.forEach((c, i) => {
     c.run = `r${String(i + 1).padStart(3, '0')}`;
   });
-  const b = { batch: id, planned: now(), seed, exposurie: '1.3.1', round_1: task.round_1.map((a) => ({ agent: a.agent, part: a.part })), cells };
-  mkdirSync(dirname(batchFile(ctx, task)), { recursive: true });
-  writeFileSync(batchFile(ctx, task), JSON.stringify(b, null, 2) + '\n');
+  return cells;
+}
+
+/** Fix round 2's runs for a task's first batch, which takes the task's name and runs on exposurie 1.3.1. */
+export function planTeam(ctx, id, { seed = id } = {}) {
+  const task = teamTask(id);
+  if (existsSync(batchFile(ctx, id))) fail(`${id} is already planned; run it with go`);
+  const b = {
+    batch: id, task: task.id, planned: now(), seed, exposurie: '1.3.1', conditions: task.conditions,
+    round_1: task.round_1.map((a) => ({ agent: a.agent, part: a.part })), cells: cellsOf(task, task.conditions, seed),
+  };
+  writeBatch(ctx, b);
+  return b;
+}
+
+/**
+ * Plan a new batch from an earlier batch's round 1, which does not run again.
+ * Round 1 is copied as the gate passed it: each agent's session and copy, the
+ * merged code with any repair by hand, the merge, the tests and the record of
+ * each step, with the acceptances that let a step through. So `go` starts at
+ * the sync, with the same three transcripts, on the exposurie named. Round 2
+ * has only the conditions named, in the order the earlier batch's seed gives,
+ * so each agent keeps its place. The earlier batch is only read.
+ */
+export function againTeam(ctx, from, id, { exposurie, conditions = ['C'], seed = null } = {}) {
+  if (!/^[a-z0-9-]+$/.test(id ?? '')) fail(`a batch is named with lowercase letters, digits and dashes, not ${id}`);
+  if (existsSync(join(ctx.runs, id))) fail(`${id} already exists; run it with go`);
+  if (!/^[a-z0-9-]+$/.test(from ?? '') || !existsSync(recordFile(join(ctx.runs, from)))) fail(`${from} has not run`);
+  const { b: was, task } = batchOf(ctx, from);
+  if (!NPM_EXPOSURIES[exposurie]) fail(`--exposurie names a release installed from npm (${Object.keys(NPM_EXPOSURIES).join(', ')}), not ${exposurie}`);
+  const bad = conditions.filter((c) => !task.conditions.includes(c));
+  if (!conditions.length || bad.length) fail(`${task.id}'s conditions are ${task.conditions.join(', ')}, not ${bad.join(', ') || 'none'}`);
+  const src = join(ctx.runs, from);
+  const T0 = readJson(recordFile(src));
+  for (const agent of agentsOf(task)) {
+    stepsOf(task, agent).forEach((_, n) => {
+      if (!counts(lastTry(T0.round_1[agent].steps, n))) fail(`${from}'s round 1 is not finished: agent ${agent}, step ${n + 1}`);
+    });
+  }
+  if (!T0.round_1.merged || !T0.round_1.gate?.passed) fail(`${from}'s round 1 has not passed its gate`);
+
+  const dir = join(ctx.runs, id);
+  mkdirSync(dir, { recursive: true });
+  cpSync(join(src, 'round-1'), join(dir, 'round-1'), { recursive: true, preserveTimestamps: true });
+  const T = {
+    task: task.id,
+    user: task.user,
+    started: now(),
+    round_1_from: { batch: from, started: T0.started, accepted: T0.accepted.filter((x) => x.kind === 'step') },
+    sessions: T0.sessions,
+    round_1: T0.round_1,
+    sync: { tries: [] },
+    round_2: { merged: {} },
+    stopped: null,
+    accepted: [],
+  };
+  saveRecord(dir, T);
+  const s = seed ?? was.seed ?? from;
+  const b = {
+    batch: id, task: task.id, planned: now(), seed: s, exposurie, conditions, round_1_from: from,
+    round_1: was.round_1, cells: cellsOf(task, conditions, s),
+  };
+  writeBatch(ctx, b);
   return b;
 }
 
@@ -166,10 +244,10 @@ async function teamStep(ctx, { dir, task, T, agent, n, versions }) {
   restore(join(adir, 'work'), work);
   const say = stepsOf(task, agent)[n];
   const started = now();
-  let placed = placeItems(ctx, `${task.id}/round-1/agent-${agent}/${pad(n + 1)}`, kitItems(originalKit(ctx, task.user)));
+  let placed = placeItems(ctx, `${basename(dir)}/round-1/agent-${agent}/${pad(n + 1)}`, kitItems(originalKit(ctx, task.user)));
   let prepared;
   try {
-    prepared = prepare131(ctx);
+    prepared = prepareNpm(ctx);
   } catch (e) {
     unplace(ctx);
     throw e;
@@ -310,6 +388,14 @@ export function mergeCopies({ base, copies, to, repo }) {
     mustGit(repo, 'checkout', '-q', '-b', `copy-${c.name}`, 'main');
     replaceTree(c.dir, repo);
     mustGit(repo, 'add', '-A');
+    // Git takes a tracked file whose size, time and creation time match its
+    // index entry as unchanged, without reading it, unless the file is as new
+    // as the index. A copied file keeps its time (Windows' copy keeps it even
+    // unasked), and one made again within 15 s of its deletion keeps the old
+    // one's creation time, so a copy's change of bytes but not size could go
+    // unseen: once in 40 merges of check/team.mjs's made-up repository
+    // (2026-11-09). --renormalize reads every tracked file again.
+    mustGit(repo, 'add', '--renormalize', '.');
     mustGit(repo, 'commit', '-q', '--allow-empty', '-m', `copy ${c.name}`);
     mustGit(repo, 'checkout', '-q', '-f', 'main');
     mustGit(repo, 'clean', '-q', '-fdx');
@@ -392,10 +478,10 @@ async function syncTeam(ctx, { dir, task, T, versions }) {
   }
   const started = now();
   const brain = join(ctx.home, 'brain');
-  let placed = placeItems(ctx, `${task.id}/sync`, kitItems(originalKit(ctx, task.user)));
+  let placed = placeItems(ctx, `${basename(dir)}/sync`, kitItems(originalKit(ctx, task.user)));
   let updated;
   try {
-    updated = update131(ctx);
+    updated = updateNpm(ctx);
   } catch (e) {
     unplace(ctx);
     throw e;
@@ -518,18 +604,18 @@ async function runCell(ctx, { dir, task, b, cell, versions }) {
   const items = conditionItems(dir, task, cell.condition);
   const missing = items.filter((i) => !existsSync(i.from));
   if (missing.length) return save({ status: 'not-run', reason: `${missing[0].from} is missing` });
-  const placed = placeItems(ctx, `${task.id}/${cell.run}`, items);
+  const placed = placeItems(ctx, `${b.batch}/${cell.run}`, items);
   let state = null;
   if (cell.condition === 'C') {
-    const r = ask131(ctx);
+    const r = askNpm(ctx);
     state = r.out.split('\n')[0].trim();
     if (r.status !== 0 || /UPDATED TO|-> RUN:/.test(r.out)) {
       unplace(ctx);
-      fail(`exposurie 1.3.1 does not see the sync's brain as the sync left it:\n${r.out.slice(0, 600)}`);
+      fail(`exposurie ${npmOf(ctx).version} does not see the sync's brain as the sync left it:\n${r.out.slice(0, 600)}`);
     }
   }
   cell.input = placed.map(({ rel, sha256: h }) => ({ file: rel, sha256: h }));
-  writeFileSync(batchFile(ctx, task), JSON.stringify(b, null, 2) + '\n');
+  writeBatch(ctx, b);
   const strayBefore = strays(ctx.home).map(norm);
   let l;
   let home;
@@ -601,17 +687,15 @@ async function runCell(ctx, { dir, task, b, cell, versions }) {
  * records a repair by hand of round 1's merged code, after the gate stopped it.
  */
 export async function goTeam(given, id, { accept = null, repaired = null } = {}) {
-  const task = teamTask(id);
+  const { b, task, conditions } = batchOf(given, id);
   const release = lockSandbox(given.lock);
   try {
     recover(given);
     recoverSession(given);
     const before = neutralProblems(given);
     if (before.length) fail(`the sandbox home is not as runs leave it, so nothing runs until it is:\n  ${before.join('\n  ')}`);
-    if (!existsSync(batchFile(given, task))) fail(`${id} is not planned; plan it first`);
-    const b = readJson(batchFile(given, task));
     const ctx = { ...given, exposurie: b.exposurie };
-    const dir = join(ctx.runs, task.id);
+    const dir = join(ctx.runs, id);
     const above = aboveProblems(dir);
     if (above.length) fail(`nothing runs while instructions sit above the runs:\n  ${above.join('\n  ')}`);
     const versions = versionsOf(ctx);
@@ -620,8 +704,8 @@ export async function goTeam(given, id, { accept = null, repaired = null } = {})
 
     if (T.stopped) {
       if (!accept) {
-        fail(`${T.stopped.where} of ${task.id} broke a check:\n  ${T.stopped.problems.join('\n  ')}\n` +
-          `Read ${join(dir, T.stopped.where)}. To keep what it did anyway: team.mjs go ${task.id} --accept "<why>"`);
+        fail(`${T.stopped.where} of ${id} broke a check:\n  ${T.stopped.problems.join('\n  ')}\n` +
+          `Read ${join(dir, T.stopped.where)}. To keep what it did anyway: team.mjs go ${id} --accept "<why>"`);
       }
       T.accepted.push({ at: now(), why: accept, ...T.stopped });
       const w = T.stopped;
@@ -651,7 +735,7 @@ export async function goTeam(given, id, { accept = null, repaired = null } = {})
       if (r.status === 'thrown-out') {
         T.stopped = { where, ...stop, problems: r.problems };
         saveRecord(dir, T);
-        console.log(`\n${where} broke a check, so ${task.id} stops here. Read ${join(dir, where)}.`);
+        console.log(`\n${where} broke a check, so ${id} stops here. Read ${join(dir, where)}.`);
         return false;
       }
       if (r.stop) {
@@ -713,7 +797,7 @@ export async function goTeam(given, id, { accept = null, repaired = null } = {})
       console.log(`round-1 gate  ${g.passed ? 'passed' : 'failed'}: its own tests ${g.own.passed} passed, ${g.own.failed} failed; the hidden test ${g.hidden.passed} passed, ${g.hidden.failed} failed`);
       if (!g.passed) {
         console.log(`\nRound 1's merged code does not pass, so round 2 cannot start from it. Read ${join(dir, 'round-1', 'tests')}. ` +
-          `Repair ${merged} by hand, with the smallest change and no round 2 decision in it, then: team.mjs go ${task.id} --repaired "<what you changed>". Or run round 1 again.`);
+          `Repair ${merged} by hand, with the smallest change and no round 2 decision in it, then: team.mjs go ${id} --repaired "<what you changed>". Or run round 1 again.`);
         return false;
       }
     }
@@ -736,7 +820,7 @@ export async function goTeam(given, id, { accept = null, repaired = null } = {})
     }
 
     // Each condition's copies, merged.
-    for (const condition of task.conditions) {
+    for (const condition of conditions) {
       if (T.round_2.merged[condition]) continue;
       const cells = b.cells.filter((c) => c.condition === condition).sort((x, y) => x.agent - y.agent);
       if (!cells.every((c) => counts(readRun(join(dir, c.run))) || readRun(join(dir, c.run))?.accepted)) continue;
@@ -747,7 +831,7 @@ export async function goTeam(given, id, { accept = null, repaired = null } = {})
       saveRecord(dir, T);
       console.log(`round-2 ${condition} merged${T.round_2.merged[condition].conflicts.length ? `, with conflicts kept both ways: ${T.round_2.merged[condition].conflicts.join(', ')}` : ', with no conflict'}`);
     }
-    const done = task.conditions.every((c) => T.round_2.merged[c]);
+    const done = conditions.every((c) => T.round_2.merged[c]);
     if (done && !T.finished) {
       T.finished = now();
       saveRecord(dir, T);
@@ -760,18 +844,18 @@ export async function goTeam(given, id, { accept = null, repaired = null } = {})
 
 /** Where a team task stands. */
 export function teamStatus(ctx, id) {
-  const task = teamTask(id);
-  const dir = join(ctx.runs, task.id);
-  if (!existsSync(batchFile(ctx, task))) {
+  const dir = join(ctx.runs, id ?? '');
+  if (!/^[a-z0-9-]+$/.test(id ?? '') || !existsSync(batchFile(ctx, id))) {
     console.log(`${id}: not planned.`);
     return null;
   }
-  const b = readJson(batchFile(ctx, task));
+  const { b, task, conditions } = batchOf(ctx, id);
   const T = existsSync(recordFile(dir)) ? readJson(recordFile(dir)) : null;
   if (!T) {
     console.log(`${id}: planned, not started (${dir}).`);
     return null;
   }
+  console.log(`${id}: ${task.id} on exposurie ${b.exposurie}${T.round_1_from ? `, round 1 from ${T.round_1_from.batch}` : ''}`);
   for (const agent of agentsOf(task)) {
     const steps = stepsOf(task, agent);
     const n = steps.filter((_, i) => counts(lastTry(T.round_1[agent].steps, i))).length;
@@ -783,7 +867,7 @@ export function teamStatus(ctx, id) {
     const r = readRun(join(dir, cell.run));
     console.log(`  ${cell.run}  round 2: ${r ? `${r.status}${r.accepted ? ' (accepted)' : ''}` : 'waiting'}`);
   }
-  console.log(`  round 2 merged: ${task.conditions.map((c) => `${c} ${T.round_2.merged[c] ? 'yes' : 'no'}`).join(', ')}`);
+  console.log(`  round 2 merged: ${conditions.map((c) => `${c} ${T.round_2.merged[c] ? 'yes' : 'no'}`).join(', ')}`);
   if (T.stopped) console.log(`  stopped at ${T.stopped.where}: ${T.stopped.problems.join('; ')}`);
   return T;
 }
@@ -801,9 +885,17 @@ if (resolve(process.argv[1] ?? '') === fileURLToPath(import.meta.url)) {
   };
   try {
     if (cmd === 'plan' && id) console.log(`${id}: planned, ${planTeam(ctx, id, { seed: flag('--seed') ?? id }).cells.length} runs in round 2.`);
-    else if (cmd === 'go' && id) process.exitCode = (await goTeam(ctx, id, { accept: flag('--accept'), repaired: flag('--repaired') })) ? 0 : 1;
+    else if (cmd === 'again' && id && rest[0] && !rest[0].startsWith('--')) {
+      const b = againTeam(ctx, id, rest[0], {
+        exposurie: flag('--exposurie'), conditions: (flag('--conditions') ?? 'C').split(','), seed: flag('--seed'),
+      });
+      console.log(`${b.batch}: planned from ${id}'s round 1, on exposurie ${b.exposurie}: ${b.cells.length} runs in round 2 (${b.conditions.join(', ')}). go starts at the sync.`);
+    } else if (cmd === 'go' && id) process.exitCode = (await goTeam(ctx, id, { accept: flag('--accept'), repaired: flag('--repaired') })) ? 0 : 1;
     else if (cmd === 'status' && id) teamStatus(ctx, id);
-    else fail('usage: node runner/team.mjs plan <task> [--seed text] | go <task> [--accept "<why>"] [--repaired "<what>"] | status <task>');
+    else {
+      fail('usage: node runner/team.mjs plan <task> [--seed text] | again <batch> <new batch> --exposurie <version> [--conditions C] [--seed text] | ' +
+        'go <batch> [--accept "<why>"] [--repaired "<what>"] | status <batch>');
+    }
   } catch (e) {
     if (!(e instanceof Stop)) throw e;
     console.error(`team: ${e.message}`);
